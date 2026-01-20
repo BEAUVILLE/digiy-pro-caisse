@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DIGIY ELITE — Dashboard & Fiscalité</title>
+    <title>DIGIY ELITE — Dashboard Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -16,229 +16,144 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); color: var(--text); padding: 20px; line-height: 1.6; }
 
-        /* Navigation & Header */
-        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .back-link { color: var(--gold); text-decoration: none; font-weight: 800; display: flex; align-items: center; gap: 8px; font-size: 14px; }
-        
-        .main-grid { display: grid; grid-template-columns: 1fr 380px; gap: 25px; }
-        @media (max-width: 1100px) { .main-grid { grid-template-columns: 1fr; } }
+        /* Navigation Onglets */
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 25px; }
+        .tab-btn { padding: 12px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: var(--card); color: var(--muted); cursor: pointer; font-weight: 700; transition: 0.3s; }
+        .tab-btn.active { background: var(--gradient); color: #000; border-color: var(--gold); }
 
-        /* Cartes & Sections */
+        .main-grid { display: grid; grid-template-columns: 1fr 350px; gap: 25px; }
+        @media (max-width: 1000px) { .main-grid { grid-template-columns: 1fr; } }
+
         .card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 25px; }
-        .card h3 { color: var(--gold); margin-bottom: 20px; font-size: 16px; border-bottom: 1px solid rgba(251,191,36,0.1); padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .card h3 { color: var(--gold); margin-bottom: 20px; font-size: 16px; border-bottom: 1px solid rgba(251,191,36,0.1); padding-bottom: 10px; }
 
-        /* Formulaires */
-        label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-        input, select { width: 100%; padding: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 10px; color: white; margin-top: 5px; margin-bottom: 15px; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--gold); }
-
-        /* Boutons */
-        .btn { padding: 15px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 13px; width: 100%; }
+        .btn { padding: 15px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-bottom: 10px; text-decoration: none; }
         .btn-gold { background: var(--gradient); color: #000; }
-        .btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
-        .btn-print { background: var(--indigo); color: white; margin-top: 15px; }
-        .btn-excel { background: var(--green); color: white; margin-bottom: 10px; }
-        .btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .btn-red { background: var(--red); color: white; }
+        .btn-indigo { background: var(--indigo); color: white; }
 
-        /* Stats */
-        .stat-box { text-align: center; padding: 20px; background: rgba(255,255,255,0.02); border-radius: 15px; }
-        .stat-val { font-size: 28px; font-weight: 900; color: var(--gold); }
-
-        /* Tableau */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th { text-align: left; font-size: 11px; color: var(--muted); padding: 10px; border-bottom: 2px solid var(--card); }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; font-size: 11px; color: var(--muted); padding: 10px; }
         td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; }
-        .badge { padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 900; }
 
-        /* STYLE POUR L'IMPRESSION A4 */
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
         @media print {
-            body { background: white !important; color: black !important; padding: 0; }
-            .no-print, .btn, .back-link, input, select { display: none !important; }
-            .main-grid { display: block !important; }
-            .card { border: 1px solid #eee !important; background: white !important; box-shadow: none !important; margin: 0; padding: 20px; color: black !important; }
-            .stat-val, h1, h2, h3 { color: black !important; }
-            table { margin-top: 20px; }
-            th { color: black !important; border-bottom: 2px solid black; }
-            td { border-bottom: 1px solid #ddd; color: black !important; }
-            .print-only { display: block !important; }
-            .signature-zone { display: block !important; margin-top: 50px; border-top: 1px solid black; padding-top: 10px; width: 200px; text-align: center; }
+            .no-print { display: none !important; }
+            body { background: white !important; color: black !important; }
+            .card { border: none !important; background: white !important; color: black !important; }
         }
-        .print-only { display: none; }
     </style>
 </head>
 <body>
 
 <div class="top-bar no-print">
-    <div>
-        <h1 id="storeDisplay">DASHBOARD PRO</h1>
-        <p style="color: var(--muted); font-size: 12px;">Édition Royal — Gestion Fiscale Intégrée</p>
-    </div>
-    <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> RETOUR À LA VENTE</a>
+    <h1 id="storeDisplay">DASHBOARD PRO</h1>
+    <a href="index.html" style="color:var(--gold); text-decoration:none; font-weight:800;"><i class="fas fa-arrow-left"></i> RETOUR</a>
 </div>
 
-<div class="main-grid">
-    <div class="left-col">
-        
-        <div class="card no-print">
-            <h3><i class="fas fa-cogs"></i> PARAMÈTRES DE L'ENTREPRISE</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <div>
-                    <label>Nom de l'Enseigne / IFU</label>
-                    <input type="text" id="proName" placeholder="Ex: Boutique Elite SN">
-                </div>
-                <div>
-                    <label>Adresse Physique</label>
-                    <input type="text" id="proAddress" placeholder="Ex: Mbour, Sénégal">
-                </div>
-            </div>
-            <label>Régime Fiscal (Calcul Automatique)</label>
-            <select id="proTaxMode">
-                <option value="FORFAIT">Forfaitaire (Pas de TVA)</option>
-                <option value="TVA18">Régime Réel (TVA 18%)</option>
-                <option value="TVA5">Régime Réel (TVA 5%)</option>
-            </select>
-            <button class="btn btn-gold" onclick="saveSettings()">ENREGISTRER LA CONFIGURATION</button>
-        </div>
+<div class="tabs no-print">
+    <div class="tab-btn active" onclick="switchTab('cloture', this)"><i class="fas fa-cash-register"></i> CLÔTURE DU JOUR</div>
+    <div class="tab-btn" onclick="switchTab('archives', this)"><i class="fas fa-archive"></i> HISTORIQUE DES Z</div>
+</div>
 
-        <div class="card">
-            <h3><i class="fas fa-file-invoice"></i> JOURNAL DES ENCAISSEMENTS</h3>
-            <div class="print-only">
-                <h2 id="printTitle">RAPPORT DE CAISSE</h2>
-                <p id="printDate"></p>
+<div id="cloturePage" class="page active">
+    <div class="main-grid">
+        <div class="left-col">
+            <div class="card">
+                <h3><i class="fas fa-list"></i> ENCAISSEMENTS EN COURS</h3>
+                <table>
+                    <thead><tr><th>HEURE</th><th>MONTANT</th><th>MODE</th></tr></thead>
+                    <tbody id="salesTableBody"></tbody>
+                </table>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>HEURE</th>
-                        <th>MONTANT</th>
-                        <th>MÉTHODE</th>
-                        <th>STATUT</th>
-                    </tr>
-                </thead>
-                <tbody id="salesTableBody">
-                    </tbody>
-            </table>
-            
-            <div class="signature-zone print-only" style="margin-left: auto;">
-                <p>Signature du Gérant</p>
+        </div>
+        <div class="right-col no-print">
+            <div class="card" style="text-align:center;">
+                <small>TOTAL À CLÔTURER (TTC)</small>
+                <h2 id="totalTTC" style="font-size:2.2rem; color:var(--gold); margin:10px 0;">0 F</h2>
+                <button class="btn btn-indigo" onclick="window.print()"><i class="fas fa-print"></i> IMPRIMER X</button>
+                <button class="btn btn-red" onclick="clotureZ()" style="margin-top:20px;"><i class="fas fa-power-off"></i> EFFECTUER CLÔTURE Z</button>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="right-col">
-        <div class="card">
-            <h3><i class="fas fa-chart-pie"></i> BILAN DU JOUR</h3>
-            <div class="stat-box">
-                <small>TOTAL ENCAISSÉ (TTC)</small>
-                <div class="stat-val" id="totalTTC">0 F</div>
-            </div>
-            
-            <div id="taxDetails" style="margin-top: 20px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 15px; font-size: 14px;">
-                </div>
-
-            <div class="no-print" style="margin-top: 25px;">
-                <button class="btn btn-excel" onclick="exportExcel()">
-                    <i class="fas fa-file-excel"></i> EXPORT COMPTABLE (CSV)
-                </button>
-                <button class="btn btn-print" onclick="window.print()">
-                    <i class="fas fa-print"></i> IMPRIMER RAPPORT A4
-                </button>
-                <p style="font-size: 10px; color: var(--muted); text-align: center; margin-top: 15px;">
-                    Note : Utilisez le Rapport Z pour clôturer la journée après impression.
-                </p>
-            </div>
-        </div>
+<div id="archivesPage" class="page">
+    <div class="card">
+        <h3><i class="fas fa-history"></i> ANCIENNES CLÔTURES (RAPPORTS Z)</h3>
+        <table>
+            <thead><tr><th>DATE DU Z</th><th>VENTES</th><th>CA TOTAL</th><th>ACTIONS</th></tr></thead>
+            <tbody id="archivesTableBody"></tbody>
+        </table>
     </div>
 </div>
 
 <script>
-    // Chargement initial
-    function init() {
-        const settings = JSON.parse(localStorage.getItem('el_pro_settings')) || { name: "MA BOUTIQUE", address: "", mode: "FORFAIT" };
-        document.getElementById('proName').value = settings.name;
-        document.getElementById('proAddress').value = settings.address;
-        document.getElementById('proTaxMode').value = settings.mode;
-        document.getElementById('storeDisplay').innerText = settings.name;
-        
-        loadAccounting();
+    function switchTab(id, btn) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id+'Page').classList.add('active');
+        btn.classList.add('active');
+        if(id === 'archives') renderArchives();
     }
 
-    function saveSettings() {
-        const settings = {
-            name: document.getElementById('proName').value,
-            address: document.getElementById('proAddress').value,
-            mode: document.getElementById('proTaxMode').value
-        };
-        localStorage.setItem('el_pro_settings', JSON.stringify(settings));
-        localStorage.setItem('el_name', settings.name); // Synchro avec index.html
-        alert("Paramètres enregistrés frérot !");
-        location.reload();
-    }
-
-    function loadAccounting() {
+    function loadData() {
         const sales = JSON.parse(localStorage.getItem('el_sales')) || [];
-        const settings = JSON.parse(localStorage.getItem('el_pro_settings')) || { mode: "FORFAIT" };
         const today = new Date().toLocaleDateString();
-        const dailySales = sales.filter(s => new Date(s.id).toLocaleDateString() === today);
+        const currentSales = sales.filter(s => new Date(s.id).toLocaleDateString() === today && !s.archived);
         
-        // Calculs
-        const ttc = dailySales.reduce((a, b) => a + b.total, 0);
-        let ht = ttc;
-        let tva = 0;
-
-        if(settings.mode !== "FORFAIT") {
-            const rate = settings.mode === "TVA18" ? 0.18 : 0.05;
-            ht = Math.round(ttc / (1 + rate));
-            tva = ttc - ht;
-        }
-
-        // Affichage
+        const ttc = currentSales.reduce((a, b) => a + b.total, 0);
         document.getElementById('totalTTC').innerText = ttc.toLocaleString() + " F";
-        document.getElementById('taxDetails').innerHTML = `
-            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                <span>Total Hors Taxe (HT)</span>
-                <b>${ht.toLocaleString()} F</b>
-            </div>
-            <div style="display:flex; justify-content:space-between; color:var(--muted);">
-                <span>TVA (${settings.mode})</span>
-                <b>${tva.toLocaleString()} F</b>
-            </div>
-        `;
-
-        // Tableau
-        document.getElementById('salesTableBody').innerHTML = dailySales.map(s => `
-            <tr>
-                <td>${new Date(s.id).toLocaleTimeString()}</td>
-                <td style="font-weight:bold;">${s.total.toLocaleString()} F</td>
-                <td>${s.method}</td>
-                <td style="color:var(--green)">✓</td>
-            </tr>
+        document.getElementById('salesTableBody').innerHTML = currentSales.map(s => `
+            <tr><td>${new Date(s.id).toLocaleTimeString()}</td><td><b>${s.total.toLocaleString()} F</b></td><td>${s.method}</td></tr>
         `).join('');
-
-        // Pour l'impression
-        document.getElementById('printDate').innerText = "Généré le " + new Date().toLocaleString();
     }
 
-    function exportExcel() {
+    function clotureZ() {
         const sales = JSON.parse(localStorage.getItem('el_sales')) || [];
-        if(!sales.length) return alert("Rien à exporter !");
-        
-        let csv = "Date,Heure,Montant,Methode\n";
-        sales.forEach(s => {
-            const d = new Date(s.id);
-            csv += `${d.toLocaleDateString()},${d.toLocaleTimeString()},${s.total},${s.method}\n`;
+        const today = new Date().toLocaleDateString();
+        const current = sales.filter(s => new Date(s.id).toLocaleDateString() === today && !s.archived);
+
+        if(current.length === 0) return alert("Rien à clôturer frérot !");
+
+        if(confirm("Confirmer la clôture Z ?\nLe total sera archivé et la caisse remise à zéro.")) {
+            window.print(); // Impression du rapport final
+            
+            const updatedSales = sales.map(s => {
+                if(new Date(s.id).toLocaleDateString() === today) return {...s, archived: true};
+                return s;
+            });
+            localStorage.setItem('el_sales', JSON.stringify(updatedSales));
+            location.reload();
+        }
+    }
+
+    function renderArchives() {
+        const sales = JSON.parse(localStorage.getItem('el_sales')) || [];
+        // On regroupe les ventes archivées par date
+        const archives = {};
+        sales.filter(s => s.archived).forEach(s => {
+            const d = new Date(s.id).toLocaleDateString();
+            if(!archives[d]) archives[d] = { count: 0, total: 0 };
+            archives[d].count++;
+            archives[d].total += s.total;
         });
 
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.setAttribute('href', url);
-        a.setAttribute('download', `COMPTA_${new Date().toLocaleDateString()}.csv`);
-        a.click();
+        document.getElementById('archivesTableBody').innerHTML = Object.keys(archives).reverse().map(date => `
+            <tr>
+                <td>${date}</td>
+                <td>${archives[date].count} ventes</td>
+                <td style="font-weight:bold; color:var(--green);">${archives[date].total.toLocaleString()} F</td>
+                <td><button onclick="alert('Rapport de CA pour le ${date} : ${archives[date].total} F')" class="tab-btn" style="padding:5px 10px; font-size:10px;">VOIR</button></td>
+            </tr>
+        `).join('');
     }
 
-    init();
+    loadData();
 </script>
-
 </body>
 </html>
