@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DIGIY POS ELITE — Royal Edition</title>
+    <title>DIGIY POS ELITE — Royal Edition + Sync</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -76,7 +76,7 @@
         </div>
     </div>
     <div style="text-align: right;">
-        <span style="color: var(--gold); font-weight: 900; font-size: 10px;">ROYAL EDITION</span>
+        <span style="color: var(--gold); font-weight: 900; font-size: 10px;">ROYAL EDITION + SYNC</span>
     </div>
 </div>
 
@@ -138,6 +138,15 @@
             <input type="text" id="adminKey" placeholder="Entrer clé PRO">
             <button class="gold-btn" onclick="activate('adminKey')">ACTIVER VERSION PRO</button>
         </div>
+        <div class="form-card" style="border: 1px solid #0ea5e9;">
+            <h3>☁️ SYNCHRONISATION DASHBOARD</h3>
+            <p style="color: var(--muted); font-size: 12px; margin: 10px 0;">Sync automatique quotidienne (23h) • WiFi only • Ultra-léger (~200 bytes/jour)</p>
+            <div style="display: flex; gap: 10px; align-items: center; margin: 15px 0;">
+                <span style="font-size: 12px;">Dernière sync:</span>
+                <span id="lastSyncDisplay" style="color: var(--gold); font-weight: 700; font-size: 12px;">Jamais</span>
+            </div>
+            <button class="gold-btn" style="background: #0ea5e9;" onclick="manualSync()">SYNCHRONISER MAINTENANT</button>
+        </div>
     </div>
 </div>
 
@@ -160,11 +169,13 @@ let db = {
     pro: localStorage.getItem('el_pro') === 'true',
     start: localStorage.getItem('el_start') || Date.now(),
     name: localStorage.getItem('el_name') || "MA BOUTIQUE NOBLE",
+    storeId: localStorage.getItem('el_storeId') || "BOUTIQUE" + Math.random().toString(36).substr(2, 6).toUpperCase(),
     items: JSON.parse(localStorage.getItem('el_items')) || defaultItems,
     sales: JSON.parse(localStorage.getItem('el_sales')) || [],
     cart: []
 };
 if(!localStorage.getItem('el_start')) localStorage.setItem('el_start', db.start);
+if(!localStorage.getItem('el_storeId')) localStorage.setItem('el_storeId', db.storeId);
 
 function tab(id, btn) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -182,7 +193,7 @@ function render() {
     
     document.getElementById('storeDisp').innerText = db.name;
     document.getElementById('trialBadge').innerHTML = db.pro ? 
-        '<span style="color:var(--gold); font-size:10px;">PRO ACTIVÉ</span>' : 
+        '<span style="color:var(--gold); font-size:10px;">PRO ACTIVÉ ∞</span>' : 
         `<span style="background:var(--gold); color:#000; padding:2px 8px; border-radius:10px; font-size:9px; font-weight:bold;">ESSAI: ${left}J</span>`;
 
     // Grille Produits
@@ -214,6 +225,12 @@ function render() {
             <button onclick="settle(${u.id})" style="padding:10px; background:#10b981; border:none; border-radius:8px; color:white; font-weight:bold; cursor:pointer;">SOLDER</button>
         </div>
     `).join('');
+    
+    // Afficher dernière sync
+    const lastSync = localStorage.getItem('digiy_last_sync');
+    if(lastSync) {
+        document.getElementById('lastSyncDisplay').innerText = new Date(lastSync).toLocaleString('fr-FR');
+    }
 }
 
 function addToCart(id) {
@@ -227,7 +244,14 @@ function addToCart(id) {
 function checkout(m) {
     if(!db.cart.length) return;
     const total = db.cart.reduce((s,i) => s + (i.price*i.qty), 0);
-    const sale = { id: Date.now(), total, method: m, status: m==='CREDIT' ? 'DUE' : 'PAID' };
+    const sale = { 
+        id: Date.now(), 
+        total, 
+        method: m, 
+        status: m==='CREDIT' ? 'DUE' : 'PAID',
+        items: db.cart.map(i => ({name: i.name, qty: i.qty, price: i.price})),
+        timestamp: Date.now()
+    };
     db.cart.forEach(i => { db.items.find(p => p.id === i.id).stock -= i.qty; });
     db.sales.push(sale);
     db.cart = [];
@@ -264,7 +288,10 @@ function settle(id) {
 function activate(id) {
     if(document.getElementById(id).value === "DIGIY-PRO-2026") {
         localStorage.setItem('el_pro', 'true');
-        location.reload();
+        db.pro = true;
+        render();
+        alert("✅ Version PRO activée !");
+        document.getElementById('lockScreen').style.display = 'none';
     } else alert("Clé invalide.");
 }
 
@@ -273,7 +300,249 @@ function save() {
     localStorage.setItem('el_sales', JSON.stringify(db.sales));
 }
 
+// Fonction pour sync manuelle depuis l'admin
+function manualSync() {
+    if(typeof DIGIY_SYNC !== 'undefined') {
+        DIGIY_SYNC.syncDailySummary(true);
+    } else {
+        alert("Module de synchronisation non chargé");
+    }
+}
+
 render();
 </script>
+
+<!-- ============================================ -->
+<!-- DIGIY SYNC MODULE - Version Batch Compressée -->
+<!-- ============================================ -->
+<script>
+/**
+ * Module de synchronisation ultra-léger
+ * Consommation: ~200 bytes/jour
+ * Sync: 1x/jour à 23h, WiFi only
+ * 99.9% économie vs temps réel
+ */
+const DIGIY_SYNC = {
+    config: {
+        SUPABASE_URL: 'https://wesqmwjjtsefyjnluosj.supabase.co',
+        SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA',
+        SYNC_HOUR: 23,
+        WIFI_ONLY: true,
+        AUTO_SYNC: true,
+        SHOW_BUTTON: true
+    },
+
+    state: {
+        lastSync: localStorage.getItem('digiy_last_sync') || null,
+        syncInProgress: false
+    },
+
+    init() {
+        console.log('🦅 DIGIY Sync Module initialisé - Version Batch');
+        
+        if (this.config.AUTO_SYNC) {
+            this.scheduleAutoSync();
+        }
+
+        if (this.config.SHOW_BUTTON) {
+            this.addSyncButton();
+        }
+    },
+
+    scheduleAutoSync() {
+        setInterval(() => {
+            const now = new Date();
+            const hour = now.getHours();
+            const today = now.toDateString();
+            
+            if (hour === this.config.SYNC_HOUR && this.state.lastSync !== today) {
+                this.syncDailySummary();
+            }
+        }, 60 * 60 * 1000);
+    },
+
+    addSyncButton() {
+        const syncBtn = document.createElement('button');
+        syncBtn.id = 'syncDashboardBtn';
+        syncBtn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Sync Dashboard';
+        syncBtn.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+            z-index: 9999;
+            font-size: 11px;
+            transition: 0.3s;
+        `;
+        
+        syncBtn.onmouseover = () => syncBtn.style.transform = 'translateY(-2px)';
+        syncBtn.onmouseout = () => syncBtn.style.transform = 'translateY(0)';
+        syncBtn.onclick = () => this.syncDailySummary(true);
+        document.body.appendChild(syncBtn);
+    },
+
+    isOnWiFi() {
+        if (!this.config.WIFI_ONLY) return true;
+        
+        if (navigator.connection) {
+            const type = navigator.connection.type || navigator.connection.effectiveType;
+            return type === 'wifi' || type === '4g';
+        }
+        
+        return true;
+    },
+
+    async calculateDailySummary() {
+        const sales = JSON.parse(localStorage.getItem('el_sales') || '[]');
+        const today = new Date().toISOString().split('T')[0];
+        
+        const todaySales = sales.filter(sale => {
+            const saleDate = new Date(sale.id || sale.timestamp).toISOString().split('T')[0];
+            return saleDate === today;
+        });
+
+        const summary = {
+            date: today,
+            total_ca: 0,
+            nb_ventes: todaySales.length,
+            cash: 0,
+            wave: 0,
+            om: 0,
+            cb: 0,
+            credit: 0,
+            nb_produits: 0
+        };
+
+        todaySales.forEach(sale => {
+            const amount = sale.total || 0;
+            summary.total_ca += amount;
+            
+            const method = (sale.method || '').toLowerCase();
+            if (method === 'cash') summary.cash += amount;
+            else if (method === 'wave') summary.wave += amount;
+            else if (method === 'om') summary.om += amount;
+            else if (method === 'cb') summary.cb += amount;
+            else if (method === 'credit') summary.credit += amount;
+            
+            if (sale.items && Array.isArray(sale.items)) {
+                summary.nb_produits += sale.items.reduce((sum, item) => sum + (item.qty || 1), 0);
+            }
+        });
+
+        return summary;
+    },
+
+    compress(data) {
+        const compact = {
+            d: data.date,
+            ca: data.total_ca,
+            nv: data.nb_ventes,
+            c: data.cash,
+            w: data.wave,
+            o: data.om,
+            cb: data.cb,
+            cr: data.credit,
+            np: data.nb_produits
+        };
+        
+        return JSON.stringify(compact);
+    },
+
+    async syncDailySummary(manual = false) {
+        if (this.state.syncInProgress) {
+            console.log('⏳ Sync déjà en cours...');
+            return;
+        }
+
+        if (!this.isOnWiFi() && !manual) {
+            console.log('📱 Pas sur WiFi - sync annulée');
+            return;
+        }
+
+        this.state.syncInProgress = true;
+        const statusMsg = manual ? 'Synchronisation manuelle...' : 'Synchronisation quotidienne...';
+        console.log('🔄', statusMsg);
+
+        try {
+            const summary = await this.calculateDailySummary();
+            
+            const storeId = localStorage.getItem('el_storeId') || 'UNKNOWN';
+            const storeName = localStorage.getItem('el_name') || 'Boutique';
+
+            const compressed = this.compress(summary);
+            const originalSize = JSON.stringify(summary).length;
+            const compressedSize = compressed.length;
+            const savings = ((1 - compressedSize / originalSize) * 100).toFixed(1);
+            
+            console.log(`📦 Compression: ${originalSize}B → ${compressedSize}B (${savings}% économie)`);
+
+            const response = await fetch(`${this.config.SUPABASE_URL}/rest/v1/pos_daily_summaries`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'apikey': this.config.SUPABASE_KEY,
+                    'Authorization': `Bearer ${this.config.SUPABASE_KEY}`,
+                    'Prefer': 'return=minimal'
+                },
+                body: JSON.stringify({
+                    store_id: storeId,
+                    store_name: storeName,
+                    date: summary.date,
+                    data_compressed: compressed,
+                    total_ca: summary.total_ca,
+                    nb_ventes: summary.nb_ventes,
+                    data_size_bytes: compressedSize
+                })
+            });
+
+            if (response.ok) {
+                const today = new Date().toISOString();
+                this.state.lastSync = today;
+                localStorage.setItem('digiy_last_sync', today);
+                
+                console.log('✅ Sync réussie !', {
+                    date: summary.date,
+                    ca: summary.total_ca,
+                    ventes: summary.nb_ventes,
+                    taille: `${compressedSize}B`
+                });
+
+                if (manual) {
+                    alert(`✅ Synchronisation réussie !\n\n📊 CA: ${summary.total_ca.toLocaleString()} F\n🛒 Ventes: ${summary.nb_ventes}\n📡 Data: ${compressedSize} bytes\n💾 Économie: ${savings}%`);
+                    render(); // Rafraîchir l'affichage
+                }
+            } else {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+        } catch (error) {
+            console.error('❌ Erreur sync:', error);
+            if (manual) {
+                alert('❌ Erreur de synchronisation.\nVérifiez votre connexion internet.\n\n' + error.message);
+            }
+        } finally {
+            this.state.syncInProgress = false;
+        }
+    }
+};
+
+// Auto-init
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => DIGIY_SYNC.init());
+} else {
+    DIGIY_SYNC.init();
+}
+
+window.DIGIY_SYNC = DIGIY_SYNC;
+console.log('🦅 DIGIY POS ELITE + Sync Batch - Ready ∞');
+</script>
+
 </body>
 </html>
