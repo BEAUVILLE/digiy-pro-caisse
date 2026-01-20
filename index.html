@@ -1164,8 +1164,9 @@
       font-size: 16px;
       font-weight: 600;
       text-align: center;
-      text-transform: uppercase;
-      letter-spacing: 2px;
+      text-transform: none;
+      letter-spacing: 0.5px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
       transition: all 0.3s;
     }
 
@@ -1339,8 +1340,8 @@
       <h2>DIGIY POS PRO</h2>
       <p>Bienvenue dans votre caisse connectée professionnelle.<br>Entrez votre code de licence pour activer.</p>
     
-    <div class="license-input-group">
-     <input type="text" id="licenseCode" placeholder="Colle ta licence DIGIY1..." autocomplete="off">
+      <div class="license-input-group">
+        <input type="text" id="licenseCode" placeholder="Colle ta licence DIGIY1..." autocomplete="off">
       </div>
 
       <div class="activation-actions">
@@ -1348,7 +1349,7 @@
           <i class="fas fa-key"></i> Activer la Licence
         </button>
         <button class="demo-mode-btn" onclick="startDemoMode()">
-          <i class="fas fa-clock"></i> Essayer en Mode Démo (14 jours)
+          <i class="fas fa-clock"></i> Essayer en Mode Démo (15 jours)
         </button>
       </div>
 
@@ -1385,16 +1386,16 @@
       <p>Vous utilisez DIGIY POS PRO en mode démo limité</p>
       <div class="demo-counter">
         <div class="counter-item">
-          <div class="counter-value" id="daysLeft">14</div>
+          <div class="counter-value" id="daysLeft">15</div>
           <div class="counter-label">Jours restants</div>
         </div>
         <div class="counter-item">
-          <div class="counter-value" id="salesLeft">30</div>
+          <div class="counter-value" id="salesLeft">∞</div>
           <div class="counter-label">Ventes restantes</div>
         </div>
       </div>
       <button class="upgrade-btn" onclick="showUpgradeModal()">
-        <i class="fas fa-arrow-up"></i> Passer à la version PRO - 12,900 FCFA/mois
+        <i class="fas fa-arrow-up"></i> Passer à la version PRO - 9,900 FCFA/mois
       </button>
     </div>
 
@@ -1600,7 +1601,7 @@
 
       <div style="text-align: center; padding: 20px 0;">
         <div class="activation-icon" style="margin: 0 auto 20px;">🦅</div>
-        <h2 style="font-size: 32px; color: var(--gold); margin: 0 0 8px 0;">12,900 FCFA</h2>
+        <h2 style="font-size: 32px; color: var(--gold); margin: 0 0 8px 0;">9,900 FCFA</h2>
         <p style="color: var(--muted); margin: 0 0 24px 0;">par mois / par appareil</p>
 
         <div style="text-align: left; background: var(--card2); padding: 20px; border-radius: 12px; margin-bottom: 24px;">
@@ -1611,7 +1612,7 @@
             <li>Gestion multi-utilisateurs</li>
             <li>Support prioritaire</li>
             <li>Mises à jour automatiques</li>
-            <li>Sauvegarde cloud Supabase</li>
+            <li>Backup export/import (fichier)</li>
           </ul>
         </div>
 
@@ -1677,11 +1678,12 @@
     </div>
   </div>
 
- <script>
+  <script>
 /* ======================================================
    DIGIY POS PRO ♾️ — OFFLINE (INDEXEDDB) + DEMO 15J + LICENCE 31J
    ✅ Démo démarre aussi via QR "cliquable" (URL)
    ✅ Zéro Supabase / Zéro Cloud requis
+   ✅ FIXES: 14→15j, input licence, filterHistory, pricing
 ====================================================== */
 
 /* ---------------------------
@@ -1730,7 +1732,6 @@ async function idbSet(key, value){
    Helpers UI
 --------------------------- */
 function showNotification(type, title, message){
-  // Ton système existe déjà : je le garde compatible
   try{
     const icons = {
       success: 'fa-check-circle',
@@ -1846,7 +1847,7 @@ async function autoStartDemoFromURL(){
     appState.demoStart = new Date().toISOString();
     await saveState();
     showNotification("success","Démo activée","Démarrée via QR / lien.");
-    // Nettoie l’URL (propre)
+    // Nettoie l'URL (propre)
     u.searchParams.delete("demo");
     u.searchParams.delete("ref");
     history.replaceState({}, "", u.toString());
@@ -1984,7 +1985,6 @@ function updateDemoUI(){
     const d = document.getElementById('daysLeft');
     if(d) d.textContent = demoDaysLeft();
 
-    // Tu as aussi "salesLeft" dans ton UI : on met ∞ (pas de limite ventes)
     const s = document.getElementById('salesLeft');
     if(s) s.textContent = "∞";
   } else {
@@ -1993,18 +1993,14 @@ function updateDemoUI(){
 }
 
 /* ---------------------------
-   Boot app (ta logique UI existante)
-   -> on garde ton fonctionnement, mais storage = IndexedDB
+   Boot app
 --------------------------- */
 function bootApp(){
-  // Si besoin d’afficher l’app
   document.getElementById('mainApp').style.display = 'block';
   document.getElementById('activationScreen').classList.remove('active');
 
-  // Shop name
   document.getElementById('shopName').textContent = appState.shopInfo?.name || "Ma Boutique";
 
-  // Catégories / produits / panier / historique
   if(!appState.products || appState.products.length===0){
     loadDefaultProducts();
   }
@@ -2019,10 +2015,8 @@ function bootApp(){
 }
 
 /* ---------------------------
-   Ton contenu POS (produits/cart/history/admin)
-   -> je reprends tes fonctions existantes (adaptées à saveState IndexedDB)
+   Produits / Cart / History
 --------------------------- */
-
 function loadDefaultProducts(){
   appState.products = [
     { id: 1, name: 'Coca Cola', category: 'Boissons', price: 500, stock: 50, icon: '🥤' },
@@ -2189,13 +2183,11 @@ function updateCartSummary(){
 function checkout(){
   if(appState.cart.length === 0) return;
 
-  // 🔒 Si ni licence ni démo valide -> lock
   if(!licenseIsValid() && !demoIsValid()){
     hardBlock();
     return;
   }
 
-  // Update stock
   appState.cart.forEach(ci=>{
     const p = appState.products.find(x=>x.id===ci.id);
     if(p) p.stock -= ci.quantity;
@@ -2234,6 +2226,48 @@ function renderHistory(){
   }
 
   tbody.innerHTML = appState.history.map(sale=>{
+    const d = new Date(sale.date);
+    return `
+      <tr onclick="showSaleDetails(${sale.id})">
+        <td>${d.toLocaleDateString('fr-FR')}</td>
+        <td>${d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</td>
+        <td>${sale.items.reduce((s,i)=>s+i.quantity,0)}</td>
+        <td style="font-weight:600;color:var(--gold);">${fmtFCFA(sale.total)}</td>
+        <td><span class="status-badge status-completed">Terminé</span></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function filterHistory(){
+  const date = document.getElementById('filterDate')?.value || "";
+  const status = document.getElementById('filterStatus')?.value || "all";
+  const q = (document.getElementById('filterSearch')?.value || "").toLowerCase();
+
+  const rows = (appState.history || []).filter(sale=>{
+    const d = new Date(sale.date);
+    const day = d.toISOString().slice(0,10);
+
+    const okDate = !date || day === date;
+    const okStatus = (status === "all") || (sale.status === status);
+    const okQ = !q || sale.items.some(i => (i.name||"").toLowerCase().includes(q)) || String(sale.total||0).includes(q);
+
+    return okDate && okStatus && okQ;
+  });
+
+  const tbody = document.getElementById('historyTableBody');
+  if(!rows.length){
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5" style="text-align:center;padding:40px;color:var(--muted);">
+          <i class="fas fa-receipt" style="font-size:48px;opacity:.3;margin-bottom:12px;display:block;"></i>
+          Aucun résultat
+        </td>
+      </tr>`;
+    return;
+  }
+
+  tbody.innerHTML = rows.map(sale=>{
     const d = new Date(sale.date);
     return `
       <tr onclick="showSaleDetails(${sale.id})">
@@ -2383,7 +2417,7 @@ function importData(){
   input.click();
 }
 
-/* ---- Tabs / Modals (tu avais déjà) ---- */
+/* ---- Tabs / Modals ---- */
 function switchTab(tab){
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   (event?.target?.closest('.nav-tab')||document.querySelector('.nav-tab')).classList.add('active');
@@ -2405,27 +2439,22 @@ async function init(){
   await ensureDeviceId();
   await autoStartDemoFromURL();
 
-  // Si licence valide -> boot
   if(licenseIsValid()){
     bootApp();
     return;
   }
 
-  // Si démo valide -> boot
   if(demoIsValid()){
     bootApp();
     return;
   }
 
-  // Sinon : show activation screen
   document.getElementById('activationScreen').classList.add('active');
   document.getElementById('mainApp').style.display = 'none';
 
-  // petit refresh badge
   updateBadge();
   updateDemoUI();
 
-  // Watchdog (au cas où la démo expire pendant qu’il travaille)
   setInterval(()=>{
     if(!licenseIsValid() && !demoIsValid() && appState.demoStart){
       hardBlock();
@@ -2437,7 +2466,7 @@ async function init(){
 
 document.addEventListener('DOMContentLoaded', init);
 
-// expose global (pour tes onclick HTML)
+// Expose global functions
 window.activateLicense = activateLicense;
 window.startDemoMode = startDemoMode;
 window.checkout = checkout;
@@ -2459,6 +2488,7 @@ window.editProduct = editProduct;
 window.saveEditedProduct = saveEditedProduct;
 window.deleteProduct = deleteProduct;
 window.showSaleDetails = showSaleDetails;
+window.filterHistory = filterHistory;
 </script>
 </body>
 </html>
