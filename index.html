@@ -17,9 +17,9 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); color: var(--text); min-height: 100vh; background-image: radial-gradient(circle at top right, #1e293b, #0f172a); }
 
-        /* Écran de verrouillage si essai fini */
+        /* Écran de verrouillage */
         #lockScreen { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(20px); z-index: 10000; display: none; align-items: center; justify-content: center; }
-        .lock-box { background: var(--card); padding: 40px; border-radius: 30px; border: 1px solid var(--gold); text-align: center; width: 90%; max-width: 400px; }
+        .lock-box { background: var(--card); padding: 40px; border-radius: 30px; border: 1px solid var(--gold); text-align: center; width: 90%; max-width: 420px; }
 
         /* Interface */
         .header { padding: 20px 25px; background: var(--glass); border-bottom: 1px solid rgba(251, 191, 36, 0.2); display: flex; justify-content: space-between; align-items: center; }
@@ -34,7 +34,7 @@
         @media (max-width: 1100px) { .main-container { grid-template-columns: 1fr; } }
 
         .products-listing { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
-        .noble-card { background: var(--card); padding: 20px; border-radius: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; cursor: pointer; }
+        .noble-card { background: var(--card); padding: 20px; border-radius: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; cursor: pointer; position: relative; }
         .noble-card:hover { transform: translateY(-5px); border-color: var(--gold); }
         .noble-card i { font-size: 30px; color: var(--gold); margin-bottom: 12px; display: block; }
 
@@ -53,12 +53,12 @@
         input { width: 100%; padding: 14px; background: #0f172a; border: 1px solid #334155; border-radius: 10px; color: white; margin-top: 8px; outline: none; }
         .gold-btn { width: 100%; padding: 16px; background: var(--gradient); border: none; border-radius: 12px; color: #000; font-weight: 800; cursor: pointer; margin-top: 15px; }
         
-        /* Nouveau style pour le bouton Dashboard */
-        .dash-link { 
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; 
-            color: white !important;
-            border: none !important;
-        }
+        .dash-link { background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; color: white !important; border: none !important; }
+
+        /* Style pour la suppression d'article */
+        .delete-item-btn { position: absolute; top: 10px; right: 10px; color: #ef4444; background: none; border: none; cursor: pointer; font-size: 14px; opacity: 0.5; }
+        .delete-item-btn:hover { opacity: 1; }
+        .inventory-list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
 <body>
@@ -67,9 +67,12 @@
     <div class="lock-box">
         <i class="fas fa-crown" style="font-size: 40px; color: var(--gold);"></i>
         <h2 style="margin: 15px 0;">ESSAI TERMINÉ</h2>
-        <p style="color: var(--muted); margin-bottom: 20px;">Veuillez contacter DIGIY pour activer votre licence.</p>
+        <p style="color: var(--muted); margin-bottom: 20px;">Votre période d'essai de 15 jours est expirée. Contactez le service technique DIGIY pour activer votre licence permanente.</p>
+        <a href="https://wa.me/221XXXXXXXXX" style="color: #10b981; text-decoration: none; font-weight: bold; display: block; margin-bottom: 20px;">
+            <i class="fab fa-whatsapp"></i> CONTACTER SUPPORT
+        </a>
         <input type="text" id="royalKey" placeholder="CLE-PRO-2026">
-        <button class="gold-btn" onclick="activate('royalKey')">ACTIVER</button>
+        <button class="gold-btn" onclick="activate('royalKey')">ACTIVER LA LICENCE</button>
     </div>
 </div>
 
@@ -120,7 +123,7 @@
             <small>RECETTE DU JOUR</small>
             <h2 id="revDay" style="color: #10b981; font-size: 2.5rem;">0 F</h2>
         </div>
-        <h3 style="margin-bottom: 15px;">Dettes à récupérer</h3>
+        <h3 style="margin-bottom: 15px;">Dernières transactions</h3>
         <div id="debtListing"></div>
     </div>
 </div>
@@ -130,17 +133,7 @@
         
         <div class="form-card" style="border: 2px solid #10b981; background: rgba(16, 185, 129, 0.05);">
             <h3 style="color: #10b981;"><i class="fas fa-chart-line"></i> ANALYSES AVANCÉES</h3>
-            <p style="font-size: 12px; color: var(--muted); margin-bottom: 15px;">Consultez vos statistiques détaillées, votre CA global et vos sauvegardes Cloud.</p>
-            <button class="gold-btn dash-link" onclick="window.location.href='dashboard.html'">
-                ACCÉDER AU DASHBOARD ROYAL
-            </button>
-        </div>
-
-        <div class="form-card" style="border: 1px solid var(--gold);">
-            <h3>👤 IDENTIFICATION CLIENT</h3>
-            <input type="text" id="custName" placeholder="Prénom & Nom du gérant">
-            <input type="text" id="custPhone" placeholder="Téléphone WhatsApp">
-            <button class="gold-btn" onclick="saveContact()">ENREGISTRER MES INFOS</button>
+            <button class="gold-btn dash-link" onclick="window.location.href='dashboard.html'">ACCÉDER AU DASHBOARD ROYAL</button>
         </div>
 
         <div class="form-card">
@@ -149,6 +142,11 @@
             <input type="number" id="addPrice" placeholder="Prix de vente">
             <input type="number" id="addStock" placeholder="Quantité en stock">
             <button class="gold-btn" onclick="addNew()">VALIDER L'AJOUT</button>
+        </div>
+
+        <div class="form-card">
+            <h3>🗑️ GÉRER L'INVENTAIRE</h3>
+            <div id="inventoryManager" style="margin-top:15px;"></div>
         </div>
 
         <div class="form-card">
@@ -166,20 +164,15 @@
 </div>
 
 <script>
-// Tes scripts restent identiques...
 const TRIAL_LIMIT = 15;
 const SUPA_URL = 'https://wesqmwjjtsefyjnluosj.supabase.co/rest/v1/pos_daily_summaries';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // Ta clé Supabase
 
 let db = {
     pro: localStorage.getItem('el_pro') === 'true',
     start: localStorage.getItem('el_start') || Date.now(),
     name: localStorage.getItem('el_name') || "MA BOUTIQUE NOBLE",
-    custName: localStorage.getItem('el_custName') || "",
-    custPhone: localStorage.getItem('el_custPhone') || "",
-    items: JSON.parse(localStorage.getItem('el_items')) || [
-        {id: 1, name: "Article Exemple", price: 1000, stock: 10}
-    ],
+    items: JSON.parse(localStorage.getItem('el_items')) || [{id: 1, name: "Article Exemple", price: 1000, stock: 10}],
     sales: JSON.parse(localStorage.getItem('el_sales')) || [],
     cart: []
 };
@@ -205,6 +198,7 @@ function render() {
         '<span style="color:var(--gold); font-size:10px;">PRO ACTIVÉ</span>' : 
         `<span style="background:var(--gold); color:#000; padding:2px 8px; border-radius:10px; font-size:9px; font-weight:bold;">ESSAI: ${left}J</span>`;
 
+    // Grille POS
     document.getElementById('productsGrid').innerHTML = db.items.map(p => `
         <div class="noble-card" onclick="addToCart(${p.id})">
             <i class="fas fa-tag"></i>
@@ -214,9 +208,19 @@ function render() {
         </div>
     `).join('');
 
+    // Manager Inventaire (Suppression)
+    document.getElementById('inventoryManager').innerHTML = db.items.map(p => `
+        <div class="inventory-list-item">
+            <span>${p.name} (${p.price}F)</span>
+            <button onclick="removeItem(${p.id})" style="color:#ef4444; background:none; border:none; cursor:pointer;"><i class="fas fa-trash"></i></button>
+        </div>
+    `).join('');
+
+    // Panier
     document.getElementById('cartListing').innerHTML = db.cart.map(i => `
         <div class="cart-row"><span>${i.name} x${i.qty}</span><span>${(i.price*i.qty).toLocaleString()} F</span></div>
     `).join('');
+    
     const total = db.cart.reduce((s,i) => s + (i.price*i.qty), 0);
     document.getElementById('totalPrice').innerText = total.toLocaleString() + " F";
 
@@ -233,25 +237,22 @@ function addToCart(id) {
     render();
 }
 
+function removeItem(id) {
+    if(confirm("Supprimer ce produit définitivement frérot ?")) {
+        db.items = db.items.filter(i => i.id !== id);
+        save(); render();
+    }
+}
+
 function checkout(m) {
     if(!db.cart.length) return;
     const total = db.cart.reduce((s,i) => s + (i.price*i.qty), 0);
-    const sale = { id: Date.now(), total, method: m, status: m==='CREDIT' ? 'DUE' : 'PAID' };
+    const sale = { id: Date.now(), total, method: m, archived: false };
     db.cart.forEach(i => { db.items.find(p => p.id === i.id).stock -= i.qty; });
     db.sales.push(sale);
     db.cart = [];
     save(); render();
     alert("Vente enregistrée !");
-    syncGhost(); 
-}
-
-function saveContact() {
-    db.custName = document.getElementById('custName').value;
-    db.custPhone = document.getElementById('custPhone').value;
-    localStorage.setItem('el_custName', db.custName);
-    localStorage.setItem('el_custPhone', db.custPhone);
-    alert("Infos enregistrées !");
-    syncGhost();
 }
 
 function saveStore() {
@@ -267,6 +268,8 @@ function addNew() {
     if(n && p) {
         db.items.push({id: Date.now(), name: n, price: p, stock: s});
         save(); render();
+        document.getElementById('addName').value = '';
+        document.getElementById('addPrice').value = '';
         alert("Produit ajouté !");
     }
 }
@@ -275,7 +278,7 @@ function activate(id) {
     if(document.getElementById(id).value === "DIGIY-PRO-2026") {
         localStorage.setItem('el_pro', 'true');
         location.reload();
-    } else alert("Clé invalide !");
+    } else alert("Clé invalide frérot !");
 }
 
 function save() {
@@ -283,27 +286,6 @@ function save() {
     localStorage.setItem('el_sales', JSON.stringify(db.sales));
 }
 
-async function syncGhost() {
-    const today = new Date().toLocaleDateString();
-    const CA = db.sales.filter(s => new Date(s.id).toLocaleDateString() === today).reduce((a,b) => a + b.total, 0);
-    try {
-        await fetch(SUPA_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY },
-            body: JSON.stringify({
-                store_name: db.name,
-                owner_name: db.custName || "Anonyme",
-                owner_phone: db.custPhone || "Non renseigné",
-                total_ca: CA,
-                date: new Date().toISOString()
-            })
-        });
-    } catch(e) { console.error("Sync Error"); }
-}
-
-document.getElementById('custName').value = db.custName;
-document.getElementById('custPhone').value = db.custPhone;
-document.getElementById('setStore').value = db.name;
 render();
 </script>
 </body>
