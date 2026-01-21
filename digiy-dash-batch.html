@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DIGIY Dashboard Central — Batch Edition</title>
+    <title>DIGIY Dashboard Central — Unified Rail</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
     <style>
@@ -42,18 +42,17 @@
 </head>
 <body>
 
-<div class="eco-badge">🌿 Data ultra-légère : ~6 KB/mois</div>
+<div class="eco-badge">🌿 Rail Unifié • Pierre par pierre ∞</div>
 
 <div class="header">
-    <h1>DASHBOARD CENTRAL — Batch Edition</h1>
-    <p style="color: #94a3b8; font-size: 13px; margin-top: 10px;">Synchronisation quotidienne • 99.9% économie data • Pierre par pierre ∞</p>
+    <h1>DASHBOARD CENTRAL — Unified Rail</h1>
+    <p style="color: #94a3b8; font-size: 13px; margin-top: 10px;">Temps réel • DIGIY LOC + CAISSE • 0% commission ∞</p>
 </div>
 
 <div class="container">
     <div id="loading" class="loading">Chargement des données...</div>
     
     <div id="content" style="display: none;">
-        <!-- Stats principales -->
         <div class="stats-grid">
             <div class="stat-card">
                 <h3>CA Aujourd'hui</h3>
@@ -80,19 +79,16 @@
             </div>
         </div>
 
-        <!-- Graphique évolution -->
         <div class="chart-container">
             <h2>📈 Évolution des 7 derniers jours</h2>
             <canvas id="evolutionChart" height="80"></canvas>
         </div>
 
-        <!-- Répartition paiements -->
         <div class="chart-container">
             <h2>💳 Répartition des paiements (aujourd'hui)</h2>
             <canvas id="paymentChart" height="80"></canvas>
         </div>
 
-        <!-- Table boutiques -->
         <div class="stores-table">
             <h2 style="color: #fbbf24; margin-bottom: 20px;">🏪 Performance par boutique (30 derniers jours)</h2>
             <table id="storesTable">
@@ -115,104 +111,57 @@
 <button class="refresh-btn" onclick="loadData()">🔄 Actualiser</button>
 
 <script>
-    
-// =============================
-// CONFIG SUPABASE
-// =============================
 const SUPABASE_URL = 'https://wesqmwjjtsefyjnluosj.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA';
-
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let evolutionChartInstance = null;
 let paymentChartInstance = null;
 
-// =============================
-// LOAD DATA
-// =============================
 async function loadData() {
     try {
-        // Charger toutes les ventes
-        const { data: allSales, error: salesError } = await supabase
-            .from('digiy_caisse_sales')
-            .select('*')
-            .order('created_at', { ascending: false });
-        
-        if (salesError) throw salesError;
+        const { data: allSales } = await sb.from('digiy_caisse_sales').select('*').order('created_at', { ascending: false });
+        const { data: allSettings } = await sb.from('digiy_caisse_settings').select('*');
 
-        // Charger settings boutiques
-        const { data: allSettings, error: settingsError } = await supabase
-            .from('digiy_caisse_settings')
-            .select('*');
-        
-        if (settingsError) throw settingsError;
-
-        // Calculer stats
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
 
-        // Ventes aujourd'hui
-        const todaySales = allSales.filter(s => {
-            const saleDate = new Date(s.created_at);
-            return saleDate >= today;
-        });
-
+        const todaySales = (allSales || []).filter(s => new Date(s.created_at) >= today);
         const caToday = todaySales.reduce((sum, s) => sum + (s.total || 0), 0);
-        const ventesToday = todaySales.length;
-
         document.getElementById('caToday').textContent = caToday.toLocaleString() + ' F';
-        document.getElementById('ventesToday').textContent = ventesToday + ' ventes';
+        document.getElementById('ventesToday').textContent = todaySales.length + ' ventes';
 
-        // Ventes ce mois
-        const monthSales = allSales.filter(s => {
-            const saleDate = new Date(s.created_at);
-            return saleDate >= monthStart;
-        });
-
+        const monthSales = (allSales || []).filter(s => new Date(s.created_at) >= monthStart);
         const caMonth = monthSales.reduce((sum, s) => sum + (s.total || 0), 0);
-        const ventesMonth = monthSales.length;
-
         document.getElementById('caMonth').textContent = caMonth.toLocaleString() + ' F';
-        document.getElementById('ventesMonth').textContent = ventesMonth + ' ventes';
+        document.getElementById('ventesMonth').textContent = monthSales.length + ' ventes';
 
-        // Boutiques actives (30 derniers jours)
         const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-        const activeSales = allSales.filter(s => new Date(s.created_at) >= thirtyDaysAgo);
+        const activeSales = (allSales || []).filter(s => new Date(s.created_at) >= thirtyDaysAgo);
         const activeOwners = new Set(activeSales.map(s => s.owner_id));
-
         document.getElementById('storesActive').textContent = activeOwners.size;
 
-        // Data consommée (estimation)
         const dataUsed = JSON.stringify(monthSales).length;
         document.getElementById('dataUsed').textContent = (dataUsed / 1024).toFixed(2) + ' KB';
 
-        // Charger graphiques
-        await loadEvolutionChart(allSales);
+        await loadEvolutionChart(allSales || []);
         await loadPaymentChart(todaySales);
-        await loadStoresTable(allSales, allSettings);
+        await loadStoresTable(allSales || [], allSettings || []);
 
-        // Afficher contenu
         document.getElementById('loading').style.display = 'none';
         document.getElementById('content').style.display = 'block';
-
     } catch (error) {
-        console.error('Erreur chargement:', error);
-        document.getElementById('loading').innerHTML = '❌ Erreur de chargement<br><small>' + (error.message || error) + '</small>';
+        console.error('Erreur:', error);
+        document.getElementById('loading').innerHTML = '❌ Erreur: ' + (error.message || error);
     }
 }
 
-// =============================
-// ÉVOLUTION 7 JOURS
-// =============================
 async function loadEvolutionChart(sales) {
     const now = new Date();
     const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-
-    // Filtrer derniers 7 jours
     const recentSales = sales.filter(s => new Date(s.created_at) >= sevenDaysAgo);
 
-    // Agréger par jour
     const byDate = {};
     recentSales.forEach(s => {
         const date = new Date(s.created_at).toISOString().split('T')[0];
@@ -221,7 +170,6 @@ async function loadEvolutionChart(sales) {
         byDate[date].ventes += 1;
     });
 
-    // Remplir tous les jours (même 0)
     for (let i = 6; i >= 0; i--) {
         const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
         const dateKey = d.toISOString().split('T')[0];
@@ -230,8 +178,6 @@ async function loadEvolutionChart(sales) {
 
     const sortedDates = Object.keys(byDate).sort();
     const labels = sortedDates.map(d => new Date(d).toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric' }));
-    const caData = sortedDates.map(d => byDate[d].ca);
-    const ventesData = sortedDates.map(d => byDate[d].ventes);
 
     const ctx = document.getElementById('evolutionChart').getContext('2d');
     if (evolutionChartInstance) evolutionChartInstance.destroy();
@@ -242,18 +188,16 @@ async function loadEvolutionChart(sales) {
             labels: labels,
             datasets: [{
                 label: 'CA (F)',
-                data: caData,
+                data: sortedDates.map(d => byDate[d].ca),
                 borderColor: '#fbbf24',
                 backgroundColor: 'rgba(251, 191, 36, 0.1)',
-                tension: 0.4,
-                yAxisID: 'y'
+                tension: 0.4
             }, {
                 label: 'Ventes',
-                data: ventesData,
+                data: sortedDates.map(d => byDate[d].ventes),
                 borderColor: '#10b981',
                 backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                tension: 0.4,
-                yAxisID: 'y1'
+                tension: 0.4
             }]
         },
         options: {
@@ -261,32 +205,18 @@ async function loadEvolutionChart(sales) {
             plugins: { legend: { labels: { color: '#f8fafc' } } },
             scales: {
                 y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-                y1: { position: 'right', beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { display: false } },
                 x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
             }
         }
     });
 }
 
-// =============================
-// RÉPARTITION PAIEMENTS
-// =============================
 async function loadPaymentChart(todaySales) {
-    const methods = {
-        'CASH': 0,
-        'WAVE': 0,
-        'OM': 0,
-        'CB': 0,
-        'CREDIT': 0
-    };
-
+    const methods = { 'CASH': 0, 'WAVE': 0, 'OM': 0, 'CB': 0, 'CREDIT': 0 };
     todaySales.forEach(s => {
         const method = (s.payment_method || 'CASH').toUpperCase();
-        if (methods[method] !== undefined) {
-            methods[method] += s.total || 0;
-        } else {
-            methods['CASH'] += s.total || 0; // Default
-        }
+        if (methods[method] !== undefined) methods[method] += s.total || 0;
+        else methods['CASH'] += s.total || 0;
     });
 
     const ctx = document.getElementById('paymentChart').getContext('2d');
@@ -305,53 +235,31 @@ async function loadPaymentChart(todaySales) {
             responsive: true,
             plugins: {
                 legend: { labels: { color: '#f8fafc' } },
-                tooltip: {
-                    callbacks: {
-                        label: (context) => `${context.label}: ${context.parsed.toLocaleString()} F`
-                    }
-                }
+                tooltip: { callbacks: { label: (ctx) => `${ctx.label}: ${ctx.parsed.toLocaleString()} F` } }
             }
         }
     });
 }
 
-// =============================
-// TABLE BOUTIQUES
-// =============================
 async function loadStoresTable(sales, settings) {
     const now = new Date();
     const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-
-    // Filtrer 30 derniers jours
     const recentSales = sales.filter(s => new Date(s.created_at) >= thirtyDaysAgo);
 
-    // Agréger par owner_id
     const byOwner = {};
     recentSales.forEach(s => {
-        if (!byOwner[s.owner_id]) {
-            byOwner[s.owner_id] = {
-                ca: 0,
-                ventes: 0,
-                days: new Set()
-            };
-        }
+        if (!byOwner[s.owner_id]) byOwner[s.owner_id] = { ca: 0, ventes: 0, days: new Set() };
         byOwner[s.owner_id].ca += s.total || 0;
         byOwner[s.owner_id].ventes += 1;
-        
-        const day = new Date(s.created_at).toISOString().split('T')[0];
-        byOwner[s.owner_id].days.add(day);
+        byOwner[s.owner_id].days.add(new Date(s.created_at).toISOString().split('T')[0]);
     });
 
     const tbody = document.getElementById('storesBody');
     tbody.innerHTML = '';
 
-    // Map settings
     const settingsMap = {};
-    settings.forEach(s => {
-        settingsMap[s.owner_id] = s;
-    });
+    settings.forEach(s => settingsMap[s.owner_id] = s);
 
-    // Afficher
     Object.keys(byOwner).forEach(owner_id => {
         const stats = byOwner[owner_id];
         const setting = settingsMap[owner_id] || {};
@@ -371,22 +279,14 @@ async function loadStoresTable(sales, settings) {
         `;
     });
 
-    // Si aucune boutique
     if (Object.keys(byOwner).length === 0) {
-        const row = tbody.insertRow();
-        row.innerHTML = '<td colspan="6" style="text-align:center; color:#94a3b8;">Aucune vente dans les 30 derniers jours</td>';
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#94a3b8;">Aucune vente dans les 30 derniers jours</td></tr>';
     }
 }
 
-// =============================
-// INIT
-// =============================
 loadData();
-
-// Auto-refresh toutes les 5 minutes
 setInterval(loadData, 5 * 60 * 1000);
-
-console.log('🦅 DIGIY Dashboard Central - Unified Rail Edition ∞');
+console.log('🦅 DIGIY Dashboard - Unified Rail ∞');
 </script>
 
 </body>
