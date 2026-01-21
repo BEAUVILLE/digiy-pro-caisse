@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DIGIY CAISSE PRO — Paramètres 🦅</title>
+  
+  <!-- Supabase + Guard -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./guard.js"></script>
+  
+  <style>
+    :root {
+      --gold: #fbbf24; --gold-dark: #d97706;
+      --bg: #0f172a; --card: #1e293b;
+      --text: #f8fafc; --muted: #94a3b8;
+      --green: #10b981; --red: #ef4444;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, var(--bg), #020617);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .header {
+      background: var(--card);
+      border: 1px solid rgba(251, 191, 36, 0.2);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    
+    h1 {
+      font-size: 24px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 20px;
+    }
+    
+    .card h2 {
+      color: var(--gold);
+      font-size: 18px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    
+    label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    input, textarea, select {
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+    }
+    
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+    }
+    
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    
+    .btn {
+      padding: 14px 30px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #000;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(251, 191, 36, 0.3);
+    }
+    
+    .btn-secondary {
+      background: rgba(148, 163, 184, 0.1);
+      color: var(--text);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+    
+    .actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: var(--muted);
+    }
+    
+    .success {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--green);
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    
+    .success.show {
+      display: block;
+    }
+    
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .checkbox-group input[type="checkbox"] {
+      width: auto;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h1>⚙️ Paramètres Boutique</h1>
+      <p style="color: var(--muted); font-size: 13px; margin-top: 5px;">Configuration complète de votre commerce</p>
+    </div>
+    <button class="btn btn-secondary" onclick="goBack()">← Retour Caisse</button>
+  </div>
+  
+  <div id="loadingMsg" class="loading">⏳ Chargement des paramètres...</div>
+  
+  <div id="successMsg" class="success">✅ Paramètres enregistrés avec succès !</div>
+  
+  <form id="formSettings" style="display: none;" onsubmit="saveSettings(event)">
+    
+    <!-- INFOS GÉNÉRALES -->
+    <div class="card">
+      <h2>🏪 Informations Générales</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Nom de la boutique *</label>
+          <input type="text" id="storeName" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Téléphone *</label>
+          <input type="tel" id="phone" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="email">
+        </div>
+        
+        <div class="form-group">
+          <label>Site web</label>
+          <input type="url" id="website" placeholder="https://...">
+        </div>
+      </div>
+      
+      <div class="form-group" style="margin-top: 15px;">
+        <label>Adresse complète</label>
+        <textarea id="address" placeholder="Rue, Ville, Pays"></textarea>
+      </div>
+    </div>
+    
+    <!-- INFOS LÉGALES -->
+    <div class="card">
+      <h2>📄 Informations Légales</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>SIRET / N° Entreprise</label>
+          <input type="text" id="siret">
+        </div>
+        
+        <div class="form-group">
+          <label>Registre de Commerce</label>
+          <input type="text" id="rc">
+        </div>
+        
+        <div class="form-group">
+          <label>Capital Social</label>
+          <input type="text" id="capital" placeholder="Ex: 1000000 FCFA">
+        </div>
+        
+        <div class="form-group">
+          <label>IBAN (optionnel)</label>
+          <input type="text" id="iban">
+        </div>
+      </div>
+    </div>
+    
+    <!-- TVA -->
+    <div class="card">
+      <h2>💰 Taxe sur la Valeur Ajoutée (TVA)</h2>
+      
+      <div class="checkbox-group" style="margin-bottom: 15px;">
+        <input type="checkbox" id="tvaAssujeti" onchange="toggleTVA()">
+        <label for="tvaAssujeti" style="text-transform: none; cursor: pointer;">Je suis assujetti à la TVA</label>
+      </div>
+      
+      <div class="form-group" id="tvaTauxGroup" style="display: none;">
+        <label>Taux de TVA (%)</label>
+        <input type="number" id="tvaTaux" step="0.01" min="0" max="100" placeholder="Ex: 18">
+      </div>
+    </div>
+    
+    <!-- PERSONNALISATION -->
+    <div class="card">
+      <h2>🎨 Personnalisation</h2>
+      <div class="form-group">
+        <label>URL du logo (pour les tickets)</label>
+        <input type="url" id="logoUrl" placeholder="https://...">
+      </div>
+      
+      <div class="form-group" style="margin-top: 15px;">
+        <label>Mentions légales (bas de ticket)</label>
+        <textarea id="mentionsLegales" placeholder="Ex: TVA non applicable, art. 293 B du CGI"></textarea>
+      </div>
+    </div>
+    
+    <!-- ACTIONS -->
+    <div class="actions">
+      <button type="button" class="btn btn-secondary" onclick="goBack()">Annuler</button>
+      <button type="submit" class="btn btn-primary">💾 Enregistrer les paramètres</button>
+    </div>
+    
+  </form>
+</div>
+
+<script>
+// =============================
+// INIT + GUARD
+// =============================
+let State = {
+  owner_id: null,
+  slug: null,
+  settings: null
+};
+
+function getSB() {
+  return window.DIGIY_GUARD?.getSb?.() || null;
+}
+
+(async function init() {
+  if (!window.DIGIY_GUARD || typeof window.DIGIY_GUARD.boot !== "function") {
+    alert("Guard non chargé");
+    return;
+  }
+
+  const guardRes = await window.DIGIY_GUARD.boot({ login: "./pin.html" });
+  if (!guardRes?.ok) return;
+
+  const sess = window.DIGIY_GUARD.getSession?.() || null;
+  State.owner_id = sess?.owner_id || null;
+  State.slug = sess?.slug || "";
+
+  if (!State.owner_id) {
+    window.location.replace("./pin.html");
+    return;
+  }
+
+  await loadSettings();
+})();
+
+// =============================
+// LOAD SETTINGS
+// =============================
+async function loadSettings() {
+  const sb = getSB();
+  if (!sb || !State.owner_id) return;
+
+  try {
+    const { data, error } = await sb
+      .from('digiy_caisse_settings')
+      .select('*')
+      .eq('owner_id', State.owner_id)
+      .maybeSingle();
+
+    if (error) throw error;
+
+    State.settings = data || {};
+
+    // Remplir le formulaire
+    document.getElementById('storeName').value = State.settings.store_name || '';
+    document.getElementById('phone').value = State.settings.phone || '';
+    document.getElementById('email').value = State.settings.email || '';
+    document.getElementById('website').value = State.settings.website || '';
+    document.getElementById('address').value = State.settings.address || '';
+    document.getElementById('siret').value = State.settings.siret || '';
+    document.getElementById('rc').value = State.settings.rc || '';
+    document.getElementById('capital').value = State.settings.capital || '';
+    document.getElementById('iban').value = State.settings.iban || '';
+    document.getElementById('tvaAssujeti').checked = State.settings.tva_assujeti || false;
+    document.getElementById('tvaTaux').value = State.settings.tva_taux || '';
+    document.getElementById('logoUrl').value = State.settings.logo_url || '';
+    document.getElementById('mentionsLegales').value = State.settings.mentions_legales || '';
+
+    toggleTVA();
+
+    document.getElementById('loadingMsg').style.display = 'none';
+    document.getElementById('formSettings').style.display = 'block';
+
+  } catch (e) {
+    console.error(e);
+    alert("❌ Erreur chargement: " + (e?.message || e));
+  }
+}
+
+// =============================
+// SAVE SETTINGS
+// =============================
+async function saveSettings(e) {
+  e.preventDefault();
+
+  const sb = getSB();
+  if (!sb || !State.owner_id) return;
+
+  const data = {
+    owner_id: State.owner_id,
+    store_name: document.getElementById('storeName').value.trim(),
+    phone: document.getElementById('phone').value.trim(),
+    email: document.getElementById('email').value.trim() || null,
+    website: document.getElementById('website').value.trim() || null,
+    address: document.getElementById('address').value.trim() || null,
+    siret: document.getElementById('siret').value.trim() || null,
+    rc: document.getElementById('rc').value.trim() || null,
+    capital: document.getElementById('capital').value.trim() || null,
+    iban: document.getElementById('iban').value.trim() || null,
+    tva_assujeti: document.getElementById('tvaAssujeti').checked,
+    tva_taux: parseFloat(document.getElementById('tvaTaux').value) || 0,
+    logo_url: document.getElementById('logoUrl').value.trim() || null,
+    mentions_legales: document.getElementById('mentionsLegales').value.trim() || null
+  };
+
+  try {
+    const { error } = await sb
+      .from('digiy_caisse_settings')
+      .upsert(data, { onConflict: 'owner_id' });
+
+    if (error) throw error;
+
+    document.getElementById('successMsg').classList.add('show');
+    setTimeout(() => {
+      document.getElementById('successMsg').classList.remove('show');
+    }, 3000);
+
+  } catch (e) {
+    console.error(e);
+    alert("❌ Erreur sauvegarde: " + (e?.message || e));
+  }
+}
+
+// =============================
+// TOGGLE TVA
+// =============================
+function toggleTVA() {
+  const checked = document.getElementById('tvaAssujeti').checked;
+  document.getElementById('tvaTauxGroup').style.display = checked ? 'block' : 'none';
+}
+
+// =============================
+// GO BACK
+// =============================
+function goBack() {
+  const url = new URL('./index.html', location.href);
+  if (State.slug) url.searchParams.set('slug', State.slug);
+  window.location.href = url.toString();
+}
+</script>
+
+</body>
+</html>
