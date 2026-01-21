@@ -161,40 +161,149 @@
     </div>
 </div>
 
-<script>
+// =============================
+// GUARD + SUPABASE INIT
+// =============================
 const TRIAL_LIMIT = 15;
-let db = {
-    pro: localStorage.getItem('el_pro') === 'true',
-    start: localStorage.getItem('el_start') || Date.now(),
-    name: localStorage.getItem('el_name') || "MA BOUTIQUE NOBLE",
-    items: JSON.parse(localStorage.getItem('el_items')) || [{id: 1, name: "Exemple Article", price: 500, stock: 10}],
-    sales: JSON.parse(localStorage.getItem('el_sales')) || [],
-    cart: []
+
+let State = {
+    owner_id: null,
+    slug: null,
+    phone: null,
+    title: null,
+    pro: false,
+    storeName: "MA BOUTIQUE NOBLE",
+    items: [],
+    sales: [],
+    cart: [],
+    settings: null
 };
 
-if(!localStorage.getItem('el_start')) localStorage.setItem('el_start', db.start);
+function getSB() {
+    return window.DIGIY_GUARD?.getSb?.() || null;
+}
 
+// =============================
+// INIT + PROTECTION
+// =============================
+(async function init() {
+    if (!window.DIGIY_GUARD || typeof window.DIGIY_GUARD.boot !== "function") {
+        console.warn("Guard absent (guard.js non chargé).");
+        return;
+    }
+
+    // 🔒 Protège la page
+    const guardRes = await window.DIGIY_GUARD.boot({
+        login: "./pin.html"
+    });
+
+    if (!guardRes?.ok) return;
+
+    const sess = window.DIGIY_GUARD.getSession?.() || null;
+    State.owner_id = sess?.owner_id || null;
+    State.phone = sess?.phone || "";
+    State.slug = sess?.slug || "";
+    State.title = sess?.title || "";
+
+    if (!State.owner_id) {
+        console.warn("owner_id introuvable, retour PIN.");
+        window.location.replace("./pin.html");
+        return;
+    }
+
+    console.log("✅ Session OK, owner_id:", State.owner_id);
+
+    // Charger les données
+    await loadData();
+    render();
+})();
+
+// =============================
+// LOAD DATA FROM SUPABASE
+// =============================
+async function loadData() {
+    const sb = getSB();
+    if (!sb || !State.owner_id) return;
+
+    try {
+        // Charger settings
+        const { data: settings } = await sb
+            .from('digiy_caisse_settings')
+            .select('*')
+            .eq('owner_id', State.owner_id)
+            .maybeSingle();
+
+        if (settings) {
+            State.settings = settings;
+            State.storeName = settings.store_name || "MA BOUTIQUE NOBLE";
+            State.pro = settings.is_pro || false;
+        } else {
+            // Créer settings par défaut
+            await sb.from('digiy_caisse_settings').insert({
+                owner_id: State.owner_id,
+                store_name: State.title || "MA BOUTIQUE NOBLE",
+                phone: State.phone
+            });
+            State.storeName = State.title || "MA BOUTIQUE NOBLE";
+        }
+
+        // Charger produits
+        const { data: products } = await sb
+            .from('digiy_caisse_products')
+            .select('*')
+            .eq('owner_id', State.owner_id)
+            .eq('is_active', true)
+            .order('created_at', { ascending: false });
+
+        State.items = products || [];
+
+        // Charger ventes
+        const { data: sales } = await sb
+            .from('digiy_caisse_sales')
+            .select('*')
+            .eq('owner_id', State.owner_id)
+            .order('created_at', { ascending: false })
+            .limit(100);
+
+        State.sales = sales || [];
+
+    } catch (e) {
+        console.error("Erreur chargement:", e);
+    }
+}
+
+// =============================
+// NAVIGATION
+// =============================
 function tab(id, btn) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-    document.getElementById(id+'Page').classList.add('active');
+    document.getElementById(id + 'Page').classList.add('active');
     btn.classList.add('active');
     render();
 }
 
+// =============================
+// RENDER
+// =============================
 function render() {
-    const diff = Date.now() - parseInt(db.start);
+    // Trial badge
+    const diff = Date.now() - new Date(State.settings?.trial_start || Date.now()).getTime();
     const passed = Math.floor(diff / (1000 * 60 * 60 * 24));
     const left = Math.max(0, TRIAL_LIMIT - passed);
-    if(!db.pro && left <= 0) document.getElementById('lockScreen').style.display = 'flex';
-    
-    document.getElementById('storeDisp').innerText = db.name;
-    document.getElementById('trialBadge').innerHTML = db.pro ? 
-        '<span style="color:var(--gold); font-size:10px;">LICENCE ACTIVE</span>' : 
+
+    if (!State.pro && left <= 0) {
+        document.getElementById('lockScreen').style.display = 'flex';
+    }
+
+    document.getElementById('storeDisp').innerText = State.storeName;
+    document.getElementById('trialBadge').innerHTML = State.pro ?
+        '<span style="color:var(--gold); font-size:10px;">LICENCE ACTIVE</span>' :
         `<span style="background:var(--gold); color:#000; padding:2px 8px; border-radius:10px; font-size:9px; font-weight:bold;">TRIAL: ${left} JOURS</span>`;
 
-    document.getElementById('productsGrid').innerHTML = db.items.map(p => `
-        <div class="noble-card" onclick="addToCart(${p.id})">
+    // Produits
+    document.getElementById('productsGrid').innerHTML = State.items.map(p => `
+        <div class="noble-card" onclick="addToCart('${p.id}')">
             <i class="fas fa-tag"></i>
             <span style="display:block; font-weight:700;">${p.name}</span>
             <span style="color:var(--gold); font-weight:800;">${p.price.toLocaleString()} F</span>
@@ -202,77 +311,180 @@ function render() {
         </div>
     `).join('');
 
-    document.getElementById('inventoryManager').innerHTML = db.items.map(p => `
+    // Inventory
+    document.getElementById('inventoryManager').innerHTML = State.items.map(p => `
         <div class="inventory-item">
             <span>${p.name}</span>
-            <button onclick="removeItem(${p.id})" style="background:none; border:none; color:var(--red); cursor:pointer;"><i class="fas fa-trash"></i></button>
+            <button onclick="removeItem('${p.id}')" style="background:none; border:none; color:#ef4444; cursor:pointer;"><i class="fas fa-trash"></i></button>
         </div>
     `).join('');
 
-    document.getElementById('cartListing').innerHTML = db.cart.map(i => `
-        <div class="cart-row"><span>${i.name} x${i.qty}</span><span>${(i.price*i.qty).toLocaleString()} F</span></div>
+    // Panier
+    document.getElementById('cartListing').innerHTML = State.cart.map(i => `
+        <div class="cart-row"><span>${i.name} x${i.qty}</span><span>${(i.price * i.qty).toLocaleString()} F</span></div>
     `).join('');
-    
-    const total = db.cart.reduce((s,i) => s + (i.price*i.qty), 0);
+
+    const total = State.cart.reduce((s, i) => s + (i.price * i.qty), 0);
     document.getElementById('totalPrice').innerText = total.toLocaleString() + " F";
 
+    // Stats du jour
     const today = new Date().toLocaleDateString();
-    const rev = db.sales.filter(s => new Date(s.id).toLocaleDateString() === today).reduce((a,b) => a+b.total, 0);
+    const rev = State.sales
+        .filter(s => new Date(s.created_at).toLocaleDateString() === today)
+        .reduce((a, b) => a + b.total, 0);
     document.getElementById('revDay').innerText = rev.toLocaleString() + " F";
 }
 
+// =============================
+// PANIER
+// =============================
 function addToCart(id) {
-    const p = db.items.find(x => x.id === id);
-    if(p.stock <= 0) return alert("Plus de stock !");
-    const inCart = db.cart.find(x => x.id === id);
-    if(inCart) inCart.qty++; else db.cart.push({...p, qty:1});
+    const p = State.items.find(x => String(x.id) === String(id));
+    if (!p) return;
+    if (p.stock <= 0) return alert("Plus de stock !");
+
+    const inCart = State.cart.find(x => String(x.id) === String(id));
+    if (inCart) {
+        inCart.qty++;
+    } else {
+        State.cart.push({ ...p, qty: 1 });
+    }
     render();
 }
 
-function removeItem(id) {
-    if(confirm("Supprimer l'article ?")) {
-        db.items = db.items.filter(i => i.id !== id);
-        save(); render();
+// =============================
+// CHECKOUT
+// =============================
+async function checkout(method) {
+    if (!State.cart.length) return;
+
+    const sb = getSB();
+    if (!sb) return alert("Supabase non disponible");
+
+    const total = State.cart.reduce((s, i) => s + (i.price * i.qty), 0);
+
+    try {
+        // Enregistrer la vente
+        const { error: saleError } = await sb.from('digiy_caisse_sales').insert({
+            owner_id: State.owner_id,
+            total: total,
+            payment_method: method,
+            items: State.cart.map(i => ({
+                id: i.id,
+                name: i.name,
+                price: i.price,
+                qty: i.qty
+            }))
+        });
+
+        if (saleError) throw saleError;
+
+        // Décrémenter le stock
+        for (const item of State.cart) {
+            const newStock = item.stock - item.qty;
+            await sb.from('digiy_caisse_products')
+                .update({ stock: newStock })
+                .eq('id', item.id)
+                .eq('owner_id', State.owner_id);
+        }
+
+        State.cart = [];
+        await loadData();
+        render();
+        alert("✅ Vente validée !");
+
+    } catch (e) {
+        console.error(e);
+        alert("❌ Erreur: " + (e?.message || e));
     }
 }
 
-function checkout(m) {
-    if(!db.cart.length) return;
-    const total = db.cart.reduce((s,i) => s + (i.price*i.qty), 0);
-    db.sales.push({ id: Date.now(), total, method: m });
-    db.cart.forEach(i => { db.items.find(p => p.id === i.id).stock -= i.qty; });
-    db.cart = [];
-    save(); render();
-    alert("Vente validée !");
-}
+// =============================
+// AJOUTER PRODUIT
+// =============================
+async function addNew() {
+    const sb = getSB();
+    if (!sb) return alert("Supabase non disponible");
 
-function addNew() {
-    const n = document.getElementById('addName').value;
-    const p = parseInt(document.getElementById('addPrice').value);
-    const s = parseInt(document.getElementById('addStock').value);
-    if(n && p) {
-        db.items.push({id: Date.now(), name: n, price: p, stock: s});
-        save(); render();
+    const name = document.getElementById('addName').value.trim();
+    const price = parseInt(document.getElementById('addPrice').value);
+    const stock = parseInt(document.getElementById('addStock').value) || 0;
+
+    if (!name || !price) return alert("Nom et prix requis");
+
+    try {
+        const { error } = await sb.from('digiy_caisse_products').insert({
+            owner_id: State.owner_id,
+            name: name,
+            price: price,
+            stock: stock
+        });
+
+        if (error) throw error;
+
         document.getElementById('addName').value = '';
+        document.getElementById('addPrice').value = '';
+        document.getElementById('addStock').value = '';
+
+        await loadData();
+        render();
+        alert("✅ Produit ajouté !");
+
+    } catch (e) {
+        console.error(e);
+        alert("❌ Erreur: " + (e?.message || e));
     }
 }
 
-function activate(id) {
-    const key = document.getElementById(id).value;
-    // Ici Supabase peut valider la clé via une API si tu veux, 
-    // ou tu peux utiliser une clé universelle pour commencer.
-    if(key === "DIGIY-PRO-2026") {
-        localStorage.setItem('el_pro', 'true');
-        location.reload();
-    } else alert("Clé invalide !");
+// =============================
+// SUPPRIMER PRODUIT
+// =============================
+async function removeItem(id) {
+    if (!confirm("Supprimer l'article ?")) return;
+
+    const sb = getSB();
+    if (!sb) return;
+
+    try {
+        const { error } = await sb.from('digiy_caisse_products')
+            .update({ is_active: false })
+            .eq('id', id)
+            .eq('owner_id', State.owner_id);
+
+        if (error) throw error;
+
+        await loadData();
+        render();
+
+    } catch (e) {
+        console.error(e);
+        alert("❌ Erreur: " + (e?.message || e));
+    }
 }
 
-function save() {
-    localStorage.setItem('el_items', JSON.stringify(db.items));
-    localStorage.setItem('el_sales', JSON.stringify(db.sales));
-}
+// =============================
+// ACTIVATION PRO
+// =============================
+async function activate(inputId) {
+    const key = document.getElementById(inputId).value;
 
-render();
+    if (key === "DIGIY-PRO-2026") {
+        const sb = getSB();
+        if (!sb) return alert("Supabase non disponible");
+
+        try {
+            await sb.from('digiy_caisse_settings')
+                .update({ is_pro: true, pro_key: key })
+                .eq('owner_id', State.owner_id);
+
+            location.reload();
+        } catch (e) {
+            alert("❌ Erreur: " + e.message);
+        }
+    } else {
+        alert("Clé invalide !");
+    }
+}
 </script>
 </body>
 </html>
