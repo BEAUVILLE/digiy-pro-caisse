@@ -359,7 +359,7 @@ function addToCart(id) {
 }
 
 // =============================
-// CHECKOUT
+// CHECKOUT + IMPRESSION
 // =============================
 async function checkout(method) {
     if (!State.cart.length) return;
@@ -394,17 +394,163 @@ async function checkout(method) {
                 .eq('owner_id', State.owner_id);
         }
 
+        // ✅ GÉNÉRER ET AFFICHER LE TICKET
+        await printTicket(State.cart, total, method);
+
         State.cart = [];
         await loadData();
         render();
-        alert("✅ Vente validée !");
 
     } catch (e) {
         console.error(e);
         alert("❌ Erreur: " + (e?.message || e));
     }
 }
+// =============================
+// GÉNÉRATION TICKET
+// =============================
+async function printTicket(cart, total, method) {
+    // Charger settings pour TVA et infos
+    const sb = getSB();
+    const { data: settings } = await sb
+        .from('digiy_caisse_settings')
+        .select('*')
+        .eq('owner_id', State.owner_id)
+        .maybeSingle();
 
+    const s = settings || {};
+    
+    // Calcul TVA
+    let totalHT = total;
+    let totalTVA = 0;
+    let totalTTC = total;
+    
+    if (s.tva_assujeti && s.tva_taux > 0) {
+        totalHT = total / (1 + s.tva_taux / 100);
+        totalTVA = total - totalHT;
+        totalTTC = total;
+    }
+
+    // Générer HTML du ticket
+    const ticketHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Ticket de caisse</title>
+    <style>
+        @page { 
+            size: 80mm auto; 
+            margin: 0; 
+        }
+        body {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            margin: 0;
+            padding: 10mm;
+            width: 80mm;
+        }
+        .center { text-align: center; }
+        .bold { font-weight: bold; }
+        .line { border-bottom: 1px dashed #000; margin: 5px 0; }
+        .row { display: flex; justify-content: space-between; margin: 3px 0; }
+        .logo { max-width: 60mm; margin: 0 auto 10px; display: block; }
+        .total { font-size: 16px; font-weight: bold; margin-top: 10px; }
+        .footer { margin-top: 15px; font-size: 10px; text-align: center; }
+    </style>
+</head>
+<body>
+    ${s.logo_url ? `<img src="${s.logo_url}" class="logo" alt="Logo">` : ''}
+    
+    <div class="center bold" style="font-size: 14px;">
+        ${s.store_name || 'MA BOUTIQUE'}
+    </div>
+    
+    ${s.address ? `<div class="center" style="font-size: 10px;">${s.address}</div>` : ''}
+    ${s.phone ? `<div class="center" style="font-size: 10px;">Tél: ${s.phone}</div>` : ''}
+    ${s.siret ? `<div class="center" style="font-size: 10px;">SIRET: ${s.siret}</div>` : ''}
+    
+    <div class="line"></div>
+    
+    <div class="center">
+        ${new Date().toLocaleDateString('fr-FR', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        })}
+        <br>
+        ${new Date().toLocaleTimeString('fr-FR')}
+    </div>
+    
+    <div class="line"></div>
+    
+    ${cart.map(item => `
+        <div class="row">
+            <span>${item.name}</span>
+            <span>${item.price.toLocaleString()} F</span>
+        </div>
+        <div style="font-size: 10px; margin-left: 10px;">
+            ${item.qty} x ${item.price.toLocaleString()} F
+        </div>
+    `).join('')}
+    
+    <div class="line"></div>
+    
+    ${s.tva_assujeti ? `
+        <div class="row">
+            <span>Total HT</span>
+            <span>${Math.round(totalHT).toLocaleString()} F</span>
+        </div>
+        <div class="row">
+            <span>TVA (${s.tva_taux}%)</span>
+            <span>${Math.round(totalTVA).toLocaleString()} F</span>
+        </div>
+    ` : ''}
+    
+    <div class="row total">
+        <span>TOTAL TTC</span>
+        <span>${totalTTC.toLocaleString()} F</span>
+    </div>
+    
+    <div class="line"></div>
+    
+    <div class="row">
+        <span>Paiement</span>
+        <span class="bold">${method}</span>
+    </div>
+    
+    ${s.mentions_legales ? `
+        <div class="footer">
+            ${s.mentions_legales}
+        </div>
+    ` : ''}
+    
+    <div class="center footer" style="margin-top: 20px;">
+        Merci de votre visite !<br>
+        À bientôt
+    </div>
+    
+    <div class="center footer" style="margin-top: 15px; font-size: 8px;">
+        Propulsé par DIGIY CAISSE PRO 🦅
+    </div>
+</body>
+</html>
+    `;
+
+    // Ouvrir dans une nouvelle fenêtre pour impression
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(ticketHTML);
+    printWindow.document.close();
+    
+    // Attendre que le contenu soit chargé
+    printWindow.onload = function() {
+        setTimeout(() => {
+            printWindow.print();
+        }, 250);
+    };
+}    
 // =============================
 // AJOUTER PRODUIT
 // =============================
