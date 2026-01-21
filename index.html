@@ -145,7 +145,13 @@
             <h3><i class="fas fa-chart-line"></i> DASHBOARD & COMPTABILITÉ</h3>
             <button class="gold-btn" onclick="window.location.href='dashboard.html'" style="background:white; color:#059669;">OUVRIR LES RAPPORTS</button>
         </div>
-        
+        <div class="form-card">
+            <h3>⚙️ PARAMÈTRES BOUTIQUE</h3>
+            <p style="color:var(--muted); font-size:13px; margin-bottom:15px;">
+                Configure tes infos légales, TVA, logo et mentions pour les tickets
+            </p>
+            <button class="gold-btn" onclick="goSettings()">OUVRIR LES PARAMÈTRES</button>
+        </div>        
         <div class="form-card">
             <h3>📦 NOUVEAU PRODUIT</h3>
             <input type="text" id="addName" placeholder="Désignation">
@@ -485,6 +491,13 @@ async function activate(inputId) {
         alert("Clé invalide !");
     }
 }
-</script>
+    // =============================
+// GO SETTINGS
+// =============================
+function goSettings() {
+  const url = new URL('./settings.html', location.href);
+  if (State.slug) url.searchParams.set('slug', State.slug);
+  window.location.href = url.toString();
+}</script>
 </body>
 </html>
