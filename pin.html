@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>DIGIY CAISSE PRO ♾️ — Accès</title>
+  <meta name="theme-color" content="#fbbf24"/>
+
+  <!-- Supabase + Guard -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./guard.js"></script>
+
+  <style>
+    :root{
+      --bg:#0f172a; --bg2:#1e293b; --line:#334155;
+      --ink:#f8fafc; --muted:#94a3b8;
+      --gold:#fbbf24; --gold-dark:#d97706;
+      --shadow:0 22px 50px rgba(0,0,0,.55);
+      --card:rgba(255,255,255,.03);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      min-height:100vh;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(900px 520px at 12% -10%, rgba(251,191,36,.16), transparent 60%),
+        radial-gradient(900px 520px at 90% 0%, rgba(217,119,6,.12), transparent 60%),
+        linear-gradient(180deg, var(--bg2), var(--bg));
+      padding:16px;
+    }
+    .wrap{max-width:560px;margin:0 auto}
+    .top{
+      display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;
+      padding:12px;border:1px solid var(--line);border-radius:18px;background:var(--card);
+      box-shadow:var(--shadow);
+    }
+    .brand{display:flex;gap:10px;align-items:center}
+    .logo{
+      width:44px;height:44px;border-radius:16px;
+      background:linear-gradient(135deg, rgba(251,191,36,.35), rgba(217,119,6,.2));
+      border:1px solid rgba(251,191,36,.35);
+      box-shadow:0 0 22px rgba(251,191,36,.12);
+      display:grid;place-items:center;color:#061b14;font-weight:1100;
+    }
+    .pill{
+      border:1px solid rgba(148,163,184,.35);
+      padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.02);
+      color:var(--muted);font-weight:900;font-size:.86rem;
+    }
+    .card{
+      margin-top:14px;border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      border-radius:20px;box-shadow:var(--shadow);
+      padding:16px;
+    }
+    h1{font-size:1.1rem;margin:0}
+    .sub{color:var(--muted);font-weight:800;margin-top:6px;line-height:1.35}
+    label{display:block;margin:14px 0 6px;font-weight:950;color:#fff}
+    input{
+      width:100%;border-radius:14px;border:1px solid var(--line);
+      background:rgba(0,0,0,.18);color:var(--ink);
+      padding:12px 12px;font-weight:900;outline:none;
+    }
+    input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(251,191,36,.15)}
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{
+      width:100%;min-height:52px;border-radius:16px;border:1px solid var(--line);
+      background:rgba(255,255,255,.04);color:#fff;font-weight:1100;font-size:16px;
+      cursor:pointer;text-decoration:none;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .btn.primary{background:rgba(251,191,36,.12);border-color:rgba(251,191,36,.35)}
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+    .note{
+      margin-top:12px;padding:10px 12px;border-radius:14px;border:1px solid rgba(148,163,184,.25);
+      background:rgba(255,255,255,.03);color:var(--muted);font-weight:900;white-space:pre-wrap;display:none;
+    }
+    .note.ok{display:block;border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.09);color:#fde68a}
+    .note.bad{display:block;border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.09);color:#fecaca}
+    .note.warn{display:block;border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.09);color:#fde68a}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="logo">🦅</div>
+        <div>
+          <h1>DIGIY CAISSE PRO — Accès</h1>
+          <div class="sub">
+            Entre les <b>4 derniers chiffres</b> de ton téléphone pour ouvrir ta caisse.
+          </div>
+        </div>
+      </div>
+      <div class="pill" id="pillLieu">Lieu : —</div>
+    </div>
+
+    <div class="card">
+      <label>4 derniers chiffres de ton téléphone</label>
+      <input id="pin" type="tel" inputmode="numeric" autocomplete="off" placeholder="5785" maxlength="4" />
+
+      <div class="row" style="margin-top:12px">
+        <button class="btn primary" id="btnLogin" type="button">🔓 Ouvrir ma caisse</button>
+      </div>
+
+      <div class="note warn" id="note"></div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  "use strict";
+  const $ = (id)=>document.getElementById(id);
+
+  function show(msg, cls){
+    const el = $("note");
+    el.className = "note " + (cls || "warn");
+    el.textContent = msg || "";
+    el.style.display = msg ? "block" : "none";
+  }
+
+  // --- LIEU (slug) ---
+  const u = new URL(location.href);
+  const LIEU = (u.searchParams.get("slug") || "").trim().replace(/\/+$/,"").toLowerCase();
+
+  $("pillLieu").textContent = "Lieu : " + (LIEU || "—");
+
+  if(!LIEU){
+    show("⚠️ Lien incomplet.\n➡️ Contacte ton admin pour obtenir ton lien d'accès.", "bad");
+  }
+
+  async function doLogin(){
+    if(!LIEU){
+      show("❌ Lieu manquant.\n➡️ Contacte ton admin.", "bad");
+      return;
+    }
+
+    const pin = ($("pin").value || "").trim();
+
+    if(!pin || pin.length < 4){
+      show("⚠️ Entre les 4 derniers chiffres de ton téléphone.", "warn");
+      return;
+    }
+
+    $("btnLogin").disabled = true;
+    show("⏳ Vérification…", "warn");
+
+    try{
+      // ✅ Appel simplifié : loginWithPin(slug, pin)
+      const res = await window.DIGIY_GUARD.loginWithPin(LIEU, pin);
+
+      if(!res || !res.ok){
+        show("❌ PIN incorrect.\n➡️ Vérifie les 4 derniers chiffres de ton téléphone.", "bad");
+        $("btnLogin").disabled = false;
+        return;
+      }
+
+      console.log("✅ Login OK, owner_id:", res.session?.owner_id);
+
+      show("✅ OK. Ouverture de la caisse…", "ok");
+      
+      // ✅ Redirige vers index.html
+      setTimeout(() => {
+        const dashboardUrl = new URL("./index.html", location.href);
+        dashboardUrl.searchParams.set("slug", LIEU);
+        location.replace(dashboardUrl.toString());
+      }, 800);
+
+    }catch(e){
+      console.error(e);
+      show("❌ Problème technique.\n➡️ Réessaie dans 10 secondes.\nDétail: " + (e?.message || e), "bad");
+      $("btnLogin").disabled = false;
+    }
+  }
+
+  $("btnLogin").addEventListener("click", doLogin);
+  $("pin").addEventListener("keydown", (e)=>{ if(e.key==="Enter") doLogin(); });
+
+  setTimeout(()=> $("pin").focus(), 120);
+})();
+</script>
+</body>
+</html>
