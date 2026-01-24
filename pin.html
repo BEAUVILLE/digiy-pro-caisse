@@ -120,6 +120,13 @@
     el.textContent = msg || "";
     el.style.display = msg ? "block" : "none";
   }
+  function withSlug(url){
+  const slug = new URL(location.href).searchParams.get("slug");
+  if(!slug) return url;
+  return url.includes("?")
+    ? url + "&slug=" + encodeURIComponent(slug)
+    : url + "?slug=" + encodeURIComponent(slug);
+}
 
   // --- LIEU (slug) ---
   const u = new URL(location.href);
