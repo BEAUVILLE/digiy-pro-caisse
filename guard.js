@@ -1,6 +1,7 @@
 /* =========================
-   DIGIY GUARD — UNIVERSAL
-   Slug + PIN → owner_id → Session 8h
+   DIGIY GUARD — UNIVERSAL (CAISSE PRO)
+   Slug + PIN → token 30j → Session locale
+   + Refresh silencieux
 ========================= */
 (function () {
   "use strict";
@@ -13,9 +14,31 @@
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
 
   const SESSION_KEY = "DIGIY_SESSION";
-  const SESSION_TTL_MS = 8 * 60 * 60 * 1000; // 8h
+  const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 jours (local). Le serveur gère aussi expires_at.
 
   function now() { return Date.now(); }
+
+  // =============================
+  // SLUG sticky
+  // =============================
+  function getSlugFromUrl(){
+    try { return (new URL(location.href)).searchParams.get("slug"); } catch { return null; }
+  }
+  function getStickySlug(){
+    const u = (getSlugFromUrl() || "").trim();
+    if(u) {
+      sessionStorage.setItem("DIGIY_LAST_SLUG", u);
+      return u;
+    }
+    return (sessionStorage.getItem("DIGIY_LAST_SLUG") || "").trim();
+  }
+  function withSlug(url){
+    const slug = getStickySlug();
+    if(!slug) return url;
+    return url.includes("?")
+      ? url + "&slug=" + encodeURIComponent(slug)
+      : url + "?slug=" + encodeURIComponent(slug);
+  }
 
   // =============================
   // SESSION
@@ -24,7 +47,11 @@
     try {
       const raw = localStorage.getItem(SESSION_KEY);
       const s = JSON.parse(raw);
-      if (!s || !s.expires_at || now() > s.expires_at) return null;
+      if (!s || !s.expires_at) return null;
+
+      // TTL local “souple”
+      if (now() > s.expires_at) return null;
+
       return s;
     } catch {
       return null;
@@ -57,7 +84,7 @@
   }
 
   // =============================
-  // LOGIN AVEC SLUG + PIN
+  // LOGIN SLUG + PIN -> TOKEN 30J
   // =============================
   async function loginWithPin(slug, pin) {
     const sb = getSb();
@@ -68,90 +95,91 @@
 
     if (!slug || !pin) return { ok: false, error: "Slug et PIN requis" };
 
-    // ✅ Appel RPC verify_access_pin(slug, pin)
-    const { data, error } = await sb.rpc("verify_access_pin", {
+    // ✅ Issue token via RPC (sécurisé)
+    const { data, error } = await sb.rpc("caisse_issue_token_v1", {
       p_slug: slug,
       p_pin: pin
     });
 
     if (error) return { ok: false, error: error.message };
 
-    // Parse si string JSON
     const result = typeof data === "string" ? JSON.parse(data) : data;
 
-    if (!result?.ok || !result?.owner_id) {
+    if (!result?.ok || !result?.owner_id || !result?.token) {
       return { ok: false, error: result?.error || "PIN invalide" };
     }
 
-    // ✅ STOCKER owner_id + infos en session
     const session = setSession({
       ok: true,
       owner_id: result.owner_id,
       slug: result.slug,
       title: result.title,
-      phone: result.phone
+      phone: result.phone,
+      token: result.token,            // ✅ token serveur
+      server_expires_at: result.expires_at || null
     });
 
     return { ok: true, session };
   }
 
   // =============================
+  // REFRESH TOKEN (silencieux)
+  // =============================
+  async function refreshTokenIfNeeded() {
+    const sb = getSb();
+    if (!sb) return { ok: false };
+
+    const s = getSession();
+    if (!s?.token) return { ok: false };
+
+    try{
+      const { data, error } = await sb.rpc("caisse_refresh_token_v1", { p_token: s.token });
+      if (error) return { ok: false, error: error.message };
+
+      const r = typeof data === "string" ? JSON.parse(data) : data;
+      if (r?.ok && r?.expires_at) {
+        // on met à jour l’info serveur dans la session (sans casser TTL local)
+        setSession({ ...s, server_expires_at: r.expires_at });
+      }
+      return r || { ok: true };
+    }catch(e){
+      return { ok: false, error: e?.message || String(e) };
+    }
+  }
+
+  // =============================
   // PROTECTION DE PAGE
   // =============================
-function getSlugFromUrl(){
-  try { return (new URL(location.href)).searchParams.get("slug"); } catch { return null; }
-}
-
-function getStickySlug(){
-  const u = (getSlugFromUrl() || "").trim();
-  if(u) {
-    sessionStorage.setItem("DIGIY_LAST_SLUG", u);
-    return u;
+  function requireSession(redirect = "pin.html") {
+    const s = getSession();
+    if (!s || !s.owner_id || !s.token) {
+      location.replace(withSlug(redirect));
+      return null;
+    }
+    return s;
   }
-  return (sessionStorage.getItem("DIGIY_LAST_SLUG") || "").trim();
-}
-
-function withSlug(url){
-  const slug = getStickySlug();
-  if(!slug) return url;
-  return url.includes("?")
-    ? url + "&slug=" + encodeURIComponent(slug)
-    : url + "?slug=" + encodeURIComponent(slug);
-}
-   
-function requireSession(redirect = "pin.html") {
-  const s = getSession();
-  if (!s || !s.owner_id) {
-    location.replace(withSlug(redirect));
-    return null;
-  }
-  return s;
-}
-
 
   // =============================
-  // BOOT (pour index.html)
+  // BOOT
   // =============================
   async function boot(options) {
     const redirect = options?.login || "pin.html";
     const s = requireSession(redirect);
-    
     if (!s) return { ok: false };
-    
-    return { 
-      ok: true, 
-      session: s 
-    };
+
+    // refresh silencieux (ne bloque pas l’UI)
+    refreshTokenIfNeeded();
+
+    return { ok: true, session: s };
   }
 
   // =============================
   // LOGOUT
   // =============================
   function logout(redirect = "index.html") {
-  clearSession();
-  location.replace(withSlug(redirect));
-}
-
+    clearSession();
+    location.replace(withSlug(redirect));
+  }
 
   // =============================
   // EXPORT
