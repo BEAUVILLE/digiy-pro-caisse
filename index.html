@@ -1,664 +1,558 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>DIGIY CAISSE PRO — Royal Edition</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DIGIY CAISSE PRO ♾️ — Royal Edition</title>
 
-  <!-- Supabase + Guard -->
+  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./guard.js?v=20260126-token30j-outbox"></script>
+  <!-- Guard (TOKEN 30J) -->
+  <script src="./guard.js?v=20260126-token30j"></script>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     :root {
-      --gold:#fbbf24; --gold-dark:#d97706;
-      --bg:#0f172a; --card:#1e293b;
-      --text:#f8fafc; --muted:#94a3b8;
-      --glass:rgba(255,255,255,0.03);
-      --gradient:linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
-      --green:#10b981;
-      --danger:#ef4444;
-      --blue:#0ea5e9;
-      --orange:#f97316;
-      --gray:#64748b;
+      --gold: #fbbf24; --gold-dark: #d97706;
+      --bg: #0f172a; --card: #1e293b;
+      --text: #f8fafc; --muted: #94a3b8;
+      --glass: rgba(255, 255, 255, 0.03);
+      --gradient: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+      --green: #10b981;
+      --red: #ef4444;
+      --blue: #0ea5e9;
+      --orange: #f97316;
+      --line: rgba(255,255,255,0.06);
+      --shadow: 0 18px 45px rgba(0,0,0,.35);
     }
 
-    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-    body{
-      background:var(--bg);
-      color:var(--text);
-      min-height:100vh;
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
       background-image: radial-gradient(circle at top right, #1e293b, #0f172a);
     }
 
-    /* LOCKSCREEN */
-    #lockScreen{
-      position:fixed; inset:0;
-      background: rgba(15,23,42,.98);
-      backdrop-filter: blur(18px);
-      z-index: 10000;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding: 16px;
+    /* Lock screen */
+    #lockScreen { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(20px); z-index: 10000; display: none; align-items: center; justify-content: center; }
+    .lock-box { background: var(--card); padding: 40px; border-radius: 30px; border: 1px solid var(--gold); text-align: center; width: 90%; max-width: 450px; box-shadow: 0 0 50px rgba(251, 191, 36, 0.1); }
+    .pay-link-btn {
+      display: block; width: 100%; padding: 18px; background: var(--green); color: white;
+      text-decoration: none; border-radius: 12px; font-weight: 800; margin-bottom: 20px;
+      transition: 0.3s; border: none; font-size: 14px;
     }
-    .lock-box{
-      background: var(--card);
-      padding: 28px;
-      border-radius: 24px;
-      border: 1px solid rgba(251,191,36,.45);
-      text-align:center;
-      width: 100%;
-      max-width: 460px;
-      box-shadow: 0 0 50px rgba(251,191,36,.12);
-    }
-    .pay-link-btn{
-      display:block;width:100%;
-      padding: 16px;
-      background: var(--green);
-      color: white;
-      text-decoration:none;
-      border-radius: 14px;
-      font-weight: 950;
-      margin: 18px 0 14px;
-      transition:.2s;
-      border:none;
-      font-size: 14px;
-    }
-    .pay-link-btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
-    .gold-btn{
-      width:100%;
-      padding: 14px;
-      background: var(--gradient);
-      border:none;border-radius: 14px;
-      color:#000;
-      font-weight: 1000;
-      cursor:pointer;
-      margin-top: 12px;
-    }
-    #royalKey{
-      width:100%;
-      padding: 14px;
-      border-radius: 12px;
-      border: 1px solid rgba(148,163,184,.25);
-      background: rgba(0,0,0,.2);
-      color: var(--text);
-      outline: none;
-    }
+    .pay-link-btn:hover { transform: scale(1.02); filter: brightness(1.1); }
 
-    /* HEADER */
-    .header{
+    /* Header */
+    .header {
       padding: 18px 20px;
       background: var(--glass);
-      border-bottom: 1px solid rgba(251,191,36,0.18);
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap: 12px;
+      border-bottom: 1px solid rgba(251, 191, 36, 0.18);
+      display: flex; justify-content: space-between; align-items: center; gap: 10px;
     }
-    .brand{ display:flex; align-items:center; gap: 12px; min-width: 0; }
-    .crown-icon{
-      width: 44px; height: 44px;
-      background: var(--gradient);
-      border-radius: 12px;
-      display:flex; align-items:center; justify-content:center;
-      color:#000;
-      font-size: 18px;
+    .brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
+    .crown-icon {
+      width: 44px; height: 44px; background: var(--gradient); border-radius: 14px;
+      display: flex; align-items: center; justify-content: center; color: #000; font-size: 18px;
+      box-shadow: 0 10px 25px rgba(251,191,36,.18);
       flex: 0 0 auto;
     }
-    #storeDisp{
-      font-size: 16px;
-      font-weight: 1000;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 52vw;
-    }
-    #trialBadge{ font-size: 10px; color: var(--muted); font-weight: 900; margin-top: 3px; display:flex; gap: 8px; align-items:center; flex-wrap:wrap; }
-
-    .tag{
-      padding: 3px 8px;
-      border-radius: 999px;
-      font-weight: 1000;
-      font-size: 9px;
-      display:inline-flex;
-      align-items:center;
-      gap: 6px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.04);
-      color: var(--text);
-    }
-    .tag.gold{ border-color: rgba(251,191,36,.35); background: rgba(251,191,36,.12); color:#fde68a;}
-    .tag.red{ border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.12); color:#fecaca;}
-    .tag.green{ border-color: rgba(16,185,129,.35); background: rgba(16,185,129,.12); color:#bbf7d0;}
-    .tag.muted{ color: var(--muted); }
-
-    .headerRight{
-      display:flex;
-      align-items:flex-end;
-      flex-direction:column;
-      gap: 4px;
-      text-align:right;
-      flex: 0 0 auto;
-    }
-    .headerRight small{ color: var(--gold); font-weight: 1000; font-size: 10px; letter-spacing:.6px; }
-
-    /* NAV */
-    .nav-elite{
-      display:flex;
-      gap: 10px;
-      padding: 14px 16px;
-      overflow-x:auto;
-      scrollbar-width:none;
-    }
-    .nav-elite::-webkit-scrollbar{display:none}
-    .nav-link{
-      padding: 11px 18px;
-      background: var(--card);
-      border-radius: 12px;
+    #storeDisp{ font-size: 15px; font-weight: 950; letter-spacing: .3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 52vw; }
+    .metaRow{ display:flex; gap:8px; flex-wrap:wrap; margin-top:4px; }
+    .badge{
+      font-size: 10px; font-weight: 950; padding: 4px 10px; border-radius: 999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.03);
       color: var(--muted);
+    }
+    .badge.gold{ border-color: rgba(251,191,36,.35); background: rgba(251,191,36,.08); color: #fde68a; }
+    .badge.green{ border-color: rgba(16,185,129,.35); background: rgba(16,185,129,.10); color: #bbf7d0; }
+    .badge.red{ border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.10); color: #fecaca; }
+
+    .headerRight { text-align: right; display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
+    .tiny { color: var(--gold); font-weight: 950; font-size: 10px; letter-spacing: .9px; }
+    .logoutBtn{
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.04);
+      color:#fff; font-weight: 900;
+      padding: 8px 12px; border-radius: 12px;
       cursor:pointer;
-      border: 1px solid rgba(255,255,255,0.06);
-      transition:.2s;
-      font-weight: 900;
-      white-space: nowrap;
-      display:flex;
-      gap: 8px;
-      align-items:center;
-      user-select:none;
     }
-    .nav-link.active{
-      background: var(--gradient);
-      color:#000;
-      border-color: rgba(251,191,36,.6);
-    }
+    .logoutBtn:hover{ filter: brightness(1.06); }
 
-    .page{ display:none; }
-    .page.active{ display:block; animation: fadeIn .18s ease; }
-    @keyframes fadeIn{ from{opacity:0} to{opacity:1} }
+    /* Nav */
+    .nav-elite { display: flex; gap: 10px; padding: 14px 16px; overflow-x: auto; scrollbar-width: none; border-bottom:1px solid var(--line); }
+    .nav-link { padding: 12px 18px; background: var(--card); border-radius: 12px; color: var(--muted); cursor: pointer; border: 1px solid rgba(255,255,255,0.06); transition: 0.2s; font-weight: 800; white-space: nowrap; }
+    .nav-link.active { background: var(--gradient); color: #000; border-color: rgba(251,191,36,.6); }
 
-    /* LAYOUT */
-    .main-container{
-      padding: 16px;
-      display:grid;
-      grid-template-columns: 1fr 380px;
-      gap: 16px;
-    }
-    @media (max-width: 1100px){
-      .main-container{ grid-template-columns: 1fr; }
-      #storeDisp{ max-width: 64vw; }
-    }
+    /* Layout */
+    .main-container { padding: 16px; display: grid; grid-template-columns: 1fr 380px; gap: 16px; }
+    @media (max-width: 1100px) { .main-container { grid-template-columns: 1fr; } }
 
-    /* PRODUCTS */
-    .products-listing{
-      display:grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 12px;
-    }
-    .noble-card{
+    /* Products */
+    .products-listing { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+    .noble-card {
       background: var(--card);
       padding: 16px;
       border-radius: 18px;
-      text-align:center;
+      text-align: center;
       border: 1px solid rgba(255,255,255,0.06);
-      transition:.18s;
-      cursor:pointer;
-      position:relative;
-      user-select:none;
+      transition: 0.2s;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(0,0,0,.12);
+      position: relative;
     }
-    .noble-card:hover{
-      transform: translateY(-2px);
-      border-color: rgba(251,191,36,.55);
-    }
-    .noble-card i{
-      font-size: 26px;
-      color: var(--gold);
-      margin-bottom: 10px;
-      display:block;
-    }
-    .pname{ font-weight: 1000; font-size: 13px; }
-    .pprice{ color: var(--gold); font-weight: 1000; margin-top: 6px; }
-    .pstock{ font-size: 10px; color: var(--muted); margin-top: 8px; }
+    .noble-card:hover { transform: translateY(-4px); border-color: rgba(251,191,36,.55); }
+    .noble-card i { font-size: 28px; color: var(--gold); margin-bottom: 10px; display: block; }
+    .noble-card .pname{ font-weight: 950; font-size: 14px; margin-bottom: 4px; }
+    .noble-card .pprice{ color: var(--gold); font-weight: 1000; font-size: 14px; }
+    .noble-card .pstock{ font-size: 10px; color: var(--muted); margin-top: 8px; font-weight: 850; }
+    .noble-card .out{ color: #fecaca; }
 
-    /* CART */
-    .royal-cart{
-      background: var(--card);
-      border-radius: 22px;
-      padding: 18px;
-      border: 1px solid rgba(251,191,36,0.12);
-      height: fit-content;
-      position: sticky;
-      top: 14px;
-    }
-    .cart-scroll{
-      max-height: 320px;
-      overflow-y:auto;
-      margin: 12px 0;
-      padding-right: 6px;
-    }
-    .cart-row{
-      display:flex;justify-content:space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      font-size: 13px;
-      gap: 10px;
-    }
-    .cart-row b{ font-weight: 1000; }
-    .cart-row small{ color: var(--muted); font-weight: 900; display:block; margin-top: 2px; }
+    /* Cart */
+    .royal-cart { background: var(--card); border-radius: 22px; padding: 18px; border: 1px solid rgba(251, 191, 36, 0.12); height: fit-content; position: sticky; top: 14px; box-shadow: var(--shadow); }
+    .cart-scroll { max-height: 300px; overflow-y: auto; margin: 12px 0; padding-right: 2px; }
+    .cart-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 13px; }
+    .cart-row small{ color: var(--muted); font-weight: 850; }
 
-    .qtyRow{
-      display:flex; gap:8px; align-items:center; justify-content:flex-end;
-    }
-    .qtyBtn{
-      border:none;
-      background: rgba(255,255,255,.06);
-      color:#fff;
-      border-radius: 10px;
-      padding: 6px 10px;
-      cursor:pointer;
-      font-weight: 1000;
-    }
+    .pay-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 14px; }
+    .pay-btn { padding: 14px; border: none; border-radius: 12px; color: white; font-weight: 950; cursor: pointer; font-size: 11px; text-transform: uppercase; }
+    .pay-btn:active{ transform: scale(.99); }
+    .pay-btn.gray { background: #64748b; grid-column: span 2; }
 
-    .pay-grid{
-      display:grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-top: 14px;
-    }
-    .pay-btn{
-      padding: 14px;
-      border:none;
-      border-radius: 14px;
-      color:white;
-      font-weight: 1100;
-      cursor:pointer;
-      font-size: 11px;
-      text-transform: uppercase;
-      transition:.15s;
-    }
-    .pay-btn:hover{ transform: translateY(-1px); }
-    .pay-btn.full{ grid-column: span 2; }
-    .pay-btn.gray{ background: var(--gray); }
-    .pay-btn.cash{ background: var(--green); }
-    .pay-btn.wave{ background: var(--blue); }
-    .pay-btn.om{ background: var(--orange); }
-    .pay-btn.credit{ background: var(--danger); }
+    .page { display: none; }
+    .page.active { display: block; animation: fadeIn 0.25s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    /* HISTORY */
-    .centerWrap{
-      padding: 16px;
-      max-width: 680px;
-      margin: 0 auto;
-    }
-    .form-card{
-      background: var(--card);
-      padding: 18px;
-      border-radius: 18px;
-      margin-bottom: 14px;
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-    .dash-link{
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-      border: none !important;
-      color: #fff !important;
-    }
+    .form-card { background: var(--card); padding: 18px; border-radius: 18px; margin-bottom: 14px; border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 10px 25px rgba(0,0,0,.12); }
+    .form-card h3{ font-size: 14px; font-weight: 950; margin-bottom: 8px; }
+    input { width: 100%; padding: 14px; background: #0f172a; border: 1px solid #334155; border-radius: 12px; color: white; margin-top: 8px; outline: none; font-weight: 900; }
+    input:focus{ border-color: rgba(251,191,36,.7); box-shadow: 0 0 0 3px rgba(251,191,36,.12); }
+    .gold-btn { width: 100%; padding: 14px; background: var(--gradient); border: none; border-radius: 12px; color: #000; font-weight: 1000; cursor: pointer; margin-top: 12px; }
+    .gold-btn:hover{ filter: brightness(1.04); }
+    .gold-btn:disabled{ opacity:.6; cursor:not-allowed; }
 
-    /* ADMIN */
-    input{
-      width:100%;
-      padding: 12px;
-      background: rgba(0,0,0,.18);
-      border: 1px solid rgba(148,163,184,.25);
-      border-radius: 12px;
-      color: white;
-      margin-top: 8px;
-      outline:none;
-      font-weight: 900;
-    }
-    input:focus{ border-color: rgba(251,191,36,.6); box-shadow: 0 0 0 3px rgba(251,191,36,.14); }
+    .dash-link { background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; color: white !important; }
+    .inventory-item { display: flex; justify-content: space-between; align-items:center; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .trashBtn{ background:none; border:none; color:#ef4444; cursor:pointer; font-size: 16px; }
+    .muted{ color: var(--muted); font-weight: 850; font-size: 12px; line-height: 1.35; }
 
-    .inventory-item{
-      display:flex; justify-content:space-between; align-items:center;
-      padding: 10px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      gap: 12px;
+    /* Toast */
+    .toast{
+      position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%);
+      background: rgba(2,6,23,.85); border:1px solid rgba(255,255,255,.12);
+      color:#fff; padding: 10px 14px; border-radius: 14px;
+      font-weight: 900; font-size: 13px;
+      display:none; z-index: 9999; box-shadow: var(--shadow);
+      max-width: 92vw;
     }
-    .trashBtn{
-      background:none; border:none;
-      color: var(--danger);
-      cursor:pointer;
-      font-size: 16px;
-    }
-
-    .muted{ color: var(--muted); font-weight: 900; }
+    .toast.show{ display:block; }
   </style>
 </head>
 
 <body>
 
-<!-- LOCKSCREEN (trial / licence) -->
-<div id="lockScreen">
-  <div class="lock-box">
-    <i class="fas fa-gem" style="font-size: 44px; color: var(--gold); margin-bottom: 10px;"></i>
-    <h2 style="margin-bottom: 6px; font-weight: 1100;">ESSAI TERMINÉ</h2>
-    <p style="color: var(--muted); margin-bottom: 12px; font-size: 13px; font-weight: 900;">
-      Pour continuer à utiliser ta caisse et débloquer les rapports, passe à la version Pro.
-    </p>
+  <div id="lockScreen">
+    <div class="lock-box">
+      <i class="fas fa-gem" style="font-size: 50px; color: var(--gold); margin-bottom: 18px;"></i>
+      <h2 style="margin-bottom: 8px;">ESSAI TERMINÉ</h2>
+      <p style="color: var(--muted); margin-bottom: 18px; font-size: 14px; font-weight: 800;">
+        Pour continuer, active ta licence.
+      </p>
 
-    <a href="https://beauville.github.io/commencer-a-payer/" class="pay-link-btn">
-      <i class="fas fa-shopping-cart"></i>&nbsp; COMMENCER À PAYER
-    </a>
+      <a href="https://beauville.github.io/commencer-a-payer/" class="pay-link-btn">
+        <i class="fas fa-shopping-cart"></i> COMMENCER À PAYER
+      </a>
 
-    <div style="margin: 14px 0; color: var(--muted); font-size: 11px; font-weight: 1000;">
-      OU ENTREZ VOTRE CLÉ PERSONNELLE
-    </div>
-
-    <input type="text" id="royalKey" placeholder="XXXX-XXXX-XXXX-XXXX">
-    <button class="gold-btn" onclick="activate('royalKey')">ACTIVER</button>
-
-    <div class="muted" style="margin-top: 12px; font-size: 11px;">
-      Besoin d’aide ? WhatsApp DIGIY.
-    </div>
-  </div>
-</div>
-
-<!-- HEADER -->
-<div class="header">
-  <div class="brand">
-    <div class="crown-icon"><i class="fas fa-eagle"></i></div>
-    <div style="min-width:0">
-      <div id="storeDisp">CHARGEMENT…</div>
-      <div id="trialBadge"></div>
+      <div style="margin: 14px 0; color: var(--muted); font-size: 11px; font-weight: 950;">OU ENTREZ VOTRE CLÉ PERSONNELLE</div>
+      <input type="text" id="royalKey" placeholder="XXXX-XXXX-XXXX-XXXX" />
+      <button class="gold-btn" onclick="activate('royalKey')">ACTIVER</button>
     </div>
   </div>
 
-  <div class="headerRight">
-    <small>ROYAL EDITION</small>
-    <div class="tag muted" id="slugTag">slug: —</div>
+  <div class="header">
+    <div class="brand">
+      <div class="crown-icon"><i class="fas fa-eagle"></i></div>
+      <div style="min-width:0">
+        <div id="storeDisp">CHARGEMENT...</div>
+        <div class="metaRow">
+          <span class="badge" id="trialBadge">—</span>
+          <span class="badge" id="netBadge">—</span>
+          <span class="badge" id="outboxBadge">—</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="headerRight">
+      <div class="tiny">ROYAL EDITION</div>
+      <button class="logoutBtn" id="btnLogout" type="button">⏻ Sortir</button>
+    </div>
   </div>
-</div>
 
-<!-- NAV -->
-<div class="nav-elite">
-  <div class="nav-link active" onclick="tab('pos', this)"><i class="fas fa-store"></i> CAISSE</div>
-  <div class="nav-link" onclick="tab('history', this)"><i class="fas fa-history"></i> VENTES</div>
-  <div class="nav-link" onclick="tab('admin', this)"><i class="fas fa-cog"></i> GESTION</div>
-</div>
+  <div class="nav-elite">
+    <div class="nav-link active" onclick="tab('pos', this)"><i class="fas fa-store"></i> CAISSE</div>
+    <div class="nav-link" onclick="tab('history', this)"><i class="fas fa-history"></i> VENTES</div>
+    <div class="nav-link" onclick="tab('admin', this)"><i class="fas fa-cog"></i> GESTION</div>
+  </div>
 
-<!-- PAGE POS -->
-<div id="posPage" class="page active">
-  <div class="main-container">
-    <div>
+  <!-- PAGE CAISSE -->
+  <div id="posPage" class="page active">
+    <div class="main-container">
+      <div id="productsGrid" class="products-listing"></div>
+
+      <div class="royal-cart">
+        <h3 style="font-size: 10px; color: var(--muted); text-transform:uppercase; letter-spacing:.8px;">PANIER</h3>
+        <div id="cartListing" class="cart-scroll"></div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(251,191,36,.55); padding-top: 12px; margin-top: 8px;">
+          <b style="font-weight:1000;">TOTAL</b>
+          <h2 id="totalPrice" style="color: var(--gold); font-size: 22px;">0 F</h2>
+        </div>
+
+        <div class="pay-grid">
+          <button class="pay-btn" style="background: var(--green);" onclick="checkout('CASH')">Cash</button>
+          <button class="pay-btn" style="background: var(--blue);" onclick="checkout('WAVE')">Wave</button>
+          <button class="pay-btn" style="background: var(--orange);" onclick="checkout('OM')">Orange</button>
+          <button class="pay-btn" style="background: var(--red);" onclick="checkout('CREDIT')">Dette</button>
+          <button class="pay-btn gray" onclick="State.cart=[]; render();">VIDER LE PANIER</button>
+        </div>
+
+        <div class="muted" style="margin-top:12px;">
+          Astuce : si le réseau saute, la vente est gardée et synchronisée dès que possible.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE VENTES -->
+  <div id="historyPage" class="page">
+    <div class="main-container" style="display: block; max-width: 720px; margin: auto;">
+      <div class="form-card" style="text-align:center;">
+        <small style="color:var(--muted); font-weight:900;">RECETTE DU JOUR</small>
+        <h2 id="revDay" style="color:var(--green); font-size: 2.5rem; margin-top:6px;">0 F</h2>
+        <div class="muted" id="salesCount" style="margin-top:6px;">—</div>
+      </div>
+
       <div class="form-card">
-        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between">
-          <div>
-            <div style="font-weight:1100">Produits</div>
-            <div class="muted" style="font-size:12px">Tape vite, vends vite. Stock géré.</div>
-          </div>
-          <div class="tag red" id="outboxBadge" style="display:none">OUTBOX 0</div>
+        <h3>📜 Dernières ventes</h3>
+        <div id="historyListing" class="muted">Chargement…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE ADMIN -->
+  <div id="adminPage" class="page">
+    <div class="main-container" style="display: block; max-width: 720px; margin: auto;">
+
+      <div class="form-card dash-link">
+        <h3><i class="fas fa-chart-line"></i> DASHBOARD & COMPTABILITÉ</h3>
+        <button class="gold-btn" onclick="window.location.href='dashboard.html'" style="background:white; color:#059669; margin-top:10px;">OUVRIR LES RAPPORTS</button>
+      </div>
+
+      <!-- OUTBOX -->
+      <div class="form-card">
+        <h3>📡 SYNCHRO (OUTBOX)</h3>
+        <p class="muted">
+          Si le réseau saute, les ventes partent en file d’attente et se synchronisent automatiquement dès que possible.
+        </p>
+
+        <button class="gold-btn" id="btnSyncOutbox" type="button">🔄 Synchroniser maintenant</button>
+
+        <div class="muted" style="margin-top:10px;">
+          Statut : <span id="outboxStatus">—</span>
         </div>
       </div>
 
-      <div id="productsGrid" class="products-listing"></div>
-    </div>
-
-    <div class="royal-cart">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
-        <h3 style="font-size: 10px; color: var(--muted); text-transform:uppercase;letter-spacing:.8px;">PANIER</h3>
-        <div class="tag" id="onlineBadge">ONLINE</div>
+      <div class="form-card">
+        <h3>⚙️ PARAMÈTRES BOUTIQUE</h3>
+        <p class="muted">
+          Configure tes infos légales, TVA, mentions et autres détails.
+        </p>
+        <button class="gold-btn" onclick="goSettings()">OUVRIR LES PARAMÈTRES</button>
       </div>
 
-      <div id="cartListing" class="cart-scroll"></div>
-
-      <div style="display:flex; justify-content:space-between; align-items:center; border-top: 1px solid rgba(251,191,36,.45); padding-top: 12px;">
-        <b style="font-weight:1100">TOTAL</b>
-        <h2 id="totalPrice" style="color: var(--gold);">0 F</h2>
+      <div class="form-card">
+        <h3>📦 NOUVEAU PRODUIT</h3>
+        <input type="text" id="addName" placeholder="Désignation (ex: Pain)" />
+        <input type="number" id="addPrice" placeholder="Prix (FCFA)" />
+        <input type="number" id="addStock" placeholder="Stock (optionnel)" />
+        <button class="gold-btn" onclick="addNew()">AJOUTER AU STOCK</button>
       </div>
 
-      <div class="pay-grid">
-        <button class="pay-btn cash" onclick="checkout('CASH')">Cash</button>
-        <button class="pay-btn wave" onclick="checkout('WAVE')">Wave</button>
-        <button class="pay-btn om" onclick="checkout('OM')">Orange</button>
-        <button class="pay-btn credit" onclick="checkout('CREDIT')">Dette</button>
-        <button class="pay-btn gray full" onclick="clearCart()">VIDER LE PANIER</button>
+      <div class="form-card">
+        <h3>🗑️ GESTION DU STOCK</h3>
+        <div id="inventoryManager" class="muted">—</div>
       </div>
 
-      <div class="muted" style="font-size:11px;margin-top:10px">
-        Astuce: si le réseau saute, ta vente part en OUTBOX et s’envoie toute seule.
-      </div>
     </div>
   </div>
-</div>
 
-<!-- PAGE HISTORY -->
-<div id="historyPage" class="page">
-  <div class="centerWrap">
-    <div class="form-card" style="text-align:center;">
-      <small class="muted">RECETTE DU JOUR</small>
-      <h2 id="revDay" style="color:var(--green); font-size: 2.4rem; margin-top: 6px;">0 F</h2>
-      <div class="muted" id="revInfo" style="font-size:12px;margin-top:6px">—</div>
-    </div>
-    <div id="historyListing"></div>
-  </div>
-</div>
-
-<!-- PAGE ADMIN -->
-<div id="adminPage" class="page">
-  <div class="centerWrap">
-    <div class="form-card dash-link">
-      <h3 style="font-weight:1100"><i class="fas fa-chart-line"></i> DASHBOARD & COMPTABILITÉ</h3>
-      <button class="gold-btn" onclick="window.location.href=withSlug('dashboard.html')" style="background:white;color:#059669;">
-        OUVRIR LES RAPPORTS
-      </button>
-    </div>
-
-    <div class="form-card">
-      <h3 style="font-weight:1100">⚙️ PARAMÈTRES BOUTIQUE</h3>
-      <p class="muted" style="font-size:12px;margin-top:8px;">
-        Infos légales, TVA, mentions, etc.
-      </p>
-      <button class="gold-btn" onclick="goSettings()">OUVRIR LES PARAMÈTRES</button>
-    </div>
-
-    <div class="form-card">
-      <h3 style="font-weight:1100">📦 NOUVEAU PRODUIT</h3>
-      <input type="text" id="addName" placeholder="Désignation">
-      <input type="number" id="addPrice" placeholder="Prix">
-      <input type="number" id="addStock" placeholder="Stock">
-      <button class="gold-btn" onclick="addNew()">AJOUTER AU STOCK</button>
-      <div class="muted" style="font-size:11px;margin-top:8px">Tu peux mettre stock 0 si c’est à la demande.</div>
-    </div>
-
-    <div class="form-card">
-      <h3 style="font-weight:1100">🗑️ GESTION DU STOCK</h3>
-      <div id="inventoryManager"></div>
-    </div>
-  </div>
-</div>
+  <div class="toast" id="toast"></div>
 
 <script>
-/* =========================================================
-   DIGIY CAISSE PRO — INDEX (TOKEN + OUTBOX) ✅
-   - Guard boot (session + token)
-   - Outbox localStorage (vente jamais perdue)
-   - RPC checkout token (safe)
-   - Badge outbox + online
-   - Slug conservé partout
-========================================================= */
+/* =============================
+   DIGIY CAISSE PRO — INDEX (PROD)
+   - Guard token 30j
+   - Checkout RPC safe + idempotent
+   - Outbox localStorage (offline-proof)
+============================= */
 
 const TRIAL_LIMIT = 15;
 
-// ---------------------
-// UTIL
-// ---------------------
-function withSlug(url){
-  try{
-    const u = new URL(location.href);
-    const slug = (u.searchParams.get("slug") || "").trim();
-    if(!slug) return url;
-    return url.includes("?")
-      ? url + "&slug=" + encodeURIComponent(slug)
-      : url + "?slug=" + encodeURIComponent(slug);
-  }catch(e){
-    return url;
-  }
-}
-
-function fmt(n){
-  try{ return (n||0).toLocaleString(); }catch{ return String(n||0); }
-}
-
-function todayStr(){
-  return new Date().toLocaleDateString();
-}
-
-function makeTxnId(){
-  return "txn_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2,10);
-}
-
-function getSB(){
-  return window.DIGIY_GUARD?.getSb?.() || null;
-}
-
-// ---------------------
-// STATE
-// ---------------------
 let State = {
   owner_id: null,
+  token: null,
   slug: null,
   phone: null,
   title: null,
-  token: null,
-
   pro: false,
   storeName: "MA BOUTIQUE",
-
   items: [],
   sales: [],
   cart: [],
   settings: null
 };
 
-// ---------------------
-// OUTBOX LOCAL
-// ---------------------
+function getSB(){
+  return window.DIGIY_GUARD?.getSb?.() || null;
+}
+
+function toast(msg){
+  const t = document.getElementById("toast");
+  if(!t) return;
+  t.textContent = msg || "";
+  t.classList.add("show");
+  setTimeout(()=> t.classList.remove("show"), 2200);
+}
+
+function setNetBadge(){
+  const el = document.getElementById("netBadge");
+  if(!el) return;
+  if(navigator.onLine){
+    el.className = "badge green";
+    el.textContent = "ONLINE";
+  }else{
+    el.className = "badge red";
+    el.textContent = "OFFLINE";
+  }
+}
+
+// =============================
+// OUTBOX
+// =============================
 const OUTBOX_KEY = "DIGIY_CAISSE_OUTBOX_V1";
 let OUTBOX_FLUSHING = false;
 
 function outboxLoad(){
-  try{ return JSON.parse(localStorage.getItem(OUTBOX_KEY) || "[]"); }catch{ return []; }
+  try{
+    const raw = localStorage.getItem(OUTBOX_KEY);
+    const arr = raw ? JSON.parse(raw) : [];
+    return Array.isArray(arr) ? arr : [];
+  }catch(e){ return []; }
 }
 function outboxSave(arr){
-  try{ localStorage.setItem(OUTBOX_KEY, JSON.stringify(arr || [])); }catch(e){ console.warn("outboxSave fail", e); }
-}
-function outboxEnqueue(entry){
-  const q = outboxLoad();
-  q.push(entry);
-  outboxSave(q);
-  return entry;
-}
-function outboxRemove(txn_id){
-  const q = outboxLoad().filter(x => x.txn_id !== txn_id);
-  outboxSave(q);
-}
-function outboxMark(txn_id, patch){
-  const q = outboxLoad();
-  const i = q.findIndex(x => x.txn_id === txn_id);
-  if(i >= 0){
-    q[i] = { ...q[i], ...patch };
-    outboxSave(q);
-  }
-}
-function outboxPending(){
-  return outboxLoad().filter(x => x.status === "pending");
+  localStorage.setItem(OUTBOX_KEY, JSON.stringify(arr || []));
 }
 function outboxCount(){
-  return outboxPending().length;
+  return outboxLoad().length;
 }
-function updateOutboxBadge(){
+function outboxSetStatus(msg){
+  const el = document.getElementById("outboxStatus");
+  if(el) el.textContent = msg || "—";
+}
+function outboxSetBadge(){
+  const el = document.getElementById("outboxBadge");
+  if(!el) return;
   const n = outboxCount();
-  const b = document.getElementById("outboxBadge");
-  if(!b) return;
-  if(n > 0){
-    b.style.display = "inline-flex";
-    b.textContent = "OUTBOX " + n;
+  if(n === 0){
+    el.className = "badge green";
+    el.textContent = "SYNC OK";
   }else{
-    b.style.display = "none";
+    el.className = "badge gold";
+    el.textContent = "OUTBOX " + n;
   }
 }
 
-// ---------------------
-// ONLINE badge
-// ---------------------
-function updateOnlineBadge(){
-  const el = document.getElementById("onlineBadge");
-  if(!el) return;
-  const ok = navigator.onLine;
-  el.className = "tag " + (ok ? "green" : "red");
-  el.textContent = ok ? "ONLINE" : "OFFLINE";
+function makeTxnId(){
+  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  );
 }
-window.addEventListener("online", () => { updateOnlineBadge(); outboxFlush(); });
-window.addEventListener("offline", updateOnlineBadge);
+function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
 
-// ---------------------
-// INIT
-// ---------------------
+function outboxEnqueue(entry){
+  const arr = outboxLoad();
+  arr.push(entry);
+  outboxSave(arr);
+  outboxSetBadge();
+  outboxSetStatus(`En attente: ${arr.length}`);
+}
+
+async function outboxFlush(){
+  if(OUTBOX_FLUSHING) return { ok:false, message:"flush déjà en cours" };
+  OUTBOX_FLUSHING = true;
+
+  try{
+    const sb = getSB();
+    const sess = window.DIGIY_GUARD?.getSession?.();
+    if(!sb || !sess?.token){
+      outboxSetStatus("Session/token manquant (reconnecte-toi)");
+      outboxSetBadge();
+      return { ok:false, message:"token manquant" };
+    }
+
+    let arr = outboxLoad();
+    if(!arr.length){
+      outboxSetStatus("✅ Tout est synchro");
+      outboxSetBadge();
+      return { ok:true, message:"vide" };
+    }
+
+    if(!navigator.onLine){
+      outboxSetStatus(`📴 Offline — en attente: ${arr.length}`);
+      outboxSetBadge();
+      return { ok:false, message:"offline" };
+    }
+
+    outboxSetStatus(`⏳ Sync… (${arr.length})`);
+    outboxSetBadge();
+
+    const keep = [];
+    let okCount = 0;
+
+    for(const job of arr){
+      const payload = {
+        p_token: sess.token,
+        p_client_txn_id: job.txn_id,
+        p_method: job.method,
+        p_items: job.items
+      };
+
+      try{
+        const { data, error } = await sb.rpc("rpc_caisse_checkout_v1", payload);
+        if(error) throw error;
+
+        const res = (typeof data === "string") ? JSON.parse(data) : data;
+
+        if(res?.ok){
+          okCount++;
+          continue;
+        }
+
+        keep.push({
+          ...job,
+          tries: (job.tries||0) + 1,
+          last_error: res?.message || "Erreur checkout",
+          last_try_at: new Date().toISOString()
+        });
+        await sleep(250);
+
+      }catch(e){
+        keep.push({
+          ...job,
+          tries: (job.tries||0) + 1,
+          last_error: e?.message || String(e),
+          last_try_at: new Date().toISOString()
+        });
+        await sleep(400);
+      }
+    }
+
+    outboxSave(keep);
+
+    if(keep.length === 0){
+      outboxSetStatus(`✅ Sync OK (${okCount}) — file vide`);
+      toast("✅ Synchro OK");
+    }else{
+      outboxSetStatus(`⚠️ Sync partielle: ${okCount} OK • ${keep.length} en attente`);
+      toast("⚠️ Synchro partielle");
+    }
+
+    outboxSetBadge();
+
+    try { await loadData(); render(); } catch(e){}
+
+    return { ok:true, okCount, left: keep.length };
+
+  } finally {
+    OUTBOX_FLUSHING = false;
+  }
+}
+
+function outboxInit(){
+  outboxSetBadge();
+  outboxSetStatus(outboxCount() ? `En attente: ${outboxCount()}` : "✅ Tout est synchro");
+
+  window.addEventListener("online", () => {
+    setNetBadge();
+    outboxFlush();
+  });
+  window.addEventListener("offline", () => {
+    setNetBadge();
+    outboxSetStatus(`📴 Offline — en attente: ${outboxCount()}`);
+    outboxSetBadge();
+  });
+
+  const btn = document.getElementById("btnSyncOutbox");
+  if(btn){
+    btn.addEventListener("click", async () => {
+      btn.disabled = true;
+      outboxSetStatus("⏳ Sync…");
+      await outboxFlush();
+      btn.disabled = false;
+    });
+  }
+
+  setTimeout(() => { if(navigator.onLine) outboxFlush(); }, 900);
+}
+
+// =============================
+// INIT + PROTECTION
+// =============================
 (async function init(){
-  updateOnlineBadge();
-
   if(!window.DIGIY_GUARD || typeof window.DIGIY_GUARD.boot !== "function"){
     console.warn("Guard absent.");
     return;
   }
 
-  // 🔒 Protège la page
+  setNetBadge();
+
   const guardRes = await window.DIGIY_GUARD.boot({ login: "./pin.html" });
   if(!guardRes?.ok) return;
 
   const sess = window.DIGIY_GUARD.getSession?.() || null;
   State.owner_id = sess?.owner_id || null;
-  State.slug = sess?.slug || getSlugFromUrl();
-  State.title = sess?.title || "";
-  State.phone = sess?.phone || "";
   State.token = sess?.token || null;
-
-  document.getElementById("slugTag").textContent = "slug: " + (State.slug || "—");
+  State.slug = sess?.slug || "";
+  State.phone = sess?.phone || "";
+  State.title = sess?.title || "";
 
   if(!State.owner_id || !State.token){
-    console.warn("Session/token manquant -> PIN");
-    location.replace(withSlug("./pin.html"));
+    window.location.replace("./pin.html");
     return;
+  }
+
+  const btnLogout = document.getElementById("btnLogout");
+  if(btnLogout){
+    btnLogout.addEventListener("click", () => window.DIGIY_GUARD.logout("./pin.html"));
   }
 
   await loadData();
   render();
-
-  // Flush outbox au démarrage (si online)
-  if(navigator.onLine) outboxFlush();
-
-  // Refresh régulier
-  setInterval(() => {
-    updateOnlineBadge();
-    updateOutboxBadge();
-    if(navigator.onLine) outboxFlush();
-  }, 4000);
+  outboxInit();
 })();
 
-function getSlugFromUrl(){
-  try{ return (new URL(location.href)).searchParams.get("slug"); }catch{ return null; }
-}
-
-// ---------------------
-// DATA LOAD
-// ---------------------
+// =============================
+// LOAD DATA
+// =============================
 async function loadData(){
   const sb = getSB();
   if(!sb || !State.owner_id) return;
 
-  // SETTINGS
   try{
+    // settings
     const { data: settings } = await sb
       .from("digiy_caisse_settings")
       .select("*")
@@ -673,17 +567,15 @@ async function loadData(){
       await sb.from("digiy_caisse_settings").insert({
         owner_id: State.owner_id,
         store_name: State.title || "MA BOUTIQUE",
-        phone: State.phone || null
+        phone: State.phone,
+        trial_start: new Date().toISOString()
       });
       State.storeName = State.title || "MA BOUTIQUE";
       State.pro = false;
+      State.settings = { trial_start: new Date().toISOString() };
     }
-  }catch(e){
-    console.warn("settings load error", e);
-  }
 
-  // PRODUCTS
-  try{
+    // products
     const { data: products } = await sb
       .from("digiy_caisse_products")
       .select("*")
@@ -692,137 +584,126 @@ async function loadData(){
       .order("created_at", { ascending: false });
 
     State.items = products || [];
-  }catch(e){
-    console.warn("products load error", e);
-    State.items = [];
-  }
 
-  // SALES
-  try{
+    // sales
     const { data: sales } = await sb
       .from("digiy_caisse_sales")
       .select("*")
       .eq("owner_id", State.owner_id)
       .order("created_at", { ascending: false })
-      .limit(120);
+      .limit(100);
 
     State.sales = sales || [];
+
   }catch(e){
-    console.warn("sales load error", e);
-    State.sales = [];
+    console.error("Erreur chargement:", e);
   }
 }
 
-// ---------------------
+// =============================
 // NAV
-// ---------------------
+// =============================
 function tab(id, btn){
   document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
   document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
-
-  const page = document.getElementById(id + "Page");
-  if(page) page.classList.add("active");
-  if(btn) btn.classList.add("active");
-
+  document.getElementById(id + "Page").classList.add("active");
+  btn.classList.add("active");
   render();
 }
 
-// ---------------------
+// =============================
 // RENDER
-// ---------------------
+// =============================
 function render(){
-  updateOutboxBadge();
-
-  // Trial logic
-  const trialStart = State.settings?.trial_start || State.settings?.created_at || new Date().toISOString();
-  const diff = Date.now() - new Date(trialStart).getTime();
+  // trial badge
+  const trialStart = State.settings?.trial_start ? new Date(State.settings.trial_start).getTime() : Date.now();
+  const diff = Date.now() - trialStart;
   const passed = Math.floor(diff / (1000 * 60 * 60 * 24));
   const left = Math.max(0, TRIAL_LIMIT - passed);
 
-  if(!State.pro && left <= 0){
-    document.getElementById("lockScreen").style.display = "flex";
+  const trialBadge = document.getElementById("trialBadge");
+  if(State.pro){
+    trialBadge.className = "badge gold";
+    trialBadge.textContent = "LICENCE ACTIVE";
   }else{
-    document.getElementById("lockScreen").style.display = "none";
+    trialBadge.className = "badge";
+    trialBadge.textContent = `TRIAL: ${left} JOURS`;
+    if(left <= 0){
+      document.getElementById("lockScreen").style.display = "flex";
+    }else{
+      document.getElementById("lockScreen").style.display = "none";
+    }
   }
 
+  // outbox badge (live)
+  outboxSetBadge();
+
+  // store
   document.getElementById("storeDisp").innerText = State.storeName || "MA BOUTIQUE";
 
-  // Tags (licence/trial + outbox)
-  const badge = document.getElementById("trialBadge");
-  const outN = outboxCount();
-  const licenceTag = State.pro
-    ? `<span class="tag gold">LICENCE ACTIVE</span>`
-    : `<span class="tag gold">TRIAL: ${left} JOURS</span>`;
-
-  const outTag = outN > 0
-    ? `<span class="tag red">OUTBOX ${outN}</span>`
-    : `<span class="tag muted">OK</span>`;
-
-  badge.innerHTML = licenceTag + outTag;
-
-  // Products
+  // produits
   const grid = document.getElementById("productsGrid");
-  grid.innerHTML = (State.items || []).map(p => `
-    <div class="noble-card" onclick="addToCart('${p.id}')">
-      <i class="fas fa-tag"></i>
-      <div class="pname">${escapeHtml(p.name || "Produit")}</div>
-      <div class="pprice">${fmt(p.price)} F</div>
-      <div class="pstock">STK: ${fmt(p.stock ?? 0)}</div>
-    </div>
-  `).join("");
+  grid.innerHTML = (State.items || []).map(p => {
+    const out = (p.stock <= 0);
+    return `
+      <div class="noble-card" onclick="addToCart('${p.id}')">
+        <i class="fas fa-tag"></i>
+        <div class="pname">${escapeHtml(p.name || "Article")}</div>
+        <div class="pprice">${Number(p.price||0).toLocaleString()} F</div>
+        <div class="pstock ${out ? 'out':''}">STK: ${Number(p.stock||0)}</div>
+      </div>
+    `;
+  }).join("");
 
-  // Inventory manager
-  const inv = document.getElementById("inventoryManager");
-  inv.innerHTML = (State.items || []).map(p => `
+  // inventory
+  document.getElementById("inventoryManager").innerHTML = (State.items || []).map(p => `
     <div class="inventory-item">
-      <div>
-        <div style="font-weight:1000">${escapeHtml(p.name || "")}</div>
-        <div class="muted" style="font-size:11px">Prix: ${fmt(p.price)} F • Stock: ${fmt(p.stock ?? 0)}</div>
-      </div>
-      <button class="trashBtn" onclick="removeItem('${p.id}')" title="Désactiver">
-        <i class="fas fa-trash"></i>
-      </button>
+      <span>${escapeHtml(p.name || "Article")} <small class="muted">(${Number(p.stock||0)} stk)</small></span>
+      <button class="trashBtn" onclick="removeItem('${p.id}')"><i class="fas fa-trash"></i></button>
     </div>
   `).join("");
 
-  // Cart
-  const cartEl = document.getElementById("cartListing");
-  if(!State.cart.length){
-    cartEl.innerHTML = `<div class="muted" style="padding:10px 0">Panier vide.</div>`;
+  // panier
+  document.getElementById("cartListing").innerHTML = (State.cart || []).map(i => `
+    <div class="cart-row">
+      <span>${escapeHtml(i.name)} <small>x${i.qty}</small></span>
+      <span>${(i.price * i.qty).toLocaleString()} F</span>
+    </div>
+  `).join("");
+
+  const total = (State.cart || []).reduce((s, i) => s + (i.price * i.qty), 0);
+  document.getElementById("totalPrice").innerText = total.toLocaleString() + " F";
+
+  // stats du jour
+  const today = new Date().toLocaleDateString();
+  const todays = (State.sales || []).filter(s => new Date(s.created_at).toLocaleDateString() === today);
+  const rev = todays.reduce((a, b) => a + Number(b.total||0), 0);
+  document.getElementById("revDay").innerText = rev.toLocaleString() + " F";
+  document.getElementById("salesCount").textContent = `${todays.length} vente(s) aujourd’hui`;
+
+  // listing ventes
+  const hist = document.getElementById("historyListing");
+  if(!State.sales?.length){
+    hist.textContent = "Aucune vente pour l’instant.";
   }else{
-    cartEl.innerHTML = State.cart.map(i => `
-      <div class="cart-row">
-        <div>
-          <b>${escapeHtml(i.name)}</b>
-          <small>${fmt(i.price)} F</small>
-        </div>
-        <div class="qtyRow">
-          <button class="qtyBtn" onclick="decQty('${i.id}')">−</button>
-          <b>x${i.qty}</b>
-          <button class="qtyBtn" onclick="incQty('${i.id}')">+</button>
-        </div>
-      </div>
-    `).join("");
+    hist.innerHTML = State.sales.slice(0, 30).map(s => {
+      const d = new Date(s.created_at);
+      const date = d.toLocaleDateString('fr-FR') + " " + d.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+      const pm = escapeHtml(s.payment_method || "—");
+      const totalS = Number(s.total||0).toLocaleString();
+      return `<div class="inventory-item">
+        <span>${date}<br><small class="muted">${pm}</small></span>
+        <b style="color:var(--gold);">${totalS} F</b>
+      </div>`;
+    }).join("");
   }
 
-  const total = State.cart.reduce((s, i) => s + (i.price * i.qty), 0);
-  document.getElementById("totalPrice").innerText = fmt(total) + " F";
-
-  // Day revenue
-  const t = todayStr();
-  const rev = (State.sales || [])
-    .filter(s => new Date(s.created_at).toLocaleDateString() === t)
-    .reduce((a, b) => a + (b.total || 0), 0);
-
-  document.getElementById("revDay").innerText = fmt(rev) + " F";
-  document.getElementById("revInfo").innerText = "Ventes chargées: " + (State.sales?.length || 0);
+  // net badge live
+  setNetBadge();
 }
 
-// ---------------------
-// HTML escape
-// ---------------------
 function escapeHtml(str){
-  return String(str || "")
+  return String(str||"")
     .replaceAll("&","&amp;")
     .replaceAll("<","&lt;")
     .replaceAll(">","&gt;")
@@ -830,195 +711,83 @@ function escapeHtml(str){
     .replaceAll("'","&#039;");
 }
 
-// ---------------------
-// CART OPS
-// ---------------------
-function clearCart(){
-  State.cart = [];
-  render();
-}
-
+// =============================
+// PANIER
+// =============================
 function addToCart(id){
   const p = State.items.find(x => String(x.id) === String(id));
   if(!p) return;
 
-  const stock = Number(p.stock ?? 0);
-  if(stock <= 0) return alert("Plus de stock !");
-
-  const inCart = State.cart.find(x => String(x.id) === String(id));
-  if(inCart){
-    if(inCart.qty + 1 > stock) return alert("Stock insuffisant");
-    inCart.qty++;
-  }else{
-    State.cart.push({ id: p.id, name: p.name, price: Number(p.price||0), stock: stock, qty: 1 });
-  }
-  render();
-}
-
-function incQty(id){
-  const it = State.cart.find(x => String(x.id) === String(id));
-  if(!it) return;
-  if(it.qty + 1 > (it.stock ?? 0)) return alert("Stock insuffisant");
-  it.qty++;
-  render();
-}
-
-function decQty(id){
-  const it = State.cart.find(x => String(x.id) === String(id));
-  if(!it) return;
-  it.qty--;
-  if(it.qty <= 0){
-    State.cart = State.cart.filter(x => String(x.id) !== String(id));
-  }
-  render();
-}
-
-// ---------------------
-// RPC checkout (token)
-// ---------------------
-async function rpcCheckoutOnce(payload){
-  const sb = getSB();
-  if(!sb) throw new Error("Supabase non disponible");
-
-  const sess = window.DIGIY_GUARD.getSession?.() || null;
-  const token = sess?.token || State.token || null;
-  if(!token) throw new Error("token invalide/expiré");
-
-  const items = payload.items.map(i => ({ id: i.id, qty: i.qty }));
-
-  const { data, error } = await sb.rpc("rpc_caisse_checkout_v1", {
-    p_token: token,
-    p_client_txn_id: payload.txn_id,
-    p_method: payload.method,
-    p_items: items
-  });
-
-  if(error) throw new Error(error.message || "RPC error");
-  const r = typeof data === "string" ? JSON.parse(data) : data;
-
-  if(!r || r.ok !== true){
-    throw new Error((r && r.message) ? r.message : "Checkout refusé");
-  }
-
-  return r;
-}
-
-// ---------------------
-// OUTBOX FLUSH
-// ---------------------
-async function outboxFlush(){
-  if(OUTBOX_FLUSHING) return;
-  if(!navigator.onLine) return;
-
-  OUTBOX_FLUSHING = true;
-  try{
-    const pending = outboxPending();
-    if(!pending.length){
-      updateOutboxBadge();
-      return;
-    }
-
-    for(const entry of pending){
-      // petit anti-boucle
-      const lastTry = entry.last_try ? new Date(entry.last_try).getTime() : 0;
-      if(Date.now() - lastTry < 1200) continue;
-
-      outboxMark(entry.txn_id, { last_try: new Date().toISOString(), tries: (entry.tries||0)+1 });
-
-      try{
-        await rpcCheckoutOnce(entry);
-        outboxRemove(entry.txn_id);
-        await loadData();
-        render();
-      }catch(e){
-        const msg = String(e?.message || e);
-        outboxMark(entry.txn_id, { last_error: msg, status: "pending" });
-
-        // si token invalide/expiré -> retour PIN
-        if(msg.toLowerCase().includes("token")){
-          alert("Session expirée. Reconnecte-toi avec ton PIN.");
-          location.replace(withSlug("./pin.html"));
-          return;
-        }
-      }
-    }
-
-    updateOutboxBadge();
-  }finally{
-    OUTBOX_FLUSHING = false;
-  }
-}
-
-// ---------------------
-// CHECKOUT (OUTBOX FIRST)
-// ---------------------
-async function checkout(method){
-  if(!State.cart.length) return;
-
-  if(!State.owner_id){
-    alert("Session invalide. Retour PIN.");
-    location.replace(withSlug("./pin.html"));
+  if(Number(p.stock||0) <= 0){
+    toast("❌ Plus de stock");
     return;
   }
 
-  const total = State.cart.reduce((s, i) => s + (i.price * i.qty), 0);
-  const txn_id = makeTxnId();
+  const inCart = State.cart.find(x => String(x.id) === String(id));
+  if(inCart){
+    inCart.qty++;
+  }else{
+    State.cart.push({ id: p.id, name: p.name, price: Number(p.price||0), stock: Number(p.stock||0), qty: 1 });
+  }
+  render();
+}
 
-  // OUTBOX enqueue
-  const entry = outboxEnqueue({
-    txn_id,
-    owner_id: State.owner_id,
-    slug: State.slug || null,
-    phone: State.phone || null,
-    method,
-    items: State.cart.map(i => ({ id: i.id, name: i.name, price: i.price, qty: i.qty })),
-    total_estimate: total,
-    status: "pending",
+// =============================
+// CHECKOUT (OUTBOX-FIRST) -> RPC
+// =============================
+async function checkout(method){
+  if(!State.cart.length) return;
+
+  const sb = getSB();
+  const sess = window.DIGIY_GUARD?.getSession?.();
+  if(!sb || !sess?.token){
+    alert("Session/token manquant. Reconnecte-toi.");
+    return;
+  }
+
+  const payloadItems = State.cart.map(i => ({ id: i.id, qty: i.qty }));
+  const txnId = makeTxnId();
+
+  // 1) enqueue (zéro perte)
+  outboxEnqueue({
+    txn_id: txnId,
+    method: method,
+    items: payloadItems,
     created_at: new Date().toISOString(),
-    tries: 0,
-    last_try: null,
-    last_error: null
+    tries: 0
   });
 
-  // UX: vider panier direct
+  // 2) vide panier (fluidité caisse)
   State.cart = [];
   render();
 
-  // tentative immédiate
-  try{
-    if(!navigator.onLine) throw new Error("OFFLINE");
-    await rpcCheckoutOnce(entry);
-    outboxRemove(txn_id);
-
-    await loadData();
-    render();
-  }catch(e){
-    outboxMark(txn_id, { status: "pending", last_error: String(e?.message || e) });
-    alert("✅ Vente enregistrée en attente (OUTBOX). Elle sera envoyée dès que le réseau revient.");
+  // 3) tente flush immédiat si online
+  if(navigator.onLine){
+    await outboxFlush();
+  }else{
+    alert("📴 Réseau KO — Vente gardée en attente. Synchro auto au retour réseau.");
   }
-
-  outboxFlush();
 }
 
-// ---------------------
-// ADMIN: add product
-// ---------------------
+// =============================
+// AJOUTER PRODUIT
+// =============================
 async function addNew(){
   const sb = getSB();
   if(!sb) return alert("Supabase non disponible");
 
-  const name = (document.getElementById("addName").value || "").trim();
+  const name = document.getElementById("addName").value.trim();
   const price = parseInt(document.getElementById("addPrice").value, 10);
   const stock = parseInt(document.getElementById("addStock").value, 10) || 0;
 
-  if(!name || !Number.isFinite(price)) return alert("Nom et prix requis");
+  if(!name || !price) return alert("Nom et prix requis");
 
   try{
     const { error } = await sb.from("digiy_caisse_products").insert({
       owner_id: State.owner_id,
-      name,
-      price,
-      stock,
+      name: name,
+      price: price,
+      stock: stock,
       is_active: true
     });
 
@@ -1030,20 +799,22 @@ async function addNew(){
 
     await loadData();
     render();
-    alert("✅ Produit ajouté !");
+    toast("✅ Produit ajouté");
+
   }catch(e){
+    console.error(e);
     alert("❌ Erreur: " + (e?.message || e));
   }
 }
 
-// ---------------------
-// ADMIN: remove product (soft)
-// ---------------------
+// =============================
+// SUPPRIMER PRODUIT
+// =============================
 async function removeItem(id){
-  if(!confirm("Désactiver cet article ?")) return;
+  if(!confirm("Supprimer l'article ?")) return;
 
   const sb = getSB();
-  if(!sb) return alert("Supabase non dispo");
+  if(!sb) return;
 
   try{
     const { error } = await sb.from("digiy_caisse_products")
@@ -1055,46 +826,46 @@ async function removeItem(id){
 
     await loadData();
     render();
+    toast("🗑️ Produit retiré");
+
+  }catch(e){
+    console.error(e);
+    alert("❌ Erreur: " + (e?.message || e));
+  }
+}
+
+// =============================
+// ACTIVATION PRO (placeholder)
+// =============================
+async function activate(inputId){
+  const key = (document.getElementById(inputId).value || "").trim();
+  if(!key) return alert("Clé requise");
+
+  const sb = getSB();
+  if(!sb) return alert("Supabase non disponible");
+
+  try{
+    await sb.from("digiy_caisse_settings")
+      .update({ is_pro: true, pro_key: key })
+      .eq("owner_id", State.owner_id);
+
+    toast("✅ Licence activée");
+    await loadData();
+    render();
   }catch(e){
     alert("❌ Erreur: " + (e?.message || e));
   }
 }
 
-// ---------------------
-// ACTIVATE PRO (placeholder)
-// ---------------------
-async function activate(inputId){
-  const key = (document.getElementById(inputId).value || "").trim();
-  if(!key) return alert("Clé requise");
-
-  // ⚠️ Exemple simple. À relier à ton système licence propre.
-  if(key === "DIGIY-PRO-2026"){
-    const sb = getSB();
-    if(!sb) return alert("Supabase non dispo");
-
-    try{
-      const { error } = await sb.from("digiy_caisse_settings")
-        .update({ is_pro: true, pro_key: key })
-        .eq("owner_id", State.owner_id);
-
-      if(error) throw error;
-      location.reload();
-    }catch(e){
-      alert("❌ Erreur: " + (e?.message || e));
-    }
-  }else{
-    alert("Clé invalide !");
-  }
-}
-
-// ---------------------
-// GO SETTINGS
-// ---------------------
+// =============================
+// GO SETTINGS (avec slug)
+// =============================
 function goSettings(){
   const url = new URL("./settings.html", location.href);
   if(State.slug) url.searchParams.set("slug", State.slug);
   window.location.href = url.toString();
 }
 </script>
+
 </body>
 </html>
