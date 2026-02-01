@@ -1,13 +1,14 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <meta name="theme-color" content="#061b14"/>
-  <title>DIGIY — Porte PIN</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DIGIY — PORTE PIN</title>
 
-  <!-- Supabase -->
+  <!-- Supabase + Guard -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- ✅ IMPORTANT: bump le v= pour casser le cache -->
+  <script src="./guard.js?v=20260201-caisse-token30j"></script>
 
   <style>
     :root{
@@ -123,7 +124,7 @@
     <div id="pinBlock">
       <label for="pin">Entre ton PIN</label>
       <input id="pin" type="password" inputmode="numeric" autocomplete="one-time-code" placeholder="••••" maxlength="8"/>
-      <button class="btn" id="go">🚀 ENTRER</button>
+      <button class="btn" id="go" type="button">🚀 ENTRER</button>
     </div>
 
     <div class="hint" id="hint"></div>
@@ -141,22 +142,24 @@
   // =========================
   // ✅ À RÉGLER PAR MODULE
   // =========================
-  const MODULE_CODE = "caisse_pro";   // ex: "loc_pro" | "pro_driver" | "caisse_pro" | "qr_pro" | "resto_pro" | "pay"
-  const NEXT_URL    = "index.html";   // ex: "planning.html" | "cockpit.html" | "index.html"
+  const MODULE_CODE = "caisse_pro";     // ex: "loc_pro" | "pro_driver" | "caisse_pro" | "qr_pro" | "resto_pro" | "pay"
+  const NEXT_URL    = "index.html";     // ex: "planning.html" | "cockpit.html" | "index.html"
   const PAY_URL     = "https://beauville.github.io/commencer-a-payer/"; // page paiement/activation
-
-  // =========================
-  // SUPABASE (TES CLÉS)
-  // =========================
-  const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
-  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   // =========================
   // UI
   // =========================
   const $ = (id)=>document.getElementById(id);
   const url = new URL(location.href);
+
+  function escapeHtml(str){
+    return String(str||"")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
 
   function setMsg(html){ $("msg").innerHTML = html || ""; }
   function setHint(text){
@@ -179,9 +182,7 @@
     $("subtitle").textContent = "Paiement & activation — sans PIN";
     $("pinBlock").style.display = "none";
     setHint("Ce module ne suit pas le moule PIN/SLUG.\nOn te redirige vers l’entrée PAY.");
-    setTimeout(()=>{
-      location.replace(NEXT_URL);
-    }, 700);
+    setTimeout(()=>{ location.replace(NEXT_URL); }, 700);
     return;
   }
 
@@ -193,10 +194,10 @@
     $("subtitle").textContent = "Mode démo — entrée directe";
     $("pinBlock").style.display = "none";
     setMsg(`<span class="ok">✅ Mode démo activé.</span> Ouverture…`);
-    setHint("Démo 15 jours : accès immédiat, fonctionnalités limitées selon le module.\nPour passer PRO : bouton “Activer licence”.");
+    setHint("Démo 15 jours : accès immédiat.\nPour passer PRO : bouton “Activer licence”.");
     const next = new URL(NEXT_URL, location.href);
     next.searchParams.set("trial","1");
-    if(slug) next.searchParams.set("slug", slug); // optionnel
+    if(slug) next.searchParams.set("slug", slug);
     setTimeout(()=> location.replace(next.toString()), 450);
     return;
   }
@@ -220,13 +221,11 @@
   $("btnTrial").addEventListener("click", ()=>{
     const u = new URL(location.href);
     u.searchParams.set("trial","1");
-    // garde slug si présent
     if(slug) u.searchParams.set("slug", slug);
     location.href = u.toString();
   });
 
   $("btnPay").addEventListener("click", ()=>{
-    // on peut passer des params si tu veux (produit/module)
     const p = new URL(PAY_URL, location.href);
     p.searchParams.set("module", MODULE_CODE);
     if(slug) p.searchParams.set("slug", slug);
@@ -234,35 +233,12 @@
   });
 
   $("btnBack").addEventListener("click", ()=>{
-    // retour simple : l'historique sinon fallback
     if(history.length > 1) history.back();
     else location.href = "https://beauville.github.io/espace-pro/";
   });
 
   // =========================
-  // Sessions
-  // =========================
-  function saveSessions(payload){
-    const session = {
-      slug: payload.slug || slug,
-      phone: payload.phone || null,
-      owner_id: payload.owner_id,
-      module: payload.module || MODULE_CODE,
-      ts: Date.now()
-    };
-
-    localStorage.setItem("DIGIY_ACCESS", JSON.stringify({
-      slug: session.slug,
-      phone: session.phone,
-      owner_id: session.owner_id,
-      ts: session.ts
-    }));
-
-    localStorage.setItem("DIGIY_SESSION_" + MODULE_CODE.toUpperCase(), JSON.stringify(session));
-  }
-
-  // =========================
-  // Enter (PRO)
+  // Enter (PRO) — ✅ via DIGIY_GUARD (token 30j)
   // =========================
   async function enter(){
     const pin = ($("pin").value || "").trim();
@@ -270,36 +246,25 @@
       setMsg(`<span class="bad">❌ PIN invalide.</span>`);
       return;
     }
+
     $("go").disabled = true;
     setMsg(`Vérification en cours…`);
     setHint("");
 
-    const { data, error } = await sb.rpc("digiy_verify_access", {
-      p_slug: slug,
-      p_pin: pin,
-      p_module: MODULE_CODE
-    });
-
-    if(error){
+    if(!window.DIGIY_GUARD?.loginWithPin){
       $("go").disabled = false;
-      setMsg(`<span class="bad">❌ Erreur.</span><br>${String(error.message || error)}`);
+      setMsg(`<span class="bad">❌ Guard manquant.</span><br>Vérifie que <b>guard.js</b> est bien chargé.`);
       return;
     }
 
-    if(!data?.ok){
+    const res = await window.DIGIY_GUARD.loginWithPin(slug, pin);
+
+    if(!res?.ok){
       $("go").disabled = false;
-
-      if(data?.reason === "module_inactive"){
-        setMsg(`<span class="bad">🔒 Module non actif.</span><br>Active ta licence puis reviens.`);
-        setHint("Modules actifs (si renvoyés par RPC) : " + ((data.modules_active||[]).join(", ") || "—"));
-        return;
-      }
-
-      setMsg(`<span class="bad">❌ Accès refusé.</span><br>PIN incorrect.`);
+      setMsg(`<span class="bad">❌ Accès refusé.</span><br>${escapeHtml(res?.error || "PIN incorrect")}`);
       return;
     }
 
-    saveSessions(data);
     setMsg(`<span class="ok">✅ Accès validé.</span> Ouverture…`);
 
     setTimeout(()=>{
@@ -316,3 +281,4 @@
 </script>
 </body>
 </html>
+
