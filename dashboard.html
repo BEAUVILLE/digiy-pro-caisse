@@ -1,159 +1,282 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DIGIY ELITE — Dashboard Pro</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --gold: #fbbf24; --bg: #0f172a; --card: #1e293b;
-            --text: #f8fafc; --muted: #94a3b8;
-            --gradient: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
-            --green: #10b981; --red: #ef4444; --indigo: #6366f1;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>DIGIY CAISSE PRO — Dashboard Z</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --gold: #fbbf24; --bg: #0f172a; --card: #1e293b;
+      --text: #f8fafc; --muted: #94a3b8;
+      --gradient: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+      --green: #10b981; --red: #ef4444; --indigo: #6366f1;
+      --line: rgba(255,255,255,0.08);
+    }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: var(--text); padding: 20px; line-height: 1.6; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding: 20px; line-height: 1.6; }
 
-        /* Navigation Onglets */
-        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .tabs { display: flex; gap: 10px; margin-bottom: 25px; }
-        .tab-btn { padding: 12px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: var(--card); color: var(--muted); cursor: pointer; font-weight: 700; transition: 0.3s; }
-        .tab-btn.active { background: var(--gradient); color: #000; border-color: var(--gold); }
+    /* Navigation Onglets */
+    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap:12px; flex-wrap:wrap; }
+    .tabs { display: flex; gap: 10px; margin-bottom: 22px; flex-wrap:wrap; }
+    .tab-btn { padding: 12px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: var(--card); color: var(--muted); cursor: pointer; font-weight: 900; transition: 0.3s; user-select:none; }
+    .tab-btn.active { background: var(--gradient); color: #000; border-color: var(--gold); }
 
-        .main-grid { display: grid; grid-template-columns: 1fr 350px; gap: 25px; }
-        @media (max-width: 1000px) { .main-grid { grid-template-columns: 1fr; } }
+    .main-grid { display: grid; grid-template-columns: 1fr 350px; gap: 25px; }
+    @media (max-width: 1000px) { .main-grid { grid-template-columns: 1fr; } }
 
-        .card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 25px; }
-        .card h3 { color: var(--gold); margin-bottom: 20px; font-size: 16px; border-bottom: 1px solid rgba(251,191,36,0.1); padding-bottom: 10px; }
+    .card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 25px; }
+    .card h3 { color: var(--gold); margin-bottom: 16px; font-size: 16px; border-bottom: 1px solid rgba(251,191,36,0.1); padding-bottom: 10px; }
 
-        .btn { padding: 15px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-bottom: 10px; text-decoration: none; }
-        .btn-gold { background: var(--gradient); color: #000; }
-        .btn-red { background: var(--red); color: white; }
-        .btn-indigo { background: var(--indigo); color: white; }
+    .btn { padding: 15px; border: none; border-radius: 12px; font-weight: 900; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-bottom: 10px; text-decoration: none; }
+    .btn-gold { background: var(--gradient); color: #000; }
+    .btn-red { background: var(--red); color: white; }
+    .btn-indigo { background: var(--indigo); color: white; }
+    .btn-ghost { background: transparent; color: var(--gold); border: 1px solid rgba(251,191,36,.25); }
 
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; font-size: 11px; color: var(--muted); padding: 10px; }
-        td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; }
+    table { width: 100%; border-collapse: collapse; }
+    th { text-align: left; font-size: 11px; color: var(--muted); padding: 10px; }
+    td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; vertical-align: top; }
 
-        .page { display: none; }
-        .page.active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .page { display: none; }
+    .page.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        @media print {
-            .no-print { display: none !important; }
-            body { background: white !important; color: black !important; }
-            .card { border: none !important; background: white !important; color: black !important; }
-        }
-    </style>
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      color: var(--muted);
+      font-weight: 900;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .pill b{ color: var(--text); }
+    .status-dot{ width:8px;height:8px;border-radius:50%; display:inline-block; margin-right:6px; }
+    .dot-ok{ background: var(--green); }
+    .dot-wait{ background: var(--gold); }
+
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white !important; color: black !important; padding:0 !important; }
+      .card { border: none !important; background: white !important; color: black !important; }
+      th{color:#111 !important}
+      td{border-bottom:1px solid #ddd !important}
+    }
+  </style>
 </head>
 <body>
 
+<!-- ✅ DIGIY ENGINE -->
+<script src="./guard.js?v=20260126-token30j"></script>
+<script>
+  // Boot guard (sécurité)
+  (async()=>{
+    if(window.DIGIY_GUARD?.boot){
+      const r = await window.DIGIY_GUARD.boot({ login:"./pin.html" });
+      if(!r?.ok) return;
+    }
+  })();
+
+  const s = window.DIGIY_GUARD?.getSession?.() || window.DIGIY_ACCESS || {};
+  const SLUG = String(s.slug || "").toLowerCase();
+  const OWNER = s.owner_id || "";
+  const KEY_SALES = "DIGIY_CAISSE_TICKETS::" + (SLUG || "noslug");
+
+  function dayKeyNow(){ return new Date().toISOString().slice(0,10); }
+
+  function getSales(){
+    try{
+      const rows = JSON.parse(localStorage.getItem(KEY_SALES) || "[]");
+      return Array.isArray(rows) ? rows : [];
+    }catch(_){ return []; }
+  }
+  function setSales(rows){
+    localStorage.setItem(KEY_SALES, JSON.stringify(rows || []));
+  }
+</script>
+
 <div class="top-bar no-print">
+  <div style="display:flex;flex-direction:column;gap:8px">
     <h1 id="storeDisplay">DASHBOARD PRO</h1>
-    <a href="index.html" style="color:var(--gold); text-decoration:none; font-weight:800;"><i class="fas fa-arrow-left"></i> RETOUR</a>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <span class="pill">SLUG: <b id="slugTxt">—</b></span>
+      <span class="pill">OWNER: <b id="ownerTxt">—</b></span>
+      <span class="pill">DATE: <b id="dayTxt">—</b></span>
+    </div>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <a href="index.html" class="btn btn-ghost" style="width:auto;margin:0;padding:10px 14px;">
+      <i class="fas fa-arrow-left"></i> RETOUR
+    </a>
+    <button class="btn btn-red" style="width:auto;margin:0;padding:10px 14px;" onclick="logout()">
+      <i class="fas fa-door-open"></i> LOGOUT
+    </button>
+  </div>
 </div>
 
 <div class="tabs no-print">
-    <div class="tab-btn active" onclick="switchTab('cloture', this)"><i class="fas fa-cash-register"></i> CLÔTURE DU JOUR</div>
-    <div class="tab-btn" onclick="switchTab('archives', this)"><i class="fas fa-archive"></i> HISTORIQUE DES Z</div>
+  <div class="tab-btn active" onclick="switchTab('cloture', this)"><i class="fas fa-cash-register"></i> CLÔTURE DU JOUR</div>
+  <div class="tab-btn" onclick="switchTab('archives', this)"><i class="fas fa-archive"></i> HISTORIQUE DES Z</div>
 </div>
 
 <div id="cloturePage" class="page active">
-    <div class="main-grid">
-        <div class="left-col">
-            <div class="card">
-                <h3><i class="fas fa-list"></i> ENCAISSEMENTS EN COURS</h3>
-                <table>
-                    <thead><tr><th>HEURE</th><th>MONTANT</th><th>MODE</th></tr></thead>
-                    <tbody id="salesTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-        <div class="right-col no-print">
-            <div class="card" style="text-align:center;">
-                <small>TOTAL À CLÔTURER (TTC)</small>
-                <h2 id="totalTTC" style="font-size:2.2rem; color:var(--gold); margin:10px 0;">0 F</h2>
-                <button class="btn btn-indigo" onclick="window.print()"><i class="fas fa-print"></i> IMPRIMER X</button>
-                <button class="btn btn-red" onclick="clotureZ()" style="margin-top:20px;"><i class="fas fa-power-off"></i> EFFECTUER CLÔTURE Z</button>
-            </div>
-        </div>
+  <div class="main-grid">
+    <div class="left-col">
+      <div class="card">
+        <h3><i class="fas fa-list"></i> ENCAISSEMENTS DU JOUR</h3>
+        <table>
+          <thead><tr><th>HEURE</th><th>MONTANT</th><th>MODE</th><th>SYNC</th></tr></thead>
+          <tbody id="salesTableBody"></tbody>
+        </table>
+      </div>
     </div>
+    <div class="right-col no-print">
+      <div class="card" style="text-align:center;">
+        <small>TOTAL À CLÔTURER (TTC)</small>
+        <h2 id="totalTTC" style="font-size:2.2rem; color:var(--gold); margin:10px 0;">0 F</h2>
+        <button class="btn btn-indigo" onclick="window.print()"><i class="fas fa-print"></i> IMPRIMER X</button>
+        <button class="btn btn-gold" onclick="exportJSON()"><i class="fas fa-download"></i> EXPORT JSON</button>
+        <button class="btn btn-red" onclick="clotureZ()" style="margin-top:10px;"><i class="fas fa-power-off"></i> EFFECTUER CLÔTURE Z</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div id="archivesPage" class="page">
-    <div class="card">
-        <h3><i class="fas fa-history"></i> ANCIENNES CLÔTURES (RAPPORTS Z)</h3>
-        <table>
-            <thead><tr><th>DATE DU Z</th><th>VENTES</th><th>CA TOTAL</th><th>ACTIONS</th></tr></thead>
-            <tbody id="archivesTableBody"></tbody>
-        </table>
-    </div>
+  <div class="card">
+    <h3><i class="fas fa-history"></i> ANCIENNES CLÔTURES (RAPPORTS Z)</h3>
+    <table>
+      <thead><tr><th>DATE DU Z</th><th>VENTES</th><th>CA TOTAL</th><th>ACTIONS</th></tr></thead>
+      <tbody id="archivesTableBody"></tbody>
+    </table>
+  </div>
 </div>
 
 <script>
-    function switchTab(id, btn) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id+'Page').classList.add('active');
-        btn.classList.add('active');
-        if(id === 'archives') renderArchives();
+  function logout(){
+    if(window.DIGIY_GUARD?.logout) return window.DIGIY_GUARD.logout("./pin.html");
+    localStorage.removeItem("DIGIY_ACCESS");
+    location.href = "./pin.html" + (SLUG ? ("?slug="+encodeURIComponent(SLUG)) : "");
+  }
+
+  function switchTab(id, btn) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id+'Page').classList.add('active');
+    btn.classList.add('active');
+    if(id === 'archives') renderArchives();
+  }
+
+  function loadData() {
+    document.getElementById("slugTxt").textContent = SLUG || "—";
+    document.getElementById("ownerTxt").textContent = OWNER || "—";
+    document.getElementById("dayTxt").textContent = dayKeyNow();
+    document.getElementById("storeDisplay").textContent = "DASHBOARD CAISSE • " + (SLUG || "PRO");
+
+    const sales = getSales();
+    const todayKey = dayKeyNow();
+    const currentSales = sales.filter(s => (s.day_key === todayKey) && !s.archived);
+
+    const ttc = currentSales.reduce((a, b) => a + (Number(b.total)||0), 0);
+    document.getElementById('totalTTC').innerText = ttc.toLocaleString() + " F";
+
+    document.getElementById('salesTableBody').innerHTML = currentSales.map(s => {
+      const ok = !!s.synced;
+      const dot = ok ? "dot-ok" : "dot-wait";
+      const label = ok ? "SYNC" : "WAIT";
+      const method = String(s.method || "cash").toUpperCase();
+      const time = new Date(s.created_at || Date.now()).toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+      return `
+        <tr>
+          <td>${time}</td>
+          <td><b>${(Number(s.total)||0).toLocaleString()} F</b></td>
+          <td>${method}</td>
+          <td><span class="status-dot ${dot}"></span><b>${label}</b></td>
+        </tr>
+      `;
+    }).join('') || `<tr><td colspan="4" style="color:var(--muted);padding:16px">Aucune vente aujourd’hui.</td></tr>`;
+  }
+
+  function clotureZ() {
+    const sales = getSales();
+    const todayKey = dayKeyNow();
+    const current = sales.filter(s => (s.day_key === todayKey) && !s.archived);
+
+    if(current.length === 0) return alert("Rien à clôturer frérot !");
+
+    const ttc = current.reduce((a,b)=>a+(Number(b.total)||0),0);
+
+    if(confirm("Confirmer la clôture Z ?\nTotal: " + ttc.toLocaleString() + " F\nLe Z sera archivé.")) {
+      window.print();
+
+      const updated = sales.map(s => {
+        if(s.day_key === todayKey) return {...s, archived:true, z_closed_at: new Date().toISOString()};
+        return s;
+      });
+
+      setSales(updated);
+      loadData();
+      alert("✅ Clôture Z faite. Archive OK.");
     }
+  }
 
-    function loadData() {
-        const sales = JSON.parse(localStorage.getItem('el_sales')) || [];
-        const today = new Date().toLocaleDateString();
-        const currentSales = sales.filter(s => new Date(s.id).toLocaleDateString() === today && !s.archived);
-        
-        const ttc = currentSales.reduce((a, b) => a + b.total, 0);
-        document.getElementById('totalTTC').innerText = ttc.toLocaleString() + " F";
-        document.getElementById('salesTableBody').innerHTML = currentSales.map(s => `
-            <tr><td>${new Date(s.id).toLocaleTimeString()}</td><td><b>${s.total.toLocaleString()} F</b></td><td>${s.method}</td></tr>
-        `).join('');
-    }
+  function renderArchives() {
+    const sales = getSales();
+    const archives = {};
 
-    function clotureZ() {
-        const sales = JSON.parse(localStorage.getItem('el_sales')) || [];
-        const today = new Date().toLocaleDateString();
-        const current = sales.filter(s => new Date(s.id).toLocaleDateString() === today && !s.archived);
+    sales.filter(s => s.archived).forEach(s => {
+      const d = s.day_key || "unknown";
+      if(!archives[d]) archives[d] = { count: 0, total: 0 };
+      archives[d].count++;
+      archives[d].total += (Number(s.total)||0);
+    });
 
-        if(current.length === 0) return alert("Rien à clôturer frérot !");
+    const dates = Object.keys(archives).sort((a,b)=> b.localeCompare(a));
 
-        if(confirm("Confirmer la clôture Z ?\nLe total sera archivé et la caisse remise à zéro.")) {
-            window.print(); // Impression du rapport final
-            
-            const updatedSales = sales.map(s => {
-                if(new Date(s.id).toLocaleDateString() === today) return {...s, archived: true};
-                return s;
-            });
-            localStorage.setItem('el_sales', JSON.stringify(updatedSales));
-            location.reload();
-        }
-    }
+    document.getElementById('archivesTableBody').innerHTML = dates.map(date => `
+      <tr>
+        <td>${date}</td>
+        <td>${archives[date].count} ventes</td>
+        <td style="font-weight:900; color:var(--green);">${archives[date].total.toLocaleString()} F</td>
+        <td>
+          <button onclick="showZ('${date}')" class="tab-btn" style="padding:6px 10px; font-size:10px;">
+            VOIR
+          </button>
+        </td>
+      </tr>
+    `).join('') || `<tr><td colspan="4" style="color:var(--muted);padding:16px">Aucune archive.</td></tr>`;
+  }
 
-    function renderArchives() {
-        const sales = JSON.parse(localStorage.getItem('el_sales')) || [];
-        // On regroupe les ventes archivées par date
-        const archives = {};
-        sales.filter(s => s.archived).forEach(s => {
-            const d = new Date(s.id).toLocaleDateString();
-            if(!archives[d]) archives[d] = { count: 0, total: 0 };
-            archives[d].count++;
-            archives[d].total += s.total;
-        });
+  function showZ(date){
+    const sales = getSales().filter(s => s.archived && (s.day_key === date));
+    const total = sales.reduce((a,b)=>a+(Number(b.total)||0),0);
+    const by = {};
+    sales.forEach(s=>{
+      const m = String(s.method||"cash");
+      by[m] = (by[m]||0) + (Number(s.total)||0);
+    });
+    const lines = Object.keys(by).map(k=> `- ${k.toUpperCase()}: ${by[k].toLocaleString()} F`).join("\n");
+    alert("Rapport Z — " + date + "\n\nTotal: " + total.toLocaleString() + " F\n\nDétail:\n" + (lines||"-"));
+  }
 
-        document.getElementById('archivesTableBody').innerHTML = Object.keys(archives).reverse().map(date => `
-            <tr>
-                <td>${date}</td>
-                <td>${archives[date].count} ventes</td>
-                <td style="font-weight:bold; color:var(--green);">${archives[date].total.toLocaleString()} F</td>
-                <td><button onclick="alert('Rapport de CA pour le ${date} : ${archives[date].total} F')" class="tab-btn" style="padding:5px 10px; font-size:10px;">VOIR</button></td>
-            </tr>
-        `).join('');
-    }
+  function exportJSON(){
+    const pack = { slug: SLUG, owner_id: OWNER, sales: getSales() };
+    const blob = new Blob([JSON.stringify(pack,null,2)], { type:"application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "caisse-" + (SLUG||"pro") + "-dashboard.json";
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 800);
+  }
 
-    loadData();
+  // init
+  loadData();
+  // refresh léger (si une vente arrive / flush)
+  setInterval(loadData, 2500);
 </script>
+
 </body>
 </html>
