@@ -566,7 +566,7 @@ function outboxInit(){
 
   setTimeout(() => { if(navigator.onLine) outboxFlush(); }, 900);
 }
-
+  if(IS_TRIAL) return; // ✅ en mode demo, on ne lance pas le PRO
 // =============================
 // INIT + PROTECTION
 // =============================
