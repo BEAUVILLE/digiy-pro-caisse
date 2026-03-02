@@ -1,20 +1,17 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DIGIY — PORTE PIN</title>
-
-  <!-- Supabase + Guard -->
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="theme-color" content="#061b14"/>
+  <title>DIGIY PRO — PIN ROYAL</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- ✅ IMPORTANT: bump le v= pour casser le cache -->
-  <script src="./guard.js?v=20260201-caisse-token30j"></script>
 
   <style>
     :root{
       --bg:#061b14; --card:#0b2a1f; --line:rgba(255,255,255,.14);
       --text:#eafff1; --muted:rgba(234,255,241,.72);
-      --gold:#facc15; --ok:#22c55e; --bad:#fb7185; --cyan:#22d3ee;
+      --gold:#facc15; --ok:#22c55e; --bad:#fb7185; --warn:#f59e0b;
       --shadow:0 18px 55px rgba(0,0,0,.45);
     }
     *{box-sizing:border-box}
@@ -26,14 +23,14 @@
       color:var(--text); padding:18px;
     }
     .card{
-      width:min(560px,92vw);
+      width:min(580px,92vw);
       background:linear-gradient(145deg,rgba(11,42,31,.96),rgba(6,35,25,.96));
       border:1px solid var(--line);
       border-radius:22px;
       box-shadow:var(--shadow);
-      padding:18px;
+      padding:20px;
     }
-    .top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
     .brand{display:flex;align-items:center;gap:10px}
     .ico{
       width:46px;height:46px;border-radius:50%;
@@ -51,53 +48,55 @@
       font-size:12px;font-weight:900;
       white-space:nowrap;
     }
-    .sep{height:1px;background:var(--line);margin:14px 0}
-    .mini{margin-top:10px; font-size:12px; color:var(--muted); line-height:1.45}
+    .sep{height:1px;background:var(--line);margin:16px 0}
+
+    .mini{font-size:12px;color:var(--muted);line-height:1.4}
     .mini b{color:var(--text)}
+
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    .row > *{flex:1;min-width:220px}
+
     label{display:block;font-size:12px;color:var(--muted);margin:10px 0 6px}
     input{
-      width:100%; padding:14px 14px;
+      width:100%; padding:14px;
       border-radius:14px; border:1px solid var(--line);
       background:rgba(0,0,0,.22); color:var(--text);
-      font-size:16px; font-weight:900; letter-spacing:.14em;
+      font-size:15px; font-weight:800;
       outline:none;
     }
-    input:focus{border-color:rgba(250,204,21,.6); box-shadow:0 0 0 3px rgba(250,204,21,.10)}
-    .btn{
-      width:100%; margin-top:12px; padding:14px 14px;
+    #pin{letter-spacing:.18em;font-size:18px}
+
+    button{
+      width:100%; margin-top:12px; padding:14px;
       border-radius:14px; border:none;
       background:linear-gradient(90deg,var(--ok),var(--gold));
       color:#062015; font-weight:1000; font-size:15px;
       cursor:pointer;
     }
-    .btn:disabled{opacity:.6; cursor:not-allowed}
-    .btn.secondary{
+    button.secondary{
       background:rgba(255,255,255,.06);
-      color:var(--text);
       border:1px solid rgba(255,255,255,.16);
+      color:var(--text);
     }
-    .btn.cyan{
-      background:linear-gradient(135deg,var(--cyan),#60a5fa);
-      color:#04160f;
-      border:none;
+    button.danger{
+      background:rgba(251,113,133,.10);
+      border:1px solid rgba(251,113,133,.35);
+      color:var(--text);
     }
-    .row{display:grid;gap:10px;margin-top:10px}
-    @media(min-width:520px){ .row{grid-template-columns:1fr 1fr} .row .span2{grid-column:span 2} }
+    button:disabled{opacity:.6;cursor:not-allowed}
+
+    .box{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:12px;
+      background:rgba(0,0,0,.12);
+      margin-top:14px;
+    }
+
     .msg{margin-top:12px;font-size:12px;color:var(--muted);line-height:1.5}
-    .ok{color:var(--ok); font-weight:900}
-    .bad{color:var(--bad); font-weight:900}
-    .hint{
-      margin-top:10px;
-      padding:10px 12px;border-radius:14px;
-      border:1px solid rgba(34,197,94,.25);
-      background:rgba(34,197,94,.08);
-      color:#bbf7d0;
-      font-weight:850;
-      display:none;
-      white-space:pre-wrap;
-    }
-    .hint.show{display:block}
-    a.link{color:#fde68a;text-decoration:none;font-weight:900}
+    .ok{color:var(--ok);font-weight:900}
+    .bad{color:var(--bad);font-weight:900}
+    .warn{color:var(--warn);font-weight:900}
   </style>
 </head>
 
@@ -105,180 +104,164 @@
   <div class="card">
     <div class="top">
       <div class="brand">
-        <div class="ico">🦅</div>
+        <div class="ico">👑</div>
         <div>
-          <div class="t" id="title">PORTE PIN</div>
+          <div class="t">PIN ROYAL</div>
           <div class="sub" id="subtitle">Chargement…</div>
         </div>
       </div>
-      <div class="pill" id="modPill">—</div>
+      <div class="pill" id="modulePill">—</div>
     </div>
 
     <div class="sep"></div>
 
     <div class="mini">
-      SLUG : <b id="slugBox">—</b><br>
-      MODE : <b id="modeBox">—</b>
+      MODULE : <b id="moduleBox">—</b><br>
+      SLUG : <b id="slugBox">—</b>
     </div>
 
-    <div id="pinBlock">
-      <label for="pin">Entre ton PIN</label>
-      <input id="pin" type="password" inputmode="numeric" autocomplete="one-time-code" placeholder="••••" maxlength="8"/>
-      <button class="btn" id="go" type="button">🚀 ENTRER</button>
+    <!-- MODE SAUVETAGE -->
+    <div class="box" id="rescueBox" style="display:none;">
+      <div class="mini"><b>🔎 Retrouver mon accès</b> — si tu es arrivé sans slug.</div>
+      <div class="row">
+        <div>
+          <label>Téléphone (digits)</label>
+          <input id="rescuePhone" inputmode="numeric" placeholder="Ex: 221771234567" maxlength="15"/>
+        </div>
+        <div>
+          <label>Module</label>
+          <input id="rescueModule" placeholder="POS / RESTO / LOC / DRIVER..." maxlength="20"/>
+        </div>
+      </div>
+      <button class="secondary" id="btnFindSlug">🧭 Trouver mon accès</button>
+      <div class="msg" id="rescueMsg"></div>
     </div>
 
-    <div class="hint" id="hint"></div>
+    <label>Entre ton PIN</label>
+    <input id="pin" type="password" inputmode="numeric" maxlength="8" placeholder="••••"/>
+
+    <button id="go">🚀 ENTRER</button>
+    <button class="danger" id="btnSupport">🛟 Support WhatsApp</button>
+
     <div class="msg" id="msg"></div>
-
-    <div class="row">
-      <button class="btn cyan" id="btnTrial" type="button">🎁 Essai 15 jours</button>
-      <button class="btn secondary" id="btnPay" type="button">🧾 Activer licence</button>
-      <button class="btn secondary span2" id="btnBack" type="button">← Retour</button>
-    </div>
   </div>
 
 <script>
 (async () => {
-  // =========================
-  // ✅ À RÉGLER PAR MODULE
-  // =========================
-  const MODULE_CODE = "caisse_pro";     // ex: "loc_pro" | "pro_driver" | "caisse_pro" | "qr_pro" | "resto_pro" | "pay"
-  const NEXT_URL    = "index.html";     // ex: "planning.html" | "cockpit.html" | "index.html"
-  const PAY_URL     = "https://beauville.github.io/commencer-a-payer/"; // page paiement/activation
+  "use strict";
 
-  // =========================
-  // UI
-  // =========================
-  const $ = (id)=>document.getElementById(id);
+  const SUPPORT_WA = "+221771342889";
+
+  const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+  const SUPABASE_ANON_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
+
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth:{ persistSession:false, autoRefreshToken:false, detectSessionInUrl:false }
+  });
+
+  const $ = id => document.getElementById(id);
+  const msg = html => $("msg").innerHTML = html;
+  const msgRescue = html => $("rescueMsg").innerHTML = html;
+
   const url = new URL(location.href);
+  const rawModule = (url.searchParams.get("module") || "").toUpperCase();
+  const ret = (url.searchParams.get("return") || "").trim();
+  let currentSlug = (url.searchParams.get("slug") || "").toLowerCase();
 
-  function escapeHtml(str){
-    return String(str||"")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
+  const MODULE_ALIAS = { CAISSE:"POS" };
+  const TARGET_MODULE = MODULE_ALIAS[rawModule] || rawModule || "POS";
+
+  $("moduleBox").textContent = TARGET_MODULE;
+  $("modulePill").textContent = TARGET_MODULE;
+  $("slugBox").textContent = currentSlug || "—";
+
+  const cleanDigits = v => String(v||"").replace(/[^\d]/g,"").slice(0,15);
+  const cleanModule = v => String(v||"").toUpperCase().replace(/[^A-Z_]/g,"");
+  const cleanPin = v => String(v||"").replace(/[^\d]/g,"").slice(0,8);
+
+  function wa(text){
+    const num = SUPPORT_WA.replace(/\+/g,"");
+    location.href = "https://wa.me/" + num + "?text=" + encodeURIComponent(text);
   }
 
-  function setMsg(html){ $("msg").innerHTML = html || ""; }
-  function setHint(text){
-    $("hint").textContent = text || "";
-    $("hint").classList.toggle("show", !!text);
+  function goNext(){
+    if(ret){
+      const u = new URL(ret, location.origin);
+      u.searchParams.set("slug", currentSlug);
+      u.searchParams.set("module", TARGET_MODULE);
+      u.searchParams.set("from","pin_royal");
+      location.href = u.toString();
+      return;
+    }
+    location.href = "/";
   }
 
-  $("modPill").textContent = MODULE_CODE;
-  $("title").textContent = "PORTE — " + MODULE_CODE.toUpperCase();
-
-  const slug = (url.searchParams.get("slug") || "").trim().toLowerCase();
-  const trial = url.searchParams.get("trial"); // "1" = demo
-  $("slugBox").textContent = slug || "—";
-
-  // =========================
-  // PAY : pas de PIN / pas de slug
-  // =========================
-  if(MODULE_CODE === "pay"){
-    $("modeBox").textContent = "PAY (sans PIN)";
-    $("subtitle").textContent = "Paiement & activation — sans PIN";
-    $("pinBlock").style.display = "none";
-    setHint("Ce module ne suit pas le moule PIN/SLUG.\nOn te redirige vers l’entrée PAY.");
-    setTimeout(()=>{ location.replace(NEXT_URL); }, 700);
-    return;
-  }
-
-  // =========================
-  // MODE DEMO (trial=1) : entrée directe
-  // =========================
-  if(trial === "1"){
-    $("modeBox").textContent = "DEMO (trial=1)";
-    $("subtitle").textContent = "Mode démo — entrée directe";
-    $("pinBlock").style.display = "none";
-    setMsg(`<span class="ok">✅ Mode démo activé.</span> Ouverture…`);
-    setHint("Démo 15 jours : accès immédiat.\nPour passer PRO : bouton “Activer licence”.");
-    const next = new URL(NEXT_URL, location.href);
-    next.searchParams.set("trial","1");
-    if(slug) next.searchParams.set("slug", slug);
-    setTimeout(()=> location.replace(next.toString()), 450);
-    return;
-  }
-
-  // =========================
-  // MODE PRO : slug obligatoire
-  // =========================
-  $("modeBox").textContent = "PRO (PIN + slug)";
-  $("subtitle").textContent = slug ? "Accès sécurisé — PIN requis" : "SLUG manquant";
-
-  if(!slug){
-    setMsg(`<span class="bad">❌ SLUG manquant.</span><br>Entre via ton Espace PRO / QR Factory (lien avec <b>?slug=...</b>).`);
-    $("go").disabled = true;
+  if(!currentSlug){
+    $("rescueBox").style.display = "block";
+    $("rescueModule").value = TARGET_MODULE;
+    $("subtitle").textContent = "Mode sauvetage actif";
+    msg(`<span class="warn">⚠️ Arrivé sans slug.</span> Mets ton téléphone.`);
   } else {
-    setTimeout(()=>$("pin").focus(), 150);
+    $("subtitle").textContent = "Accès sécurisé — PIN requis";
   }
 
-  // =========================
-  // Boutons bas
-  // =========================
-  $("btnTrial").addEventListener("click", ()=>{
-    const u = new URL(location.href);
-    u.searchParams.set("trial","1");
-    if(slug) u.searchParams.set("slug", slug);
-    location.href = u.toString();
+  $("btnFindSlug").addEventListener("click", async ()=>{
+    const phone = cleanDigits($("rescuePhone").value);
+    const mod = cleanModule($("rescueModule").value || TARGET_MODULE);
+
+    if(phone.length < 9){
+      msgRescue(`<span class="bad">Téléphone invalide.</span>`); return;
+    }
+
+    const { data } = await sb
+      .from("digiy_subscriptions_public")
+      .select("slug")
+      .eq("phone", phone)
+      .eq("module", mod)
+      .limit(1);
+
+    if(!data || !data[0]){
+      msgRescue(`<span class="bad">Aucun accès trouvé.</span>`); return;
+    }
+
+    currentSlug = data[0].slug;
+    $("slugBox").textContent = currentSlug;
+    msgRescue(`<span class="ok">Accès trouvé.</span> Entre ton PIN.`);
   });
 
-  $("btnPay").addEventListener("click", ()=>{
-    const p = new URL(PAY_URL, location.href);
-    p.searchParams.set("module", MODULE_CODE);
-    if(slug) p.searchParams.set("slug", slug);
-    window.open(p.toString(), "_blank", "noopener");
-  });
-
-  $("btnBack").addEventListener("click", ()=>{
-    if(history.length > 1) history.back();
-    else location.href = "https://beauville.github.io/espace-pro/";
-  });
-
-  // =========================
-  // Enter (PRO) — ✅ via DIGIY_GUARD (token 30j)
-  // =========================
   async function enter(){
-    const pin = ($("pin").value || "").trim();
-    if(pin.length < 3){
-      setMsg(`<span class="bad">❌ PIN invalide.</span>`);
-      return;
+    const pin = cleanPin($("pin").value);
+    if(!currentSlug){ msg(`<span class="bad">Slug manquant.</span>`); return; }
+    if(pin.length < 3){ msg(`<span class="bad">PIN invalide.</span>`); return; }
+
+    const { data } = await sb.rpc("digiy_verify_access", {
+      p_slug: currentSlug,
+      p_pin: pin,
+      p_module: TARGET_MODULE
+    });
+
+    if(!data?.ok){
+      msg(`<span class="bad">Accès refusé.</span>`); return;
     }
 
-    $("go").disabled = true;
-    setMsg(`Vérification en cours…`);
-    setHint("");
+    localStorage.setItem("DIGIY_ACCESS", JSON.stringify({
+      slug: currentSlug,
+      module: TARGET_MODULE,
+      ts: Date.now()
+    }));
 
-    if(!window.DIGIY_GUARD?.loginWithPin){
-      $("go").disabled = false;
-      setMsg(`<span class="bad">❌ Guard manquant.</span><br>Vérifie que <b>guard.js</b> est bien chargé.`);
-      return;
-    }
-
-    const res = await window.DIGIY_GUARD.loginWithPin(slug, pin);
-
-    if(!res?.ok){
-      $("go").disabled = false;
-      setMsg(`<span class="bad">❌ Accès refusé.</span><br>${escapeHtml(res?.error || "PIN incorrect")}`);
-      return;
-    }
-
-    setMsg(`<span class="ok">✅ Accès validé.</span> Ouverture…`);
-
-    setTimeout(()=>{
-      const next = new URL(NEXT_URL, location.href);
-      next.searchParams.set("slug", slug);
-      location.href = next.toString();
-    }, 450);
+    msg(`<span class="ok">Accès validé.</span>`);
+    setTimeout(goNext,300);
   }
 
   $("go").addEventListener("click", enter);
-  $("pin").addEventListener("keydown", (e)=>{ if(e.key === "Enter") enter(); });
+  $("pin").addEventListener("keydown", e=>{ if(e.key==="Enter") enter(); });
+  $("btnSupport").addEventListener("click", ()=>{
+    wa("DIGIY PRO - Problème PIN\nModule: "+TARGET_MODULE+"\nSlug: "+(currentSlug||"-"));
+  });
 
 })();
 </script>
 </body>
 </html>
-
