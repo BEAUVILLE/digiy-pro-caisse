@@ -1,111 +1,88 @@
-// guard-pro.js — DIGIY PRO access gate (slug-first) -> commencer-a-payer
-(() => {
+/* guard-pro.js — CAISSE PRO (alias POS) */
+(async function(){
   "use strict";
 
   const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
   const SUPABASE_ANON_KEY =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
 
-  // ✅ À CHANGER PAR MODULE
-  const MODULE_CODE = "CAISSE"; // ex: DRIVER, LOC, RESTO, POS, RESA, BUILD, EXPLORE, FRET_CHAUF, FRET_CLIENT
+  const PIN_HUB = "https://beauville.github.io/qr_pro/pin.html";
+  const PAY_URL = "https://beauville.github.io/commencer-a-payer/"; // si tu veux fallback paiement
 
-  const PAY_URL = "https://commencer-a-payer.digiylyfe.com/";
+  // ✅ IMPORTANT : CAISSE PRO = POS (source de vérité)
+  const MODULE = "POS";
 
-  const qs = new URLSearchParams(location.search);
-  const slugQ  = (qs.get("slug")  || "").trim();
-  const phoneQ = (qs.get("phone") || "").trim();
+  const url = new URL(location.href);
+  const slug = (url.searchParams.get("slug") || "").trim();
 
-  function normPhone(p) {
-    const d = String(p || "").replace(/[^\d]/g, "");
-    return d.length >= 9 ? d : "";
+  const ret = encodeURIComponent(location.origin + location.pathname + (slug ? ("?slug="+encodeURIComponent(slug)) : ""));
+
+  function goPin(){
+    const u = `${PIN_HUB}?module=${encodeURIComponent(MODULE)}&return=${ret}` + (slug ? `&slug=${encodeURIComponent(slug)}` : "");
+    location.replace(u);
   }
 
-  function normSlug(s) {
-    return String(s || "")
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, "-")
-      .replace(/[^a-z0-9-]/g, "")
-      .replace(/-+/g, "-")
-      .replace(/^-|-$/g, "");
-  }
-
-  async function rpc(name, params) {
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${name}`, {
-      method: "POST",
-      headers: {
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(params),
-    });
-
-    const j = await r.json().catch(() => null);
-    return { ok: r.ok, status: r.status, data: j };
-  }
-
-  async function resolvePhoneFromSlug(slug) {
-    const s = normSlug(slug);
-    if (!s) return "";
-
-    // ✅ view publique minimaliste: phone + module + slug
-    const url =
-      `${SUPABASE_URL}/rest/v1/digiy_subscriptions_public` +
-      `?select=phone,slug,module&slug=eq.${encodeURIComponent(s)}&limit=1`;
-
-    const r = await fetch(url, {
-      headers: {
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-      },
-    });
-
-    const arr = await r.json().catch(() => []);
-    if (!r.ok || !Array.isArray(arr) || !arr[0]?.phone) return "";
-    return String(arr[0].phone);
-  }
-
-  function goPay({ phone, slug }) {
+  function goPay(){
+    // fallback paiement propre (si tu veux)
     const u = new URL(PAY_URL);
-    u.searchParams.set("module", MODULE_CODE);
-
-    const p = normPhone(phone);
-    const s = normSlug(slug);
-
-    if (p) u.searchParams.set("phone", p);
-    if (s) u.searchParams.set("slug", s);
-
-    // ✅ return = page actuelle
-    u.searchParams.set("return", location.href);
-
+    u.searchParams.set("module", "POS"); // ✅ jamais CAISSE
+    if(slug) u.searchParams.set("slug", slug);
+    u.searchParams.set("return", location.origin + location.pathname);
     location.replace(u.toString());
   }
 
-  async function go() {
-    const slug = normSlug(slugQ);
-    let phone = normPhone(phoneQ);
-
-    // slug-first : si pas de phone, on résout via slug
-    if (!phone && slug) {
-      phone = normPhone(await resolvePhoneFromSlug(slug));
-    }
-
-    // rien -> commencer-a-payer direct
-    if (!phone) return goPay({ phone: "", slug });
-
-    // check access (backend truth)
-    const res = await rpc("digiy_has_access", { p_phone: phone, p_module: MODULE_CODE });
-
-    // digiy_has_access renvoie boolean true/false
-    if (res.ok && res.data === true) return; // ✅ accès OK
-
-    // pas accès -> payer
-    return goPay({ phone, slug });
+  // 0) slug absent => PIN HUB en mode rescue
+  if(!slug){
+    goPin();
+    return;
   }
 
-  go().catch(() => {
-    // en cas de réseau down : on renvoie vers payer (safe)
-    goPay({ phone: phoneQ, slug: slugQ });
+  // 1) Supabase lib check
+  if(!window.supabase || typeof window.supabase.createClient !== "function"){
+    console.error("Supabase JS missing");
+    goPin();
+    return;
+  }
+
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth:{ persistSession:false, autoRefreshToken:false, detectSessionInUrl:false }
   });
+
+  // 2) slug -> phone (view publique) SUR POS
+  const { data: rows, error: e1 } = await sb
+    .from("digiy_subscriptions_public")
+    .select("phone,slug,module")
+    .eq("slug", slug)
+    .eq("module", MODULE)
+    .limit(1);
+
+  if(e1 || !rows || !rows[0] || !rows[0].phone){
+    console.warn("slug->phone not found for POS", e1, rows);
+    goPin();
+    return;
+  }
+
+  const phone = String(rows[0].phone);
+
+  // 3) check access SUR POS
+  const { data: ok, error: e2 } = await sb.rpc("digiy_has_access", {
+    p_phone: phone,
+    p_module: MODULE
+  });
+
+  if(e2 || !ok){
+    console.warn("no access POS", e2, ok);
+
+    // ✅ priorité PIN HUB (plutôt que paiement direct)
+    goPin();
+
+    // (optionnel) ou paiement si tu veux forcer:
+    // goPay();
+    return;
+  }
+
+  // ✅ 4) accès OK => on bloque toute redirection paiement
+  localStorage.setItem("DIGIY_ACCESS", JSON.stringify({ slug, phone, module: MODULE, ts: Date.now() }));
+  // fini. pas de redirect.
+
 })();
