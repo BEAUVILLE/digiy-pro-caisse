@@ -152,7 +152,7 @@
     <div class="hero">
       <h1>Bienvenue frérot 👑</h1>
       <p>
-        Ici c’est la porte de la Caisse DIGIY.<br>
+        Ici c'est la porte de la Caisse DIGIY.<br>
         Deux chemins simples :
         <b>Essai 15 jours</b> ou <b>Accès PIN</b>.
       </p>
@@ -172,7 +172,7 @@
       <!-- ✅ ACCÈS PIN -->
       <button class="btn pin" id="btnPin" type="button">
         <div>
-          🔑 <b>J’ai déjà mon accès</b><br>
+          🔑 <b>J'ai déjà mon accès</b><br>
           <small style="opacity:.9;font-weight:850">Slug + PIN (via QR boutique)</small>
         </div>
         <span>→</span>
@@ -207,15 +207,24 @@ La vitrine, elle, reste simple pour tout le monde.
   const MODULE = "caisse_pro";
 
   const INSCRIPTION_URL = "https://beauville.github.io/inscription-digiy/?module=" + MODULE;
-  const PIN_URL         = "https://beauville.github.io/digiy-caisse-pro/pin.html";
   const PAY_URL         = "https://beauville.github.io/commencer-a-payer/?module=" + MODULE;
 
-  // slug optionnel si présent
+  // Récupération du slug depuis l'URL si présent (ex: ?slug=chez-astou-saly)
   const url = new URL(location.href);
   const slug = (url.searchParams.get("slug") || "").trim();
 
-  function withSlug(base){
-    if(!slug) return base;
+  // ✅ FIX : URL PIN correcte avec module + return + slug si disponible
+  function buildPinUrl() {
+    const base = "https://beauville.github.io/digiy-qr-pro/pin.html";
+    const u = new URL(base);
+    u.searchParams.set("module", "POS");
+    u.searchParams.set("return", "https://pro-caisse.digiylyfe.com/");
+    if (slug) u.searchParams.set("slug", slug);
+    return u.toString();
+  }
+
+  function withSlug(base) {
+    if (!slug) return base;
     const u = new URL(base, location.href);
     u.searchParams.set("slug", slug);
     return u.toString();
@@ -226,7 +235,7 @@ La vitrine, elle, reste simple pour tout le monde.
   });
 
   document.getElementById("btnPin").addEventListener("click", () => {
-    location.href = withSlug(PIN_URL);
+    location.href = buildPinUrl();
   });
 
   document.getElementById("btnPay").addEventListener("click", () => {
