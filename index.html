@@ -1,438 +1,883 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#061b14" />
-  <title>DIGIY CAISSE PRO ♾️ — Royal Edition</title>
-
-  <!-- Supabase -->
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta name="theme-color" content="#061b14"/>
+  <title>DIGIY CAISSE PRO ♾️</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- Guard PRO (window.DIGIY_GUARD) -->
   <script src="./guard-pro.js?v=20260302"></script>
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
   <style>
-    :root {
-      --gold: #fbbf24; --gold-dark: #d97706;
-      --bg: #0f172a; --card: #1e293b;
-      --text: #f8fafc; --muted: #94a3b8;
-      --glass: rgba(255, 255, 255, 0.03);
-      --gradient: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
-      --green: #10b981; --red: #ef4444; --blue: #0ea5e9; --orange: #f97316;
-      --line: rgba(255,255,255,0.06);
-      --shadow: 0 18px 45px rgba(0,0,0,.35);
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
-    body { background: var(--bg); color: var(--text); min-height: 100vh; background-image: radial-gradient(circle at top right, #1e293b, #0f172a); }
-
-    /* Lock screen */
-    #lockScreen { position: fixed; inset: 0; background: rgba(15,23,42,0.98); backdrop-filter: blur(20px); z-index: 10000; display: none; align-items: center; justify-content: center; }
-    .lock-box { background: var(--card); padding: 40px; border-radius: 30px; border: 1px solid var(--gold); text-align: center; width: 90%; max-width: 450px; box-shadow: 0 0 50px rgba(251,191,36,0.1); }
-    .pay-link-btn { display: block; width: 100%; padding: 18px; background: var(--green); color: white; text-decoration: none; border-radius: 12px; font-weight: 800; margin-bottom: 20px; transition: 0.3s; border: none; font-size: 14px; }
-    .pay-link-btn:hover { transform: scale(1.02); filter: brightness(1.1); }
-
-    /* Header */
-    .header { padding: 18px 20px; background: var(--glass); border-bottom: 1px solid rgba(251,191,36,0.18); display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-    .brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
-    .crown-icon { width: 44px; height: 44px; background: var(--gradient); border-radius: 14px; display: flex; align-items: center; justify-content: center; color: #000; font-size: 18px; box-shadow: 0 10px 25px rgba(251,191,36,.18); flex: 0 0 auto; }
-    #storeDisp { font-size: 15px; font-weight: 950; letter-spacing: .3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 52vw; }
-    .metaRow { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
-    .badge { font-size: 10px; font-weight: 950; padding: 4px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.03); color: var(--muted); }
-    .badge.gold { border-color: rgba(251,191,36,.35); background: rgba(251,191,36,.08); color: #fde68a; }
-    .badge.green { border-color: rgba(16,185,129,.35); background: rgba(16,185,129,.10); color: #bbf7d0; }
-    .badge.red { border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.10); color: #fecaca; }
-    .headerRight { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
-    .tiny { color: var(--gold); font-weight: 950; font-size: 10px; letter-spacing: .9px; }
-    .logoutBtn { border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.04); color: #fff; font-weight: 900; padding: 8px 12px; border-radius: 12px; cursor: pointer; }
-
-    /* Nav */
-    .nav-elite { display: flex; gap: 10px; padding: 14px 16px; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--line); }
-    .nav-link { padding: 12px 18px; background: var(--card); border-radius: 12px; color: var(--muted); cursor: pointer; border: 1px solid rgba(255,255,255,0.06); transition: 0.2s; font-weight: 800; white-space: nowrap; }
-    .nav-link.active { background: var(--gradient); color: #000; border-color: rgba(251,191,36,.6); }
-
-    /* Layout */
-    .main-container { padding: 16px; display: grid; grid-template-columns: 1fr 380px; gap: 16px; }
-    @media (max-width: 1100px) { .main-container { grid-template-columns: 1fr; } }
-
-    /* Products */
-    .products-listing { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
-    .noble-card { background: var(--card); padding: 16px; border-radius: 18px; text-align: center; border: 1px solid rgba(255,255,255,0.06); transition: 0.2s; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,.12); }
-    .noble-card:hover { transform: translateY(-4px); border-color: rgba(251,191,36,.55); }
-    .noble-card i { font-size: 28px; color: var(--gold); margin-bottom: 10px; display: block; }
-    .noble-card .pname { font-weight: 950; font-size: 14px; margin-bottom: 4px; }
-    .noble-card .pprice { color: var(--gold); font-weight: 1000; font-size: 14px; }
-    .noble-card .pstock { font-size: 10px; color: var(--muted); margin-top: 8px; font-weight: 850; }
-    .noble-card .out { color: #fecaca; }
-
-    /* Cart */
-    .royal-cart { background: var(--card); border-radius: 22px; padding: 18px; border: 1px solid rgba(251,191,36,0.12); height: fit-content; position: sticky; top: 14px; box-shadow: var(--shadow); }
-    .cart-scroll { max-height: 300px; overflow-y: auto; margin: 12px 0; }
-    .cart-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 13px; }
-    .cart-row small { color: var(--muted); font-weight: 850; }
-    .pay-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 14px; }
-    .pay-btn { padding: 14px; border: none; border-radius: 12px; color: white; font-weight: 950; cursor: pointer; font-size: 11px; text-transform: uppercase; }
-    .pay-btn.gray { background: #64748b; grid-column: span 2; }
-
-    .page { display: none; }
-    .page.active { display: block; animation: fadeIn 0.25s ease; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-    .form-card { background: var(--card); padding: 18px; border-radius: 18px; margin-bottom: 14px; border: 1px solid rgba(255,255,255,0.06); }
-    .form-card h3 { font-size: 14px; font-weight: 950; margin-bottom: 8px; }
-    input { width: 100%; padding: 14px; background: #0f172a; border: 1px solid #334155; border-radius: 12px; color: white; margin-top: 8px; outline: none; font-weight: 900; }
-    input:focus { border-color: rgba(251,191,36,.7); }
-    .gold-btn { width: 100%; padding: 14px; background: var(--gradient); border: none; border-radius: 12px; color: #000; font-weight: 1000; cursor: pointer; margin-top: 12px; }
-    .gold-btn:disabled { opacity: .6; cursor: not-allowed; }
-    .dash-link { background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; color: white !important; }
-    .inventory-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.06); }
-    .trashBtn { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 16px; }
-    .muted { color: var(--muted); font-weight: 850; font-size: 12px; line-height: 1.35; }
-    .toast { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); background: rgba(2,6,23,.85); border: 1px solid rgba(255,255,255,.12); color: #fff; padding: 10px 14px; border-radius: 14px; font-weight: 900; font-size: 13px; display: none; z-index: 9999; max-width: 92vw; }
-    .toast.show { display: block; }
+    :root{--gold:#fbbf24;--gold-dark:#d97706;--bg:#0f172a;--card:#1e293b;--text:#f8fafc;--muted:#94a3b8;--glass:rgba(255,255,255,.03);--gradient:linear-gradient(135deg,#fbbf24,#d97706);--green:#10b981;--red:#ef4444;--blue:#0ea5e9;--orange:#f97316;--line:rgba(255,255,255,.06);--shadow:0 18px 45px rgba(0,0,0,.35)}
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    body{background:var(--bg);color:var(--text);min-height:100vh;background-image:radial-gradient(circle at top right,#1e293b,#0f172a)}
+    #lockScreen{position:fixed;inset:0;background:rgba(15,23,42,.98);backdrop-filter:blur(20px);z-index:10000;display:none;align-items:center;justify-content:center}
+    .lock-box{background:var(--card);padding:40px;border-radius:30px;border:1px solid var(--gold);text-align:center;width:90%;max-width:440px}
+    .pay-link-btn{display:block;width:100%;padding:16px;background:var(--green);color:white;text-decoration:none;border-radius:12px;font-weight:800;margin-bottom:18px;border:none;font-size:14px;cursor:pointer}
+    .header{padding:13px 18px;background:var(--glass);border-bottom:1px solid rgba(251,191,36,.18);display:flex;justify-content:space-between;align-items:center;gap:10px;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+    .brand{display:flex;align-items:center;gap:11px;min-width:0}
+    .crown-icon{width:40px;height:40px;background:var(--gradient);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#000;font-size:17px;flex:0 0 auto}
+    #storeDisp{font-size:14px;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:45vw}
+    .metaRow{display:flex;gap:5px;flex-wrap:wrap;margin-top:3px}
+    .badge{font-size:9px;font-weight:950;padding:3px 7px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.03);color:var(--muted)}
+    .badge.gold{border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.08);color:#fde68a}
+    .badge.green{border-color:rgba(16,185,129,.35);background:rgba(16,185,129,.1);color:#bbf7d0}
+    .badge.red{border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.1);color:#fecaca}
+    .badge.blue{border-color:rgba(14,165,233,.35);background:rgba(14,165,233,.08);color:#bae6fd}
+    .logoutBtn{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:#fff;font-weight:900;padding:7px 11px;border-radius:10px;cursor:pointer;font-size:12px}
+    .nav-elite{display:flex;gap:8px;padding:10px 14px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line);background:rgba(15,23,42,.6)}
+    .nav-link{padding:10px 15px;background:var(--card);border-radius:10px;color:var(--muted);cursor:pointer;border:1px solid rgba(255,255,255,.06);font-weight:800;white-space:nowrap;font-size:12px;transition:.2s}
+    .nav-link.active{background:var(--gradient);color:#000;border-color:rgba(251,191,36,.6)}
+    .main-container{padding:14px;display:grid;grid-template-columns:1fr 355px;gap:14px}
+    @media(max-width:1024px){.main-container{grid-template-columns:1fr}}
+    .block-container{padding:14px;max-width:860px;margin:auto}
+    .products-listing{display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:11px}
+    .noble-card{background:var(--card);padding:14px;border-radius:15px;text-align:center;border:1px solid rgba(255,255,255,.06);cursor:pointer;transition:.2s}
+    .noble-card:hover{transform:translateY(-3px);border-color:rgba(251,191,36,.55)}
+    .noble-card i{font-size:23px;color:var(--gold);margin-bottom:7px;display:block}
+    .noble-card .pname{font-weight:950;font-size:12px;margin-bottom:3px}
+    .noble-card .pprice{color:var(--gold);font-weight:1000;font-size:13px}
+    .noble-card .pstock{font-size:10px;color:var(--muted);margin-top:5px;font-weight:850}
+    .noble-card .out{color:#fecaca}
+    .noble-card.rupture{opacity:.45;pointer-events:none}
+    .royal-cart{background:var(--card);border-radius:20px;padding:16px;border:1px solid rgba(251,191,36,.12);height:fit-content;position:sticky;top:68px;box-shadow:var(--shadow)}
+    .cart-scroll{max-height:260px;overflow-y:auto;margin:10px 0}
+    .cart-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:12px;gap:6px}
+    .qty-ctrl{display:flex;align-items:center;gap:5px}
+    .qty-btn{width:25px;height:25px;border-radius:7px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;cursor:pointer;font-weight:900;font-size:13px}
+    .pay-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:11px}
+    .pay-btn{padding:12px;border:none;border-radius:10px;color:white;font-weight:950;cursor:pointer;font-size:11px;text-transform:uppercase}
+    .pay-btn.gray{background:#64748b;grid-column:span 2}
+    .tva-box{background:rgba(250,204,21,.06);border:1px solid rgba(250,204,21,.2);border-radius:11px;padding:11px;margin-top:9px}
+    .tva-row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;font-weight:850}
+    .tva-total{font-size:15px;font-weight:1000;color:var(--gold);border-top:1px solid rgba(250,204,21,.3);margin-top:5px;padding-top:5px}
+    .page{display:none}
+    .page.active{display:block;animation:fadeIn .2s ease}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    .form-card{background:var(--card);padding:15px;border-radius:15px;margin-bottom:11px;border:1px solid rgba(255,255,255,.06)}
+    .form-card h3{font-size:13px;font-weight:950;margin-bottom:9px}
+    .flabel{display:block;font-size:10px;color:var(--muted);font-weight:700;margin-bottom:3px;margin-top:9px;text-transform:uppercase;letter-spacing:.4px}
+    input,select,textarea{width:100%;padding:11px 12px;background:#0f172a;border:1px solid #334155;border-radius:9px;color:white;outline:none;font-weight:900;font-size:13px}
+    input:focus,select:focus,textarea:focus{border-color:rgba(251,191,36,.7)}
+    textarea{resize:vertical;min-height:65px;font-weight:700}
+    select option{background:#1e293b}
+    .gold-btn{width:100%;padding:12px;background:var(--gradient);border:none;border-radius:10px;color:#000;font-weight:1000;cursor:pointer;margin-top:9px;font-size:13px}
+    .gold-btn:disabled{opacity:.6;cursor:not-allowed}
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:9px;margin-bottom:11px}
+    .stat-box{background:var(--card);padding:13px;border-radius:13px;border:1px solid rgba(255,255,255,.06);text-align:center}
+    .stat-box .val{font-size:19px;font-weight:1000;color:var(--gold)}
+    .stat-box .lbl{font-size:9px;color:var(--muted);font-weight:900;margin-top:3px;text-transform:uppercase}
+    .inv-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+    .inv-item:last-child{border-bottom:none}
+    .icon-btn{background:none;border:none;cursor:pointer;padding:5px 7px;border-radius:7px;font-size:12px}
+    .icon-btn.edit{color:var(--gold)}.icon-btn.del{color:#ef4444}
+    .icon-btn:hover{background:rgba(255,255,255,.08)}
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);z-index:5000;display:none;align-items:center;justify-content:center}
+    .modal-overlay.open{display:flex}
+    .modal-box{background:var(--card);border-radius:17px;padding:21px;width:min(470px,94vw);border:1px solid rgba(251,191,36,.25)}
+    .modal-box h3{font-size:14px;font-weight:950;margin-bottom:13px;color:var(--gold)}
+    .modal-actions{display:flex;gap:8px;margin-top:11px}
+    .modal-actions button{flex:1;padding:11px;border-radius:9px;border:none;font-weight:900;cursor:pointer;font-size:13px}
+    .switch-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;gap:10px}
+    .switch{position:relative;width:42px;height:23px;flex:0 0 auto}
+    .switch input{opacity:0;width:0;height:0}
+    .slider{position:absolute;inset:0;background:#334155;border-radius:999px;cursor:pointer;transition:.3s}
+    .slider:before{content:'';position:absolute;width:17px;height:17px;left:3px;top:3px;background:white;border-radius:50%;transition:.3s}
+    input:checked+.slider{background:var(--green)}
+    input:checked+.slider:before{transform:translateX(19px)}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+    @media(max-width:500px){.grid2{grid-template-columns:1fr}}
+    .sep{height:1px;background:var(--line);margin:11px 0}
+    .muted{color:var(--muted);font-size:12px;font-weight:750;line-height:1.5}
+    .search-bar{width:100%;padding:8px 13px;background:#0f172a;border:1px solid #334155;border-radius:9px;color:white;outline:none;font-size:12px;margin-bottom:9px}
+    .search-bar:focus{border-color:rgba(251,191,36,.5)}
+    .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:rgba(2,6,23,.95);border:1px solid rgba(255,255,255,.12);color:#fff;padding:9px 16px;border-radius:11px;font-weight:900;font-size:12px;display:none;z-index:9999;max-width:92vw}
+    .toast.show{display:block}
+    .sim-box{background:rgba(250,204,21,.06);border:1px solid rgba(250,204,21,.18);border-radius:10px;padding:11px;margin-top:9px}
+    .dash-link{background:linear-gradient(135deg,#10b981,#059669)!important;color:white!important}
   </style>
 </head>
 <body>
 
-  <div id="lockScreen">
-    <div class="lock-box">
-      <i class="fas fa-gem" style="font-size: 50px; color: var(--gold); margin-bottom: 18px;"></i>
-      <h2 style="margin-bottom: 8px;">ESSAI TERMINÉ</h2>
-      <p style="color: var(--muted); margin-bottom: 18px; font-size: 14px; font-weight: 800;">Pour continuer, active ta licence.</p>
-      <a href="https://beauville.github.io/commencer-a-payer/" class="pay-link-btn">
-        <i class="fas fa-shopping-cart"></i> COMMENCER À PAYER
-      </a>
-      <div style="margin: 14px 0; color: var(--muted); font-size: 11px; font-weight: 950;">OU ENTREZ VOTRE CLÉ PERSONNELLE</div>
-      <input type="text" id="royalKey" placeholder="XXXX-XXXX-XXXX-XXXX" />
-      <button class="gold-btn" onclick="activate('royalKey')">ACTIVER</button>
+<!-- LOCK -->
+<div id="lockScreen">
+  <div class="lock-box">
+    <i class="fas fa-gem" style="font-size:46px;color:var(--gold);margin-bottom:14px"></i>
+    <h2 style="margin-bottom:7px">ESSAI TERMINÉ</h2>
+    <p class="muted" style="margin-bottom:16px">Pour continuer, active ta licence.</p>
+    <a href="https://beauville.github.io/commencer-a-payer/" class="pay-link-btn">🛒 COMMENCER À PAYER</a>
+    <div class="muted" style="margin:10px 0;font-size:10px;font-weight:950">OU CLÉ PERSONNELLE</div>
+    <label class="flabel">Clé de licence</label>
+    <input type="text" id="royalKey" placeholder="XXXX-XXXX-XXXX-XXXX"/>
+    <button class="gold-btn" onclick="activate('royalKey')">ACTIVER</button>
+  </div>
+</div>
+
+<!-- MODAL EDIT -->
+<div class="modal-overlay" id="modalEdit">
+  <div class="modal-box">
+    <h3>✏️ Modifier le produit</h3>
+    <input type="hidden" id="editId"/>
+    <label class="flabel">Désignation</label><input type="text" id="editName"/>
+    <label class="flabel">Prix HT (FCFA)</label><input type="number" id="editPrice"/>
+    <label class="flabel">Stock</label><input type="number" id="editStock"/>
+    <label class="flabel">Catégorie</label><input type="text" id="editCategory"/>
+    <div class="modal-actions">
+      <button style="background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.14)" onclick="closeModal()">Annuler</button>
+      <button style="background:var(--gradient);color:#000" onclick="saveEdit()">💾 Enregistrer</button>
     </div>
   </div>
+</div>
 
-  <div class="header">
-    <div class="brand">
-      <div class="crown-icon">👑</div>
-      <div style="min-width:0">
-        <div id="storeDisp">CHARGEMENT...</div>
-        <div class="metaRow">
-          <span class="badge" id="trialBadge">—</span>
-          <span class="badge" id="netBadge">—</span>
-          <span class="badge" id="outboxBadge">—</span>
-        </div>
+<!-- HEADER -->
+<div class="header">
+  <div class="brand">
+    <div class="crown-icon">👑</div>
+    <div style="min-width:0">
+      <div id="storeDisp">CHARGEMENT...</div>
+      <div class="metaRow">
+        <span class="badge" id="trialBadge">—</span>
+        <span class="badge" id="netBadge">—</span>
+        <span class="badge" id="outboxBadge">—</span>
+        <span class="badge blue" id="tvaBadge" style="display:none">TVA ACTIVE</span>
       </div>
     </div>
-    <div class="headerRight">
-      <div class="tiny">ROYAL EDITION</div>
-      <button class="logoutBtn" id="btnLogout" type="button">⏻ Sortir</button>
-    </div>
   </div>
-
-  <div class="nav-elite">
-    <div class="nav-link active" onclick="tab('pos', this)"><i class="fas fa-store"></i> CAISSE</div>
-    <div class="nav-link" onclick="tab('history', this)"><i class="fas fa-history"></i> VENTES</div>
-    <div class="nav-link" onclick="tab('admin', this)"><i class="fas fa-cog"></i> GESTION</div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <div style="font-size:9px;color:var(--gold);font-weight:950;letter-spacing:.8px">ROYAL EDITION</div>
+    <button class="logoutBtn" id="btnLogout">⏻ Sortir</button>
   </div>
+</div>
 
-  <div id="posPage" class="page active">
-    <div class="main-container">
+<!-- NAV -->
+<div class="nav-elite">
+  <div class="nav-link active" onclick="tab('pos',this)">🛒 CAISSE</div>
+  <div class="nav-link" onclick="tab('history',this)">📜 VENTES</div>
+  <div class="nav-link" onclick="tab('stock',this)">📦 STOCK</div>
+  <div class="nav-link" onclick="tab('admin',this)">⚙️ ADMIN</div>
+</div>
+
+<!-- PAGE CAISSE -->
+<div id="posPage" class="page active">
+  <div class="main-container">
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;gap:9px">
+        <span class="muted" style="white-space:nowrap">📦 <span id="prodCount">0</span> articles</span>
+        <input class="search-bar" style="margin-bottom:0;flex:1;max-width:200px" placeholder="🔍 Rechercher..." oninput="filterProd(this.value)"/>
+      </div>
       <div id="productsGrid" class="products-listing"></div>
-      <div class="royal-cart">
-        <h3 style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;">PANIER</h3>
-        <div id="cartListing" class="cart-scroll"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(251,191,36,.55);padding-top:12px;margin-top:8px;">
-          <b style="font-weight:1000;">TOTAL</b>
-          <h2 id="totalPrice" style="color:var(--gold);font-size:22px;">0 F</h2>
+    </div>
+    <div class="royal-cart">
+      <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;font-weight:900">🛒 PANIER</div>
+      <div id="cartListing" class="cart-scroll"></div>
+      <div id="tvaBox" class="tva-box" style="display:none">
+        <div class="tva-row"><span>Sous-total HT</span><span id="tvaHT">—</span></div>
+        <div class="tva-row"><span id="tvaPct">TVA</span><span id="tvaMontant">—</span></div>
+        <div class="tva-row tva-total"><span>TOTAL TTC</span><span id="tvaTTC">—</span></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(251,191,36,.4);padding-top:9px;margin-top:7px">
+        <div>
+          <div style="font-size:9px;color:var(--muted);font-weight:900" id="totalLabel">TOTAL</div>
+          <div id="totalPrice" style="color:var(--gold);font-size:24px;font-weight:1000">0 F</div>
         </div>
-        <div class="pay-grid">
-          <button class="pay-btn" style="background:var(--green);" onclick="checkout('CASH')">Cash</button>
-          <button class="pay-btn" style="background:var(--blue);" onclick="checkout('WAVE')">Wave</button>
-          <button class="pay-btn" style="background:var(--orange);" onclick="checkout('OM')">Orange</button>
-          <button class="pay-btn" style="background:var(--red);" onclick="checkout('CREDIT')">Dette</button>
-          <button class="pay-btn gray" onclick="State.cart=[];render();">VIDER LE PANIER</button>
+        <div class="muted" id="cartItemCount">0 art.</div>
+      </div>
+      <div class="pay-grid">
+        <button class="pay-btn" style="background:var(--green)" onclick="checkout('CASH')">💵 Cash</button>
+        <button class="pay-btn" style="background:var(--blue)" onclick="checkout('WAVE')">🌊 Wave</button>
+        <button class="pay-btn" style="background:var(--orange)" onclick="checkout('OM')">🟠 Orange</button>
+        <button class="pay-btn" style="background:var(--red)" onclick="checkout('CREDIT')">📒 Dette</button>
+        <button class="pay-btn gray" onclick="clearCart()">🗑️ VIDER</button>
+      </div>
+      <div class="muted" style="margin-top:9px;text-align:center">📴 Mode hors-ligne disponible</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE VENTES -->
+<div id="historyPage" class="page">
+  <div class="block-container">
+    <div class="stat-grid">
+      <div class="stat-box"><div class="val" id="revDay">0 F</div><div class="lbl">Recette du jour</div></div>
+      <div class="stat-box"><div class="val" id="salesCount">0</div><div class="lbl">Ventes aujourd'hui</div></div>
+      <div class="stat-box"><div class="val" id="revMonth">0 F</div><div class="lbl">Ce mois</div></div>
+      <div class="stat-box"><div class="val" id="avgTicket">0 F</div><div class="lbl">Ticket moyen</div></div>
+    </div>
+    <div class="form-card" style="display:flex;gap:9px;flex-wrap:wrap;align-items:flex-end">
+      <div style="flex:1;min-width:130px">
+        <label class="flabel">Méthode</label>
+        <select id="filterMethod" onchange="renderHistory()">
+          <option value="">Tous</option>
+          <option value="CASH">Cash</option>
+          <option value="WAVE">Wave</option>
+          <option value="OM">Orange Money</option>
+          <option value="CREDIT">Dette</option>
+        </select>
+      </div>
+      <div style="flex:1;min-width:130px">
+        <label class="flabel">Date</label>
+        <input type="date" id="filterDate" onchange="renderHistory()"/>
+      </div>
+      <button class="gold-btn" style="margin-top:0;padding:9px 14px;width:auto" onclick="resetFilters()">↺ Reset</button>
+    </div>
+    <div class="form-card">
+      <h3>📜 Historique des ventes</h3>
+      <div id="historyListing" class="muted">Chargement…</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE STOCK -->
+<div id="stockPage" class="page">
+  <div class="block-container">
+    <div class="form-card">
+      <h3>➕ Ajouter un produit</h3>
+      <div class="grid2">
+        <div><label class="flabel">Désignation *</label><input type="text" id="addName" placeholder="Ex: Thiébou dieune"/></div>
+        <div><label class="flabel">Prix HT (FCFA) *</label><input type="number" id="addPrice" placeholder="Ex: 2500"/></div>
+        <div><label class="flabel">Stock initial</label><input type="number" id="addStock" placeholder="Ex: 20"/></div>
+        <div><label class="flabel">Catégorie</label><input type="text" id="addCategory" placeholder="Ex: Plats"/></div>
+      </div>
+      <button class="gold-btn" onclick="addNew()">💾 AJOUTER AU CATALOGUE</button>
+    </div>
+    <div class="form-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <h3 style="margin-bottom:0">📦 Inventaire</h3>
+        <span id="stockAlert" style="font-size:11px;color:#fb7185;font-weight:900"></span>
+      </div>
+      <input class="search-bar" placeholder="🔍 Filtrer le stock…" oninput="renderStock(this.value)"/>
+      <div id="inventoryManager" class="muted">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE ADMIN -->
+<div id="adminPage" class="page">
+  <div class="block-container">
+
+    <!-- Dashboard -->
+    <div class="form-card dash-link">
+      <h3 style="color:#fff">📊 DASHBOARD & RAPPORTS</h3>
+      <p style="color:rgba(255,255,255,.8);font-size:12px;margin-top:3px">CA, ventes par méthode, produits top, exports</p>
+      <button class="gold-btn" style="background:white;color:#059669;margin-top:9px" onclick="window.location.href='dashboard.html'">OUVRIR LES RAPPORTS</button>
+    </div>
+
+    <!-- PARAMÈTRES BOUTIQUE -->
+    <div class="form-card">
+      <h3>🏪 Paramètres boutique</h3>
+
+      <div class="grid2">
+        <div><label class="flabel">Nom de la boutique *</label><input type="text" id="pStoreName" placeholder="Chez Astou"/></div>
+        <div><label class="flabel">Téléphone *</label><input type="tel" id="pPhone" placeholder="221771234567"/></div>
+        <div><label class="flabel">Email</label><input type="email" id="pEmail" placeholder="contact@..."/></div>
+        <div><label class="flabel">Site web</label><input type="url" id="pWebsite" placeholder="https://..."/></div>
+      </div>
+      <label class="flabel">Adresse complète</label>
+      <textarea id="pAddress" placeholder="Rue, Quartier, Ville, Pays"></textarea>
+
+      <div class="sep"></div>
+      <div style="font-size:11px;font-weight:950;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">📄 Infos légales</div>
+      <div class="grid2">
+        <div><label class="flabel">NINEA / SIRET</label><input type="text" id="pSiret" placeholder="Numéro fiscal"/></div>
+        <div><label class="flabel">RC Commerce</label><input type="text" id="pRc" placeholder="N° registre"/></div>
+        <div><label class="flabel">Capital social</label><input type="text" id="pCapital" placeholder="Ex: 1 000 000 FCFA"/></div>
+        <div><label class="flabel">IBAN / Compte</label><input type="text" id="pIban" placeholder="Optionnel"/></div>
+      </div>
+      <label class="flabel">Mentions légales (bas de ticket)</label>
+      <textarea id="pMentions" placeholder="Ex: TVA non applicable – Art. 293B CGI"></textarea>
+      <label class="flabel">URL du logo (tickets)</label>
+      <input type="url" id="pLogo" placeholder="https://..."/>
+
+      <div class="sep"></div>
+
+      <!-- ══ SECTION TVA ══ -->
+      <div style="font-size:11px;font-weight:950;color:var(--gold);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">💰 Régime TVA</div>
+
+      <div class="switch-row">
+        <div>
+          <div style="font-weight:900;font-size:13px">Assujetti à la TVA</div>
+          <div class="muted">Active le calcul TVA sur les tickets et le total panier</div>
         </div>
-        <div class="muted" style="margin-top:12px;">Astuce : si le réseau saute, la vente est gardée et synchronisée dès que possible.</div>
+        <label class="switch">
+          <input type="checkbox" id="pTvaActive" onchange="toggleTVASection()"/>
+          <span class="slider"></span>
+        </label>
       </div>
+
+      <div id="tvaSettings" style="display:none">
+        <div class="grid2">
+          <div>
+            <label class="flabel">Taux de TVA (%)</label>
+            <input type="number" id="pTvaTaux" placeholder="Ex: 18" step="0.01" min="0" max="100" oninput="simulateTVA()"/>
+          </div>
+          <div>
+            <label class="flabel">Mode de calcul</label>
+            <select id="pTvaMode" onchange="simulateTVA()">
+              <option value="excl">Prix HT → TVA ajoutée (TTC affiché)</option>
+              <option value="incl">Prix TTC → TVA déduite (HT calculé)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Explication du mode -->
+        <div id="tvaExplication" class="sim-box" style="margin-top:10px;font-size:12px;line-height:1.6"></div>
+
+        <!-- Simulateur TVA -->
+        <div style="margin-top:12px">
+          <label class="flabel">🧮 Simulateur TVA — Entrez un montant</label>
+          <input type="number" id="simMontant" placeholder="Ex: 5000" oninput="simulateTVA()"/>
+        </div>
+        <div id="simResult" class="sim-box" style="display:none;margin-top:8px"></div>
+      </div>
+
+      <button class="gold-btn" onclick="saveSettings()">💾 ENREGISTRER LES PARAMÈTRES</button>
     </div>
-  </div>
 
-  <div id="historyPage" class="page">
-    <div class="main-container" style="display:block;max-width:720px;margin:auto;">
-      <div class="form-card" style="text-align:center;">
-        <small style="color:var(--muted);font-weight:900;">RECETTE DU JOUR</small>
-        <h2 id="revDay" style="color:var(--green);font-size:2.5rem;margin-top:6px;">0 F</h2>
-        <div class="muted" id="salesCount" style="margin-top:6px;">—</div>
-      </div>
-      <div class="form-card">
-        <h3>📜 Dernières ventes</h3>
-        <div id="historyListing" class="muted">Chargement…</div>
-      </div>
+    <!-- SYNCHRO -->
+    <div class="form-card">
+      <h3>📡 Synchro Outbox</h3>
+      <p class="muted">Si le réseau saute, les ventes partent en file d'attente et se synchronisent automatiquement.</p>
+      <button class="gold-btn" id="btnSyncOutbox">🔄 Synchroniser maintenant</button>
+      <div class="muted" style="margin-top:7px">Statut : <span id="outboxStatus">—</span></div>
     </div>
-  </div>
 
-  <div id="adminPage" class="page">
-    <div class="main-container" style="display:block;max-width:720px;margin:auto;">
-      <div class="form-card dash-link">
-        <h3><i class="fas fa-chart-line"></i> DASHBOARD & COMPTABILITÉ</h3>
-        <button class="gold-btn" onclick="window.location.href='dashboard.html'" style="background:white;color:#059669;margin-top:10px;">OUVRIR LES RAPPORTS</button>
-      </div>
-      <div class="form-card">
-        <h3>📡 SYNCHRO (OUTBOX)</h3>
-        <p class="muted">Si le réseau saute, les ventes partent en file d'attente et se synchronisent automatiquement.</p>
-        <button class="gold-btn" id="btnSyncOutbox" type="button">🔄 Synchroniser maintenant</button>
-        <div class="muted" style="margin-top:10px;">Statut : <span id="outboxStatus">—</span></div>
-      </div>
-      <div class="form-card">
-        <h3>⚙️ PARAMÈTRES BOUTIQUE</h3>
-        <p class="muted">Configure tes infos légales, TVA, mentions et autres détails.</p>
-        <button class="gold-btn" onclick="goSettings()">OUVRIR LES PARAMÈTRES</button>
-      </div>
-      <div class="form-card">
-        <h3>📦 NOUVEAU PRODUIT</h3>
-        <input type="text" id="addName" placeholder="Désignation (ex: Pain)" />
-        <input type="number" id="addPrice" placeholder="Prix (FCFA)" />
-        <input type="number" id="addStock" placeholder="Stock (optionnel)" />
-        <button class="gold-btn" onclick="addNew()">AJOUTER AU STOCK</button>
-      </div>
-      <div class="form-card">
-        <h3>🗑️ GESTION DU STOCK</h3>
-        <div id="inventoryManager" class="muted">—</div>
-      </div>
+    <!-- LICENCE -->
+    <div class="form-card">
+      <h3>🔑 Activer une licence</h3>
+      <p class="muted">Clé reçue après paiement — passe en mode PRO illimité.</p>
+      <input type="text" id="royalKeyAdmin" placeholder="XXXX-XXXX-XXXX-XXXX"/>
+      <button class="gold-btn" onclick="activate('royalKeyAdmin')">ACTIVER LA LICENCE</button>
     </div>
+
+    <!-- SESSION -->
+    <div class="form-card">
+      <h3>🦅 Session active</h3>
+      <div class="muted" id="sessionInfo" style="margin-top:5px;line-height:2">—</div>
+      <button class="gold-btn" style="background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#fca5a5;margin-top:9px"
+        onclick="window.DIGIY_GUARD.logout('https://beauville.github.io/digiy-qr-pro/pin.html?module=POS')">
+        ⏻ SE DÉCONNECTER
+      </button>
+    </div>
+
   </div>
+</div>
 
-  <div class="toast" id="toast"></div>
-
+<div class="toast" id="toast"></div>
 <script>
-const TRIAL_LIMIT = 15;
-const PIN_HUB = "https://beauville.github.io/digiy-qr-pro/pin.html";
+"use strict";
+const TRIAL_LIMIT=15;
+const PIN_HUB="https://beauville.github.io/digiy-qr-pro/pin.html";
 
-let State = {
-  owner_id: null, slug: null, phone: null, title: null,
-  pro: false, storeName: "MA BOUTIQUE",
-  items: [], sales: [], cart: [], settings: null
+let State={
+  owner_id:null,slug:null,phone:null,title:null,
+  pro:false,storeName:"MA BOUTIQUE",
+  items:[],filteredItems:[],sales:[],cart:[],
+  settings:null,
+  tva:{active:false,taux:18,mode:"excl"}
 };
 
-function getSB(){ return window.DIGIY_GUARD?.getSb?.() || null; }
+function getSB(){return window.DIGIY_GUARD?.getSb?.()||null;}
+function esc(s){return String(s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");}
+function fmt(n){return Number(n||0).toLocaleString("fr-FR");}
+function dayKey(){return new Date().toISOString().slice(0,10);}
+function monthKey(){return new Date().toISOString().slice(0,7);}
 
-function toast(msg){
-  const t = document.getElementById("toast"); if(!t) return;
-  t.textContent = msg || ""; t.classList.add("show");
-  setTimeout(()=> t.classList.remove("show"), 2200);
+function toast(msg,dur=2400){
+  const t=document.getElementById("toast");if(!t)return;
+  t.textContent=msg||"";t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),dur);
 }
-
 function setNetBadge(){
-  const el = document.getElementById("netBadge"); if(!el) return;
-  el.className = navigator.onLine ? "badge green" : "badge red";
-  el.textContent = navigator.onLine ? "ONLINE" : "OFFLINE";
+  const el=document.getElementById("netBadge");if(!el)return;
+  el.className=navigator.onLine?"badge green":"badge red";
+  el.textContent=navigator.onLine?"ONLINE":"OFFLINE";
 }
 
-/* ─── LOCAL MIRROR ─── */
-function getSlugSafe(){ return String(State.slug||"").trim().toLowerCase()||"noslug"; }
-function getSalesKey(){ return "DIGIY_CAISSE_TICKETS::"+getSlugSafe(); }
-function localSalesLoad(){ try{ const a=JSON.parse(localStorage.getItem(getSalesKey())||"[]"); return Array.isArray(a)?a:[]; }catch(_){return[];} }
-function localSalesSave(arr){ localStorage.setItem(getSalesKey(),JSON.stringify(arr||[])); }
-function dayKeyNow(){ return new Date().toISOString().slice(0,10); }
+/* ── TVA ── */
+function calcTVA(montant){
+  const taux=Number(State.tva.taux||0)/100;
+  if(State.tva.mode==="excl"){
+    const ht=montant,tva=Math.round(ht*taux),ttc=ht+tva;
+    return{ht,tva,ttc};
+  }else{
+    const ttc=montant,ht=Math.round(ttc/(1+taux)),tva=ttc-ht;
+    return{ht,tva,ttc};
+  }
+}
+function prixTTC(prixDB){
+  if(!State.tva.active)return prixDB;
+  return calcTVA(prixDB).ttc;
+}
 
+/* ── LOCAL MIRROR ── */
+function slugSafe(){return String(State.slug||"").trim().toLowerCase()||"noslug";}
+function salesKey(){return"DIGIY_CAISSE_TICKETS::"+slugSafe();}
+function localSalesLoad(){try{const a=JSON.parse(localStorage.getItem(salesKey())||"[]");return Array.isArray(a)?a:[];}catch(_){return[];}}
+function localSalesSave(a){localStorage.setItem(salesKey(),JSON.stringify(a||[]));}
 function localAddTicket({client_txn_id,method,total,items=[],note=""}){
   const rows=localSalesLoad();
-  if(client_txn_id && rows.some(r=>r.client_txn_id===client_txn_id)) return;
-  rows.unshift({ id:(crypto?.randomUUID?crypto.randomUUID():"id_"+Math.random().toString(16).slice(2)+Date.now()), client_txn_id:client_txn_id||null, slug:getSlugSafe(), owner_id:State.owner_id||null, total:Number(total)||0, method:String(method||"cash"), note:String(note||""), items:items||[], archived:false, synced:false, created_at:new Date().toISOString(), day_key:dayKeyNow() });
+  if(client_txn_id&&rows.some(r=>r.client_txn_id===client_txn_id))return;
+  rows.unshift({id:crypto?.randomUUID?crypto.randomUUID():"id_"+Math.random().toString(16).slice(2)+Date.now(),client_txn_id:client_txn_id||null,slug:slugSafe(),owner_id:State.owner_id||null,total:Number(total)||0,method:String(method||"cash"),note:String(note||""),items:items||[],archived:false,synced:false,created_at:new Date().toISOString(),day_key:dayKey()});
   localSalesSave(rows);
 }
-function localMarkSynced(id){ if(!id) return; const rows=localSalesLoad(); const i=rows.findIndex(r=>r.client_txn_id===id); if(i>=0){rows[i].synced=true;rows[i].synced_at=new Date().toISOString();localSalesSave(rows);} }
+function localMarkSynced(id){if(!id)return;const r=localSalesLoad();const i=r.findIndex(x=>x.client_txn_id===id);if(i>=0){r[i].synced=true;r[i].synced_at=new Date().toISOString();localSalesSave(r);}}
 
-/* ─── OUTBOX ─── */
-function getOutboxKey(){ return "DIGIY_CAISSE_OUTBOX_V1::"+getSlugSafe(); }
-let OUTBOX_FLUSHING=false;
-function outboxLoad(){ try{ const r=localStorage.getItem(getOutboxKey()); const a=r?JSON.parse(r):[]; return Array.isArray(a)?a:[]; }catch(e){return[];} }
-function outboxSave(arr){ localStorage.setItem(getOutboxKey(),JSON.stringify(arr||[])); }
-function outboxCount(){ return outboxLoad().length; }
-function outboxSetStatus(msg){ const el=document.getElementById("outboxStatus"); if(el) el.textContent=msg||"—"; }
-function outboxSetBadge(){ const el=document.getElementById("outboxBadge"); if(!el) return; const n=outboxCount(); el.className=n===0?"badge green":"badge gold"; el.textContent=n===0?"SYNC OK":"OUTBOX "+n; }
-function makeTxnId(){ return([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16)); }
-function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
-function outboxEnqueue(entry){ const arr=outboxLoad(); arr.push(entry); outboxSave(arr); outboxSetBadge(); outboxSetStatus(`En attente: ${arr.length}`); }
+/* ── OUTBOX ── */
+function obKey(){return"DIGIY_CAISSE_OUTBOX_V1::"+slugSafe();}
+let OB_FL=false;
+function obLoad(){try{const r=localStorage.getItem(obKey());const a=r?JSON.parse(r):[];return Array.isArray(a)?a:[];}catch(e){return[];}}
+function obSave(a){localStorage.setItem(obKey(),JSON.stringify(a||[]));}
+function obCount(){return obLoad().length;}
+function obStatus(m){const e=document.getElementById("outboxStatus");if(e)e.textContent=m||"—";}
+function obBadge(){const e=document.getElementById("outboxBadge");if(!e)return;const n=obCount();e.className=n===0?"badge green":"badge gold";e.textContent=n===0?"SYNC OK":"OUTBOX "+n;}
+function makeTxn(){return([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16));}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+function obEnqueue(e){const a=obLoad();a.push(e);obSave(a);obBadge();obStatus("En attente : "+a.length);}
 
-async function outboxFlush(){
-  if(OUTBOX_FLUSHING) return {ok:false};
-  OUTBOX_FLUSHING=true;
+async function obFlush(){
+  if(OB_FL)return{ok:false};OB_FL=true;
   try{
-    const sb=getSB(); if(!sb){outboxSetStatus("Supabase non dispo");outboxSetBadge();return{ok:false};}
-    let arr=outboxLoad();
-    if(!arr.length){outboxSetStatus("✅ Tout est synchro");outboxSetBadge();return{ok:true};}
-    if(!navigator.onLine){outboxSetStatus(`📴 Offline — en attente: ${arr.length}`);outboxSetBadge();return{ok:false};}
-    outboxSetStatus(`⏳ Sync… (${arr.length})`); outboxSetBadge();
-    const keep=[]; let okCount=0;
+    const sb=getSB();if(!sb){obStatus("Supabase non dispo");obBadge();return{ok:false};}
+    let arr=obLoad();
+    if(!arr.length){obStatus("✅ Tout est synchro");obBadge();return{ok:true};}
+    if(!navigator.onLine){obStatus("📴 Offline — "+arr.length+" en attente");obBadge();return{ok:false};}
+    obStatus("⏳ Sync… ("+arr.length+")");obBadge();
+    const keep=[];let ok=0;
     for(const job of arr){
       try{
-        const {data,error}=await sb.rpc("rpc_caisse_checkout_v1",{p_owner_id:State.owner_id,p_client_txn_id:job.txn_id,p_method:job.method,p_items:job.items});
-        if(error) throw error;
+        const{data,error}=await sb.rpc("rpc_caisse_checkout_v1",{p_owner_id:State.owner_id,p_client_txn_id:job.txn_id,p_method:job.method,p_items:job.items});
+        if(error)throw error;
         const res=(typeof data==="string")?JSON.parse(data):data;
-        if(res?.ok){okCount++;localMarkSynced(job.txn_id);continue;}
+        if(res?.ok){ok++;localMarkSynced(job.txn_id);continue;}
         keep.push({...job,tries:(job.tries||0)+1,last_error:res?.message||"Erreur",last_try_at:new Date().toISOString()});
         await sleep(250);
       }catch(e){keep.push({...job,tries:(job.tries||0)+1,last_error:e?.message||String(e),last_try_at:new Date().toISOString()});await sleep(400);}
     }
-    outboxSave(keep);
-    if(keep.length===0){outboxSetStatus(`✅ Sync OK (${okCount})`);toast("✅ Synchro OK");}
-    else{outboxSetStatus(`⚠️ Sync partielle: ${okCount} OK • ${keep.length} en attente`);toast("⚠️ Synchro partielle");}
-    outboxSetBadge();
-    try{await loadData();render();}catch(e){}
-    return{ok:true,okCount,left:keep.length};
-  }finally{OUTBOX_FLUSHING=false;}
+    obSave(keep);
+    if(keep.length===0){obStatus("✅ Sync OK ("+ok+")");toast("✅ Synchro OK");}
+    else{obStatus("⚠️ "+ok+" OK • "+keep.length+" en attente");toast("⚠️ Synchro partielle");}
+    obBadge();
+    try{await loadData();renderAll();}catch(_){}
+    return{ok:true,left:keep.length};
+  }finally{OB_FL=false;}
 }
 
-function outboxInit(){
-  outboxSetBadge();
-  outboxSetStatus(outboxCount()?`En attente: ${outboxCount()}`:"✅ Tout est synchro");
-  window.addEventListener("online",()=>{setNetBadge();outboxFlush();});
-  window.addEventListener("offline",()=>{setNetBadge();outboxSetStatus(`📴 Offline — en attente: ${outboxCount()}`);outboxSetBadge();});
+function obInit(){
+  obBadge();obStatus(obCount()?"En attente : "+obCount():"✅ Tout est synchro");
+  window.addEventListener("online",()=>{setNetBadge();obFlush();});
+  window.addEventListener("offline",()=>{setNetBadge();obStatus("📴 Offline — "+obCount()+" en attente");obBadge();});
   const btn=document.getElementById("btnSyncOutbox");
-  if(btn){btn.addEventListener("click",async()=>{btn.disabled=true;outboxSetStatus("⏳ Sync…");await outboxFlush();btn.disabled=false;});}
-  setTimeout(()=>{if(navigator.onLine) outboxFlush();},900);
+  if(btn)btn.addEventListener("click",async()=>{btn.disabled=true;obStatus("⏳ Sync…");await obFlush();btn.disabled=false;});
+  setTimeout(()=>{if(navigator.onLine)obFlush();},900);
 }
 
-/* ─── INIT ─── */
+/* ════ INIT ════ */
 (async function init(){
-  if(!window.DIGIY_GUARD || typeof window.DIGIY_GUARD.boot !== "function"){
-    console.error("❌ guard-pro.js non chargé !");
+  if(!window.DIGIY_GUARD||typeof window.DIGIY_GUARD.boot!=="function"){
+    document.body.innerHTML='<div style="color:#fb7185;padding:40px;text-align:center;font-size:16px">❌ guard-pro.js introuvable. Vérifie le repo.</div>';
     return;
   }
   setNetBadge();
+  const res=await window.DIGIY_GUARD.boot();
+  if(!res?.ok)return;
 
-  const guardRes = await window.DIGIY_GUARD.boot();
-  if(!guardRes?.ok) return; // guard redirige seul
+  const sess=window.DIGIY_GUARD.getSession?.()||null;
+  State.owner_id=sess?.owner_id||null;
+  State.slug=sess?.slug||"";
+  State.phone=sess?.phone||"";
+  State.title=sess?.title||"";
 
-  const sess = window.DIGIY_GUARD.getSession?.() || null;
-  State.owner_id = sess?.owner_id || null;
-  State.slug     = sess?.slug     || "";
-  State.phone    = sess?.phone    || "";
-  State.title    = sess?.title    || "";
-
-  // ✅ Plus de token — owner_id suffit
   if(!State.owner_id){
-    window.location.replace(PIN_HUB + "?module=POS&return=" + encodeURIComponent(location.href));
+    window.location.replace(PIN_HUB+"?module=POS&return="+encodeURIComponent(location.href));
     return;
   }
 
-  document.getElementById("btnLogout")?.addEventListener("click", () => {
-    window.DIGIY_GUARD.logout(PIN_HUB + "?module=POS");
-  });
+  document.getElementById("btnLogout")?.addEventListener("click",()=>window.DIGIY_GUARD.logout(PIN_HUB+"?module=POS"));
+
+  const si=document.getElementById("sessionInfo");
+  if(si)si.innerHTML="SLUG : <b style='color:#fff'>"+esc(State.slug||"—")+"</b><br>PHONE : <b style='color:#fff'>"+esc(State.phone||"—")+"</b><br>OWNER : <b style='color:#fff;font-size:10px'>"+esc(State.owner_id||"—")+"</b>";
 
   await loadData();
-  render();
-  outboxInit();
+  renderAll();
+  obInit();
 })();
 
-/* ─── LOAD DATA ─── */
+/* ════ LOAD DATA ════ */
 async function loadData(){
-  const sb=getSB(); if(!sb||!State.owner_id) return;
+  const sb=getSB();if(!sb||!State.owner_id)return;
   try{
-    const {data:settings}=await sb.from("digiy_caisse_settings").select("*").eq("owner_id",State.owner_id).maybeSingle();
-    if(settings){ State.settings=settings; State.storeName=settings.store_name||(State.title||"MA BOUTIQUE"); State.pro=!!settings.is_pro; }
-    else{
+    const{data:s}=await sb.from("digiy_caisse_settings").select("*").eq("owner_id",State.owner_id).maybeSingle();
+    if(s){
+      State.settings=s;
+      State.storeName=s.store_name||State.title||"MA BOUTIQUE";
+      State.pro=!!s.is_pro;
+      State.tva={active:!!s.tva_assujeti,taux:Number(s.tva_taux||18),mode:s.tva_mode||"excl"};
+    }else{
       await sb.from("digiy_caisse_settings").insert({owner_id:State.owner_id,store_name:State.title||"MA BOUTIQUE",phone:State.phone,trial_start:new Date().toISOString()});
-      State.storeName=State.title||"MA BOUTIQUE"; State.pro=false; State.settings={trial_start:new Date().toISOString()};
+      State.storeName=State.title||"MA BOUTIQUE";State.pro=false;
+      State.settings={trial_start:new Date().toISOString()};
     }
-    const {data:products}=await sb.from("digiy_caisse_products").select("*").eq("owner_id",State.owner_id).eq("is_active",true).order("created_at",{ascending:false});
-    State.items=products||[];
-    const {data:sales}=await sb.from("digiy_caisse_sales").select("*").eq("owner_id",State.owner_id).order("created_at",{ascending:false}).limit(100);
-    State.sales=sales||[];
-  }catch(e){console.error("Erreur chargement:",e);}
+    const{data:p}=await sb.from("digiy_caisse_products").select("*").eq("owner_id",State.owner_id).eq("is_active",true).order("created_at",{ascending:false});
+    State.items=p||[];State.filteredItems=State.items;
+    const{data:v}=await sb.from("digiy_caisse_sales").select("*").eq("owner_id",State.owner_id).order("created_at",{ascending:false}).limit(200);
+    State.sales=v||[];
+  }catch(e){console.error("loadData:",e);}
 }
 
-/* ─── NAV ─── */
+/* ════ NAV ════ */
 function tab(id,btn){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.querySelectorAll(".nav-link").forEach(l=>l.classList.remove("active"));
   document.getElementById(id+"Page").classList.add("active");
-  btn.classList.add("active"); render();
+  btn.classList.add("active");renderAll();
 }
 
-/* ─── RENDER ─── */
-function render(){
-  const trialStart=State.settings?.trial_start?new Date(State.settings.trial_start).getTime():Date.now();
-  const left=Math.max(0,TRIAL_LIMIT-Math.floor((Date.now()-trialStart)/86400000));
+/* ════ RENDER ════ */
+function renderAll(){renderHeader();renderCaisse();renderHistory();renderStock();renderAdminForm();}
+
+function renderHeader(){
+  const ts=State.settings?.trial_start?new Date(State.settings.trial_start).getTime():Date.now();
+  const left=Math.max(0,TRIAL_LIMIT-Math.floor((Date.now()-ts)/86400000));
   const tb=document.getElementById("trialBadge");
-  if(State.pro){tb.className="badge gold";tb.textContent="LICENCE ACTIVE";}
-  else{tb.className="badge";tb.textContent=`TRIAL: ${left} JOURS`;document.getElementById("lockScreen").style.display=left<=0?"flex":"none";}
-  outboxSetBadge();
+  if(State.pro){tb.className="badge gold";tb.textContent="LICENCE ACTIVE";document.getElementById("lockScreen").style.display="none";}
+  else{tb.className="badge";tb.textContent="TRIAL: "+left+" J";document.getElementById("lockScreen").style.display=left<=0?"flex":"none";}
+  const tvab=document.getElementById("tvaBadge");
+  if(tvab)tvab.style.display=State.tva.active?"inline-flex":"none";
+  obBadge();
   document.getElementById("storeDisp").innerText=State.storeName||"MA BOUTIQUE";
-  const grid=document.getElementById("productsGrid");
-  if(grid) grid.innerHTML=(State.items||[]).map(p=>`<div class="noble-card" onclick="addToCart('${p.id}')"><i class="fas fa-tag"></i><div class="pname">${escapeHtml(p.name||"Article")}</div><div class="pprice">${Number(p.price||0).toLocaleString()} F</div><div class="pstock ${Number(p.stock||0)<=0?'out':''}">${Number(p.stock||0)<=0?'RUPTURE':'STK: '+Number(p.stock||0)}</div></div>`).join("");
-  const inv=document.getElementById("inventoryManager");
-  if(inv) inv.innerHTML=(State.items||[]).map(p=>`<div class="inventory-item"><span>${escapeHtml(p.name||"Article")} <small class="muted">(${Number(p.stock||0)} stk)</small></span><button class="trashBtn" onclick="removeItem('${p.id}')"><i class="fas fa-trash"></i></button></div>`).join("")||"—";
-  document.getElementById("cartListing").innerHTML=(State.cart||[]).map(i=>`<div class="cart-row"><span>${escapeHtml(i.name)} <small>x${i.qty}</small></span><span>${(i.price*i.qty).toLocaleString()} F</span></div>`).join("");
-  document.getElementById("totalPrice").innerText=(State.cart||[]).reduce((s,i)=>s+(i.price*i.qty),0).toLocaleString()+" F";
-  const todayKey=dayKeyNow();
-  const todays=(State.sales||[]).filter(s=>String(s.created_at||"").slice(0,10)===todayKey);
-  document.getElementById("revDay").innerText=todays.reduce((a,b)=>a+Number(b.total||0),0).toLocaleString()+" F";
-  document.getElementById("salesCount").textContent=`${todays.length} vente(s) aujourd'hui`;
-  const hist=document.getElementById("historyListing");
-  if(!State.sales?.length){hist.textContent="Aucune vente pour l'instant.";}
-  else hist.innerHTML=State.sales.slice(0,30).map(s=>{const d=new Date(s.created_at);return`<div class="inventory-item"><span>${d.toLocaleDateString('fr-FR')} ${d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}<br><small class="muted">${escapeHtml(s.payment_method||"—")}</small></span><b style="color:var(--gold);">${Number(s.total||0).toLocaleString()} F</b></div>`;}).join("");
   setNetBadge();
 }
 
-function escapeHtml(str){ return String(str||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
-
-function addToCart(id){
-  const p=State.items.find(x=>String(x.id)===String(id)); if(!p) return;
-  if(Number(p.stock||0)<=0){toast("❌ Plus de stock");return;}
-  const inCart=State.cart.find(x=>String(x.id)===String(id));
-  if(inCart){inCart.qty++;}else{State.cart.push({id:p.id,name:p.name,price:Number(p.price||0),stock:Number(p.stock||0),qty:1});}
-  render();
+function renderCaisse(){
+  const items=State.filteredItems;
+  document.getElementById("prodCount").textContent=items.length;
+  const grid=document.getElementById("productsGrid");if(!grid)return;
+  if(!items.length){
+    grid.innerHTML='<div class="muted" style="padding:28px;text-align:center;grid-column:1/-1">Aucun produit — onglet STOCK pour en ajouter.</div>';
+  }else{
+    grid.innerHTML=items.map(p=>{
+      const out=Number(p.stock||0)<=0;
+      const prix=State.tva.active?calcTVA(Number(p.price||0)).ttc:Number(p.price||0);
+      return`<div class="noble-card${out?' rupture':''}" onclick="addToCart('${p.id}')">
+        <i class="fas fa-tag"></i>
+        <div class="pname">${esc(p.name||"Article")}</div>
+        <div class="pprice">${fmt(prix)} F${State.tva.active?'<span style="font-size:9px;opacity:.7"> TTC</span>':''}</div>
+        <div class="pstock${out?' out':''}">${out?'⚠️ RUPTURE':'STK: '+Number(p.stock||0)}</div>
+      </div>`;
+    }).join("");
+  }
+  renderCart();
 }
 
-async function checkout(method){
-  if(!State.cart.length) return;
-  const sb=getSB(); if(!sb){alert("Supabase non disponible.");return;}
-  const payloadItems=State.cart.map(i=>({id:i.id,qty:i.qty}));
-  const txnId=makeTxnId();
-  const total=State.cart.reduce((s,i)=>s+(Number(i.price||0)*Number(i.qty||0)),0);
-  localAddTicket({client_txn_id:txnId,method:String(method||"cash").toLowerCase(),total,items:payloadItems,note:State.cart.map(i=>`${i.name} x${i.qty}`).join(" | ")});
-  outboxEnqueue({txn_id:txnId,method,items:payloadItems,created_at:new Date().toISOString(),tries:0});
-  State.cart=[]; render();
-  if(navigator.onLine){await outboxFlush();}else{alert("📴 Réseau KO — Vente gardée en attente.");}
+function filterProd(q){
+  const s=(q||"").toLowerCase().trim();
+  State.filteredItems=s?State.items.filter(p=>(p.name||"").toLowerCase().includes(s)):State.items;
+  renderCaisse();
 }
 
-async function addNew(){
-  const sb=getSB(); if(!sb) return alert("Supabase non disponible");
-  const name=document.getElementById("addName").value.trim();
-  const price=parseInt(document.getElementById("addPrice").value,10);
-  const stock=parseInt(document.getElementById("addStock").value,10)||0;
-  if(!name||!price) return alert("Nom et prix requis");
+function renderCart(){
+  const listing=document.getElementById("cartListing");
+  if(!State.cart.length){
+    listing.innerHTML='<div class="muted" style="padding:14px 0;text-align:center">Panier vide</div>';
+  }else{
+    listing.innerHTML=State.cart.map(i=>`
+      <div class="cart-row">
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:900">${esc(i.name)}</div>
+          <div class="muted">${fmt(i.price)} F × ${i.qty} = <b style="color:var(--gold)">${fmt(i.price*i.qty)} F</b></div>
+        </div>
+        <div class="qty-ctrl" style="margin-left:6px">
+          <button class="qty-btn" onclick="changeQty('${i.id}',-1)">−</button>
+          <span style="font-weight:900;font-size:12px;min-width:18px;text-align:center">${i.qty}</span>
+          <button class="qty-btn" onclick="changeQty('${i.id}',1)">+</button>
+        </div>
+      </div>`).join("");
+  }
+
+  const totalHT=State.cart.reduce((s,i)=>s+(i.price*i.qty),0);
+  const totalItems=State.cart.reduce((s,i)=>s+i.qty,0);
+  const tvaBox=document.getElementById("tvaBox");
+  const totalLabel=document.getElementById("totalLabel");
+
+  if(State.tva.active&&State.cart.length){
+    const{ht,tva,ttc}=calcTVA(totalHT);
+    tvaBox.style.display="block";
+    document.getElementById("tvaHT").textContent=fmt(ht)+" F";
+    document.getElementById("tvaPct").textContent="TVA ("+State.tva.taux+"%)";
+    document.getElementById("tvaMontant").textContent=fmt(tva)+" F";
+    document.getElementById("tvaTTC").textContent=fmt(ttc)+" F";
+    document.getElementById("totalPrice").textContent=fmt(ttc)+" F";
+    if(totalLabel)totalLabel.textContent="TOTAL TTC";
+  }else{
+    if(tvaBox)tvaBox.style.display="none";
+    document.getElementById("totalPrice").textContent=fmt(totalHT)+" F";
+    if(totalLabel)totalLabel.textContent="TOTAL";
+  }
+  document.getElementById("cartItemCount").textContent=totalItems+" art.";
+}
+
+function renderHistory(){
+  const today=dayKey(),month=monthKey();
+  const meth=document.getElementById("filterMethod")?.value||"";
+  const date=document.getElementById("filterDate")?.value||"";
+  let sales=State.sales;
+  if(meth)sales=sales.filter(s=>(s.payment_method||"").toUpperCase()===meth.toUpperCase());
+  if(date)sales=sales.filter(s=>String(s.created_at||"").slice(0,10)===date);
+
+  const todays=State.sales.filter(s=>String(s.created_at||"").slice(0,10)===today);
+  const revDay=todays.reduce((a,b)=>a+Number(b.total||0),0);
+  const revMonth=State.sales.filter(s=>String(s.created_at||"").slice(0,7)===month).reduce((a,b)=>a+Number(b.total||0),0);
+  const avg=todays.length?Math.round(revDay/todays.length):0;
+
+  document.getElementById("revDay").textContent=fmt(revDay)+" F";
+  document.getElementById("salesCount").textContent=todays.length;
+  document.getElementById("revMonth").textContent=fmt(revMonth)+" F";
+  document.getElementById("avgTicket").textContent=fmt(avg)+" F";
+
+  const hist=document.getElementById("historyListing");
+  if(!sales.length){hist.innerHTML='<div style="padding:18px;text-align:center">Aucune vente trouvée.</div>';return;}
+  const pmC={CASH:"var(--green)",WAVE:"var(--blue)",OM:"var(--orange)",CREDIT:"var(--red)"};
+  hist.innerHTML=sales.slice(0,50).map(s=>{
+    const d=new Date(s.created_at),pm=(s.payment_method||"—").toUpperCase();
+    return`<div class="inv-item">
+      <div>
+        <div style="font-weight:900;font-size:12px">${d.toLocaleDateString("fr-FR")} ${d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})}</div>
+        <div class="muted">${s.items_count||"?"} article(s)</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-weight:1000;color:var(--gold);font-size:13px">${fmt(s.total||0)} F</div>
+        <div style="font-size:10px;font-weight:900;color:${pmC[pm]||'var(--muted)'}">${pm}</div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function resetFilters(){
+  document.getElementById("filterMethod").value="";
+  document.getElementById("filterDate").value="";
+  renderHistory();
+}
+
+function renderStock(q=""){
+  const s=(q||"").toLowerCase().trim();
+  const items=s?State.items.filter(p=>(p.name||"").toLowerCase().includes(s)):State.items;
+  const rupt=State.items.filter(p=>Number(p.stock||0)<=0).length;
+  const sa=document.getElementById("stockAlert");
+  if(sa)sa.textContent=rupt?"⚠️ "+rupt+" rupture(s)":"";
+  const inv=document.getElementById("inventoryManager");if(!inv)return;
+  if(!items.length){inv.innerHTML='<div style="padding:18px;text-align:center">Aucun produit.</div>';return;}
+  inv.innerHTML=items.map(p=>{
+    const stk=Number(p.stock||0);
+    const col=stk<=0?"#fb7185":stk<=5?"#f59e0b":"#bbf7d0";
+    const pHT=Number(p.price||0),pTTC=State.tva.active?calcTVA(pHT).ttc:pHT;
+    return`<div class="inv-item">
+      <div>
+        <div style="font-weight:950;font-size:12px">${esc(p.name||"Article")}</div>
+        <div class="muted">${fmt(pHT)} F HT${State.tva.active?' / '+fmt(pTTC)+' F TTC':''}${p.category?' · '+esc(p.category):''}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px">
+        <span style="font-weight:1000;color:${col};font-size:12px">${stk<=0?'⚠️ RUPTURE':stk+' unités'}</span>
+        <button class="icon-btn edit" onclick="openEdit('${p.id}')"><i class="fas fa-edit"></i></button>
+        <button class="icon-btn del" onclick="removeItem('${p.id}')"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function renderAdminForm(){
+  const s=State.settings||{};
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.value=v||"";};
+  set("pStoreName",s.store_name||State.storeName);
+  set("pPhone",s.phone||State.phone);
+  set("pEmail",s.email);set("pWebsite",s.website);
+  set("pAddress",s.address);set("pSiret",s.siret);
+  set("pRc",s.rc);set("pCapital",s.capital);
+  set("pIban",s.iban);set("pMentions",s.mentions_legales);
+  set("pLogo",s.logo_url);set("pTvaTaux",s.tva_taux||18);
+  const tvaCheck=document.getElementById("pTvaActive");
+  if(tvaCheck)tvaCheck.checked=!!s.tva_assujeti;
+  const tvaMode=document.getElementById("pTvaMode");
+  if(tvaMode)tvaMode.value=s.tva_mode||"excl";
+  toggleTVASection();
+}
+
+/* ── TVA ADMIN ── */
+function toggleTVASection(){
+  const active=document.getElementById("pTvaActive")?.checked;
+  const box=document.getElementById("tvaSettings");
+  if(box)box.style.display=active?"block":"none";
+  if(active)updateTvaExplication();
+}
+
+function updateTvaExplication(){
+  const mode=document.getElementById("pTvaMode")?.value||"excl";
+  const taux=document.getElementById("pTvaTaux")?.value||18;
+  const el=document.getElementById("tvaExplication");if(!el)return;
+  if(mode==="excl"){
+    el.innerHTML=`<b style="color:var(--gold)">Mode HT → TTC :</b><br>
+    Tu entres les prix <b>hors taxes</b>.<br>
+    La TVA de <b>${taux}%</b> est <b>ajoutée</b> au moment du ticket.<br>
+    Exemple : 1 000 F HT → TVA ${Math.round(1000*taux/100)} F → <b>${1000+Math.round(1000*taux/100)} F TTC</b>`;
+  }else{
+    el.innerHTML=`<b style="color:var(--gold)">Mode TTC → HT :</b><br>
+    Tu entres les prix <b>toutes taxes comprises</b>.<br>
+    La TVA de <b>${taux}%</b> est <b>déduite</b> pour l'affichage comptable.<br>
+    Exemple : 1 180 F TTC → HT ${Math.round(1180/(1+taux/100))} F → TVA <b>${1180-Math.round(1180/(1+taux/100))} F</b>`;
+  }
+}
+
+function simulateTVA(){
+  updateTvaExplication();
+  const m=Number(document.getElementById("simMontant")?.value||0);
+  const taux=Number(document.getElementById("pTvaTaux")?.value||18);
+  const mode=document.getElementById("pTvaMode")?.value||"excl";
+  const res=document.getElementById("simResult");if(!res)return;
+  if(!m){res.style.display="none";return;}
+  let ht,tva,ttc;
+  if(mode==="excl"){ht=m;tva=Math.round(m*taux/100);ttc=m+tva;}
+  else{ttc=m;ht=Math.round(m/(1+taux/100));tva=ttc-ht;}
+  res.style.display="block";
+  res.innerHTML=`
+    <div class="tva-row"><span>Montant HT</span><span><b>${fmt(ht)} F</b></span></div>
+    <div class="tva-row"><span>TVA ${taux}%</span><span><b style="color:var(--orange)">${fmt(tva)} F</b></span></div>
+    <div class="tva-row tva-total"><span>Total TTC</span><span>${fmt(ttc)} F</span></div>`;
+}
+
+/* ════ SAVE SETTINGS ════ */
+async function saveSettings(){
+  const sb=getSB();if(!sb||!State.owner_id)return;
+  const g=id=>document.getElementById(id)?.value?.trim()||null;
+  const gn=id=>parseFloat(document.getElementById(id)?.value)||0;
+  const tvaActive=!!document.getElementById("pTvaActive")?.checked;
+
+  const payload={
+    owner_id:State.owner_id,
+    store_name:g("pStoreName")||State.storeName,
+    phone:g("pPhone")||State.phone,
+    email:g("pEmail"),website:g("pWebsite"),address:g("pAddress"),
+    siret:g("pSiret"),rc:g("pRc"),capital:g("pCapital"),iban:g("pIban"),
+    mentions_legales:g("pMentions"),logo_url:g("pLogo"),
+    tva_assujeti:tvaActive,
+    tva_taux:gn("pTvaTaux"),
+    tva_mode:document.getElementById("pTvaMode")?.value||"excl"
+  };
+
   try{
-    const {error}=await sb.from("digiy_caisse_products").insert({owner_id:State.owner_id,name,price,stock,is_active:true});
-    if(error) throw error;
-    document.getElementById("addName").value=""; document.getElementById("addPrice").value=""; document.getElementById("addStock").value="";
-    await loadData(); render(); toast("✅ Produit ajouté");
-  }catch(e){alert("❌ Erreur: "+(e?.message||e));}
+    const{error}=await sb.from("digiy_caisse_settings").upsert(payload,{onConflict:"owner_id"});
+    if(error)throw error;
+    State.storeName=payload.store_name;
+    State.tva={active:tvaActive,taux:payload.tva_taux,mode:payload.tva_mode};
+    State.settings={...State.settings,...payload};
+    toast("✅ Paramètres enregistrés !");
+    renderAll();
+  }catch(e){alert("❌ Erreur : "+(e?.message||e));}
+}
+
+/* ════ PANIER ════ */
+function addToCart(id){
+  const p=State.items.find(x=>String(x.id)===String(id));if(!p)return;
+  if(Number(p.stock||0)<=0){toast("❌ Rupture de stock !");return;}
+  const inCart=State.cart.find(x=>String(x.id)===String(id));
+  if(inCart){if(inCart.qty>=Number(p.stock||0)){toast("⚠️ Stock max atteint");return;}inCart.qty++;}
+  else{State.cart.push({id:p.id,name:p.name,price:Number(p.price||0),stock:Number(p.stock||0),qty:1});}
+  renderCart();toast("✅ "+esc(p.name)+" ajouté");
+}
+
+function changeQty(id,d){
+  const i=State.cart.findIndex(x=>String(x.id)===String(id));if(i<0)return;
+  State.cart[i].qty+=d;
+  if(State.cart[i].qty<=0)State.cart.splice(i,1);
+  renderCart();
+}
+
+function clearCart(){
+  if(State.cart.length&&!confirm("Vider le panier ?"))return;
+  State.cart=[];renderCart();
+}
+
+/* ════ CHECKOUT ════ */
+async function checkout(method){
+  if(!State.cart.length){toast("🛒 Panier vide !");return;}
+  const sb=getSB();if(!sb){alert("Supabase non disponible.");return;}
+  const totalHT=State.cart.reduce((s,i)=>s+(i.price*i.qty),0);
+  const totalFinal=State.tva.active?calcTVA(totalHT).ttc:totalHT;
+  const payloadItems=State.cart.map(i=>({id:i.id,qty:i.qty}));
+  const txnId=makeTxn();
+  const note=State.cart.map(i=>i.name+" x"+i.qty).join(" | ");
+  localAddTicket({client_txn_id:txnId,method:method.toLowerCase(),total:totalFinal,items:payloadItems,note});
+  obEnqueue({txn_id:txnId,method,items:payloadItems,created_at:new Date().toISOString(),tries:0});
+  toast("💳 "+method+" — "+fmt(totalFinal)+" F"+(State.tva.active?" TTC":""));
+  State.cart=[];renderCart();
+  if(navigator.onLine){await obFlush();}
+  else{toast("📴 Offline — vente gardée. Synchro auto dès le retour réseau.");}
+}
+
+/* ════ CRUD PRODUITS ════ */
+async function addNew(){
+  const sb=getSB();if(!sb)return alert("Supabase non disponible");
+  const name=(document.getElementById("addName")?.value||"").trim();
+  const price=parseInt(document.getElementById("addPrice")?.value||"0",10);
+  const stock=parseInt(document.getElementById("addStock")?.value||"0",10)||0;
+  const category=(document.getElementById("addCategory")?.value||"").trim()||null;
+  if(!name)return alert("Nom requis");
+  if(!price||price<=0)return alert("Prix requis et > 0");
+  try{
+    const{error}=await sb.from("digiy_caisse_products").insert({owner_id:State.owner_id,name,price,stock,category,is_active:true});
+    if(error)throw error;
+    ["addName","addPrice","addStock","addCategory"].forEach(id=>{const e=document.getElementById(id);if(e)e.value="";});
+    await loadData();renderAll();toast("✅ "+name+" ajouté !");
+  }catch(e){alert("❌ Erreur : "+(e?.message||e));}
 }
 
 async function removeItem(id){
-  if(!confirm("Supprimer l'article ?")) return;
-  const sb=getSB(); if(!sb) return;
+  if(!confirm("Supprimer cet article ?"))return;
+  const sb=getSB();if(!sb)return;
   try{
-    const {error}=await sb.from("digiy_caisse_products").update({is_active:false}).eq("id",id).eq("owner_id",State.owner_id);
-    if(error) throw error;
-    await loadData(); render(); toast("🗑️ Produit retiré");
-  }catch(e){alert("❌ Erreur: "+(e?.message||e));}
+    const{error}=await sb.from("digiy_caisse_products").update({is_active:false}).eq("id",id).eq("owner_id",State.owner_id);
+    if(error)throw error;
+    await loadData();renderAll();toast("🗑️ Article retiré");
+  }catch(e){alert("❌ Erreur : "+(e?.message||e));}
 }
 
+function openEdit(id){
+  const p=State.items.find(x=>String(x.id)===String(id));if(!p)return;
+  document.getElementById("editId").value=p.id;
+  document.getElementById("editName").value=p.name||"";
+  document.getElementById("editPrice").value=p.price||"";
+  document.getElementById("editStock").value=p.stock??0;
+  document.getElementById("editCategory").value=p.category||"";
+  document.getElementById("modalEdit").classList.add("open");
+}
+
+function closeModal(){document.getElementById("modalEdit").classList.remove("open");}
+
+async function saveEdit(){
+  const sb=getSB();if(!sb)return;
+  const id=document.getElementById("editId").value;
+  const name=(document.getElementById("editName").value||"").trim();
+  const price=parseInt(document.getElementById("editPrice").value||"0",10);
+  const stock=parseInt(document.getElementById("editStock").value||"0",10)||0;
+  const category=(document.getElementById("editCategory").value||"").trim()||null;
+  if(!name||!price)return alert("Nom et prix requis");
+  try{
+    const{error}=await sb.from("digiy_caisse_products").update({name,price,stock,category}).eq("id",id).eq("owner_id",State.owner_id);
+    if(error)throw error;
+    closeModal();await loadData();renderAll();toast("✅ Produit mis à jour !");
+  }catch(e){alert("❌ Erreur : "+(e?.message||e));}
+}
+
+/* ════ LICENCE ════ */
 async function activate(inputId){
-  const key=(document.getElementById(inputId).value||"").trim(); if(!key) return alert("Clé requise");
-  const sb=getSB(); if(!sb) return alert("Supabase non disponible");
+  const key=(document.getElementById(inputId)?.value||"").trim();
+  if(!key)return alert("Clé requise");
+  const sb=getSB();if(!sb)return alert("Supabase non disponible");
   try{
-    await sb.from("digiy_caisse_settings").update({is_pro:true,pro_key:key}).eq("owner_id",State.owner_id);
-    toast("✅ Licence activée"); await loadData(); render();
-  }catch(e){alert("❌ Erreur: "+(e?.message||e));}
-}
-
-function goSettings(){
-  const url=new URL("./settings.html",location.href);
-  if(State.slug) url.searchParams.set("slug",State.slug);
-  window.location.href=url.toString();
+    const{error}=await sb.from("digiy_caisse_settings").update({is_pro:true,pro_key:key}).eq("owner_id",State.owner_id);
+    if(error)throw error;
+    State.pro=true;if(State.settings)State.settings.is_pro=true;
+    toast("✅ Licence PRO activée 🦅 !");renderAll();
+  }catch(e){alert("❌ Erreur : "+(e?.message||e));}
 }
 </script>
 </body>
