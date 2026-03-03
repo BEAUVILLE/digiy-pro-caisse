@@ -313,7 +313,7 @@ select.field{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xml
   <div class="footer">
     <div class="footer-logo">DIGIYLYFE</div>
     <div class="footer-text">L'Afrique enracinée, connectée au monde · © 2026</div>
-    <div class="footer-text">digiylyfe@gmail.com</div>
+    <div class="footer-text"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3a5e535d534356435c5f7a5d575b535614595557">[email&#160;protected]</a></div>
   </div>
 </div>
 
@@ -362,7 +362,7 @@ select.field{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xml
       <div class="field-wrap"><label class="field-label">Mot de passe</label><input class="field" id="login-pass" type="password" placeholder="••••••••"></div>
       <div class="auth-error" id="login-error"></div>
       <button class="btn-auth" id="btn-login" onclick="doLogin()">Se connecter →</button>
-      <div class="demo-box">🔑 Démo : demo@digiylyfe.com / demo1234</div>
+      <div class="demo-box">🔑 Démo : <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0367666e6c43676a646a7a6f7a65662d606c6e">[email&#160;protected]</a> / demo1234</div>
       <div class="auth-link">Pas encore de compte ? <a onclick="goTo('register')">1 mois gratuit</a></div>
     </div>
   </div>
@@ -383,7 +383,10 @@ select.field{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xml
       <div><div class="logo-title">CAISSE PRO</div><div class="logo-sub">Gestion de vente</div></div>
     </div>
     <div class="header-right">
-      <div class="store-name" id="store-name-display">Ma Boutique</div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end">
+        <div class="store-name" id="store-name-display">Ma Boutique</div>
+        <div id="store-slug" style="font-size:9px;color:var(--muted);letter-spacing:1px"></div>
+      </div>
       <div class="user-av" id="user-av">B</div>
       <button class="btn-logout" onclick="doLogout()">Déco</button>
     </div>
@@ -543,7 +546,12 @@ select.field{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xml
               </div>
             </div>
           </div>
-          <button class="btn-submit" onclick="saveSettings()">💾 Enregistrer</button>
+          <div style="background:var(--bg3);border:1px solid #f0c04022;border-radius:8px;padding:10px;margin-top:10px;font-size:10px;color:var(--muted)">
+          Votre identifiant unique (slug) :
+          <strong style="color:var(--gold);font-size:12px;display:block;margin-top:4px" id="admin-slug-display">—</strong>
+          <span style="font-size:9px">Communiquez ce slug à DIGIYLYFE pour toute demande</span>
+        </div>
+        <button class="btn-submit" onclick="saveSettings()">💾 Enregistrer</button>
         </div>
       </div>
 
@@ -604,7 +612,7 @@ select.field{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xml
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ══════════════════════════════════════════════════════
 // ⚙️  CONFIG SUPABASE — Remplace par tes vraies clés
 // ══════════════════════════════════════════════════════
@@ -838,6 +846,10 @@ function launchApp(){
   const boutique = currentProfile.nom_boutique||'Ma Boutique';
   document.getElementById('store-name-display').textContent = boutique;
   document.getElementById('user-av').textContent = boutique.charAt(0).toUpperCase();
+  const slugEl = document.getElementById('store-slug');
+  if(slugEl && currentProfile.slug) slugEl.textContent = '🔑 ' + currentProfile.slug;
+  const adminSlug = document.getElementById('admin-slug-display');
+  if(adminSlug && currentProfile.slug) adminSlug.textContent = currentProfile.slug;
 
   // TVA
   const tvaToggle = document.getElementById('tva-toggle');
@@ -1234,6 +1246,10 @@ async function saveSettings(){
   await loadProfile();
   document.getElementById('store-name-display').textContent = boutique;
   document.getElementById('user-av').textContent = boutique.charAt(0).toUpperCase();
+  const slugEl = document.getElementById('store-slug');
+  if(slugEl && currentProfile.slug) slugEl.textContent = '🔑 ' + currentProfile.slug;
+  const adminSlug = document.getElementById('admin-slug-display');
+  if(adminSlug && currentProfile.slug) adminSlug.textContent = currentProfile.slug;
   document.getElementById('tva-rate-display').textContent = tvaTaux;
   if(currentProfile) currentProfile.tva_active=tvaActive;
   renderCart();
@@ -1252,14 +1268,4 @@ function hideUpgrade(){document.getElementById('upgrade-overlay').classList.remo
 function fmt(n){return Number(n||0).toLocaleString('fr-FR');}
 
 function showToast(msg,type='success'){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.style.display='block';
-  t.style.background  = type==='error'?'#c0392b':'#0f2318';
-  t.style.borderColor = type==='error'?'#c0392b':'#f0c040';
-  t.style.color       = '#e8f0e8';
-  clearTimeout(window._tt);
-  window._tt=setTimeout(()=>t.style.display='none',3000);
-}
-</script>
-</body>
-</html>
+  const
