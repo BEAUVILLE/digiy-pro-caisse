@@ -1,1335 +1,1265 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <meta name="theme-color" content="#061b14"/>
-  <title>DIGIY CAISSE PRO ♾️ — Royal Edition</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DIGIY CAISSE PRO — Logiciel de caisse boutique</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#f0c040;--gold2:#d4a820;
+  --bg:#0a1a0f;--bg2:#0f2318;--bg3:#163020;
+  --text:#e8f0e8;--muted:#7a9e7a;
+  --red:#c0392b;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;
+  --border:#1e3a28;
+}
+body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:#f0c04033;border-radius:2px}
+.screen{display:none;animation:fadeIn .3s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-<!-- Supabase + Guard (béton) -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-<script src="/guard-pro.js?v=20260302-0500" defer></script>
+/* ── LANDING ── */
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:var(--bg2);border-bottom:1px solid #f0c04022;position:sticky;top:0;z-index:100}
+.top-logo{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;letter-spacing:3px;color:var(--gold)}
+.top-logo span{color:var(--text);font-weight:300}
+.top-nav{display:flex;gap:10px}
+.btn-sm{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:8px 18px;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:1px;transition:all .2s}
+.btn-sm:hover{border-color:var(--gold);color:var(--gold)}
+.btn-gold{background:var(--gold);border:none;color:var(--bg);border-radius:6px;padding:8px 18px;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;transition:all .2s}
+.btn-gold:hover{background:var(--gold2)}
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+.hero{text-align:center;padding:70px 20px 50px;position:relative}
+.hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:500px;height:500px;background:radial-gradient(circle,#f0c04008 0%,transparent 70%);pointer-events:none}
+.hero-badge{display:inline-block;background:#f0c04018;border:1px solid #f0c04044;border-radius:20px;padding:6px 18px;font-size:10px;letter-spacing:2px;color:var(--gold);margin-bottom:22px;text-transform:uppercase}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(34px,6vw,68px);font-weight:700;line-height:1.1;margin-bottom:18px}
+.hero-title em{color:var(--gold);font-style:normal}
+.hero-sub{font-size:13px;color:var(--muted);max-width:520px;margin:0 auto 32px;line-height:1.8}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-hero{background:var(--gold);border:none;color:var(--bg);border-radius:8px;padding:15px 32px;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;transition:all .2s;box-shadow:0 4px 24px #f0c04033}
+.btn-hero:hover{background:var(--gold2);transform:translateY(-2px)}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:15px 32px;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:2px;transition:all .2s}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold)}
 
-  <style>
-    :root{--gold:#fbbf24;--gold-dark:#d97706;--bg:#0f172a;--card:#1e293b;--text:#f8fafc;--muted:#94a3b8;--glass:rgba(255,255,255,.03);--gradient:linear-gradient(135deg,#fbbf24,#d97706);--green:#10b981;--red:#ef4444;--blue:#0ea5e9;--orange:#f97316;--line:rgba(255,255,255,.06);--shadow:0 18px 45px rgba(0,0,0,.35)}
-    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
-    body{background:var(--bg);color:var(--text);min-height:100vh;background-image:radial-gradient(circle at top right,#1e293b,#0f172a)}
+.section{padding:60px 20px;max-width:1000px;margin:0 auto}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,4vw,42px);text-align:center;margin-bottom:10px}
+.section-sub{text-align:center;color:var(--muted);font-size:12px;margin-bottom:38px;line-height:1.8}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.feat-card{background:var(--bg2);border:1px solid #f0c04018;border-radius:12px;padding:22px;transition:all .3s}
+.feat-card:hover{border-color:#f0c04044;transform:translateY(-3px)}
+.feat-icon{font-size:28px;margin-bottom:12px}
+.feat-title{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold);margin-bottom:6px}
+.feat-text{font-size:11px;color:var(--muted);line-height:1.8}
 
-    /* Lock */
-    #lockScreen{position:fixed;inset:0;background:rgba(15,23,42,.98);backdrop-filter:blur(20px);z-index:10000;display:none;align-items:center;justify-content:center}
-    .lock-box{background:var(--card);padding:40px;border-radius:30px;border:1px solid var(--gold);text-align:center;width:90%;max-width:440px}
-    .pay-link-btn{display:block;width:100%;padding:16px;background:var(--green);color:white;text-decoration:none;border-radius:12px;font-weight:900;margin-bottom:18px;border:none;font-size:14px;cursor:pointer}
-    .pay-link-btn:hover{filter:brightness(1.06)}
-    .gold-btn{width:100%;padding:12px;background:var(--gradient);border:none;border-radius:10px;color:#000;font-weight:1000;cursor:pointer;margin-top:9px;font-size:13px}
-    .gold-btn:disabled{opacity:.6;cursor:not-allowed}
-    .flabel{display:block;font-size:10px;color:var(--muted);font-weight:800;margin-bottom:3px;margin-top:9px;text-transform:uppercase;letter-spacing:.4px}
-    input,select,textarea{width:100%;padding:11px 12px;background:#0f172a;border:1px solid #334155;border-radius:9px;color:white;outline:none;font-weight:900;font-size:13px}
-    input:focus,select:focus,textarea:focus{border-color:rgba(251,191,36,.7)}
-    textarea{resize:vertical;min-height:65px;font-weight:700}
-    select option{background:#1e293b}
+.pricing-wrap{padding:60px 20px;background:var(--bg2)}
+.pricing-inner{max-width:700px;margin:0 auto;text-align:center}
+.price-card{background:var(--bg);border:2px solid var(--gold);border-radius:16px;padding:32px;margin-top:36px;position:relative}
+.price-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--bg);border-radius:20px;padding:4px 16px;font-size:9px;font-weight:700;letter-spacing:2px;white-space:nowrap}
+.price-name{font-family:'Cormorant Garamond',serif;font-size:24px;margin-bottom:8px}
+.price-amount{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:700;color:var(--gold);line-height:1}
+.price-period{font-size:10px;color:var(--muted);margin-bottom:22px;letter-spacing:1px}
+.price-feats{list-style:none;text-align:left;max-width:300px;margin:0 auto 24px}
+.price-feats li{font-size:12px;color:#aaa;padding:6px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.price-feats li::before{content:"✦";color:var(--gold);font-size:9px}
 
-    /* Header */
-    .header{padding:13px 18px;background:var(--glass);border-bottom:1px solid rgba(251,191,36,.18);display:flex;justify-content:space-between;align-items:center;gap:10px;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
-    .brand{display:flex;align-items:center;gap:11px;min-width:0}
-    .crown-icon{width:40px;height:40px;background:var(--gradient);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#000;font-size:17px;flex:0 0 auto}
-    #storeDisp{font-size:14px;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:45vw}
-    .metaRow{display:flex;gap:5px;flex-wrap:wrap;margin-top:3px}
-    .badge{font-size:9px;font-weight:950;padding:3px 7px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.03);color:var(--muted)}
-    .badge.gold{border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.08);color:#fde68a}
-    .badge.green{border-color:rgba(16,185,129,.35);background:rgba(16,185,129,.1);color:#bbf7d0}
-    .badge.red{border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.1);color:#fecaca}
-    .badge.blue{border-color:rgba(14,165,233,.35);background:rgba(14,165,233,.08);color:#bae6fd}
-    .logoutBtn{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:#fff;font-weight:900;padding:7px 11px;border-radius:10px;cursor:pointer;font-size:12px}
+.footer{background:var(--bg2);border-top:1px solid #f0c04022;padding:20px 28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.footer-logo{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--gold);letter-spacing:2px}
+.footer-text{font-size:10px;color:var(--muted)}
 
-    /* Nav */
-    .nav-elite{display:flex;gap:8px;padding:10px 14px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line);background:rgba(15,23,42,.6)}
-    .nav-link{padding:10px 15px;background:var(--card);border-radius:10px;color:var(--muted);cursor:pointer;border:1px solid rgba(255,255,255,.06);font-weight:900;white-space:nowrap;font-size:12px;transition:.2s}
-    .nav-link.active{background:var(--gradient);color:#000;border-color:rgba(251,191,36,.6)}
+/* ── AUTH ── */
+#screen-register,#screen-login{min-height:100vh;background:var(--bg);display:flex;flex-direction:column}
+.auth-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:20px}
+.auth-card{background:var(--bg2);border:1px solid #f0c04033;border-radius:16px;padding:34px;max-width:420px;width:100%}
+.auth-title{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--gold);margin-bottom:5px;letter-spacing:2px}
+.auth-sub{font-size:11px;color:var(--muted);margin-bottom:20px;line-height:1.7}
+.trial-banner{background:#f0c04018;border:1px solid #f0c04044;border-radius:8px;padding:12px 14px;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.trial-banner-text{font-size:11px;color:var(--gold);line-height:1.5}
+.trial-banner-text strong{display:block;font-size:12px;margin-bottom:2px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field-wrap{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+.field-label{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.field{background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:10px 12px;font-family:'Montserrat',sans-serif;font-size:12px;outline:none;transition:border-color .2s;width:100%}
+.field:focus{border-color:#f0c04066}
+.btn-auth{background:var(--gold);border:none;color:var(--bg);border-radius:8px;padding:12px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:background .2s;width:100%;margin-top:6px}
+.btn-auth:hover{background:var(--gold2)}
+.btn-auth:disabled{opacity:.5;cursor:not-allowed}
+.auth-error{background:#1a0808;border:1px solid #c0392b44;border-radius:6px;padding:9px 12px;font-size:11px;color:#e74c3c;display:none;margin-top:6px}
+.auth-link{text-align:center;font-size:11px;color:var(--muted);margin-top:12px}
+.auth-link a{color:var(--gold);cursor:pointer}
+.demo-box{background:#f0c04010;border:1px solid #f0c04033;border-radius:6px;padding:9px 12px;font-size:10px;color:var(--gold);text-align:center;margin-top:10px;letter-spacing:1px}
 
-    /* Layout */
-    .main-container{padding:14px;display:grid;grid-template-columns:1fr 355px;gap:14px}
-    @media(max-width:1024px){.main-container{grid-template-columns:1fr}}
-    .block-container{padding:14px;max-width:860px;margin:auto}
+/* ── APP ── */
+#trial-bar{background:linear-gradient(90deg,#0a1f10,#0f2a18);border-bottom:1px solid #f0c04044;padding:7px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:7px}
+.trial-text{font-size:10px;color:var(--gold);display:flex;align-items:center;gap:7px}
+.trial-pill{background:#f0c04022;border:1px solid #f0c04044;border-radius:20px;padding:3px 11px;font-size:10px;font-weight:600;letter-spacing:1px}
+.trial-btn{background:var(--gold);border:none;color:var(--bg);border-radius:4px;padding:5px 13px;font-size:10px;font-weight:700;letter-spacing:1px;cursor:pointer}
+#trial-bar.urgent{background:linear-gradient(90deg,#1a1505,#2a2008);border-color:#f0c04088}
 
-    /* Products */
-    .products-listing{display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:11px}
-    .noble-card{background:var(--card);padding:14px;border-radius:15px;text-align:center;border:1px solid rgba(255,255,255,.06);cursor:pointer;transition:.2s}
-    .noble-card:hover{transform:translateY(-3px);border-color:rgba(251,191,36,.55)}
-    .noble-card i{font-size:23px;color:var(--gold);margin-bottom:7px;display:block}
-    .noble-card .pname{font-weight:950;font-size:12px;margin-bottom:3px}
-    .noble-card .pprice{color:var(--gold);font-weight:1000;font-size:13px}
-    .noble-card .pstock{font-size:10px;color:var(--muted);margin-top:5px;font-weight:900}
-    .noble-card .out{color:#fecaca}
-    .noble-card.rupture{opacity:.45;pointer-events:none}
+#app-header{display:flex;align-items:center;justify-content:space-between;padding:11px 18px;background:var(--bg2);border-bottom:1px solid #f0c04022;flex-wrap:wrap;gap:8px}
+.logo-wrap{display:flex;align-items:center;gap:8px}
+.logo-icon{font-size:20px}
+.logo-title{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:700;letter-spacing:3px;color:var(--gold)}
+.logo-sub{font-size:8px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+.header-right{display:flex;align-items:center;gap:12px}
+.store-name{font-size:12px;color:var(--text);font-weight:600;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.user-av{width:28px;height:28px;border-radius:50%;background:var(--gold);color:var(--bg);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;font-family:'Cormorant Garamond',serif}
+.btn-logout{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:4px;padding:4px 9px;cursor:pointer;font-size:9px;font-family:'Montserrat',sans-serif}
+.btn-logout:hover{border-color:var(--red);color:var(--red)}
 
-    /* Cart */
-    .royal-cart{background:var(--card);border-radius:20px;padding:16px;border:1px solid rgba(251,191,36,.12);height:fit-content;position:sticky;top:68px;box-shadow:var(--shadow)}
-    .cart-scroll{max-height:260px;overflow-y:auto;margin:10px 0}
-    .cart-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:12px;gap:6px}
-    .qty-ctrl{display:flex;align-items:center;gap:5px}
-    .qty-btn{width:25px;height:25px;border-radius:7px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;cursor:pointer;font-weight:1000;font-size:13px}
-    .pay-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:11px}
-    .pay-btn{padding:12px;border:none;border-radius:10px;color:white;font-weight:950;cursor:pointer;font-size:11px;text-transform:uppercase}
-    .pay-btn.gray{background:#64748b;grid-column:span 2}
-    .tva-box{background:rgba(250,204,21,.06);border:1px solid rgba(250,204,21,.2);border-radius:11px;padding:11px;margin-top:9px}
-    .tva-row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;font-weight:900}
-    .tva-total{font-size:15px;font-weight:1000;color:var(--gold);border-top:1px solid rgba(250,204,21,.3);margin-top:5px;padding-top:5px}
+/* NAV TABS */
+#app-nav{display:flex;gap:3px;padding:8px 14px;background:var(--bg);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
+.tab-btn{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:6px 14px;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:1px;transition:all .2s;white-space:nowrap}
+.tab-btn:hover,.tab-btn.active{background:#f0c04011;color:var(--gold);border-color:#f0c04044}
 
-    /* Pages */
-    .page{display:none}
-    .page.active{display:block;animation:fadeIn .2s ease}
-    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+/* TOAST */
+#toast{position:fixed;top:18px;left:50%;transform:translateX(-50%);padding:10px 22px;border-radius:6px;border:1px solid;font-size:11px;z-index:9999;letter-spacing:1px;display:none;white-space:nowrap;font-family:'Montserrat',sans-serif}
 
-    /* Cards */
-    .form-card{background:var(--card);padding:15px;border-radius:15px;margin-bottom:11px;border:1px solid rgba(255,255,255,.06)}
-    .form-card h3{font-size:13px;font-weight:1000;margin-bottom:9px}
-    .muted{color:var(--muted);font-size:12px;font-weight:750;line-height:1.5}
-    .sep{height:1px;background:var(--line);margin:11px 0}
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-    @media(max-width:500px){.grid2{grid-template-columns:1fr}}
+/* APP CONTENT */
+#app-content{padding:14px 16px}
 
-    /* Stats + history */
-    .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:9px;margin-bottom:11px}
-    .stat-box{background:var(--card);padding:13px;border-radius:13px;border:1px solid rgba(255,255,255,.06);text-align:center}
-    .stat-box .val{font-size:19px;font-weight:1000;color:var(--gold)}
-    .stat-box .lbl{font-size:9px;color:var(--muted);font-weight:950;margin-top:3px;text-transform:uppercase}
-    .inv-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05)}
-    .inv-item:last-child{border-bottom:none}
-    .search-bar{width:100%;padding:8px 13px;background:#0f172a;border:1px solid #334155;border-radius:9px;color:white;outline:none;font-size:12px;margin-bottom:9px}
-    .search-bar:focus{border-color:rgba(251,191,36,.5)}
+/* CAISSE */
+.caisse-wrap{display:grid;grid-template-columns:1fr 320px;gap:14px}
+@media(max-width:900px){.caisse-wrap{grid-template-columns:1fr}}
 
-    /* Modal */
-    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);z-index:5000;display:none;align-items:center;justify-content:center}
-    .modal-overlay.open{display:flex}
-    .modal-box{background:var(--card);border-radius:17px;padding:21px;width:min(470px,94vw);border:1px solid rgba(251,191,36,.25)}
-    .modal-box h3{font-size:14px;font-weight:1000;margin-bottom:13px;color:var(--gold)}
-    .modal-actions{display:flex;gap:8px;margin-top:11px}
-    .modal-actions button{flex:1;padding:11px;border-radius:9px;border:none;font-weight:950;cursor:pointer;font-size:13px}
-    .icon-btn{background:none;border:none;cursor:pointer;padding:5px 7px;border-radius:7px;font-size:12px}
-    .icon-btn.edit{color:var(--gold)}.icon-btn.del{color:#ef4444}
-    .icon-btn:hover{background:rgba(255,255,255,.08)}
+.prod-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px}
+.prod-count{font-size:10px;color:var(--muted)}
+#search-prod{background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:6px 11px;font-family:'Montserrat',sans-serif;font-size:11px;flex:1;max-width:180px;outline:none}
+#search-prod:focus{border-color:#f0c04044}
+.cat-filter{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.cat-chip{padding:3px 10px;border-radius:20px;border:1px solid var(--border);color:var(--muted);font-size:9px;letter-spacing:1px;cursor:pointer;transition:all .2s}
+.cat-chip.active,.cat-chip:hover{background:#f0c04022;color:var(--gold);border-color:#f0c04044}
 
-    /* Switch */
-    .switch-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;gap:10px}
-    .switch{position:relative;width:42px;height:23px;flex:0 0 auto}
-    .switch input{opacity:0;width:0;height:0}
-    .slider{position:absolute;inset:0;background:#334155;border-radius:999px;cursor:pointer;transition:.3s}
-    .slider:before{content:'';position:absolute;width:17px;height:17px;left:3px;top:3px;background:white;border-radius:50%;transition:.3s}
-    input:checked+.slider{background:var(--green)}
-    input:checked+.slider:before{transform:translateX(19px)}
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:9px}
+.prod-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:13px;text-align:center;cursor:pointer;transition:all .2s}
+.prod-card:hover:not(.rupture){border-color:#f0c04044;transform:translateY(-2px)}
+.prod-card.rupture{opacity:.4;cursor:not-allowed}
+.prod-icon{font-size:22px;margin-bottom:7px}
+.prod-name{font-weight:600;font-size:11px;margin-bottom:4px;line-height:1.3}
+.prod-price{color:var(--gold);font-weight:700;font-size:12px;font-family:'Cormorant Garamond',serif}
+.prod-stock{font-size:9px;color:var(--muted);margin-top:4px}
+.prod-stock.low{color:#e67e22}.prod-stock.out{color:var(--red)}
 
-    /* Toast */
-    .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:rgba(2,6,23,.95);border:1px solid rgba(255,255,255,.12);color:#fff;padding:9px 16px;border-radius:11px;font-weight:950;font-size:12px;display:none;z-index:9999;max-width:92vw}
-    .toast.show{display:block}
-    .dash-link{background:linear-gradient(135deg,#10b981,#059669)!important;color:white!important}
-    .sim-box{background:rgba(250,204,21,.06);border:1px solid rgba(250,204,21,.18);border-radius:10px;padding:11px;margin-top:9px}
-  </style>
+/* CART */
+.cart-box{background:var(--bg2);border:1px solid #f0c04022;border-radius:14px;padding:14px;height:fit-content;position:sticky;top:68px}
+.cart-title{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--gold);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.cart-list{max-height:240px;overflow-y:auto;margin-bottom:10px}
+.cart-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:11px}
+.cart-row-info{flex:1;min-width:0}
+.cart-row-name{font-weight:600;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cart-row-price{color:var(--gold);font-size:10px}
+.qty-ctrl{display:flex;align-items:center;gap:4px}
+.qty-btn{width:22px;height:22px;border-radius:5px;border:1px solid var(--border);background:var(--bg3);color:var(--text);cursor:pointer;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.qty-btn:hover{border-color:var(--gold);color:var(--gold)}
+.qty-num{font-size:11px;font-weight:700;min-width:16px;text-align:center}
+
+.tva-toggle{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:8px;font-size:11px}
+.switch{position:relative;width:36px;height:20px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#1e3a28;border-radius:20px;cursor:pointer;transition:.3s}
+.slider:before{content:'';position:absolute;width:14px;height:14px;left:3px;top:3px;background:#7a9e7a;border-radius:50%;transition:.3s}
+input:checked+.slider{background:var(--green)}
+input:checked+.slider:before{transform:translateX(16px);background:#fff}
+
+.total-wrap{padding:10px 0;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #f0c04033;margin-top:6px}
+.total-label{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.total-amount{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--gold)}
+.tva-line{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);padding:2px 0}
+.tva-line.total{color:var(--gold);font-weight:700;font-size:12px;border-top:1px solid #f0c04033;padding-top:5px;margin-top:3px}
+
+.pay-btns{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
+.pay-btn{padding:11px;border:none;border-radius:8px;color:#fff;font-weight:700;cursor:pointer;font-size:10px;letter-spacing:1px;font-family:'Montserrat',sans-serif;transition:all .2s}
+.pay-btn:hover{filter:brightness(1.1)}
+.pay-btn.cash{background:var(--green)}.pay-btn.wave{background:#1a6da8}.pay-btn.om{background:var(--orange)}.pay-btn.credit{background:var(--red)}
+.btn-clear{width:100%;padding:9px;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;cursor:pointer;font-size:10px;font-family:'Montserrat',sans-serif;margin-top:6px}
+.btn-clear:hover{border-color:var(--red);color:var(--red)}
+
+/* DASHBOARD */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px}
+.stat-card{background:var(--bg2);border:1px solid #f0c04018;border-radius:10px;padding:16px;text-align:center}
+.stat-val{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--gold);line-height:1}
+.stat-label{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:4px}
+.ventes-table{background:var(--bg2);border:1px solid #f0c04018;border-radius:10px;overflow:hidden}
+.vente-row{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-bottom:1px solid var(--border);font-size:11px}
+.vente-row:last-child{border-bottom:none}
+.vente-info{flex:1}
+.vente-time{font-weight:600;margin-bottom:2px}
+.vente-items{font-size:10px;color:var(--muted)}
+.vente-right{text-align:right}
+.vente-amount{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--gold);font-weight:700}
+.vente-method{font-size:9px;letter-spacing:1px;font-weight:600;margin-top:2px}
+.method-cash{color:var(--green)}.method-wave{color:#6ab0d8}.method-om{color:var(--orange)}.method-credit{color:var(--red)}
+
+/* STOCK */
+.stock-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:700px){.stock-wrap{grid-template-columns:1fr}}
+.section-card{background:var(--bg2);border:1px solid #f0c04018;border-radius:12px;padding:16px}
+.section-card h3{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold);margin-bottom:14px}
+.stock-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);font-size:11px}
+.stock-item:last-child{border-bottom:none}
+.stock-name{font-weight:600;margin-bottom:2px}
+.stock-meta{font-size:10px;color:var(--muted)}
+.stock-right{text-align:right;display:flex;align-items:center;gap:6px}
+.stock-qty{font-weight:700;font-size:13px}
+.stock-qty.ok{color:var(--green)}.stock-qty.low{color:#e67e22}.stock-qty.out{color:var(--red)}
+.icon-btn{background:transparent;border:none;cursor:pointer;padding:4px;font-size:13px;border-radius:4px;transition:background .2s}
+.icon-btn:hover{background:#f0c04022}
+#search-stock{background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:7px 11px;font-family:'Montserrat',sans-serif;font-size:11px;width:100%;outline:none;margin-bottom:10px}
+
+/* ADMIN / ADD PRODUCT */
+.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:700px){.admin-grid{grid-template-columns:1fr}}
+.form-2col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:500px){.form-2col{grid-template-columns:1fr}}
+.btn-submit{background:var(--gold);border:none;color:var(--bg);border-radius:6px;padding:10px 20px;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;transition:background .2s;width:100%;margin-top:10px}
+.btn-submit:hover{background:var(--gold2)}
+.btn-submit.red{background:var(--red)}.btn-submit.red:hover{background:#a93226}
+
+/* TVA ADMIN */
+.tva-admin-box{background:var(--bg3);border:1px solid #f0c04022;border-radius:8px;padding:12px;margin-top:10px}
+.tva-admin-title{font-size:10px;color:var(--gold);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;font-weight:600}
+.switch-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;font-size:12px}
+select.field{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23f0c040'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+
+/* MODAL */
+#modal-overlay{position:fixed;inset:0;background:#000000cc;display:none;align-items:center;justify-content:center;z-index:9998;padding:20px}
+#modal-overlay.open{display:flex}
+.modal-box{background:var(--bg2);border:1px solid #f0c04044;border-radius:12px;padding:22px;max-width:380px;width:100%}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold);margin-bottom:14px}
+.modal-actions{display:flex;gap:8px;margin-top:14px}
+
+/* UPGRADE MODAL */
+#upgrade-overlay{position:fixed;inset:0;background:#000000dd;display:none;align-items:center;justify-content:center;z-index:9999;padding:20px}
+#upgrade-overlay.open{display:flex}
+.upgrade-box{background:var(--bg2);border:2px solid var(--gold);border-radius:16px;padding:30px;max-width:440px;width:100%;text-align:center}
+.upgrade-icon{font-size:40px;margin-bottom:12px}
+.upgrade-title{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--gold);margin-bottom:8px}
+.upgrade-sub{font-size:12px;color:var(--muted);margin-bottom:20px;line-height:1.7}
+.step-list{text-align:left;display:flex;flex-direction:column;gap:9px;margin-bottom:18px}
+.step-item{display:flex;gap:9px;font-size:11px;color:#aaa}
+.step-n{background:var(--gold);color:var(--bg);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;flex-shrink:0}
+.contact-card{background:var(--bg);border:1.5px solid var(--gold);border-radius:10px;padding:14px;margin-bottom:14px;text-align:left}
+.contact-name{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--gold);font-weight:700;margin-bottom:3px}
+.contact-tel{font-size:12px;margin-bottom:10px;letter-spacing:1px}
+.contact-btns{display:flex;gap:8px}
+.btn-wa{background:#25d366;color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:10px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px;font-family:'Montserrat',sans-serif}
+.btn-tel{background:transparent;color:var(--gold);border:1px solid var(--gold);border-radius:6px;padding:8px 14px;font-size:10px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px;font-family:'Montserrat',sans-serif}
+.price-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.price-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+.price-box.best{border-color:var(--gold);background:#0a1f0a}
+.price-amt{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold);font-weight:700}
+.price-period{font-size:9px;color:var(--muted);letter-spacing:1px;margin-top:2px}
+.price-eco{font-size:9px;color:var(--green);margin-top:3px}
+.btn-skip{background:transparent;border:none;color:var(--muted);font-size:10px;cursor:pointer;font-family:'Montserrat',sans-serif;margin-top:8px}
+
+.empty-state{text-align:center;color:#3a6a3a;padding:40px 20px;font-family:'Cormorant Garamond',serif;font-size:18px}
+</style>
 </head>
-
 <body>
 
-<!-- LOCK -->
-<div id="lockScreen">
-  <div class="lock-box">
-    <i class="fas fa-gem" style="font-size:46px;color:var(--gold);margin-bottom:14px"></i>
-    <h2 style="margin-bottom:7px">ESSAI TERMINÉ</h2>
-    <p class="muted" style="margin-bottom:16px">Pour continuer, active ta licence.</p>
-    <a href="https://beauville.github.io/commencer-a-payer/" class="pay-link-btn">🛒 COMMENCER À PAYER</a>
-
-    <div class="muted" style="margin:10px 0;font-size:10px;font-weight:950">OU CLÉ PERSONNELLE</div>
-    <label class="flabel">Clé de licence</label>
-    <input type="text" id="royalKey" placeholder="XXXX-XXXX-XXXX-XXXX"/>
-    <button class="gold-btn" id="btnActivateLock" type="button">ACTIVER</button>
+<!-- ══ LANDING ══ -->
+<div id="screen-landing" class="screen active">
+  <div class="top-bar">
+    <div class="top-logo">DIGIY <span>CAISSE PRO</span></div>
+    <div class="top-nav">
+      <button class="btn-sm" onclick="goTo('login')">Se connecter</button>
+      <button class="btn-gold" onclick="goTo('register')">1 mois gratuit</button>
+    </div>
+  </div>
+  <div class="hero">
+    <div class="hero-badge">🚀 1er mois offert — sans CB requise</div>
+    <h1 class="hero-title">La caisse pro<br><em>pour votre boutique</em></h1>
+    <p class="hero-sub">Catalogue produits, encaissement, gestion du stock, TVA, tableau de bord. Tout ce qu'il faut — simple et efficace.</p>
+    <div class="hero-btns">
+      <button class="btn-hero" onclick="goTo('register')">🎯 Commencer gratuitement</button>
+      <button class="btn-outline" onclick="goTo('login')">Se connecter</button>
+    </div>
+  </div>
+  <div class="section">
+    <h2 class="section-title">L'essentiel, rien de plus</h2>
+    <p class="section-sub">Pensé pour les boutiques sénégalaises et françaises. Simple, rapide, fiable.</p>
+    <div class="feat-grid">
+      <div class="feat-card"><div class="feat-icon">🛒</div><div class="feat-title">Caisse rapide</div><div class="feat-text">Catalogue visuel, panier en un clic, encaissement Cash · Wave · Orange Money · Crédit.</div></div>
+      <div class="feat-card"><div class="feat-icon">📦</div><div class="feat-title">Stock en temps réel</div><div class="feat-text">Alertes rupture automatiques. Chaque vente décrémente le stock instantanément.</div></div>
+      <div class="feat-card"><div class="feat-icon">💰</div><div class="feat-title">TVA flexible</div><div class="feat-text">Activez ou désactivez la TVA selon votre régime fiscal. Calcul automatique sur chaque ticket.</div></div>
+      <div class="feat-card"><div class="feat-icon">📊</div><div class="feat-title">Tableau de bord</div><div class="feat-text">Recette du jour, nombre de ventes, ticket moyen, historique. Vos chiffres d'un coup d'œil.</div></div>
+      <div class="feat-card"><div class="feat-icon">🔐</div><div class="feat-title">Votre espace privé</div><div class="feat-text">Chaque boutique a son compte sécurisé. Données sauvegardées en ligne.</div></div>
+      <div class="feat-card"><div class="feat-icon">📱</div><div class="feat-title">Mobile & desktop</div><div class="feat-text">Fonctionne sur téléphone, tablette, ordinateur. Gérez depuis n'importe où.</div></div>
+    </div>
+  </div>
+  <div class="pricing-wrap">
+    <div class="pricing-inner">
+      <h2 class="section-title">Transparent, 0% commission</h2>
+      <p class="section-sub">Un abonnement fixe. Toutes vos ventes vous appartiennent à 100%.</p>
+      <div class="price-card">
+        <div class="price-badge">⭐ APRÈS L'ESSAI GRATUIT</div>
+        <div class="price-name">CAISSE PRO</div>
+        <div class="price-amount">12.900 F <span style="font-size:16px;color:var(--muted);font-family:'Montserrat',sans-serif;font-weight:400">CFA</span></div>
+        <div class="price-period">PAR MOIS · PAIEMENT WAVE</div>
+        <ul class="price-feats">
+          <li>1er mois 100% gratuit</li>
+          <li>Catalogue & stock illimités</li>
+          <li>Tous modes de paiement</li>
+          <li>TVA configurable</li>
+          <li>Tableau de bord complet</li>
+          <li>Données sauvegardées en ligne</li>
+          <li>0% commission sur vos ventes</li>
+        </ul>
+        <button class="btn-hero" style="width:100%" onclick="goTo('register')">Essayer 1 mois gratuit →</button>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="footer-logo">DIGIYLYFE</div>
+    <div class="footer-text">L'Afrique enracinée, connectée au monde · © 2026</div>
+    <div class="footer-text">digiylyfe@gmail.com</div>
   </div>
 </div>
+
+<!-- ══ REGISTER ══ -->
+<div id="screen-register" class="screen">
+  <div class="top-bar">
+    <div class="top-logo">DIGIY <span>CAISSE PRO</span></div>
+    <button class="btn-sm" onclick="goTo('landing')">← Retour</button>
+  </div>
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-title">1er mois gratuit</div>
+      <p class="auth-sub">Créez votre compte en 30 secondes. Accès immédiat, sans carte bancaire.</p>
+      <div class="trial-banner">
+        <span style="font-size:22px">🎁</span>
+        <div class="trial-banner-text">
+          <strong>30 jours offerts — accès complet</strong>
+          Après l'essai : 12.900 F CFA/mois via Wave
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field-wrap"><label class="field-label">Prénom</label><input class="field" id="reg-prenom" placeholder="Mamadou"></div>
+        <div class="field-wrap"><label class="field-label">Nom</label><input class="field" id="reg-nom" placeholder="Diallo"></div>
+      </div>
+      <div class="field-wrap"><label class="field-label">Email *</label><input class="field" id="reg-email" type="email" placeholder="mamadou@maboutique.sn"></div>
+      <div class="field-wrap"><label class="field-label">Nom de la boutique *</label><input class="field" id="reg-boutique" placeholder="Chez Mamadou"></div>
+      <div class="field-wrap"><label class="field-label">Mot de passe *</label><input class="field" id="reg-pass" type="password" placeholder="6 caractères minimum"></div>
+      <div class="auth-error" id="reg-error"></div>
+      <button class="btn-auth" id="btn-register" onclick="doRegister()">Créer mon compte gratuit →</button>
+      <div class="auth-link">Déjà un compte ? <a onclick="goTo('login')">Se connecter</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ LOGIN ══ -->
+<div id="screen-login" class="screen">
+  <div class="top-bar">
+    <div class="top-logo">DIGIY <span>CAISSE PRO</span></div>
+    <button class="btn-sm" onclick="goTo('landing')">← Retour</button>
+  </div>
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-title">Connexion</div>
+      <p class="auth-sub">Accédez à votre espace de vente.</p>
+      <div class="field-wrap"><label class="field-label">Email</label><input class="field" id="login-email" type="email" placeholder="votre@email.com"></div>
+      <div class="field-wrap"><label class="field-label">Mot de passe</label><input class="field" id="login-pass" type="password" placeholder="••••••••"></div>
+      <div class="auth-error" id="login-error"></div>
+      <button class="btn-auth" id="btn-login" onclick="doLogin()">Se connecter →</button>
+      <div class="demo-box">🔑 Démo : demo@digiylyfe.com / demo1234</div>
+      <div class="auth-link">Pas encore de compte ? <a onclick="goTo('register')">1 mois gratuit</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ APP ══ -->
+<div id="screen-app" class="screen">
+  <!-- Trial bar -->
+  <div id="trial-bar">
+    <div class="trial-text">⏳ Essai gratuit : <span class="trial-pill" id="trial-days">30 jours restants</span></div>
+    <button class="trial-btn" onclick="showUpgrade()">Passer en Pro →</button>
+  </div>
+
+  <!-- Header -->
+  <div id="app-header">
+    <div class="logo-wrap">
+      <span class="logo-icon">🏪</span>
+      <div><div class="logo-title">CAISSE PRO</div><div class="logo-sub">Gestion de vente</div></div>
+    </div>
+    <div class="header-right">
+      <div class="store-name" id="store-name-display">Ma Boutique</div>
+      <div class="user-av" id="user-av">B</div>
+      <button class="btn-logout" onclick="doLogout()">Déco</button>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <div id="app-nav">
+    <button class="tab-btn active" id="tab-caisse"   onclick="showTab('caisse')">🛒 Caisse</button>
+    <button class="tab-btn"        id="tab-dashboard" onclick="showTab('dashboard')">📊 Tableau de bord</button>
+    <button class="tab-btn"        id="tab-stock"     onclick="showTab('stock')">📦 Stock</button>
+    <button class="tab-btn"        id="tab-admin"     onclick="showTab('admin')">⚙️ Admin</button>
+  </div>
+
+  <div id="toast"></div>
+  <div id="app-content">
+
+    <!-- ═ CAISSE ═ -->
+    <div id="view-caisse">
+      <div class="caisse-wrap">
+        <div>
+          <div class="prod-header">
+            <span class="prod-count">📦 <span id="prod-count">0</span> articles</span>
+            <input id="search-prod" placeholder="🔍 Rechercher..." oninput="filterProds(this.value)">
+          </div>
+          <div class="cat-filter" id="cat-filter"></div>
+          <div class="prod-grid" id="prod-grid">
+            <div class="empty-state">Ajoutez des produits via l'onglet Admin</div>
+          </div>
+        </div>
+
+        <div class="cart-box">
+          <div class="cart-title">
+            🛒 Panier
+            <span style="font-size:11px;color:var(--muted)" id="cart-count">0 article</span>
+          </div>
+          <div class="cart-list" id="cart-list">
+            <div class="empty-state" style="padding:20px;font-size:14px">Panier vide</div>
+          </div>
+
+          <!-- TVA toggle -->
+          <div class="tva-toggle">
+            <span>TVA active (<span id="tva-rate-display">18</span>%)</span>
+            <label class="switch">
+              <input type="checkbox" id="tva-toggle" onchange="renderCart()">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div id="tva-detail" style="display:none;margin-bottom:8px">
+            <div class="tva-line"><span>Sous-total HT</span><span id="tva-ht">—</span></div>
+            <div class="tva-line"><span id="tva-pct-label">TVA 18%</span><span id="tva-montant">—</span></div>
+            <div class="tva-line total"><span>Total TTC</span><span id="tva-ttc">—</span></div>
+          </div>
+
+          <div class="total-wrap">
+            <div>
+              <div class="total-label" id="total-label">Total</div>
+              <div class="total-amount" id="total-amount">0 F</div>
+            </div>
+          </div>
+
+          <div class="pay-btns">
+            <button class="pay-btn cash"   onclick="checkout('CASH')">💵 Cash</button>
+            <button class="pay-btn wave"   onclick="checkout('WAVE')">🌊 Wave</button>
+            <button class="pay-btn om"     onclick="checkout('OM')">🟠 Orange</button>
+            <button class="pay-btn credit" onclick="checkout('CREDIT')">📒 Crédit</button>
+          </div>
+          <button class="btn-clear" onclick="clearCart()">🗑 Vider le panier</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═ DASHBOARD ═ -->
+    <div id="view-dashboard" style="display:none">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-val" id="stat-day">0 F</div><div class="stat-label">Recette du jour</div></div>
+        <div class="stat-card"><div class="stat-val" id="stat-count-v">0</div><div class="stat-label">Ventes aujourd'hui</div></div>
+        <div class="stat-card"><div class="stat-val" id="stat-month">0 F</div><div class="stat-label">Ce mois</div></div>
+        <div class="stat-card"><div class="stat-val" id="stat-avg">0 F</div><div class="stat-label">Ticket moyen</div></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;align-items:flex-end">
+        <div>
+          <div class="field-label" style="margin-bottom:4px">Méthode</div>
+          <select class="field" id="filter-method" style="width:130px" onchange="renderDashboard()">
+            <option value="">Toutes</option>
+            <option value="CASH">Cash</option>
+            <option value="WAVE">Wave</option>
+            <option value="OM">Orange Money</option>
+            <option value="CREDIT">Crédit</option>
+          </select>
+        </div>
+        <div>
+          <div class="field-label" style="margin-bottom:4px">Date</div>
+          <input type="date" class="field" id="filter-date" style="width:150px" onchange="renderDashboard()">
+        </div>
+        <button class="btn-gold" onclick="resetFilters()">↺ Reset</button>
+      </div>
+      <div class="ventes-table" id="ventes-list">
+        <div class="empty-state">Aucune vente enregistrée</div>
+      </div>
+    </div>
+
+    <!-- ═ STOCK ═ -->
+    <div id="view-stock" style="display:none">
+      <div class="stock-wrap">
+        <div class="section-card">
+          <h3>📦 Inventaire</h3>
+          <input id="search-stock" placeholder="🔍 Filtrer..." oninput="renderStock(this.value)">
+          <div id="stock-list"><div class="empty-state">Aucun produit</div></div>
+        </div>
+        <div class="section-card">
+          <h3>⚠️ Alertes rupture</h3>
+          <div id="rupture-list"><div class="empty-state">Aucune rupture</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═ ADMIN ═ -->
+    <div id="view-admin" style="display:none">
+      <div class="admin-grid">
+        <!-- Ajouter produit -->
+        <div class="section-card">
+          <h3>➕ Ajouter un produit</h3>
+          <div class="form-2col">
+            <div class="field-wrap"><label class="field-label">Nom *</label><input class="field" id="add-name" placeholder="Thiébou dieune"></div>
+            <div class="field-wrap"><label class="field-label">Prix HT (FCFA) *</label><input class="field" id="add-price" type="number" placeholder="2500" inputmode="numeric"></div>
+            <div class="field-wrap"><label class="field-label">Stock initial</label><input class="field" id="add-stock" type="number" placeholder="20" inputmode="numeric"></div>
+            <div class="field-wrap"><label class="field-label">Catégorie</label><input class="field" id="add-cat" placeholder="Plats"></div>
+          </div>
+          <button class="btn-submit" onclick="addProduct()">💾 Ajouter au catalogue</button>
+        </div>
+
+        <!-- Paramètres boutique + TVA -->
+        <div class="section-card">
+          <h3>⚙️ Paramètres boutique</h3>
+          <div class="form-2col">
+            <div class="field-wrap"><label class="field-label">Nom boutique *</label><input class="field" id="p-store" placeholder="Chez Mamadou"></div>
+            <div class="field-wrap"><label class="field-label">Téléphone</label><input class="field" id="p-phone" placeholder="77 xxx xx xx"></div>
+          </div>
+          <div class="field-wrap"><label class="field-label">Adresse</label><input class="field" id="p-address" placeholder="Rue, Quartier, Ville"></div>
+
+          <div class="tva-admin-box">
+            <div class="tva-admin-title">💰 Régime TVA</div>
+            <div class="switch-row">
+              <span style="font-size:12px">Assujetti à la TVA</span>
+              <label class="switch"><input type="checkbox" id="p-tva-active" onchange="toggleTVAAdmin()"><span class="slider"></span></label>
+            </div>
+            <div id="tva-admin-fields" style="display:none">
+              <div class="form-2col">
+                <div class="field-wrap"><label class="field-label">Taux (%)</label><input class="field" id="p-tva-taux" type="number" placeholder="18" value="18"></div>
+                <div class="field-wrap"><label class="field-label">Mode</label>
+                  <select class="field" id="p-tva-mode">
+                    <option value="excl">HT → TVA ajoutée</option>
+                    <option value="incl">TTC → TVA déduite</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="btn-submit" onclick="saveSettings()">💾 Enregistrer</button>
+        </div>
+      </div>
+
+      <!-- Liste produits éditable -->
+      <div class="section-card" style="margin-top:14px">
+        <h3>📋 Catalogue complet</h3>
+        <input class="field" style="margin-bottom:12px" id="search-admin" placeholder="🔍 Filtrer..." oninput="renderAdminList(this.value)">
+        <div id="admin-prod-list"><div class="empty-state">Aucun produit</div></div>
+      </div>
+    </div>
+
+  </div><!-- /app-content -->
+</div><!-- /screen-app -->
 
 <!-- MODAL EDIT -->
-<div class="modal-overlay" id="modalEdit" aria-hidden="true">
-  <div class="modal-box">
-    <h3>✏️ Modifier le produit</h3>
-    <input type="hidden" id="editId"/>
-    <label class="flabel">Désignation</label><input type="text" id="editName"/>
-    <label class="flabel">Prix HT (FCFA)</label><input type="number" id="editPrice" inputmode="numeric"/>
-    <label class="flabel">Stock</label><input type="number" id="editStock" inputmode="numeric"/>
-    <label class="flabel">Catégorie</label><input type="text" id="editCategory"/>
+<div id="modal-overlay" onclick="closeModal()">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-title">✏️ Modifier le produit</div>
+    <input type="hidden" id="edit-id">
+    <div class="field-wrap"><label class="field-label">Nom</label><input class="field" id="edit-name"></div>
+    <div class="form-2col">
+      <div class="field-wrap"><label class="field-label">Prix HT</label><input class="field" id="edit-price" type="number"></div>
+      <div class="field-wrap"><label class="field-label">Stock</label><input class="field" id="edit-stock" type="number"></div>
+    </div>
+    <div class="field-wrap"><label class="field-label">Catégorie</label><input class="field" id="edit-cat"></div>
     <div class="modal-actions">
-      <button type="button" style="background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.14)" id="btnCancelEdit">Annuler</button>
-      <button type="button" style="background:var(--gradient);color:#000" id="btnSaveEdit">💾 Enregistrer</button>
+      <button class="btn-submit" style="background:transparent;border:1px solid var(--border);color:var(--muted);margin-top:0" onclick="closeModal()">Annuler</button>
+      <button class="btn-submit" style="margin-top:0" onclick="saveEdit()">💾 Enregistrer</button>
     </div>
   </div>
 </div>
 
-<!-- HEADER -->
-<div class="header">
-  <div class="brand">
-    <div class="crown-icon">👑</div>
-    <div style="min-width:0">
-      <div id="storeDisp">CHARGEMENT...</div>
-      <div class="metaRow">
-        <span class="badge" id="trialBadge">—</span>
-        <span class="badge" id="netBadge">—</span>
-        <span class="badge" id="outboxBadge">—</span>
-        <span class="badge blue" id="tvaBadge" style="display:none">TVA ACTIVE</span>
+<!-- UPGRADE MODAL -->
+<div id="upgrade-overlay" onclick="hideUpgrade()">
+  <div class="upgrade-box" onclick="event.stopPropagation()">
+    <div class="upgrade-icon">🌊</div>
+    <div class="upgrade-title">Activer votre abonnement</div>
+    <p class="upgrade-sub">Envoyez votre paiement Wave — votre accès Pro est activé dans la journée.</p>
+    <div class="step-list">
+      <div class="step-item"><div class="step-n">1</div><span>Ouvrez <strong style="color:#27ae60">Wave</strong> et envoyez le montant</span></div>
+      <div class="step-item"><div class="step-n">2</div><span>Envoyez la <strong style="color:#fff">capture + votre email</strong> sur WhatsApp</span></div>
+      <div class="step-item"><div class="step-n">3</div><span>Votre accès Pro est <strong style="color:#f0c040">activé dans la journée ✓</strong></span></div>
+    </div>
+    <div class="contact-card">
+      <div style="font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Votre contact DIGIYLYFE</div>
+      <div class="contact-name">JB BEAUVILLE</div>
+      <div class="contact-tel">+221 77 134 28 89</div>
+      <div class="contact-btns">
+        <a class="btn-wa" href="https://wa.me/221771342889?text=Bonjour%20JB%2C%20je%20veux%20activer%20DIGIY%20CAISSE%20PRO" target="_blank">💬 WhatsApp</a>
+        <a class="btn-tel" href="tel:+221771342889">📞 Appeler</a>
       </div>
     </div>
-  </div>
-  <div style="display:flex;align-items:center;gap:8px">
-    <div style="font-size:9px;color:var(--gold);font-weight:950;letter-spacing:.8px">ROYAL EDITION</div>
-    <button class="logoutBtn" id="btnLogout" type="button">⏻ Sortir</button>
-  </div>
-</div>
-
-<!-- NAV -->
-<div class="nav-elite">
-  <div class="nav-link active" data-tab="pos">🛒 CAISSE</div>
-  <div class="nav-link" data-tab="history">📜 VENTES</div>
-  <div class="nav-link" data-tab="stock">📦 STOCK</div>
-  <div class="nav-link" data-tab="admin">⚙️ ADMIN</div>
-</div>
-
-<!-- PAGE CAISSE -->
-<div id="posPage" class="page active">
-  <div class="main-container">
-    <div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;gap:9px">
-        <span class="muted" style="white-space:nowrap">📦 <span id="prodCount">0</span> articles</span>
-        <input class="search-bar" id="searchProd" style="margin-bottom:0;flex:1;max-width:200px" placeholder="🔍 Rechercher..."/>
-      </div>
-      <div id="productsGrid" class="products-listing"></div>
+    <div class="price-row">
+      <div class="price-box"><div class="price-amt">12.900 F</div><div class="price-period">MENSUEL · CFA</div></div>
+      <div class="price-box best"><div class="price-amt">24.900 F</div><div class="price-period">TRIMESTRIEL · CFA</div><div class="price-eco">Économisez 5.000 F !</div></div>
     </div>
-
-    <div class="royal-cart">
-      <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;font-weight:950">🛒 PANIER</div>
-      <div id="cartListing" class="cart-scroll"></div>
-
-      <div id="tvaBox" class="tva-box" style="display:none">
-        <div class="tva-row"><span>Sous-total HT</span><span id="tvaHT">—</span></div>
-        <div class="tva-row"><span id="tvaPct">TVA</span><span id="tvaMontant">—</span></div>
-        <div class="tva-row tva-total"><span>TOTAL TTC</span><span id="tvaTTC">—</span></div>
-      </div>
-
-      <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(251,191,36,.4);padding-top:9px;margin-top:7px">
-        <div>
-          <div style="font-size:9px;color:var(--muted);font-weight:950" id="totalLabel">TOTAL</div>
-          <div id="totalPrice" style="color:var(--gold);font-size:24px;font-weight:1000">0 F</div>
-        </div>
-        <div class="muted" id="cartItemCount">0 art.</div>
-      </div>
-
-      <div class="pay-grid">
-        <button class="pay-btn" style="background:var(--green)" id="btnPayCash">💵 Cash</button>
-        <button class="pay-btn" style="background:var(--blue)" id="btnPayWave">🌊 Wave</button>
-        <button class="pay-btn" style="background:var(--orange)" id="btnPayOm">🟠 Orange</button>
-        <button class="pay-btn" style="background:var(--red)" id="btnPayCredit">📒 Dette</button>
-        <button class="pay-btn gray" id="btnClearCart">🗑️ VIDER</button>
-      </div>
-
-      <div class="muted" style="margin-top:9px;text-align:center">📴 Mode hors-ligne disponible</div>
-    </div>
+    <button class="btn-skip" onclick="hideUpgrade()">← Retour à la caisse</button>
   </div>
 </div>
-
-<!-- PAGE VENTES -->
-<div id="historyPage" class="page">
-  <div class="block-container">
-    <div class="stat-grid">
-      <div class="stat-box"><div class="val" id="revDay">0 F</div><div class="lbl">Recette du jour</div></div>
-      <div class="stat-box"><div class="val" id="salesCount">0</div><div class="lbl">Ventes aujourd'hui</div></div>
-      <div class="stat-box"><div class="val" id="revMonth">0 F</div><div class="lbl">Ce mois</div></div>
-      <div class="stat-box"><div class="val" id="avgTicket">0 F</div><div class="lbl">Ticket moyen</div></div>
-    </div>
-
-    <div class="form-card" style="display:flex;gap:9px;flex-wrap:wrap;align-items:flex-end">
-      <div style="flex:1;min-width:130px">
-        <label class="flabel">Méthode</label>
-        <select id="filterMethod">
-          <option value="">Tous</option>
-          <option value="CASH">Cash</option>
-          <option value="WAVE">Wave</option>
-          <option value="OM">Orange Money</option>
-          <option value="CREDIT">Dette</option>
-        </select>
-      </div>
-      <div style="flex:1;min-width:130px">
-        <label class="flabel">Date</label>
-        <input type="date" id="filterDate"/>
-      </div>
-      <button class="gold-btn" style="margin-top:0;padding:9px 14px;width:auto" id="btnResetFilters" type="button">↺ Reset</button>
-    </div>
-
-    <div class="form-card">
-      <h3>📜 Historique des ventes</h3>
-      <div id="historyListing" class="muted">Chargement…</div>
-    </div>
-  </div>
-</div>
-
-<!-- PAGE STOCK -->
-<div id="stockPage" class="page">
-  <div class="block-container">
-    <div class="form-card">
-      <h3>➕ Ajouter un produit</h3>
-      <div class="grid2">
-        <div><label class="flabel">Désignation *</label><input type="text" id="addName" placeholder="Ex: Thiébou dieune"/></div>
-        <div><label class="flabel">Prix HT (FCFA) *</label><input type="number" id="addPrice" placeholder="Ex: 2500" inputmode="numeric"/></div>
-        <div><label class="flabel">Stock initial</label><input type="number" id="addStock" placeholder="Ex: 20" inputmode="numeric"/></div>
-        <div><label class="flabel">Catégorie</label><input type="text" id="addCategory" placeholder="Ex: Plats"/></div>
-      </div>
-      <button class="gold-btn" id="btnAddNew" type="button">💾 AJOUTER AU CATALOGUE</button>
-    </div>
-
-    <div class="form-card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <h3 style="margin-bottom:0">📦 Inventaire</h3>
-        <span id="stockAlert" style="font-size:11px;color:#fb7185;font-weight:950"></span>
-      </div>
-      <input class="search-bar" id="searchStock" placeholder="🔍 Filtrer le stock…"/>
-      <div id="inventoryManager" class="muted">—</div>
-    </div>
-  </div>
-</div>
-
-<!-- PAGE ADMIN -->
-<div id="adminPage" class="page">
-  <div class="block-container">
-
-    <div class="form-card dash-link">
-      <h3 style="color:#fff">📊 DASHBOARD & RAPPORTS</h3>
-      <p style="color:rgba(255,255,255,.8);font-size:12px;margin-top:3px">CA, ventes par méthode, produits top, exports</p>
-      <button class="gold-btn" style="background:white;color:#059669;margin-top:9px" id="btnGoDashboard" type="button">OUVRIR LES RAPPORTS</button>
-    </div>
-
-    <div class="form-card">
-      <h3>🏪 Paramètres boutique</h3>
-
-      <div class="grid2">
-        <div><label class="flabel">Nom de la boutique *</label><input type="text" id="pStoreName" placeholder="Chez Astou"/></div>
-        <div><label class="flabel">Téléphone *</label><input type="tel" id="pPhone" placeholder="221771234567"/></div>
-        <div><label class="flabel">Email</label><input type="email" id="pEmail" placeholder="contact@..."/></div>
-        <div><label class="flabel">Site web</label><input type="url" id="pWebsite" placeholder="https://..."/></div>
-      </div>
-
-      <label class="flabel">Adresse complète</label>
-      <textarea id="pAddress" placeholder="Rue, Quartier, Ville, Pays"></textarea>
-
-      <div class="sep"></div>
-
-      <div style="font-size:11px;font-weight:1000;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">📄 Infos légales</div>
-      <div class="grid2">
-        <div><label class="flabel">NINEA / SIRET</label><input type="text" id="pSiret" placeholder="Numéro fiscal"/></div>
-        <div><label class="flabel">RC Commerce</label><input type="text" id="pRc" placeholder="N° registre"/></div>
-        <div><label class="flabel">Capital social</label><input type="text" id="pCapital" placeholder="Ex: 1 000 000 FCFA"/></div>
-        <div><label class="flabel">IBAN / Compte</label><input type="text" id="pIban" placeholder="Optionnel"/></div>
-      </div>
-
-      <label class="flabel">Mentions légales (bas de ticket)</label>
-      <textarea id="pMentions" placeholder="Ex: TVA non applicable – ..."></textarea>
-
-      <label class="flabel">URL du logo (tickets)</label>
-      <input type="url" id="pLogo" placeholder="https://..."/>
-
-      <div class="sep"></div>
-
-      <div style="font-size:11px;font-weight:1000;color:var(--gold);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">💰 Régime TVA</div>
-
-      <div class="switch-row">
-        <div>
-          <div style="font-weight:950;font-size:13px">Assujetti à la TVA</div>
-          <div class="muted">Active le calcul TVA sur les tickets et le total panier</div>
-        </div>
-        <label class="switch">
-          <input type="checkbox" id="pTvaActive"/>
-          <span class="slider"></span>
-        </label>
-      </div>
-
-      <div id="tvaSettings" style="display:none">
-        <div class="grid2">
-          <div>
-            <label class="flabel">Taux de TVA (%)</label>
-            <input type="number" id="pTvaTaux" placeholder="Ex: 18" step="0.01" min="0" max="100"/>
-          </div>
-          <div>
-            <label class="flabel">Mode de calcul</label>
-            <select id="pTvaMode">
-              <option value="excl">Prix HT → TVA ajoutée (TTC affiché)</option>
-              <option value="incl">Prix TTC → TVA déduite (HT calculé)</option>
-            </select>
-          </div>
-        </div>
-
-        <div id="tvaExplication" class="sim-box" style="margin-top:10px;font-size:12px;line-height:1.6"></div>
-
-        <div style="margin-top:12px">
-          <label class="flabel">🧮 Simulateur TVA — Entrez un montant</label>
-          <input type="number" id="simMontant" placeholder="Ex: 5000"/>
-        </div>
-        <div id="simResult" class="sim-box" style="display:none;margin-top:8px"></div>
-      </div>
-
-      <button class="gold-btn" id="btnSaveSettings" type="button">💾 ENREGISTRER LES PARAMÈTRES</button>
-    </div>
-
-    <div class="form-card">
-      <h3>📡 Synchro Outbox</h3>
-      <p class="muted">Si le réseau saute, les ventes partent en file d'attente et se synchronisent automatiquement.</p>
-      <button class="gold-btn" id="btnSyncOutbox" type="button">🔄 Synchroniser maintenant</button>
-      <div class="muted" style="margin-top:7px">Statut : <span id="outboxStatus">—</span></div>
-    </div>
-
-    <div class="form-card">
-      <h3>🔑 Activer une licence</h3>
-      <p class="muted">Clé reçue après paiement — passe en mode PRO illimité.</p>
-      <input type="text" id="royalKeyAdmin" placeholder="XXXX-XXXX-XXXX-XXXX"/>
-      <button class="gold-btn" id="btnActivateAdmin" type="button">ACTIVER LA LICENCE</button>
-    </div>
-
-    <div class="form-card">
-      <h3>🦅 Session active</h3>
-      <div class="muted" id="sessionInfo" style="margin-top:5px;line-height:2">—</div>
-      <button class="gold-btn" style="background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#fca5a5;margin-top:9px" id="btnHardLogout" type="button">
-        ⏻ SE DÉCONNECTER
-      </button>
-    </div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
 
 <script>
-"use strict";
+// ══════════════════════════════════════════════════════
+// ⚙️  CONFIG SUPABASE — Remplace par tes vraies clés
+// ══════════════════════════════════════════════════════
+const SUPABASE_URL      = 'https://TON_PROJECT_ID.supabase.co';
+const SUPABASE_ANON_KEY = 'TON_ANON_KEY';
 
-/* =======================
-   CONFIG
-======================= */
-const TRIAL_LIMIT = 15;
-const PIN_HUB = "https://beauville.github.io/digiy-qr-pro/pin.html";
+// ══════════════════════════════════════════════════════
+// MINI CLIENT SUPABASE — fetch() natif, zéro CDN
+// ══════════════════════════════════════════════════════
+const SB = {
+  _token: localStorage.getItem('cp_token') || null,
 
-/* =======================
-   STATE
-======================= */
-const State = {
-  owner_id: null,
-  slug: "",
-  phone: "",
-  title: "",
-  pro: false,
-  storeName: "MA BOUTIQUE",
-  settings: null,
+  h(extra){
+    return Object.assign({
+      'Content-Type':'application/json',
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization':'Bearer '+(this._token||SUPABASE_ANON_KEY)
+    }, extra||{});
+  },
 
-  items: [],
-  filteredItems: [],
-  sales: [],
-  cart: [],
+  async signUp(email,password,meta){
+    const r = await fetch(SUPABASE_URL+'/auth/v1/signup',{method:'POST',headers:this.h(),body:JSON.stringify({email,password,data:meta})});
+    return r.json();
+  },
 
-  tva: { active:false, taux:18, mode:"excl" }
+  async signIn(email,password){
+    const r = await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:this.h(),body:JSON.stringify({email,password})});
+    const d = await r.json();
+    if(d.access_token){this._token=d.access_token;localStorage.setItem('cp_token',d.access_token);}
+    return d;
+  },
+
+  async signOut(){
+    try{await fetch(SUPABASE_URL+'/auth/v1/logout',{method:'POST',headers:this.h()});}catch(_){}
+    this._token=null;localStorage.removeItem('cp_token');
+  },
+
+  async getUser(){
+    if(!this._token) return null;
+    try{
+      const r = await fetch(SUPABASE_URL+'/auth/v1/user',{headers:this.h()});
+      if(!r.ok){this._token=null;localStorage.removeItem('cp_token');return null;}
+      return await r.json();
+    }catch(_){return null;}
+  },
+
+  from(table){
+    const self=this;
+    return {
+      _t:table, _f:[], _o:null,
+      eq(c,v){this._f.push(c+'=eq.'+encodeURIComponent(v));return this;},
+      order(c){this._o='order='+c;return this;},
+      _url(extra){
+        let u=SUPABASE_URL+'/rest/v1/'+this._t+'?';
+        if(this._f.length) u+=this._f.join('&')+'&';
+        if(this._o) u+=this._o+'&';
+        if(extra) u+=extra;
+        return u;
+      },
+      _h(e){return self.h(Object.assign({'Prefer':'return=representation'},e));},
+      async select(c){
+        try{const r=await fetch(this._url('select='+(c||'*')),{headers:this._h()});const d=await r.json();return{data:Array.isArray(d)?d:[],error:d.message?d:null};}
+        catch(e){return{data:[],error:e};}
+      },
+      async single(){
+        try{const r=await fetch(this._url('select=*&limit=1'),{headers:this._h()});const d=await r.json();const a=Array.isArray(d)?d:[];return{data:a[0]||null,error:null};}
+        catch(e){return{data:null,error:e};}
+      },
+      async insert(obj){
+        try{const r=await fetch(SUPABASE_URL+'/rest/v1/'+this._t,{method:'POST',headers:this._h(),body:JSON.stringify(obj)});const d=await r.json();return{data:d,error:d.message?d:null};}
+        catch(e){return{data:null,error:e};}
+      },
+      async update(obj){
+        try{const r=await fetch(this._url(''),{method:'PATCH',headers:this._h(),body:JSON.stringify(obj)});const d=await r.json();return{data:d,error:d.message?d:null};}
+        catch(e){return{data:null,error:e};}
+      },
+      async upsert(obj,opts){
+        try{
+          const h=this._h({'Prefer':'resolution='+(opts?.onConflict?'merge-duplicates':'ignore-duplicates')+',return=representation'});
+          const r=await fetch(SUPABASE_URL+'/rest/v1/'+this._t,{method:'POST',headers:h,body:JSON.stringify(obj)});
+          const d=await r.json();return{data:d,error:d.message?d:null};
+        }catch(e){return{data:null,error:e};}
+      },
+      async delete(){
+        try{await fetch(this._url(''),{method:'DELETE',headers:this._h()});return{error:null};}
+        catch(e){return{error:e};}
+      }
+    };
+  }
 };
 
-/* =======================
-   HELPERS
-======================= */
-const $ = (id) => document.getElementById(id);
-function getSB(){ return window.DIGIY_GUARD?.getSb?.() || null; }
-function esc(s){ return String(s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
-function fmt(n){ return Number(n||0).toLocaleString("fr-FR"); }
-function dayKey(){ return new Date().toISOString().slice(0,10); }
-function monthKey(){ return new Date().toISOString().slice(0,7); }
+// ══════════════════════════════════════════════════════
+// ÉTAT
+// ══════════════════════════════════════════════════════
+let currentUser    = null;
+let currentProfile = null;
+let products       = [];
+let filteredProds  = [];
+let sales          = [];
+let cart           = [];
+let currentCat     = 'Tous';
+let editTargetId   = null;
 
-function toast(msg, dur=2400){
-  const t = $("toast"); if(!t) return;
-  t.textContent = msg || "";
-  t.classList.add("show");
-  setTimeout(()=>t.classList.remove("show"), dur);
-}
-
-function setNetBadge(){
-  const el = $("netBadge"); if(!el) return;
-  el.className = navigator.onLine ? "badge green" : "badge red";
-  el.textContent = navigator.onLine ? "ONLINE" : "OFFLINE";
-}
-
-/* =======================
-   TVA (UI only)
-   NOTE: le serveur recalculera à la sync (vérité finale)
-======================= */
-function calcTVA(montant){
-  const taux = Number(State.tva.taux||0)/100;
-  if(State.tva.mode === "excl"){
-    const ht = montant;
-    const tva = Math.round(ht * taux);
-    const ttc = ht + tva;
-    return {ht,tva,ttc};
-  } else {
-    const ttc = montant;
-    const ht = taux>0 ? Math.round(ttc/(1+taux)) : ttc;
-    const tva = ttc - ht;
-    return {ht,tva,ttc};
-  }
-}
-
-/* =======================
-   LOCAL MIRROR (tickets)
-======================= */
-function slugSafe(){ return String(State.slug||"").trim().toLowerCase() || "noslug"; }
-function salesKey(){ return "DIGIY_CAISSE_TICKETS::" + slugSafe(); }
-
-function localSalesLoad(){
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', async () => {
   try{
-    const a = JSON.parse(localStorage.getItem(salesKey()) || "[]");
-    return Array.isArray(a) ? a : [];
-  }catch(_){ return []; }
-}
-function localSalesSave(a){ localStorage.setItem(salesKey(), JSON.stringify(a||[])); }
+    const user = await SB.getUser();
+    if(!user||user.error){goTo('landing');return;}
+    currentUser = user;
+    await loadAll();
+    launchApp();
+  }catch(e){goTo('landing');}
+});
 
-function localAddTicket({client_txn_id,method,total,items=[],note=""}){
-  const rows = localSalesLoad();
-  if(client_txn_id && rows.some(r=>r.client_txn_id===client_txn_id)) return;
-  rows.unshift({
-    id: (crypto?.randomUUID ? crypto.randomUUID() : ("id_"+Math.random().toString(16).slice(2)+Date.now())),
-    client_txn_id,
-    slug: slugSafe(),
-    owner_id: State.owner_id,
-    total: Number(total)||0,
-    method: String(method||"cash"),
-    note: String(note||""),
-    items: items||[],
-    synced: false,
-    created_at: new Date().toISOString(),
-    day_key: dayKey()
+// ══════════════════════════════════════════════════════
+// NAV
+// ══════════════════════════════════════════════════════
+function goTo(screen){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+screen).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function showTab(tab){
+  ['caisse','dashboard','stock','admin'].forEach(t=>{
+    document.getElementById('view-'+t).style.display = t===tab?'block':'none';
+    document.getElementById('tab-'+t).classList.toggle('active',t===tab);
   });
-  localSalesSave(rows);
+  if(tab==='dashboard') renderDashboard();
+  if(tab==='stock')     renderStock('');
+  if(tab==='admin')     renderAdminList('');
 }
-function localMarkSynced(txn){
-  if(!txn) return;
-  const rows = localSalesLoad();
-  const i = rows.findIndex(r=>r.client_txn_id===txn);
-  if(i>=0){
-    rows[i].synced = true;
-    rows[i].synced_at = new Date().toISOString();
-    localSalesSave(rows);
+
+// ══════════════════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════════════════
+async function doRegister(){
+  const email    = document.getElementById('reg-email').value.trim();
+  const pass     = document.getElementById('reg-pass').value.trim();
+  const boutique = document.getElementById('reg-boutique').value.trim();
+  const prenom   = document.getElementById('reg-prenom').value.trim();
+  const nom      = document.getElementById('reg-nom').value.trim();
+  const btn      = document.getElementById('btn-register');
+  if(!email||!pass||!boutique){showAuthErr('reg-error','Remplissez tous les champs requis');return;}
+  if(pass.length<6){showAuthErr('reg-error','Mot de passe trop court (6 min)');return;}
+  btn.disabled=true;btn.textContent='Création...';
+  const data = await SB.signUp(email,pass,{nom_boutique:boutique,prenom,nom});
+  if(data.error_code||!data.id){showAuthErr('reg-error',data.msg||data.error_description||'Erreur inscription');btn.disabled=false;btn.textContent='Créer mon compte gratuit →';return;}
+  const login = await SB.signIn(email,pass);
+  if(!login.access_token){showAuthErr('reg-error','Compte créé ! Connectez-vous.');btn.disabled=false;btn.textContent='Créer mon compte gratuit →';goTo('login');return;}
+  currentUser = login.user;
+  await loadAll();
+  launchApp();
+}
+
+async function doLogin(){
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-pass').value.trim();
+  const btn   = document.getElementById('btn-login');
+  if(!email||!pass){showAuthErr('login-error','Email et mot de passe requis');return;}
+  btn.disabled=true;btn.textContent='Connexion...';
+  const data = await SB.signIn(email,pass);
+  if(!data.access_token){showAuthErr('login-error','Email ou mot de passe incorrect');btn.disabled=false;btn.textContent='Se connecter →';return;}
+  currentUser = data.user;
+  await loadAll();
+  launchApp();
+}
+
+async function doLogout(){
+  await SB.signOut();
+  currentUser=null;currentProfile=null;products=[];sales=[];cart=[];
+  goTo('landing');
+}
+
+function showAuthErr(id,msg){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.textContent=msg;el.style.display='block';
+  setTimeout(()=>el.style.display='none',4000);
+}
+
+// ══════════════════════════════════════════════════════
+// LOAD DATA
+// ══════════════════════════════════════════════════════
+async function loadAll(){
+  await loadProfile();
+  await loadProducts();
+  await loadSales();
+}
+
+async function loadProfile(){
+  // Try caisse_settings table
+  const {data} = await SB.from('caisse_settings').eq('owner_id',currentUser.id).single();
+  currentProfile = data;
+}
+
+async function loadProducts(){
+  const {data} = await SB.from('caisse_products').eq('owner_id',currentUser.id).eq('is_active',true).order('created_at').select('*');
+  products       = data||[];
+  filteredProds  = products;
+}
+
+async function loadSales(){
+  const {data} = await SB.from('caisse_sales').eq('owner_id',currentUser.id).order('created_at').select('*');
+  sales = (data||[]).reverse();
+}
+
+// ══════════════════════════════════════════════════════
+// LAUNCH APP
+// ══════════════════════════════════════════════════════
+function launchApp(){
+  if(!currentProfile){
+    // Créer profil vide si premier login
+    createProfile();
+    return;
   }
-}
+  const trialEnd = new Date(currentProfile.trial_end||Date.now());
+  const daysLeft = Math.ceil((trialEnd-new Date())/86400000);
+  const isPro    = currentProfile.plan==='pro';
 
-/* =======================
-   OUTBOX
-======================= */
-function obKey(){ return "DIGIY_CAISSE_OUTBOX_V1::" + slugSafe(); }
-function obLoad(){
-  try{
-    const r = localStorage.getItem(obKey());
-    const a = r ? JSON.parse(r) : [];
-    return Array.isArray(a) ? a : [];
-  }catch(_){ return []; }
-}
-function obSave(a){ localStorage.setItem(obKey(), JSON.stringify(a||[])); }
-function obCount(){ return obLoad().length; }
-
-let OB_FLUSHING = false;
-
-function obStatus(msg){
-  const e = $("outboxStatus"); if(e) e.textContent = msg || "—";
-}
-function obBadge(){
-  const e = $("outboxBadge"); if(!e) return;
-  const n = obCount();
-  e.className = n===0 ? "badge green" : "badge gold";
-  e.textContent = n===0 ? "SYNC OK" : ("OUTBOX " + n);
-}
-function makeTxn(){
-  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c/4).toString(16)
-  );
-}
-function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
-function obEnqueue(job){
-  const a = obLoad();
-  a.push(job);
-  obSave(a);
-  obBadge();
-  obStatus("En attente : " + a.length);
-}
-
-async function obFlush(){
-  if(OB_FLUSHING) return {ok:false, busy:true};
-  OB_FLUSHING = true;
-  try{
-    const sb = getSB();
-    if(!sb){ obStatus("Supabase non dispo"); obBadge(); return {ok:false}; }
-
-    let arr = obLoad();
-    if(!arr.length){ obStatus("✅ Tout est synchro"); obBadge(); return {ok:true}; }
-
-    if(!navigator.onLine){
-      obStatus("📴 Offline — " + arr.length + " en attente");
-      obBadge();
-      return {ok:false, offline:true};
-    }
-
-    obStatus("⏳ Sync… (" + arr.length + ")");
-    obBadge();
-
-    const keep = [];
-    let ok = 0;
-
-    for(const job of arr){
-      try{
-        const {data, error} = await sb.rpc("rpc_caisse_checkout_v1", {
-          p_owner_id: State.owner_id,
-          p_client_txn_id: job.txn_id,
-          p_method: job.method,
-          p_items: job.items
-        });
-        if(error) throw error;
-
-        const res = (typeof data === "string") ? JSON.parse(data) : data;
-
-        if(res?.ok){
-          ok++;
-          localMarkSynced(job.txn_id);
-
-          // feedback PRO serveur
-          if(res.total_ttc != null){
-            toast(`✅ Vente OK — TTC: ${fmt(res.total_ttc)} F (TVA: ${fmt(res.total_tva||0)} F)`, 2600);
-          }else{
-            toast("✅ Vente OK", 2200);
-          }
-          continue;
-        }
-
-        keep.push({...job,
-          tries:(job.tries||0)+1,
-          last_error: res?.message || "Erreur",
-          last_try_at: new Date().toISOString()
-        });
-        await sleep(250);
-
-      }catch(e){
-        keep.push({...job,
-          tries:(job.tries||0)+1,
-          last_error: e?.message || String(e),
-          last_try_at: new Date().toISOString()
-        });
-        await sleep(400);
-      }
-    }
-
-    obSave(keep);
-
-    if(keep.length===0){
-      obStatus("✅ Sync OK ("+ok+")");
-      toast("✅ Synchro OK", 2200);
-    }else{
-      obStatus("⚠️ "+ok+" OK • "+keep.length+" en attente");
-      toast("⚠️ Synchro partielle", 2400);
-    }
-    obBadge();
-
-    // reload data after sync
-    try{ await loadData(); renderAll(); }catch(_){}
-
-    return {ok:true, left: keep.length};
-
-  }finally{
-    OB_FLUSHING = false;
-  }
-}
-
-function obInit(){
-  obBadge();
-  obStatus(obCount() ? ("En attente : "+obCount()) : "✅ Tout est synchro");
-
-  window.addEventListener("online", ()=>{ setNetBadge(); obFlush(); });
-  window.addEventListener("offline", ()=>{ setNetBadge(); obStatus("📴 Offline — "+obCount()+" en attente"); obBadge(); });
-
-  const btn = $("btnSyncOutbox");
-  if(btn){
-    btn.addEventListener("click", async ()=>{
-      btn.disabled = true;
-      obStatus("⏳ Sync…");
-      await obFlush();
-      btn.disabled = false;
-    });
-  }
-  setTimeout(()=>{ if(navigator.onLine) obFlush(); }, 900);
-}
-
-/* =======================
-   NAV
-======================= */
-function setTab(tab){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  document.querySelectorAll(".nav-link").forEach(l=>l.classList.remove("active"));
-  const page = $(tab+"Page");
-  if(page) page.classList.add("active");
-  const btn = document.querySelector(`.nav-link[data-tab="${tab}"]`);
-  if(btn) btn.classList.add("active");
-  renderAll();
-}
-
-/* =======================
-   LOAD DATA
-======================= */
-async function loadData(){
-  const sb = getSB();
-  if(!sb || !State.owner_id) return;
-
-  // settings
-  const {data:s, error:se} = await sb.from("digiy_caisse_settings").select("*").eq("owner_id", State.owner_id).maybeSingle();
-  if(se) console.error("settings:", se);
-
-  if(s){
-    State.settings = s;
-    State.storeName = s.store_name || State.title || "MA BOUTIQUE";
-    State.pro = !!s.is_pro;
-
-    State.tva = {
-      active: !!s.tva_assujeti,
-      taux: Number(s.tva_taux ?? 18),
-      mode: (s.tva_mode === "incl" ? "incl" : "excl")
-    };
-  }else{
-    await sb.from("digiy_caisse_settings").insert({
-      owner_id: State.owner_id,
-      store_name: State.title || "MA BOUTIQUE",
-      phone: State.phone,
-      trial_start: new Date().toISOString(),
-      tva_assujeti: false,
-      tva_taux: 0,
-      tva_mode: "excl"
-    });
-    State.settings = { trial_start: new Date().toISOString() };
-    State.storeName = State.title || "MA BOUTIQUE";
-    State.pro = false;
-    State.tva = { active:false, taux:18, mode:"excl" };
+  const trialBar = document.getElementById('trial-bar');
+  if(isPro){trialBar.style.display='none';}
+  else{
+    document.getElementById('trial-days').textContent = daysLeft+' jour'+(daysLeft>1?'s':'')+' restant'+(daysLeft>1?'s':'');
+    if(daysLeft<=7) trialBar.classList.add('urgent');
+    if(daysLeft<=0){showUpgrade();} // Expiré
   }
 
-  // products
-  const {data:p, error:pe} = await sb.from("digiy_caisse_products")
-    .select("*").eq("owner_id", State.owner_id).eq("is_active", true)
-    .order("created_at", {ascending:false});
-  if(pe) console.error("products:", pe);
-  State.items = p || [];
-  State.filteredItems = State.items;
+  const boutique = currentProfile.nom_boutique||'Ma Boutique';
+  document.getElementById('store-name-display').textContent = boutique;
+  document.getElementById('user-av').textContent = boutique.charAt(0).toUpperCase();
 
-  // sales
-  const {data:v, error:ve} = await sb.from("digiy_caisse_sales")
-    .select("*").eq("owner_id", State.owner_id)
-    .order("created_at", {ascending:false}).limit(200);
-  if(ve) console.error("sales:", ve);
-  State.sales = v || [];
-}
+  // TVA
+  const tvaToggle = document.getElementById('tva-toggle');
+  if(tvaToggle) tvaToggle.checked = !!currentProfile.tva_active;
+  if(document.getElementById('tva-rate-display')) document.getElementById('tva-rate-display').textContent = currentProfile.tva_taux||18;
+  if(document.getElementById('p-tva-active')) document.getElementById('p-tva-active').checked = !!currentProfile.tva_active;
+  if(document.getElementById('p-tva-taux')) document.getElementById('p-tva-taux').value = currentProfile.tva_taux||18;
+  if(document.getElementById('p-tva-mode')) document.getElementById('p-tva-mode').value = currentProfile.tva_mode||'excl';
+  if(document.getElementById('p-store')) document.getElementById('p-store').value = currentProfile.nom_boutique||'';
+  if(document.getElementById('p-phone')) document.getElementById('p-phone').value = currentProfile.telephone||'';
+  if(document.getElementById('p-address')) document.getElementById('p-address').value = currentProfile.adresse||'';
+  toggleTVAAdmin();
 
-/* =======================
-   RENDER
-======================= */
-function renderAll(){
-  renderHeader();
+  goTo('app');
   renderCaisse();
-  renderHistory();
-  renderStock();
-  renderAdminForm();
 }
 
-function renderHeader(){
-  const ts = State.settings?.trial_start ? new Date(State.settings.trial_start).getTime() : Date.now();
-  const left = Math.max(0, TRIAL_LIMIT - Math.floor((Date.now()-ts)/86400000));
-  const tb = $("trialBadge");
-  if(State.pro){
-    tb.className="badge gold"; tb.textContent="LICENCE ACTIVE";
-    $("lockScreen").style.display="none";
-  }else{
-    tb.className="badge"; tb.textContent="TRIAL: "+left+" J";
-    $("lockScreen").style.display = (left<=0 ? "flex" : "none");
-  }
-
-  const tvab = $("tvaBadge");
-  if(tvab) tvab.style.display = State.tva.active ? "inline-flex" : "none";
-
-  obBadge();
-  $("storeDisp").innerText = State.storeName || "MA BOUTIQUE";
-  setNetBadge();
+async function createProfile(){
+  await SB.from('caisse_settings').insert({
+    owner_id:currentUser.id,
+    email:currentUser.email,
+    nom_boutique:'Ma Boutique',
+    plan:'trial',
+    trial_start:new Date().toISOString(),
+    trial_end:new Date(Date.now()+30*86400000).toISOString(),
+    tva_active:false,tva_taux:18,tva_mode:'excl'
+  });
+  await loadProfile();
+  launchApp();
 }
 
+// ══════════════════════════════════════════════════════
+// CAISSE RENDER
+// ══════════════════════════════════════════════════════
 function renderCaisse(){
-  const items = State.filteredItems || [];
-  $("prodCount").textContent = items.length;
+  // Catégories
+  const cats = ['Tous',...new Set(products.map(p=>p.categorie||'Autre').filter(Boolean))];
+  document.getElementById('cat-filter').innerHTML = cats.map(c=>`
+    <span class="cat-chip${c===currentCat?' active':''}" onclick="setCat('${c}')">${c}</span>`).join('');
 
-  const grid = $("productsGrid");
-  if(!grid) return;
+  document.getElementById('prod-count').textContent = filteredProds.length;
 
-  if(!items.length){
-    grid.innerHTML = '<div class="muted" style="padding:28px;text-align:center;grid-column:1/-1">Aucun produit — onglet STOCK pour en ajouter.</div>';
-  }else{
-    grid.innerHTML = items.map(p=>{
-      const out = Number(p.stock||0) <= 0;
-      // UI: on affiche TTC si TVA active (mais DB produit = HT)
-      const prixHT = Number(p.price||0);
-      const prixDisp = (State.tva.active ? calcTVA(prixHT).ttc : prixHT);
-      return `
-        <div class="noble-card${out?' rupture':''}" data-pid="${esc(p.id)}">
-          <i class="fas fa-tag"></i>
-          <div class="pname">${esc(p.name||"Article")}</div>
-          <div class="pprice">${fmt(prixDisp)} F${State.tva.active?'<span style="font-size:9px;opacity:.7"> TTC</span>':''}</div>
-          <div class="pstock${out?' out':''}">${out?'⚠️ RUPTURE':'STK: '+Number(p.stock||0)}</div>
-        </div>`;
-    }).join("");
-
-    // event delegation (évite bugs onclick string)
-    grid.querySelectorAll(".noble-card").forEach(card=>{
-      card.addEventListener("click", ()=>{
-        const pid = card.getAttribute("data-pid");
-        addToCart(pid);
-      });
-    });
+  const grid = document.getElementById('prod-grid');
+  if(!filteredProds.length){
+    grid.innerHTML='<div class="empty-state" style="grid-column:1/-1">Aucun produit — onglet Admin pour en ajouter</div>';
+  } else {
+    grid.innerHTML = filteredProds.map(p=>{
+      const stk = Number(p.stock||0);
+      const rupt = stk<=0;
+      const prixHT = Number(p.prix||0);
+      const tvaOn  = document.getElementById('tva-toggle')?.checked;
+      const taux   = Number(currentProfile?.tva_taux||18)/100;
+      const prix   = tvaOn && currentProfile?.tva_mode!=='incl' ? Math.round(prixHT*(1+taux)) : prixHT;
+      const icons  = {'Plats':'🍽','Boissons':'🥤','Alimentation':'🛒','Vêtements':'👕','Pharmacie':'💊','Autre':'📦'};
+      const icon   = icons[p.categorie]||'🏷';
+      return `<div class="prod-card${rupt?' rupture':''}" onclick="addToCart('${p.id}')">
+        <div class="prod-icon">${icon}</div>
+        <div class="prod-name">${p.nom||'Article'}</div>
+        <div class="prod-price">${fmt(prix)} F${tvaOn?'<span style="font-size:9px;opacity:.7"> TTC</span>':''}</div>
+        <div class="prod-stock${stk<=0?' out':stk<=5?' low':''}">${stk<=0?'⚠️ Rupture':stk<=5?'⚠️ '+stk+' restants':stk+' en stock'}</div>
+      </div>`;
+    }).join('');
   }
-
   renderCart();
 }
 
-function renderCart(){
-  const listing = $("cartListing");
-  if(!listing) return;
-
-  if(!State.cart.length){
-    listing.innerHTML = '<div class="muted" style="padding:14px 0;text-align:center">Panier vide</div>';
-  }else{
-    listing.innerHTML = State.cart.map(i=>`
-      <div class="cart-row">
-        <div style="flex:1;min-width:0">
-          <div style="font-weight:950">${esc(i.name)}</div>
-          <div class="muted">${fmt(i.price)} F × ${i.qty} = <b style="color:var(--gold)">${fmt(i.price*i.qty)} F</b></div>
-        </div>
-        <div class="qty-ctrl" style="margin-left:6px">
-          <button class="qty-btn" data-act="dec" data-id="${esc(i.id)}">−</button>
-          <span style="font-weight:950;font-size:12px;min-width:18px;text-align:center">${i.qty}</span>
-          <button class="qty-btn" data-act="inc" data-id="${esc(i.id)}">+</button>
-        </div>
-      </div>`).join("");
-
-    listing.querySelectorAll(".qty-btn").forEach(b=>{
-      b.addEventListener("click", (e)=>{
-        e.stopPropagation();
-        const id = b.getAttribute("data-id");
-        const act = b.getAttribute("data-act");
-        changeQty(id, act==="inc" ? 1 : -1);
-      });
-    });
-  }
-
-  const totalHT = State.cart.reduce((s,i)=>s+(i.price*i.qty),0);
-  const totalItems = State.cart.reduce((s,i)=>s+i.qty,0);
-
-  const tvaBox = $("tvaBox");
-  const totalLabel = $("totalLabel");
-
-  if(State.tva.active && State.cart.length){
-    const {ht,tva,ttc} = calcTVA(totalHT);
-    tvaBox.style.display = "block";
-    $("tvaHT").textContent = fmt(ht)+" F";
-    $("tvaPct").textContent = "TVA ("+Number(State.tva.taux||0)+"%)";
-    $("tvaMontant").textContent = fmt(tva)+" F";
-    $("tvaTTC").textContent = fmt(ttc)+" F";
-    $("totalPrice").textContent = fmt(ttc)+" F";
-    if(totalLabel) totalLabel.textContent = "TOTAL TTC";
-  }else{
-    if(tvaBox) tvaBox.style.display = "none";
-    $("totalPrice").textContent = fmt(totalHT)+" F";
-    if(totalLabel) totalLabel.textContent = "TOTAL";
-  }
-  $("cartItemCount").textContent = totalItems + " art.";
-}
-
-function renderHistory(){
-  const today = dayKey(), month = monthKey();
-
-  const meth = $("filterMethod")?.value || "";
-  const date = $("filterDate")?.value || "";
-
-  let sales = State.sales || [];
-  if(meth) sales = sales.filter(s => (s.payment_method||"").toUpperCase() === meth.toUpperCase());
-  if(date) sales = sales.filter(s => String(s.created_at||"").slice(0,10) === date);
-
-  const todays = (State.sales||[]).filter(s=>String(s.created_at||"").slice(0,10)===today);
-  const revDay = todays.reduce((a,b)=>a+Number(b.total||0),0);
-  const revMonth = (State.sales||[]).filter(s=>String(s.created_at||"").slice(0,7)===month).reduce((a,b)=>a+Number(b.total||0),0);
-  const avg = todays.length ? Math.round(revDay/todays.length) : 0;
-
-  $("revDay").textContent = fmt(revDay)+" F";
-  $("salesCount").textContent = String(todays.length);
-  $("revMonth").textContent = fmt(revMonth)+" F";
-  $("avgTicket").textContent = fmt(avg)+" F";
-
-  const hist = $("historyListing");
-  if(!hist) return;
-
-  if(!sales.length){
-    hist.innerHTML = '<div style="padding:18px;text-align:center">Aucune vente trouvée.</div>';
-    return;
-  }
-
-  const pmC = {CASH:"var(--green)",WAVE:"var(--blue)",OM:"var(--orange)",CREDIT:"var(--red)"};
-
-  hist.innerHTML = sales.slice(0,50).map(s=>{
-    const d = new Date(s.created_at);
-    const pm = (s.payment_method||"—").toUpperCase();
-    const count = (s.items_count ?? "?");
-    return `
-      <div class="inv-item">
-        <div>
-          <div style="font-weight:950;font-size:12px">${d.toLocaleDateString("fr-FR")} ${d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})}</div>
-          <div class="muted">${count} article(s)</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-weight:1000;color:var(--gold);font-size:13px">${fmt(s.total||0)} F</div>
-          <div style="font-size:10px;font-weight:950;color:${pmC[pm]||'var(--muted)'}">${pm}</div>
-        </div>
-      </div>`;
-  }).join("");
-}
-
-function renderStock(filter=""){
-  const q = (filter||"").toLowerCase().trim();
-  const list = q ? (State.items||[]).filter(p=>(p.name||"").toLowerCase().includes(q)) : (State.items||[]);
-
-  const rupt = (State.items||[]).filter(p=>Number(p.stock||0)<=0).length;
-  if($("stockAlert")) $("stockAlert").textContent = rupt ? ("⚠️ "+rupt+" rupture(s)") : "";
-
-  const inv = $("inventoryManager");
-  if(!inv) return;
-
-  if(!list.length){
-    inv.innerHTML = '<div style="padding:18px;text-align:center">Aucun produit.</div>';
-    return;
-  }
-
-  inv.innerHTML = list.map(p=>{
-    const stk = Number(p.stock||0);
-    const col = stk<=0 ? "#fb7185" : stk<=5 ? "#f59e0b" : "#bbf7d0";
-    const pHT = Number(p.price||0);
-    const pTTC = State.tva.active ? calcTVA(pHT).ttc : pHT;
-
-    return `
-      <div class="inv-item">
-        <div>
-          <div style="font-weight:950;font-size:12px">${esc(p.name||"Article")}</div>
-          <div class="muted">${fmt(pHT)} F HT${State.tva.active ? (" / "+fmt(pTTC)+" F TTC") : ""}${p.category ? (" · "+esc(p.category)) : ""}</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:5px">
-          <span style="font-weight:1000;color:${col};font-size:12px">${stk<=0?'⚠️ RUPTURE':stk+' unités'}</span>
-          <button class="icon-btn edit" data-act="edit" data-id="${esc(p.id)}"><i class="fas fa-edit"></i></button>
-          <button class="icon-btn del" data-act="del" data-id="${esc(p.id)}"><i class="fas fa-trash"></i></button>
-        </div>
-      </div>`;
-  }).join("");
-
-  inv.querySelectorAll("button[data-act]").forEach(b=>{
-    b.addEventListener("click", ()=>{
-      const act = b.getAttribute("data-act");
-      const id = b.getAttribute("data-id");
-      if(act==="edit") openEdit(id);
-      if(act==="del") removeItem(id);
-    });
-  });
-}
-
-function renderAdminForm(){
-  const s = State.settings || {};
-  const setVal = (id, v) => { const e=$(id); if(e) e.value = (v ?? ""); };
-
-  setVal("pStoreName", s.store_name || State.storeName);
-  setVal("pPhone", s.phone || State.phone);
-  setVal("pEmail", s.email);
-  setVal("pWebsite", s.website);
-  setVal("pAddress", s.address);
-  setVal("pSiret", s.siret);
-  setVal("pRc", s.rc);
-  setVal("pCapital", s.capital);
-  setVal("pIban", s.iban);
-  setVal("pMentions", s.mentions_legales);
-  setVal("pLogo", s.logo_url);
-
-  if($("pTvaActive")) $("pTvaActive").checked = !!s.tva_assujeti;
-  setVal("pTvaTaux", (s.tva_taux ?? 18));
-  if($("pTvaMode")) $("pTvaMode").value = (s.tva_mode === "incl" ? "incl" : "excl");
-
-  toggleTVASection();
-  updateTvaExplication();
-  simulateTVA();
-}
-
-/* =======================
-   FILTERS
-======================= */
-function filterProd(q){
-  const s = (q||"").toLowerCase().trim();
-  State.filteredItems = s ? State.items.filter(p => (p.name||"").toLowerCase().includes(s)) : State.items;
+function filterProds(q){
+  const s=(q||'').toLowerCase().trim();
+  const base = currentCat==='Tous'?products:products.filter(p=>(p.categorie||'Autre')===currentCat);
+  filteredProds = s ? base.filter(p=>(p.nom||'').toLowerCase().includes(s)) : base;
   renderCaisse();
 }
-function resetFilters(){
-  if($("filterMethod")) $("filterMethod").value = "";
-  if($("filterDate")) $("filterDate").value = "";
-  renderHistory();
+
+function setCat(cat){
+  currentCat=cat;
+  filterProds(document.getElementById('search-prod')?.value||'');
 }
 
-/* =======================
-   CART ACTIONS
-======================= */
+// ══════════════════════════════════════════════════════
+// CART
+// ══════════════════════════════════════════════════════
 function addToCart(id){
-  const p = (State.items||[]).find(x=>String(x.id)===String(id));
+  const p = products.find(x=>String(x.id)===String(id));
   if(!p) return;
-
-  const stock = Number(p.stock||0);
-  if(stock<=0){ toast("❌ Rupture de stock !"); return; }
-
-  const found = State.cart.find(x=>String(x.id)===String(id));
+  if(Number(p.stock||0)<=0){showToast('⚠️ Rupture de stock !','error');return;}
+  const found = cart.find(x=>String(x.id)===String(id));
   if(found){
-    if(found.qty >= stock){ toast("⚠️ Stock max atteint"); return; }
+    if(found.qty>=Number(p.stock||0)){showToast('⚠️ Stock maximum atteint');return;}
     found.qty++;
-  }else{
-    State.cart.push({
-      id: p.id,
-      name: p.name,
-      price: Number(p.price||0),  // DB = HT dans ce setup
-      stock: stock,
-      qty: 1
-    });
+  } else {
+    cart.push({id:p.id,nom:p.nom,prix:Number(p.prix||0),stock:Number(p.stock||0),qty:1});
   }
-
+  showToast('✓ '+p.nom+' ajouté');
   renderCart();
-  toast("✅ "+esc(p.name)+" ajouté");
 }
 
-function changeQty(id, delta){
-  const i = State.cart.findIndex(x=>String(x.id)===String(id));
+function changeQty(id,delta){
+  const i = cart.findIndex(x=>String(x.id)===String(id));
   if(i<0) return;
-  const p = (State.items||[]).find(x=>String(x.id)===String(id));
-  const stock = Number(p?.stock||0);
-
-  State.cart[i].qty += delta;
-  if(State.cart[i].qty <= 0){
-    State.cart.splice(i,1);
-  }else if(stock>0 && State.cart[i].qty > stock){
-    State.cart[i].qty = stock;
-    toast("⚠️ Stock max atteint");
+  cart[i].qty += delta;
+  if(cart[i].qty<=0) cart.splice(i,1);
+  else {
+    const p = products.find(x=>String(x.id)===String(id));
+    if(p && cart[i].qty>Number(p.stock||0)){cart[i].qty=Number(p.stock||0);showToast('⚠️ Stock max');}
   }
   renderCart();
 }
 
 function clearCart(){
-  if(State.cart.length && !confirm("Vider le panier ?")) return;
-  State.cart = [];
-  renderCart();
+  if(cart.length&&!confirm('Vider le panier ?')) return;
+  cart=[];renderCart();
 }
 
-/* =======================
-   CHECKOUT (offline-first)
-======================= */
+function renderCart(){
+  const list = document.getElementById('cart-list');
+  const totalItems = cart.reduce((s,i)=>s+i.qty,0);
+  document.getElementById('cart-count').textContent = totalItems+' article'+(totalItems>1?'s':'');
+
+  if(!cart.length){
+    list.innerHTML='<div class="empty-state" style="padding:20px;font-size:14px">Panier vide</div>';
+  } else {
+    list.innerHTML = cart.map(i=>`
+      <div class="cart-row">
+        <div class="cart-row-info">
+          <div class="cart-row-name">${i.nom}</div>
+          <div class="cart-row-price">${fmt(i.prix)} F × ${i.qty} = <strong style="color:var(--gold)">${fmt(i.prix*i.qty)} F</strong></div>
+        </div>
+        <div class="qty-ctrl">
+          <button class="qty-btn" onclick="changeQty('${i.id}',-1)">−</button>
+          <span class="qty-num">${i.qty}</span>
+          <button class="qty-btn" onclick="changeQty('${i.id}',1)">+</button>
+        </div>
+      </div>`).join('');
+  }
+
+  const totalHT  = cart.reduce((s,i)=>s+(i.prix*i.qty),0);
+  const tvaOn    = document.getElementById('tva-toggle')?.checked;
+  const taux     = Number(currentProfile?.tva_taux||18)/100;
+  const mode     = currentProfile?.tva_mode||'excl';
+  const tvaDetail = document.getElementById('tva-detail');
+  const totalLabel = document.getElementById('total-label');
+
+  if(tvaOn && cart.length){
+    let ht,tva,ttc;
+    if(mode==='excl'){ht=totalHT;tva=Math.round(ht*taux);ttc=ht+tva;}
+    else{ttc=totalHT;ht=Math.round(ttc/(1+taux));tva=ttc-ht;}
+    tvaDetail.style.display='block';
+    document.getElementById('tva-ht').textContent    = fmt(ht)+' F';
+    document.getElementById('tva-pct-label').textContent = 'TVA '+(Number(currentProfile?.tva_taux||18))+'%';
+    document.getElementById('tva-montant').textContent = fmt(tva)+' F';
+    document.getElementById('tva-ttc').textContent   = fmt(ttc)+' F';
+    document.getElementById('total-amount').textContent = fmt(ttc)+' F';
+    if(totalLabel) totalLabel.textContent='Total TTC';
+  } else {
+    if(tvaDetail) tvaDetail.style.display='none';
+    document.getElementById('total-amount').textContent = fmt(totalHT)+' F';
+    if(totalLabel) totalLabel.textContent='Total';
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// CHECKOUT
+// ══════════════════════════════════════════════════════
 async function checkout(method){
-  if(!State.cart.length){ toast("🛒 Panier vide !"); return; }
+  if(!cart.length){showToast('🛒 Panier vide !','error');return;}
 
-  const payloadItems = State.cart.map(i=>({id:i.id, qty:i.qty}));
-  const totalHT = State.cart.reduce((s,i)=>s+(i.price*i.qty),0);
-  const totalUI = (State.tva.active ? calcTVA(totalHT).ttc : totalHT);
+  const totalHT = cart.reduce((s,i)=>s+(i.prix*i.qty),0);
+  const tvaOn   = document.getElementById('tva-toggle')?.checked;
+  const taux    = Number(currentProfile?.tva_taux||18)/100;
+  const mode    = currentProfile?.tva_mode||'excl';
+  let total=totalHT,tva_montant=0;
+  if(tvaOn){
+    if(mode==='excl'){tva_montant=Math.round(totalHT*taux);total=totalHT+tva_montant;}
+    else{const ht=Math.round(totalHT/(1+taux));tva_montant=totalHT-ht;total=totalHT;}
+  }
 
-  const txnId = makeTxn();
-  const note = State.cart.map(i=>i.name+" x"+i.qty).join(" | ");
+  const items_snapshot = cart.map(i=>({id:i.id,nom:i.nom,prix:i.prix,qty:i.qty}));
 
-  // local mirror
-  localAddTicket({client_txn_id:txnId, method: method.toLowerCase(), total: totalUI, items: payloadItems, note});
+  const {error} = await SB.from('caisse_sales').insert({
+    owner_id:     currentUser.id,
+    methode:      method,
+    total:        total,
+    total_ht:     totalHT,
+    tva_montant:  tva_montant,
+    items_count:  cart.reduce((s,i)=>s+i.qty,0),
+    items:        items_snapshot,
+    created_at:   new Date().toISOString()
+  });
 
-  // outbox
-  obEnqueue({txn_id: txnId, method, items: payloadItems, created_at: new Date().toISOString(), tries:0});
+  if(error){showToast('❌ Erreur enregistrement','error');return;}
 
-  toast(`💳 ${method} — Enregistré • sync…`, 2200);
+  // Décrémenter stock
+  for(const i of cart){
+    const p = products.find(x=>String(x.id)===String(i.id));
+    if(p){
+      const newStock = Math.max(0,Number(p.stock||0)-i.qty);
+      await SB.from('caisse_products').eq('id',i.id).eq('owner_id',currentUser.id).update({stock:newStock});
+    }
+  }
 
-  State.cart = [];
-  renderCart();
-
-  if(navigator.onLine) await obFlush();
-  else toast("📴 Offline — vente gardée. Synchro auto au retour réseau.", 2600);
+  showToast(`✅ ${method} — ${fmt(total)} F encaissé !`);
+  cart=[];
+  await loadAll();
+  renderCaisse();
 }
 
-/* =======================
-   PRODUCTS CRUD
-======================= */
-async function addNew(){
-  const sb = getSB(); if(!sb) return alert("Supabase non disponible");
-  const name = ($("addName")?.value || "").trim();
-  const price = parseInt($("addPrice")?.value || "0", 10);
-  const stock = parseInt($("addStock")?.value || "0", 10) || 0;
-  const category = ($("addCategory")?.value || "").trim() || null;
+// ══════════════════════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════════════════════
+function renderDashboard(){
+  const today  = new Date().toISOString().slice(0,10);
+  const month  = new Date().toISOString().slice(0,7);
+  const meth   = document.getElementById('filter-method')?.value||'';
+  const date   = document.getElementById('filter-date')?.value||'';
 
-  if(!name) return alert("Nom requis");
-  if(!price || price<=0) return alert("Prix requis et > 0");
+  const todays = sales.filter(s=>String(s.created_at||'').slice(0,10)===today);
+  const revDay = todays.reduce((a,b)=>a+Number(b.total||0),0);
+  const revMonth = sales.filter(s=>String(s.created_at||'').slice(0,7)===month).reduce((a,b)=>a+Number(b.total||0),0);
+  const avg    = todays.length ? Math.round(revDay/todays.length) : 0;
 
-  try{
-    const {error} = await sb.from("digiy_caisse_products").insert({
-      owner_id: State.owner_id,
-      name, price, stock, category,
-      is_active: true
-    });
-    if(error) throw error;
+  document.getElementById('stat-day').textContent    = fmt(revDay)+' F';
+  document.getElementById('stat-count-v').textContent = todays.length;
+  document.getElementById('stat-month').textContent  = fmt(revMonth)+' F';
+  document.getElementById('stat-avg').textContent    = fmt(avg)+' F';
 
-    ["addName","addPrice","addStock","addCategory"].forEach(id=>{ if($(id)) $(id).value=""; });
-    await loadData(); renderAll();
-    toast("✅ "+name+" ajouté !");
-  }catch(e){
-    alert("❌ Erreur : "+(e?.message||e));
+  let filtered = [...sales];
+  if(meth) filtered = filtered.filter(s=>(s.methode||'').toUpperCase()===meth);
+  if(date) filtered = filtered.filter(s=>String(s.created_at||'').slice(0,10)===date);
+
+  const list = document.getElementById('ventes-list');
+  if(!filtered.length){list.innerHTML='<div class="empty-state">Aucune vente trouvée</div>';return;}
+
+  const mc = {CASH:'method-cash',WAVE:'method-wave',OM:'method-om',CREDIT:'method-credit'};
+  list.innerHTML = filtered.slice(0,50).map(s=>{
+    const d = new Date(s.created_at);
+    const m = (s.methode||'—').toUpperCase();
+    const items = Array.isArray(s.items) ? s.items.map(i=>i.nom+'×'+i.qty).join(', ') : (s.items_count+' article(s)');
+    return `<div class="vente-row">
+      <div class="vente-info">
+        <div class="vente-time">${d.toLocaleDateString('fr-FR')} ${d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</div>
+        <div class="vente-items">${items}</div>
+      </div>
+      <div class="vente-right">
+        <div class="vente-amount">${fmt(s.total||0)} F</div>
+        <div class="vente-method ${mc[m]||''}">${m}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function resetFilters(){
+  if(document.getElementById('filter-method')) document.getElementById('filter-method').value='';
+  if(document.getElementById('filter-date'))   document.getElementById('filter-date').value='';
+  renderDashboard();
+}
+
+// ══════════════════════════════════════════════════════
+// STOCK
+// ══════════════════════════════════════════════════════
+function renderStock(q){
+  const s  = (q||'').toLowerCase().trim();
+  const list = s ? products.filter(p=>(p.nom||'').toLowerCase().includes(s)) : products;
+  const rupt = products.filter(p=>Number(p.stock||0)<=0);
+
+  const el = document.getElementById('stock-list');
+  if(!list.length){el.innerHTML='<div class="empty-state">Aucun produit</div>';}
+  else{
+    el.innerHTML = list.map(p=>{
+      const stk=Number(p.stock||0);
+      const cl  = stk<=0?'out':stk<=5?'low':'ok';
+      return `<div class="stock-item">
+        <div>
+          <div class="stock-name">${p.nom||'Article'}</div>
+          <div class="stock-meta">${fmt(p.prix)} F HT · ${p.categorie||'—'}</div>
+        </div>
+        <div class="stock-right">
+          <span class="stock-qty ${cl}">${stk<=0?'⚠️ Rupture':stk+' unités'}</span>
+          <button class="icon-btn" onclick="openEdit('${p.id}')">✏️</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  const rel = document.getElementById('rupture-list');
+  if(!rupt.length){rel.innerHTML='<div class="empty-state" style="font-size:14px">✅ Aucune rupture</div>';}
+  else{
+    rel.innerHTML = rupt.map(p=>`
+      <div class="stock-item">
+        <div><div class="stock-name">${p.nom||'Article'}</div><div class="stock-meta">${fmt(p.prix)} F HT</div></div>
+        <div class="stock-right"><span class="stock-qty out">⚠️ Rupture</span><button class="icon-btn" onclick="openEdit('${p.id}')">✏️</button></div>
+      </div>`).join('');
   }
 }
 
-async function removeItem(id){
-  if(!confirm("Supprimer cet article ?")) return;
-  const sb = getSB(); if(!sb) return;
-  try{
-    const {error} = await sb.from("digiy_caisse_products")
-      .update({is_active:false})
-      .eq("id", id).eq("owner_id", State.owner_id);
-    if(error) throw error;
-    await loadData(); renderAll();
-    toast("🗑️ Article retiré");
-  }catch(e){
-    alert("❌ Erreur : "+(e?.message||e));
-  }
+// ══════════════════════════════════════════════════════
+// ADMIN — CATALOGUE
+// ══════════════════════════════════════════════════════
+function renderAdminList(q){
+  const s = (q||'').toLowerCase().trim();
+  const list = s ? products.filter(p=>(p.nom||'').toLowerCase().includes(s)) : products;
+  const el = document.getElementById('admin-prod-list');
+  if(!list.length){el.innerHTML='<div class="empty-state">Aucun produit</div>';return;}
+  el.innerHTML = list.map(p=>`
+    <div class="stock-item">
+      <div>
+        <div class="stock-name">${p.nom||'Article'}</div>
+        <div class="stock-meta">${fmt(p.prix)} F HT · Stock: ${p.stock||0} · ${p.categorie||'—'}</div>
+      </div>
+      <div class="stock-right">
+        <button class="icon-btn" onclick="openEdit('${p.id}')">✏️</button>
+        <button class="icon-btn" style="color:var(--red)" onclick="deleteProduct('${p.id}')">🗑</button>
+      </div>
+    </div>`).join('');
 }
 
-/* Modal edit */
+async function addProduct(){
+  const nom    = document.getElementById('add-name').value.trim();
+  const prix   = parseInt(document.getElementById('add-price').value||'0',10);
+  const stock  = parseInt(document.getElementById('add-stock').value||'0',10)||0;
+  const cat    = document.getElementById('add-cat').value.trim()||null;
+  if(!nom)       {showToast('⚠️ Nom requis','error');return;}
+  if(!prix||prix<=0){showToast('⚠️ Prix requis','error');return;}
+  const {error} = await SB.from('caisse_products').insert({
+    owner_id:currentUser.id,nom,prix,stock,categorie:cat,is_active:true,created_at:new Date().toISOString()
+  });
+  if(error){showToast('❌ Erreur : '+error.message,'error');return;}
+  ['add-name','add-price','add-stock','add-cat'].forEach(id=>{if(document.getElementById(id))document.getElementById(id).value='';});
+  await loadProducts();
+  renderCaisse();
+  renderAdminList('');
+  showToast('✅ '+nom+' ajouté !');
+}
+
+async function deleteProduct(id){
+  if(!confirm('Supprimer ce produit ?')) return;
+  await SB.from('caisse_products').eq('id',id).eq('owner_id',currentUser.id).update({is_active:false});
+  await loadProducts();renderCaisse();renderAdminList('');renderStock('');
+  showToast('🗑 Produit retiré');
+}
+
+// ══════════════════════════════════════════════════════
+// EDIT MODAL
+// ══════════════════════════════════════════════════════
 function openEdit(id){
-  const p = (State.items||[]).find(x=>String(x.id)===String(id));
+  const p = products.find(x=>String(x.id)===String(id));
   if(!p) return;
-  $("editId").value = p.id;
-  $("editName").value = p.name || "";
-  $("editPrice").value = p.price ?? "";
-  $("editStock").value = p.stock ?? 0;
-  $("editCategory").value = p.category || "";
-  $("modalEdit").classList.add("open");
-  $("modalEdit").setAttribute("aria-hidden","false");
+  editTargetId = id;
+  document.getElementById('edit-id').value    = id;
+  document.getElementById('edit-name').value  = p.nom||'';
+  document.getElementById('edit-price').value = p.prix||0;
+  document.getElementById('edit-stock').value = p.stock||0;
+  document.getElementById('edit-cat').value   = p.categorie||'';
+  document.getElementById('modal-overlay').classList.add('open');
 }
-function closeModal(){
-  $("modalEdit").classList.remove("open");
-  $("modalEdit").setAttribute("aria-hidden","true");
-}
+
+function closeModal(){document.getElementById('modal-overlay').classList.remove('open');}
+
 async function saveEdit(){
-  const sb = getSB(); if(!sb) return;
-  const id = $("editId").value;
-  const name = ($("editName").value||"").trim();
-  const price = parseInt($("editPrice").value||"0",10);
-  const stock = parseInt($("editStock").value||"0",10) || 0;
-  const category = ($("editCategory").value||"").trim() || null;
-
-  if(!name || !price) return alert("Nom et prix requis");
-
-  try{
-    const {error} = await sb.from("digiy_caisse_products")
-      .update({name, price, stock, category})
-      .eq("id", id).eq("owner_id", State.owner_id);
-    if(error) throw error;
-    closeModal();
-    await loadData(); renderAll();
-    toast("✅ Produit mis à jour !");
-  }catch(e){
-    alert("❌ Erreur : "+(e?.message||e));
-  }
+  const id    = document.getElementById('edit-id').value;
+  const nom   = document.getElementById('edit-name').value.trim();
+  const prix  = parseInt(document.getElementById('edit-price').value||'0',10);
+  const stock = parseInt(document.getElementById('edit-stock').value||'0',10)||0;
+  const cat   = document.getElementById('edit-cat').value.trim()||null;
+  if(!nom||!prix){showToast('⚠️ Nom et prix requis','error');return;}
+  const {error} = await SB.from('caisse_products').eq('id',id).eq('owner_id',currentUser.id).update({nom,prix,stock,categorie:cat});
+  if(error){showToast('❌ Erreur','error');return;}
+  closeModal();
+  await loadProducts();renderCaisse();renderAdminList('');renderStock('');
+  showToast('✅ Produit mis à jour !');
 }
 
-/* =======================
-   SETTINGS SAVE (ADMIN)
-======================= */
-function toggleTVASection(){
-  const active = !!$("pTvaActive")?.checked;
-  const box = $("tvaSettings");
-  if(box) box.style.display = active ? "block" : "none";
-  updateTvaExplication();
-  simulateTVA();
-}
-
-function updateTvaExplication(){
-  const mode = $("pTvaMode")?.value || "excl";
-  const taux = Number($("pTvaTaux")?.value || 18);
-  const el = $("tvaExplication"); if(!el) return;
-
-  if(mode==="excl"){
-    el.innerHTML = `<b style="color:var(--gold)">Mode HT → TTC :</b><br>
-    Tu entres les prix <b>hors taxes</b>.<br>
-    La TVA de <b>${taux}%</b> est <b>ajoutée</b> au moment du ticket.`;
-  }else{
-    el.innerHTML = `<b style="color:var(--gold)">Mode TTC → HT :</b><br>
-    Tu entres les prix <b>TTC</b>.<br>
-    La TVA de <b>${taux}%</b> est <b>déduite</b> pour la compta.`;
-  }
-}
-
-function simulateTVA(){
-  const res = $("simResult"); if(!res) return;
-  const m = Number($("simMontant")?.value || 0);
-  const taux = Number($("pTvaTaux")?.value || 18);
-  const mode = $("pTvaMode")?.value || "excl";
-  if(!m){ res.style.display="none"; return; }
-
-  let ht,tva,ttc;
-  if(mode==="excl"){ ht=m; tva=Math.round(m*taux/100); ttc=m+tva; }
-  else{ ttc=m; ht=Math.round(m/(1+taux/100)); tva=ttc-ht; }
-
-  res.style.display="block";
-  res.innerHTML = `
-    <div class="tva-row"><span>Montant HT</span><span><b>${fmt(ht)} F</b></span></div>
-    <div class="tva-row"><span>TVA ${taux}%</span><span><b style="color:var(--orange)">${fmt(tva)} F</b></span></div>
-    <div class="tva-row tva-total"><span>Total TTC</span><span>${fmt(ttc)} F</span></div>`;
+// ══════════════════════════════════════════════════════
+// SETTINGS / TVA
+// ══════════════════════════════════════════════════════
+function toggleTVAAdmin(){
+  const active = document.getElementById('p-tva-active')?.checked;
+  const fields = document.getElementById('tva-admin-fields');
+  if(fields) fields.style.display = active?'block':'none';
 }
 
 async function saveSettings(){
-  const sb = getSB(); if(!sb || !State.owner_id) return;
+  const boutique = document.getElementById('p-store').value.trim()||'Ma Boutique';
+  const phone    = document.getElementById('p-phone').value.trim()||null;
+  const address  = document.getElementById('p-address').value.trim()||null;
+  const tvaActive= document.getElementById('p-tva-active').checked;
+  const tvaTaux  = parseInt(document.getElementById('p-tva-taux').value||'18',10);
+  const tvaMode  = document.getElementById('p-tva-mode').value||'excl';
 
-  const g = (id) => ($(`${id}`)?.value || "").trim() || null;
-  const gn = (id) => Number(($(`${id}`)?.value || "0")) || 0;
-
-  const tvaActive = !!$("pTvaActive")?.checked;
-
-  const payload = {
-    owner_id: State.owner_id,
-    store_name: g("pStoreName") || State.storeName,
-    phone: g("pPhone") || State.phone,
-    email: g("pEmail"),
-    website: g("pWebsite"),
-    address: g("pAddress"),
-    siret: g("pSiret"),
-    rc: g("pRc"),
-    capital: g("pCapital"),
-    iban: g("pIban"),
-    mentions_legales: g("pMentions"),
-    logo_url: g("pLogo"),
-    tva_assujeti: tvaActive,
-    tva_taux: gn("pTvaTaux"),
-    tva_mode: ($("pTvaMode")?.value === "incl") ? "incl" : "excl"
-  };
-
-  try{
-    const {error} = await sb.from("digiy_caisse_settings").upsert(payload, {onConflict:"owner_id"});
-    if(error) throw error;
-
-    State.settings = {...(State.settings||{}), ...payload};
-    State.storeName = payload.store_name;
-
-    State.tva = { active: tvaActive, taux: payload.tva_taux, mode: payload.tva_mode };
-
-    toast("✅ Paramètres enregistrés !");
-    renderAll();
-  }catch(e){
-    alert("❌ Erreur : " + (e?.message || e));
-  }
-}
-
-/* =======================
-   LICENCE
-======================= */
-async function activateFromInput(inputId){
-  const key = ($(inputId)?.value || "").trim();
-  if(!key) return alert("Clé requise");
-
-  const sb = getSB();
-  if(!sb) return alert("Supabase non disponible");
-
-  try{
-    const {error} = await sb.from("digiy_caisse_settings")
-      .update({is_pro:true, pro_key:key})
-      .eq("owner_id", State.owner_id);
-
-    if(error) throw error;
-
-    State.pro = true;
-    State.settings = {...(State.settings||{}), is_pro:true, pro_key:key};
-
-    toast("✅ Licence PRO activée 🦅 !");
-    renderAll();
-  }catch(e){
-    alert("❌ Erreur : " + (e?.message || e));
-  }
-}
-
-/* =======================
-   INIT
-======================= */
-async function init(){
-  if(!window.DIGIY_GUARD || typeof window.DIGIY_GUARD.boot !== "function"){
-    document.body.innerHTML = '<div style="color:#fb7185;padding:40px;text-align:center;font-size:16px">❌ guard-pro.js introuvable. Vérifie le repo.</div>';
-    return;
-  }
-
-  setNetBadge();
-
-  const res = await window.DIGIY_GUARD.boot();
-  if(!res?.ok) return; // guard redirige seul
-
-  const sess = window.DIGIY_GUARD.getSession?.() || null;
-  State.owner_id = sess?.owner_id || null;
-  State.slug = sess?.slug || "";
-  State.phone = sess?.phone || "";
-  State.title = sess?.title || "";
-
-  if(!State.owner_id){
-    window.location.replace(PIN_HUB + "?module=POS&return=" + encodeURIComponent(location.href));
-    return;
-  }
-
-  // session info
-  const si = $("sessionInfo");
-  if(si){
-    si.innerHTML =
-      "SLUG : <b style='color:#fff'>" + esc(State.slug||"—") + "</b><br>" +
-      "PHONE : <b style='color:#fff'>" + esc(State.phone||"—") + "</b><br>" +
-      "OWNER : <b style='color:#fff;font-size:10px'>" + esc(State.owner_id||"—") + "</b>";
-  }
-
-  // events
-  document.querySelectorAll(".nav-link").forEach(btn=>{
-    btn.addEventListener("click", ()=> setTab(btn.getAttribute("data-tab")));
+  const {error} = await SB.from('caisse_settings').eq('owner_id',currentUser.id).update({
+    nom_boutique:boutique,telephone:phone,adresse:address,
+    tva_active:tvaActive,tva_taux:tvaTaux,tva_mode:tvaMode
   });
-
-  $("btnLogout")?.addEventListener("click", ()=> window.DIGIY_GUARD.logout(PIN_HUB+"?module=POS"));
-  $("btnHardLogout")?.addEventListener("click", ()=> window.DIGIY_GUARD.logout(PIN_HUB+"?module=POS"));
-
-  $("searchProd")?.addEventListener("input", (e)=> filterProd(e.target.value));
-  $("searchStock")?.addEventListener("input", (e)=> renderStock(e.target.value));
-
-  $("filterMethod")?.addEventListener("change", renderHistory);
-  $("filterDate")?.addEventListener("change", renderHistory);
-  $("btnResetFilters")?.addEventListener("click", resetFilters);
-
-  $("btnClearCart")?.addEventListener("click", clearCart);
-
-  $("btnPayCash")?.addEventListener("click", ()=>checkout("CASH"));
-  $("btnPayWave")?.addEventListener("click", ()=>checkout("WAVE"));
-  $("btnPayOm")?.addEventListener("click", ()=>checkout("OM"));
-  $("btnPayCredit")?.addEventListener("click", ()=>checkout("CREDIT"));
-
-  $("btnAddNew")?.addEventListener("click", addNew);
-
-  $("btnGoDashboard")?.addEventListener("click", ()=> location.href="dashboard.html");
-
-  $("btnCancelEdit")?.addEventListener("click", closeModal);
-  $("btnSaveEdit")?.addEventListener("click", saveEdit);
-  $("modalEdit")?.addEventListener("click", (e)=>{ if(e.target && e.target.id==="modalEdit") closeModal(); });
-
-  $("pTvaActive")?.addEventListener("change", toggleTVASection);
-  $("pTvaTaux")?.addEventListener("input", ()=>{ updateTvaExplication(); simulateTVA(); });
-  $("pTvaMode")?.addEventListener("change", ()=>{ updateTvaExplication(); simulateTVA(); });
-  $("simMontant")?.addEventListener("input", simulateTVA);
-
-  $("btnSaveSettings")?.addEventListener("click", saveSettings);
-
-  $("btnActivateLock")?.addEventListener("click", ()=>activateFromInput("royalKey"));
-  $("btnActivateAdmin")?.addEventListener("click", ()=>activateFromInput("royalKeyAdmin"));
-
-  // load & render
-  await loadData();
-  renderAll();
-  obInit();
+  if(error){showToast('❌ Erreur sauvegarde','error');return;}
+  await loadProfile();
+  document.getElementById('store-name-display').textContent = boutique;
+  document.getElementById('user-av').textContent = boutique.charAt(0).toUpperCase();
+  document.getElementById('tva-rate-display').textContent = tvaTaux;
+  if(currentProfile) currentProfile.tva_active=tvaActive;
+  renderCart();
+  showToast('✅ Paramètres enregistrés !');
 }
 
-// GO
-init();
+// ══════════════════════════════════════════════════════
+// UPGRADE
+// ══════════════════════════════════════════════════════
+function showUpgrade(){document.getElementById('upgrade-overlay').classList.add('open');}
+function hideUpgrade(){document.getElementById('upgrade-overlay').classList.remove('open');}
+
+// ══════════════════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════════════════
+function fmt(n){return Number(n||0).toLocaleString('fr-FR');}
+
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.style.display='block';
+  t.style.background  = type==='error'?'#c0392b':'#0f2318';
+  t.style.borderColor = type==='error'?'#c0392b':'#f0c040';
+  t.style.color       = '#e8f0e8';
+  clearTimeout(window._tt);
+  window._tt=setTimeout(()=>t.style.display='none',3000);
+}
 </script>
 </body>
 </html>
