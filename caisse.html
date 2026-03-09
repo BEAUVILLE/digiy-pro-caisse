@@ -11,7 +11,6 @@
     :root{
       --bg:#04130d;
       --card:#0b2218;
-      --card2:#102b1f;
       --line:rgba(255,255,255,.10);
       --text:#ecfdf5;
       --muted:rgba(236,253,245,.72);
@@ -91,6 +90,7 @@
       align-items:center;
       justify-content:center;
       gap:8px;
+      transition:.15s ease;
     }
     .btn:hover{transform:translateY(-1px)}
     .btn.primary{
@@ -108,18 +108,17 @@
       background:rgba(239,68,68,.12);
       color:#fecaca;
     }
+    .btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+      transform:none;
+    }
 
     .stack{display:grid;gap:14px;margin-top:14px}
     .grid2{display:grid;gap:14px}
-    .grid3{display:grid;gap:14px}
-    .grid4{display:grid;gap:10px}
 
     @media(min-width:1024px){
       .grid2{grid-template-columns:1.15fr .85fr}
-      .grid3{grid-template-columns:1.1fr .9fr .9fr}
-    }
-    @media(min-width:760px){
-      .grid4{grid-template-columns:repeat(4,1fr)}
     }
 
     .card{
@@ -241,6 +240,7 @@
       display:flex;
       gap:6px;
       align-items:center;
+      justify-content:flex-end;
     }
     .qty button{
       width:34px;height:34px;border-radius:10px;border:1px solid var(--line);
@@ -435,7 +435,7 @@
 
         <div class="card">
           <h2>Contexte boutique</h2>
-          <div class="salesList" id="ctxBox" style="margin-top:12px">
+          <div class="salesList" style="margin-top:12px">
             <div class="item">
               <div>
                 <b>Commerce</b>
@@ -473,18 +473,14 @@
 
   const MODULE_CODE = "POS";
   const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
-  const SUPABASE_ANON =
- "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
-
-  // 👆 remplace la ligne ci-dessus par ta vraie ANON complète si besoin
-</script>
+  const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJIUzI1NiIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
 
   const ABOS_URL = "https://commencer-a-payer.digiylyfe.com/";
   const HALL_URL = "./dashboard-pro.html";
   const SETTINGS_URL = "./settings.html";
 
   const $ = (id) => document.getElementById(id);
-  const sb = window.supabase.createClient(SUPABASE_URL, REAL_SUPABASE_ANON);
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
   let slug = "";
   let phone = "";
@@ -500,11 +496,11 @@
 
   function escapeHtml(str){
     return String(str || "")
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
   }
 
   function getSlug(){
@@ -536,8 +532,8 @@
     const url = `${SUPABASE_URL}/rest/v1/digiy_subscriptions_public?select=phone,module,slug&slug=eq.${encodeURIComponent(pSlug)}&limit=1`;
     const r = await fetch(url, {
       headers: {
-        apikey: REAL_SUPABASE_ANON,
-        authorization: `Bearer ${REAL_SUPABASE_ANON}`
+        apikey: SUPABASE_ANON,
+        authorization: `Bearer ${SUPABASE_ANON}`
       }
     });
     if(!r.ok) throw new Error("Cannot read digiy_subscriptions_public");
@@ -626,6 +622,7 @@
 
   function renderCatChips(){
     const cats = ["Tous", ...new Set(products.map(p => p.category || "Autre"))];
+
     $("catChips").innerHTML = cats.map(cat => `
       <button class="chip ${cat === activeCat ? "active" : ""}" data-cat="${escapeHtml(cat)}">${escapeHtml(cat)}</button>
     `).join("");
@@ -643,7 +640,7 @@
     const q = ($("searchProd").value || "").trim().toLowerCase();
     filteredProducts = products.filter(p => {
       const catOk = activeCat === "Tous" || (p.category || "Autre") === activeCat;
-      const txt = [p.name, p.category, p.sku].filter(Boolean).join(" ").toLowerCase();
+      const txt = [p.name, p.category, p.barcode].filter(Boolean).join(" ").toLowerCase();
       return catOk && (!q || txt.includes(q));
     });
     renderProducts();
