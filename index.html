@@ -1,1271 +1,872 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DIGIY CAISSE PRO — Logiciel de caisse boutique</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --gold:#f0c040;--gold2:#d4a820;
-  --bg:#0a1a0f;--bg2:#0f2318;--bg3:#163020;
-  --text:#e8f0e8;--muted:#7a9e7a;
-  --red:#c0392b;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;
-  --border:#1e3a28;
-}
-body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:#f0c04033;border-radius:2px}
-.screen{display:none;animation:fadeIn .3s ease}
-.screen.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>DIGIY CAISSE PRO — Logiciel de caisse boutique</title>
+  <meta name="theme-color" content="#0b1020" />
+  <meta name="description" content="DIGIY CAISSE PRO — hall d’entrée du module POS. Aperçu, statut d’accès, activation et ouverture de la caisse." />
 
-/* ── LANDING ── */
-.top-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:var(--bg2);border-bottom:1px solid #f0c04022;position:sticky;top:0;z-index:100}
-.top-logo{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;letter-spacing:3px;color:var(--gold)}
-.top-logo span{color:var(--text);font-weight:300}
-.top-nav{display:flex;gap:10px}
-.btn-sm{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:8px 18px;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:1px;transition:all .2s}
-.btn-sm:hover{border-color:var(--gold);color:var(--gold)}
-.btn-gold{background:var(--gold);border:none;color:var(--bg);border-radius:6px;padding:8px 18px;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;transition:all .2s}
-.btn-gold:hover{background:var(--gold2)}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-.hero{text-align:center;padding:70px 20px 50px;position:relative}
-.hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:500px;height:500px;background:radial-gradient(circle,#f0c04008 0%,transparent 70%);pointer-events:none}
-.hero-badge{display:inline-block;background:#f0c04018;border:1px solid #f0c04044;border-radius:20px;padding:6px 18px;font-size:10px;letter-spacing:2px;color:var(--gold);margin-bottom:22px;text-transform:uppercase}
-.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(34px,6vw,68px);font-weight:700;line-height:1.1;margin-bottom:18px}
-.hero-title em{color:var(--gold);font-style:normal}
-.hero-sub{font-size:13px;color:var(--muted);max-width:520px;margin:0 auto 32px;line-height:1.8}
-.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.btn-hero{background:var(--gold);border:none;color:var(--bg);border-radius:8px;padding:15px 32px;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;transition:all .2s;box-shadow:0 4px 24px #f0c04033}
-.btn-hero:hover{background:var(--gold2);transform:translateY(-2px)}
-.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:15px 32px;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:2px;transition:all .2s}
-.btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+    window.DIGIY_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJIUzI1NiIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
+  </script>
 
-.section{padding:60px 20px;max-width:1000px;margin:0 auto}
-.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,4vw,42px);text-align:center;margin-bottom:10px}
-.section-sub{text-align:center;color:var(--muted);font-size:12px;margin-bottom:38px;line-height:1.8}
-.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
-.feat-card{background:var(--bg2);border:1px solid #f0c04018;border-radius:12px;padding:22px;transition:all .3s}
-.feat-card:hover{border-color:#f0c04044;transform:translateY(-3px)}
-.feat-icon{font-size:28px;margin-bottom:12px}
-.feat-title{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold);margin-bottom:6px}
-.feat-text{font-size:11px;color:var(--muted);line-height:1.8}
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --gold:#f0c040;
+      --gold2:#d4a820;
+      --bg:#08120d;
+      --bg2:#0d1c14;
+      --bg3:#13261c;
+      --card:rgba(16,31,24,.88);
+      --text:#edf4ed;
+      --muted:#8fa894;
+      --line:rgba(240,192,64,.12);
+      --line2:rgba(255,255,255,.08);
+      --ok:#22c55e;
+      --warn:#f59e0b;
+      --danger:#ef4444;
+      --accent:#6366f1;
+      --shadow:0 18px 50px rgba(0,0,0,.28);
+      --radius:20px;
+    }
 
-.pricing-wrap{padding:60px 20px;background:var(--bg2)}
-.pricing-inner{max-width:700px;margin:0 auto;text-align:center}
-.price-card{background:var(--bg);border:2px solid var(--gold);border-radius:16px;padding:32px;margin-top:36px;position:relative}
-.price-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--bg);border-radius:20px;padding:4px 16px;font-size:9px;font-weight:700;letter-spacing:2px;white-space:nowrap}
-.price-name{font-family:'Cormorant Garamond',serif;font-size:24px;margin-bottom:8px}
-.price-amount{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:700;color:var(--gold);line-height:1}
-.price-period{font-size:10px;color:var(--muted);margin-bottom:22px;letter-spacing:1px}
-.price-feats{list-style:none;text-align:left;max-width:300px;margin:0 auto 24px}
-.price-feats li{font-size:12px;color:#aaa;padding:6px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
-.price-feats li::before{content:"✦";color:var(--gold);font-size:9px}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:'Montserrat',sans-serif;
+      background:
+        radial-gradient(900px 500px at 15% -15%, rgba(240,192,64,.10), transparent 70%),
+        radial-gradient(1000px 600px at 100% 0%, rgba(99,102,241,.08), transparent 55%),
+        linear-gradient(180deg, #0b1711 0%, #08120d 100%);
+      color:var(--text);
+      min-height:100vh;
+    }
 
-.footer{background:var(--bg2);border-top:1px solid #f0c04022;padding:20px 28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
-.footer-logo{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--gold);letter-spacing:2px}
-.footer-text{font-size:10px;color:var(--muted)}
+    a{text-decoration:none;color:inherit}
+    button{font:inherit}
 
-/* ── AUTH ── */
-#screen-register,#screen-login{min-height:100vh;background:var(--bg);display:flex;flex-direction:column}
-.auth-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:20px}
-.auth-card{background:var(--bg2);border:1px solid #f0c04033;border-radius:16px;padding:34px;max-width:420px;width:100%}
-.auth-title{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--gold);margin-bottom:5px;letter-spacing:2px}
-.auth-sub{font-size:11px;color:var(--muted);margin-bottom:20px;line-height:1.7}
-.trial-banner{background:#f0c04018;border:1px solid #f0c04044;border-radius:8px;padding:12px 14px;margin-bottom:20px;display:flex;align-items:center;gap:10px}
-.trial-banner-text{font-size:11px;color:var(--gold);line-height:1.5}
-.trial-banner-text strong{display:block;font-size:12px;margin-bottom:2px}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.field-wrap{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
-.field-label{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
-.field{background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:10px 12px;font-family:'Montserrat',sans-serif;font-size:12px;outline:none;transition:border-color .2s;width:100%}
-.field:focus{border-color:#f0c04066}
-.btn-auth{background:var(--gold);border:none;color:var(--bg);border-radius:8px;padding:12px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:background .2s;width:100%;margin-top:6px}
-.btn-auth:hover{background:var(--gold2)}
-.btn-auth:disabled{opacity:.5;cursor:not-allowed}
-.auth-error{background:#1a0808;border:1px solid #c0392b44;border-radius:6px;padding:9px 12px;font-size:11px;color:#e74c3c;display:none;margin-top:6px}
-.auth-link{text-align:center;font-size:11px;color:var(--muted);margin-top:12px}
-.auth-link a{color:var(--gold);cursor:pointer}
-.demo-box{background:#f0c04010;border:1px solid #f0c04033;border-radius:6px;padding:9px 12px;font-size:10px;color:var(--gold);text-align:center;margin-top:10px;letter-spacing:1px}
+    .wrap{max-width:1160px;margin:0 auto;padding:0 16px}
+    .topbar{
+      position:sticky;top:0;z-index:50;
+      backdrop-filter:blur(10px);
+      background:rgba(8,18,13,.78);
+      border-bottom:1px solid var(--line);
+    }
+    .topbar-inner{
+      max-width:1160px;margin:0 auto;
+      padding:14px 16px;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand-badge{
+      width:42px;height:42px;border-radius:14px;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(240,192,64,.12);
+      border:1px solid var(--line);
+      font-size:21px;
+    }
+    .brand-title{
+      font-family:'Cormorant Garamond',serif;
+      font-size:23px;font-weight:700;letter-spacing:1.5px;color:var(--gold);
+      line-height:1;
+    }
+    .brand-sub{
+      margin-top:2px;
+      font-size:11px;color:var(--muted);font-weight:700;letter-spacing:1.6px;
+      text-transform:uppercase;
+    }
 
-/* ── APP ── */
-#trial-bar{background:linear-gradient(90deg,#0a1f10,#0f2a18);border-bottom:1px solid #f0c04044;padding:7px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:7px}
-.trial-text{font-size:10px;color:var(--gold);display:flex;align-items:center;gap:7px}
-.trial-pill{background:#f0c04022;border:1px solid #f0c04044;border-radius:20px;padding:3px 11px;font-size:10px;font-weight:600;letter-spacing:1px}
-.trial-btn{background:var(--gold);border:none;color:var(--bg);border-radius:4px;padding:5px 13px;font-size:10px;font-weight:700;letter-spacing:1px;cursor:pointer}
-#trial-bar.urgent{background:linear-gradient(90deg,#1a1505,#2a2008);border-color:#f0c04088}
+    .top-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:10px 12px;border-radius:999px;
+      background:rgba(255,255,255,.03);
+      border:1px solid var(--line2);
+      color:var(--muted);
+      font-size:12px;font-weight:700;
+    }
+    .pill strong{color:var(--text)}
+    .dot{
+      width:10px;height:10px;border-radius:999px;background:var(--warn);flex:0 0 auto;
+      box-shadow:0 0 0 4px rgba(255,255,255,.03);
+    }
+    .dot.ok{background:var(--ok)}
+    .dot.bad{background:var(--danger)}
 
-#app-header{display:flex;align-items:center;justify-content:space-between;padding:11px 18px;background:var(--bg2);border-bottom:1px solid #f0c04022;flex-wrap:wrap;gap:8px}
-.logo-wrap{display:flex;align-items:center;gap:8px}
-.logo-icon{font-size:20px}
-.logo-title{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:700;letter-spacing:3px;color:var(--gold)}
-.logo-sub{font-size:8px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
-.header-right{display:flex;align-items:center;gap:12px}
-.store-name{font-size:12px;color:var(--text);font-weight:600;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.user-av{width:28px;height:28px;border-radius:50%;background:var(--gold);color:var(--bg);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;font-family:'Cormorant Garamond',serif}
-.btn-logout{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:4px;padding:4px 9px;cursor:pointer;font-size:9px;font-family:'Montserrat',sans-serif}
-.btn-logout:hover{border-color:var(--red);color:var(--red)}
+    .btn{
+      appearance:none;border:none;cursor:pointer;
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      min-height:46px;padding:12px 16px;border-radius:14px;
+      font-weight:800;font-size:12px;letter-spacing:.6px;
+      transition:transform .14s ease,opacity .14s ease, background .14s ease;
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+    .btn-primary{
+      background:var(--gold);color:#0b140f;
+      box-shadow:0 10px 30px rgba(240,192,64,.18);
+    }
+    .btn-primary:hover{background:var(--gold2)}
+    .btn-secondary{
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      border:1px solid var(--line2);
+    }
+    .btn-ghost{
+      background:transparent;
+      color:var(--muted);
+      border:1px solid var(--line2);
+    }
 
-/* NAV TABS */
-#app-nav{display:flex;gap:3px;padding:8px 14px;background:var(--bg);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
-.tab-btn{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:6px 14px;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:1px;transition:all .2s;white-space:nowrap}
-.tab-btn:hover,.tab-btn.active{background:#f0c04011;color:var(--gold);border-color:#f0c04044}
+    .hero{padding:58px 0 26px}
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:16px;
+    }
+    @media (max-width:920px){
+      .hero-grid{grid-template-columns:1fr}
+    }
 
-/* TOAST */
-#toast{position:fixed;top:18px;left:50%;transform:translateX(-50%);padding:10px 22px;border-radius:6px;border:1px solid;font-size:11px;z-index:9999;letter-spacing:1px;display:none;white-space:nowrap;font-family:'Montserrat',sans-serif}
+    .hero-main,
+    .hero-side,
+    .section-card,
+    .price-card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
 
-/* APP CONTENT */
-#app-content{padding:14px 16px}
+    .hero-main{padding:28px}
+    .hero-side{padding:22px}
 
-/* CAISSE */
-.caisse-wrap{display:grid;grid-template-columns:1fr 320px;gap:14px}
-@media(max-width:900px){.caisse-wrap{grid-template-columns:1fr}}
+    .hero-badge{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 12px;border-radius:999px;
+      background:rgba(240,192,64,.10);
+      border:1px solid rgba(240,192,64,.24);
+      color:var(--gold);font-size:11px;font-weight:800;letter-spacing:1px;
+      text-transform:uppercase;
+      margin-bottom:18px;
+    }
+    .hero-title{
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(38px,6vw,70px);
+      line-height:1.03;
+      font-weight:700;
+      letter-spacing:-.7px;
+      margin-bottom:14px;
+    }
+    .hero-title em{color:var(--gold);font-style:normal}
+    .hero-sub{
+      color:var(--muted);
+      font-size:14px;line-height:1.9;
+      max-width:720px;
+    }
+    .hero-actions{
+      display:flex;gap:10px;flex-wrap:wrap;
+      margin-top:24px;
+    }
 
-.prod-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px}
-.prod-count{font-size:10px;color:var(--muted)}
-#search-prod{background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:6px 11px;font-family:'Montserrat',sans-serif;font-size:11px;flex:1;max-width:180px;outline:none}
-#search-prod:focus{border-color:#f0c04044}
-.cat-filter{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
-.cat-chip{padding:3px 10px;border-radius:20px;border:1px solid var(--border);color:var(--muted);font-size:9px;letter-spacing:1px;cursor:pointer;transition:all .2s}
-.cat-chip.active,.cat-chip:hover{background:#f0c04022;color:var(--gold);border-color:#f0c04044}
+    .status-box{
+      padding:14px;border-radius:16px;
+      background:rgba(255,255,255,.03);
+      border:1px solid var(--line2);
+    }
+    .status-top{display:flex;align-items:flex-start;gap:10px}
+    .status-title{font-weight:900;font-size:18px}
+    .status-sub{margin-top:4px;color:var(--muted);font-size:13px;line-height:1.65}
+    .status-meta{
+      display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;
+    }
+    .mini{
+      padding:12px;border-radius:14px;
+      background:rgba(255,255,255,.03);
+      border:1px solid var(--line2);
+      min-width:0;
+    }
+    .mini-label{
+      font-size:10px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:1.2px;
+      font-weight:800;
+    }
+    .mini-value{
+      margin-top:5px;
+      font-size:14px;
+      font-weight:800;
+      word-break:break-word;
+    }
 
-.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:9px}
-.prod-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:13px;text-align:center;cursor:pointer;transition:all .2s}
-.prod-card:hover:not(.rupture){border-color:#f0c04044;transform:translateY(-2px)}
-.prod-card.rupture{opacity:.4;cursor:not-allowed}
-.prod-icon{font-size:22px;margin-bottom:7px}
-.prod-name{font-weight:600;font-size:11px;margin-bottom:4px;line-height:1.3}
-.prod-price{color:var(--gold);font-weight:700;font-size:12px;font-family:'Cormorant Garamond',serif}
-.prod-stock{font-size:9px;color:var(--muted);margin-top:4px}
-.prod-stock.low{color:#e67e22}.prod-stock.out{color:var(--red)}
+    .helper{
+      margin-top:14px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.7;
+      font-weight:700;
+    }
 
-/* CART */
-.cart-box{background:var(--bg2);border:1px solid #f0c04022;border-radius:14px;padding:14px;height:fit-content;position:sticky;top:68px}
-.cart-title{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--gold);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
-.cart-list{max-height:240px;overflow-y:auto;margin-bottom:10px}
-.cart-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:11px}
-.cart-row-info{flex:1;min-width:0}
-.cart-row-name{font-weight:600;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.cart-row-price{color:var(--gold);font-size:10px}
-.qty-ctrl{display:flex;align-items:center;gap:4px}
-.qty-btn{width:22px;height:22px;border-radius:5px;border:1px solid var(--border);background:var(--bg3);color:var(--text);cursor:pointer;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
-.qty-btn:hover{border-color:var(--gold);color:var(--gold)}
-.qty-num{font-size:11px;font-weight:700;min-width:16px;text-align:center}
+    .section{
+      padding:22px 0;
+    }
+    .section-head{
+      text-align:center;
+      margin-bottom:18px;
+    }
+    .section-title{
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(28px,4vw,46px);
+      margin-bottom:8px;
+    }
+    .section-sub{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+      max-width:760px;
+      margin:0 auto;
+    }
 
-.tva-toggle{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:8px;font-size:11px}
-.switch{position:relative;width:36px;height:20px;flex-shrink:0}
-.switch input{opacity:0;width:0;height:0}
-.slider{position:absolute;inset:0;background:#1e3a28;border-radius:20px;cursor:pointer;transition:.3s}
-.slider:before{content:'';position:absolute;width:14px;height:14px;left:3px;top:3px;background:#7a9e7a;border-radius:50%;transition:.3s}
-input:checked+.slider{background:var(--green)}
-input:checked+.slider:before{transform:translateX(16px);background:#fff}
+    .features{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+      gap:14px;
+    }
+    .section-card{
+      padding:20px;
+      transition:transform .18s ease, border-color .18s ease;
+    }
+    .section-card:hover{
+      transform:translateY(-2px);
+      border-color:rgba(240,192,64,.26);
+    }
+    .feat-icon{font-size:28px;margin-bottom:10px}
+    .feat-title{
+      font-family:'Cormorant Garamond',serif;
+      font-size:22px;
+      color:var(--gold);
+      margin-bottom:6px;
+    }
+    .feat-text{
+      font-size:12px;
+      line-height:1.9;
+      color:var(--muted);
+    }
 
-.total-wrap{padding:10px 0;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #f0c04033;margin-top:6px}
-.total-label{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
-.total-amount{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--gold)}
-.tva-line{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);padding:2px 0}
-.tva-line.total{color:var(--gold);font-weight:700;font-size:12px;border-top:1px solid #f0c04033;padding-top:5px;margin-top:3px}
+    .how-grid{
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;
+    }
+    .step-num{
+      width:30px;height:30px;border-radius:999px;
+      background:var(--gold);color:#0b140f;
+      display:flex;align-items:center;justify-content:center;
+      font-weight:900;font-size:13px;margin-bottom:12px;
+    }
 
-.pay-btns{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
-.pay-btn{padding:11px;border:none;border-radius:8px;color:#fff;font-weight:700;cursor:pointer;font-size:10px;letter-spacing:1px;font-family:'Montserrat',sans-serif;transition:all .2s}
-.pay-btn:hover{filter:brightness(1.1)}
-.pay-btn.cash{background:var(--green)}.pay-btn.wave{background:#1a6da8}.pay-btn.om{background:var(--orange)}.pay-btn.credit{background:var(--red)}
-.btn-clear{width:100%;padding:9px;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;cursor:pointer;font-size:10px;font-family:'Montserrat',sans-serif;margin-top:6px}
-.btn-clear:hover{border-color:var(--red);color:var(--red)}
+    .pricing{
+      padding:30px 0 50px;
+    }
+    .price-wrap{
+      max-width:760px;margin:0 auto;
+    }
+    .price-card{
+      padding:28px;
+      border:2px solid rgba(240,192,64,.32);
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+    }
+    .price-badge{
+      display:inline-flex;
+      padding:7px 12px;
+      border-radius:999px;
+      background:var(--gold);
+      color:#0b140f;
+      font-weight:900;
+      font-size:10px;
+      letter-spacing:1.2px;
+      text-transform:uppercase;
+      margin-bottom:18px;
+    }
+    .price-name{
+      font-family:'Cormorant Garamond',serif;
+      font-size:28px;
+      margin-bottom:8px;
+    }
+    .price-amount{
+      font-family:'Cormorant Garamond',serif;
+      font-size:58px;
+      font-weight:700;
+      color:var(--gold);
+      line-height:1;
+    }
+    .price-period{
+      margin-top:8px;
+      color:var(--muted);
+      font-size:11px;
+      letter-spacing:1.4px;
+      text-transform:uppercase;
+    }
+    .price-list{
+      list-style:none;
+      max-width:420px;
+      margin:22px auto 0;
+      text-align:left;
+      display:grid;
+      gap:8px;
+    }
+    .price-list li{
+      padding:10px 12px;
+      border-radius:12px;
+      background:rgba(255,255,255,.03);
+      border:1px solid var(--line2);
+      font-size:12px;
+      color:#d5ded5;
+      line-height:1.6;
+    }
 
-/* DASHBOARD */
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px}
-.stat-card{background:var(--bg2);border:1px solid #f0c04018;border-radius:10px;padding:16px;text-align:center}
-.stat-val{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--gold);line-height:1}
-.stat-label{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:4px}
-.ventes-table{background:var(--bg2);border:1px solid #f0c04018;border-radius:10px;overflow:hidden}
-.vente-row{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-bottom:1px solid var(--border);font-size:11px}
-.vente-row:last-child{border-bottom:none}
-.vente-info{flex:1}
-.vente-time{font-weight:600;margin-bottom:2px}
-.vente-items{font-size:10px;color:var(--muted)}
-.vente-right{text-align:right}
-.vente-amount{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--gold);font-weight:700}
-.vente-method{font-size:9px;letter-spacing:1px;font-weight:600;margin-top:2px}
-.method-cash{color:var(--green)}.method-wave{color:#6ab0d8}.method-om{color:var(--orange)}.method-credit{color:var(--red)}
+    .cta-box{
+      margin-top:18px;
+      display:flex;gap:10px;justify-content:center;flex-wrap:wrap;
+    }
 
-/* STOCK */
-.stock-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media(max-width:700px){.stock-wrap{grid-template-columns:1fr}}
-.section-card{background:var(--bg2);border:1px solid #f0c04018;border-radius:12px;padding:16px}
-.section-card h3{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold);margin-bottom:14px}
-.stock-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);font-size:11px}
-.stock-item:last-child{border-bottom:none}
-.stock-name{font-weight:600;margin-bottom:2px}
-.stock-meta{font-size:10px;color:var(--muted)}
-.stock-right{text-align:right;display:flex;align-items:center;gap:6px}
-.stock-qty{font-weight:700;font-size:13px}
-.stock-qty.ok{color:var(--green)}.stock-qty.low{color:#e67e22}.stock-qty.out{color:var(--red)}
-.icon-btn{background:transparent;border:none;cursor:pointer;padding:4px;font-size:13px;border-radius:4px;transition:background .2s}
-.icon-btn:hover{background:#f0c04022}
-#search-stock{background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:7px 11px;font-family:'Montserrat',sans-serif;font-size:11px;width:100%;outline:none;margin-bottom:10px}
+    .footer{
+      border-top:1px solid var(--line);
+      padding:20px 0 40px;
+      color:var(--muted);
+      font-size:11px;
+    }
+    .footer-inner{
+      display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;
+    }
 
-/* ADMIN / ADD PRODUCT */
-.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media(max-width:700px){.admin-grid{grid-template-columns:1fr}}
-.form-2col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-@media(max-width:500px){.form-2col{grid-template-columns:1fr}}
-.btn-submit{background:var(--gold);border:none;color:var(--bg);border-radius:6px;padding:10px 20px;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;transition:background .2s;width:100%;margin-top:10px}
-.btn-submit:hover{background:var(--gold2)}
-.btn-submit.red{background:var(--red)}.btn-submit.red:hover{background:#a93226}
-
-/* TVA ADMIN */
-.tva-admin-box{background:var(--bg3);border:1px solid #f0c04022;border-radius:8px;padding:12px;margin-top:10px}
-.tva-admin-title{font-size:10px;color:var(--gold);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;font-weight:600}
-.switch-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;font-size:12px}
-select.field{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23f0c040'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
-
-/* MODAL */
-#modal-overlay{position:fixed;inset:0;background:#000000cc;display:none;align-items:center;justify-content:center;z-index:9998;padding:20px}
-#modal-overlay.open{display:flex}
-.modal-box{background:var(--bg2);border:1px solid #f0c04044;border-radius:12px;padding:22px;max-width:380px;width:100%}
-.modal-title{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold);margin-bottom:14px}
-.modal-actions{display:flex;gap:8px;margin-top:14px}
-
-/* UPGRADE MODAL */
-#upgrade-overlay{position:fixed;inset:0;background:#000000dd;display:none;align-items:center;justify-content:center;z-index:9999;padding:20px}
-#upgrade-overlay.open{display:flex}
-.upgrade-box{background:var(--bg2);border:2px solid var(--gold);border-radius:16px;padding:30px;max-width:440px;width:100%;text-align:center}
-.upgrade-icon{font-size:40px;margin-bottom:12px}
-.upgrade-title{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--gold);margin-bottom:8px}
-.upgrade-sub{font-size:12px;color:var(--muted);margin-bottom:20px;line-height:1.7}
-.step-list{text-align:left;display:flex;flex-direction:column;gap:9px;margin-bottom:18px}
-.step-item{display:flex;gap:9px;font-size:11px;color:#aaa}
-.step-n{background:var(--gold);color:var(--bg);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;flex-shrink:0}
-.contact-card{background:var(--bg);border:1.5px solid var(--gold);border-radius:10px;padding:14px;margin-bottom:14px;text-align:left}
-.contact-name{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--gold);font-weight:700;margin-bottom:3px}
-.contact-tel{font-size:12px;margin-bottom:10px;letter-spacing:1px}
-.contact-btns{display:flex;gap:8px}
-.btn-wa{background:#25d366;color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:10px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px;font-family:'Montserrat',sans-serif}
-.btn-tel{background:transparent;color:var(--gold);border:1px solid var(--gold);border-radius:6px;padding:8px 14px;font-size:10px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px;font-family:'Montserrat',sans-serif}
-.price-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
-.price-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
-.price-box.best{border-color:var(--gold);background:#0a1f0a}
-.price-amt{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold);font-weight:700}
-.price-period{font-size:9px;color:var(--muted);letter-spacing:1px;margin-top:2px}
-.price-eco{font-size:9px;color:var(--green);margin-top:3px}
-.btn-skip{background:transparent;border:none;color:var(--muted);font-size:10px;cursor:pointer;font-family:'Montserrat',sans-serif;margin-top:8px}
-
-.empty-state{text-align:center;color:#3a6a3a;padding:40px 20px;font-family:'Cormorant Garamond',serif;font-size:18px}
-</style>
+    .diag{
+      margin-top:12px;
+      padding:12px;
+      border-radius:14px;
+      background:#081119;
+      border:1px solid var(--line2);
+      color:#c9d8ff;
+      font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      white-space:pre-wrap;
+      word-break:break-word;
+      max-height:220px;
+      overflow:auto;
+    }
+  </style>
 </head>
 <body>
-
-<!-- ══ LANDING ══ -->
-<div id="screen-landing" class="screen active">
-  <div class="top-bar">
-    <div class="top-logo">DIGIY <span>CAISSE PRO</span></div>
-    <div class="top-nav">
-      <button class="btn-sm" onclick="goTo('login')">Se connecter</button>
-      <button class="btn-gold" onclick="goTo('register')">1 mois gratuit</button>
-    </div>
-  </div>
-  <div class="hero">
-    <div class="hero-badge">🚀 1er mois offert — sans CB requise</div>
-    <h1 class="hero-title">La caisse pro<br><em>pour votre boutique</em></h1>
-    <p class="hero-sub">Catalogue produits, encaissement, gestion du stock, TVA, tableau de bord. Tout ce qu'il faut — simple et efficace.</p>
-    <div class="hero-btns">
-      <button class="btn-hero" onclick="goTo('register')">🎯 Commencer gratuitement</button>
-      <button class="btn-outline" onclick="goTo('login')">Se connecter</button>
-    </div>
-  </div>
-  <div class="section">
-    <h2 class="section-title">L'essentiel, rien de plus</h2>
-    <p class="section-sub">Pensé pour les boutiques sénégalaises et françaises. Simple, rapide, fiable.</p>
-    <div class="feat-grid">
-      <div class="feat-card"><div class="feat-icon">🛒</div><div class="feat-title">Caisse rapide</div><div class="feat-text">Catalogue visuel, panier en un clic, encaissement Cash · Wave · Orange Money · Crédit.</div></div>
-      <div class="feat-card"><div class="feat-icon">📦</div><div class="feat-title">Stock en temps réel</div><div class="feat-text">Alertes rupture automatiques. Chaque vente décrémente le stock instantanément.</div></div>
-      <div class="feat-card"><div class="feat-icon">💰</div><div class="feat-title">TVA flexible</div><div class="feat-text">Activez ou désactivez la TVA selon votre régime fiscal. Calcul automatique sur chaque ticket.</div></div>
-      <div class="feat-card"><div class="feat-icon">📊</div><div class="feat-title">Tableau de bord</div><div class="feat-text">Recette du jour, nombre de ventes, ticket moyen, historique. Vos chiffres d'un coup d'œil.</div></div>
-      <div class="feat-card"><div class="feat-icon">🔐</div><div class="feat-title">Votre espace privé</div><div class="feat-text">Chaque boutique a son compte sécurisé. Données sauvegardées en ligne.</div></div>
-      <div class="feat-card"><div class="feat-icon">📱</div><div class="feat-title">Mobile & desktop</div><div class="feat-text">Fonctionne sur téléphone, tablette, ordinateur. Gérez depuis n'importe où.</div></div>
-    </div>
-  </div>
-  <div class="pricing-wrap">
-    <div class="pricing-inner">
-      <h2 class="section-title">Transparent, 0% commission</h2>
-      <p class="section-sub">Un abonnement fixe. Toutes vos ventes vous appartiennent à 100%.</p>
-      <div class="price-card">
-        <div class="price-badge">⭐ APRÈS L'ESSAI GRATUIT</div>
-        <div class="price-name">CAISSE PRO</div>
-        <div class="price-amount">12.900 F <span style="font-size:16px;color:var(--muted);font-family:'Montserrat',sans-serif;font-weight:400">CFA</span></div>
-        <div class="price-period">PAR MOIS · PAIEMENT WAVE</div>
-        <ul class="price-feats">
-          <li>1er mois 100% gratuit</li>
-          <li>Catalogue & stock illimités</li>
-          <li>Tous modes de paiement</li>
-          <li>TVA configurable</li>
-          <li>Tableau de bord complet</li>
-          <li>Données sauvegardées en ligne</li>
-          <li>0% commission sur vos ventes</li>
-        </ul>
-        <button class="btn-hero" style="width:100%" onclick="goTo('register')">Essayer 1 mois gratuit →</button>
-      </div>
-    </div>
-  </div>
-  <div class="footer">
-    <div class="footer-logo">DIGIYLYFE</div>
-    <div class="footer-text">L'Afrique enracinée, connectée au monde · © 2026</div>
-    <div class="footer-text"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3a5e535d534356435c5f7a5d575b535614595557">[email&#160;protected]</a></div>
-  </div>
-</div>
-
-<!-- ══ REGISTER ══ -->
-<div id="screen-register" class="screen">
-  <div class="top-bar">
-    <div class="top-logo">DIGIY <span>CAISSE PRO</span></div>
-    <button class="btn-sm" onclick="goTo('landing')">← Retour</button>
-  </div>
-  <div class="auth-wrap">
-    <div class="auth-card">
-      <div class="auth-title">1er mois gratuit</div>
-      <p class="auth-sub">Créez votre compte en 30 secondes. Accès immédiat, sans carte bancaire.</p>
-      <div class="trial-banner">
-        <span style="font-size:22px">🎁</span>
-        <div class="trial-banner-text">
-          <strong>30 jours offerts — accès complet</strong>
-          Après l'essai : 12.900 F CFA/mois via Wave
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="field-wrap"><label class="field-label">Prénom</label><input class="field" id="reg-prenom" placeholder="Mamadou"></div>
-        <div class="field-wrap"><label class="field-label">Nom</label><input class="field" id="reg-nom" placeholder="Diallo"></div>
-      </div>
-      <div class="field-wrap"><label class="field-label">Email *</label><input class="field" id="reg-email" type="email" placeholder="mamadou@maboutique.sn"></div>
-      <div class="field-wrap"><label class="field-label">Nom de la boutique *</label><input class="field" id="reg-boutique" placeholder="Chez Mamadou"></div>
-      <div class="field-wrap"><label class="field-label">Mot de passe *</label><input class="field" id="reg-pass" type="password" placeholder="6 caractères minimum"></div>
-      <div class="auth-error" id="reg-error"></div>
-      <button class="btn-auth" id="btn-register" onclick="doRegister()">Créer mon compte gratuit →</button>
-      <div class="auth-link">Déjà un compte ? <a onclick="goTo('login')">Se connecter</a></div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ LOGIN ══ -->
-<div id="screen-login" class="screen">
-  <div class="top-bar">
-    <div class="top-logo">DIGIY <span>CAISSE PRO</span></div>
-    <button class="btn-sm" onclick="goTo('landing')">← Retour</button>
-  </div>
-  <div class="auth-wrap">
-    <div class="auth-card">
-      <div class="auth-title">Connexion</div>
-      <p class="auth-sub">Accédez à votre espace de vente.</p>
-      <div class="field-wrap"><label class="field-label">Email</label><input class="field" id="login-email" type="email" placeholder="votre@email.com"></div>
-      <div class="field-wrap"><label class="field-label">Mot de passe</label><input class="field" id="login-pass" type="password" placeholder="••••••••"></div>
-      <div class="auth-error" id="login-error"></div>
-      <button class="btn-auth" id="btn-login" onclick="doLogin()">Se connecter →</button>
-      <div class="demo-box">🔑 Démo : <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0367666e6c43676a646a7a6f7a65662d606c6e">[email&#160;protected]</a> / demo1234</div>
-      <div class="auth-link">Pas encore de compte ? <a onclick="goTo('register')">1 mois gratuit</a></div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ APP ══ -->
-<div id="screen-app" class="screen">
-  <!-- Trial bar -->
-  <div id="trial-bar">
-    <div class="trial-text">⏳ Essai gratuit : <span class="trial-pill" id="trial-days">30 jours restants</span></div>
-    <button class="trial-btn" onclick="showUpgrade()">Passer en Pro →</button>
-  </div>
-
-  <!-- Header -->
-  <div id="app-header">
-    <div class="logo-wrap">
-      <span class="logo-icon">🏪</span>
-      <div><div class="logo-title">CAISSE PRO</div><div class="logo-sub">Gestion de vente</div></div>
-    </div>
-    <div class="header-right">
-      <div style="display:flex;flex-direction:column;align-items:flex-end">
-        <div class="store-name" id="store-name-display">Ma Boutique</div>
-        <div id="store-slug" style="font-size:9px;color:var(--muted);letter-spacing:1px"></div>
-      </div>
-      <div class="user-av" id="user-av">B</div>
-      <button class="btn-logout" onclick="doLogout()">Déco</button>
-    </div>
-  </div>
-
-  <!-- Nav -->
-  <div id="app-nav">
-    <button class="tab-btn active" id="tab-caisse"   onclick="showTab('caisse')">🛒 Caisse</button>
-    <button class="tab-btn"        id="tab-dashboard" onclick="showTab('dashboard')">📊 Tableau de bord</button>
-    <button class="tab-btn"        id="tab-stock"     onclick="showTab('stock')">📦 Stock</button>
-    <button class="tab-btn"        id="tab-admin"     onclick="showTab('admin')">⚙️ Admin</button>
-  </div>
-
-  <div id="toast"></div>
-  <div id="app-content">
-
-    <!-- ═ CAISSE ═ -->
-    <div id="view-caisse">
-      <div class="caisse-wrap">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-badge">🏪</div>
         <div>
-          <div class="prod-header">
-            <span class="prod-count">📦 <span id="prod-count">0</span> articles</span>
-            <input id="search-prod" placeholder="🔍 Rechercher..." oninput="filterProds(this.value)">
-          </div>
-          <div class="cat-filter" id="cat-filter"></div>
-          <div class="prod-grid" id="prod-grid">
-            <div class="empty-state">Ajoutez des produits via l'onglet Admin</div>
-          </div>
+          <div class="brand-title">DIGIY CAISSE PRO</div>
+          <div class="brand-sub">Hall d’entrée POS</div>
         </div>
+      </div>
 
-        <div class="cart-box">
-          <div class="cart-title">
-            🛒 Panier
-            <span style="font-size:11px;color:var(--muted)" id="cart-count">0 article</span>
-          </div>
-          <div class="cart-list" id="cart-list">
-            <div class="empty-state" style="padding:20px;font-size:14px">Panier vide</div>
-          </div>
-
-          <!-- TVA toggle -->
-          <div class="tva-toggle">
-            <span>TVA active (<span id="tva-rate-display">18</span>%)</span>
-            <label class="switch">
-              <input type="checkbox" id="tva-toggle" onchange="renderCart()">
-              <span class="slider"></span>
-            </label>
-          </div>
-
-          <div id="tva-detail" style="display:none;margin-bottom:8px">
-            <div class="tva-line"><span>Sous-total HT</span><span id="tva-ht">—</span></div>
-            <div class="tva-line"><span id="tva-pct-label">TVA 18%</span><span id="tva-montant">—</span></div>
-            <div class="tva-line total"><span>Total TTC</span><span id="tva-ttc">—</span></div>
-          </div>
-
-          <div class="total-wrap">
-            <div>
-              <div class="total-label" id="total-label">Total</div>
-              <div class="total-amount" id="total-amount">0 F</div>
-            </div>
-          </div>
-
-          <div class="pay-btns">
-            <button class="pay-btn cash"   onclick="checkout('CASH')">💵 Cash</button>
-            <button class="pay-btn wave"   onclick="checkout('WAVE')">🌊 Wave</button>
-            <button class="pay-btn om"     onclick="checkout('OM')">🟠 Orange</button>
-            <button class="pay-btn credit" onclick="checkout('CREDIT')">📒 Crédit</button>
-          </div>
-          <button class="btn-clear" onclick="clearCart()">🗑 Vider le panier</button>
+      <div class="top-actions">
+        <div class="pill">
+          <span id="statusDot" class="dot"></span>
+          <span id="statusPillText">Chargement…</span>
         </div>
+        <button class="btn btn-secondary" id="btnCheck" type="button">Vérifier mon accès</button>
+        <a class="btn btn-primary" id="btnTopAction" href="https://commencer-a-payer.digiylyfe.com/">Activer mon module</a>
       </div>
     </div>
+  </header>
 
-    <!-- ═ DASHBOARD ═ -->
-    <div id="view-dashboard" style="display:none">
-      <div class="stats-grid">
-        <div class="stat-card"><div class="stat-val" id="stat-day">0 F</div><div class="stat-label">Recette du jour</div></div>
-        <div class="stat-card"><div class="stat-val" id="stat-count-v">0</div><div class="stat-label">Ventes aujourd'hui</div></div>
-        <div class="stat-card"><div class="stat-val" id="stat-month">0 F</div><div class="stat-label">Ce mois</div></div>
-        <div class="stat-card"><div class="stat-val" id="stat-avg">0 F</div><div class="stat-label">Ticket moyen</div></div>
-      </div>
-      <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;align-items:flex-end">
-        <div>
-          <div class="field-label" style="margin-bottom:4px">Méthode</div>
-          <select class="field" id="filter-method" style="width:130px" onchange="renderDashboard()">
-            <option value="">Toutes</option>
-            <option value="CASH">Cash</option>
-            <option value="WAVE">Wave</option>
-            <option value="OM">Orange Money</option>
-            <option value="CREDIT">Crédit</option>
-          </select>
-        </div>
-        <div>
-          <div class="field-label" style="margin-bottom:4px">Date</div>
-          <input type="date" class="field" id="filter-date" style="width:150px" onchange="renderDashboard()">
-        </div>
-        <button class="btn-gold" onclick="resetFilters()">↺ Reset</button>
-      </div>
-      <div class="ventes-table" id="ventes-list">
-        <div class="empty-state">Aucune vente enregistrée</div>
-      </div>
-    </div>
+  <main class="wrap">
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="hero-main">
+          <div class="hero-badge">0% commission • aperçu libre • usage protégé</div>
+          <h1 class="hero-title">La caisse pro<br><em>pour boutiques sérieuses</em></h1>
+          <p class="hero-sub">
+            DIGIY CAISSE PRO est la porte propre pour encaisser, gérer le stock, suivre les ventes et tenir une boutique locale
+            sans se perdre dans une usine à gaz. Ici, on découvre l’outil librement. L’usage réel de la caisse passe par un accès actif.
+          </p>
 
-    <!-- ═ STOCK ═ -->
-    <div id="view-stock" style="display:none">
-      <div class="stock-wrap">
-        <div class="section-card">
-          <h3>📦 Inventaire</h3>
-          <input id="search-stock" placeholder="🔍 Filtrer..." oninput="renderStock(this.value)">
-          <div id="stock-list"><div class="empty-state">Aucun produit</div></div>
-        </div>
-        <div class="section-card">
-          <h3>⚠️ Alertes rupture</h3>
-          <div id="rupture-list"><div class="empty-state">Aucune rupture</div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═ ADMIN ═ -->
-    <div id="view-admin" style="display:none">
-      <div class="admin-grid">
-        <!-- Ajouter produit -->
-        <div class="section-card">
-          <h3>➕ Ajouter un produit</h3>
-          <div class="form-2col">
-            <div class="field-wrap"><label class="field-label">Nom *</label><input class="field" id="add-name" placeholder="Thiébou dieune"></div>
-            <div class="field-wrap"><label class="field-label">Prix HT (FCFA) *</label><input class="field" id="add-price" type="number" placeholder="2500" inputmode="numeric"></div>
-            <div class="field-wrap"><label class="field-label">Stock initial</label><input class="field" id="add-stock" type="number" placeholder="20" inputmode="numeric"></div>
-            <div class="field-wrap"><label class="field-label">Catégorie</label><input class="field" id="add-cat" placeholder="Plats"></div>
+          <div class="hero-actions">
+            <a class="btn btn-primary" id="btnHeroPrimary" href="https://commencer-a-payer.digiylyfe.com/">Activer mon module</a>
+            <a class="btn btn-secondary" id="btnOpenCaisse" href="./caisse.html">Ouvrir la caisse</a>
+            <a class="btn btn-ghost" href="#aperçu">Voir l’aperçu</a>
           </div>
-          <button class="btn-submit" onclick="addProduct()">💾 Ajouter au catalogue</button>
+
+          <div class="helper">
+            Pas de mois gratuit jeté partout. La valeur se voit ici. L’usage réel s’ouvre avec l’abonnement.
+          </div>
         </div>
 
-        <!-- Paramètres boutique + TVA -->
-        <div class="section-card">
-          <h3>⚙️ Paramètres boutique</h3>
-          <div class="form-2col">
-            <div class="field-wrap"><label class="field-label">Nom boutique *</label><input class="field" id="p-store" placeholder="Chez Mamadou"></div>
-            <div class="field-wrap"><label class="field-label">Téléphone</label><input class="field" id="p-phone" placeholder="77 xxx xx xx"></div>
-          </div>
-          <div class="field-wrap"><label class="field-label">Adresse</label><input class="field" id="p-address" placeholder="Rue, Quartier, Ville"></div>
-
-          <div class="tva-admin-box">
-            <div class="tva-admin-title">💰 Régime TVA</div>
-            <div class="switch-row">
-              <span style="font-size:12px">Assujetti à la TVA</span>
-              <label class="switch"><input type="checkbox" id="p-tva-active" onchange="toggleTVAAdmin()"><span class="slider"></span></label>
-            </div>
-            <div id="tva-admin-fields" style="display:none">
-              <div class="form-2col">
-                <div class="field-wrap"><label class="field-label">Taux (%)</label><input class="field" id="p-tva-taux" type="number" placeholder="18" value="18"></div>
-                <div class="field-wrap"><label class="field-label">Mode</label>
-                  <select class="field" id="p-tva-mode">
-                    <option value="excl">HT → TVA ajoutée</option>
-                    <option value="incl">TTC → TVA déduite</option>
-                  </select>
+        <aside class="hero-side">
+          <div class="status-box">
+            <div class="status-top">
+              <span id="statusDotSide" class="dot"></span>
+              <div>
+                <div class="status-title" id="statusTitle">Vérification en cours…</div>
+                <div class="status-sub" id="statusSub">
+                  Lecture du slug, du téléphone et de l’accès module.
                 </div>
               </div>
             </div>
+
+            <div class="status-meta">
+              <div class="mini">
+                <div class="mini-label">Slug</div>
+                <div class="mini-value" id="metaSlug">—</div>
+              </div>
+              <div class="mini">
+                <div class="mini-label">Téléphone</div>
+                <div class="mini-value" id="metaPhone">—</div>
+              </div>
+              <div class="mini">
+                <div class="mini-label">Magasin</div>
+                <div class="mini-value" id="metaStore">Aperçu public</div>
+              </div>
+              <div class="mini">
+                <div class="mini-label">Plan</div>
+                <div class="mini-value" id="metaPlan">—</div>
+              </div>
+            </div>
+
+            <div class="helper" id="statusHelper">
+              Ouvre idéalement cette page avec un lien du style <b>?slug=pos-2217...</b> pour que le hall reconnaisse le module.
+            </div>
+
+            <div class="diag" id="diagBox">Initialisation…</div>
           </div>
-          <div style="background:var(--bg3);border:1px solid #f0c04022;border-radius:8px;padding:10px;margin-top:10px;font-size:10px;color:var(--muted)">
-          Votre identifiant unique (slug) :
-          <strong style="color:var(--gold);font-size:12px;display:block;margin-top:4px" id="admin-slug-display">—</strong>
-          <span style="font-size:9px">Communiquez ce slug à DIGIYLYFE pour toute demande</span>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="aperçu">
+      <div class="section-head">
+        <h2 class="section-title">Ce que le module apporte</h2>
+        <p class="section-sub">
+          Une structure claire, pensée pour le terrain. Tu regardes, tu comprends, tu vois la valeur.
+          Ensuite, la vraie caisse s’ouvre proprement.
+        </p>
+      </div>
+
+      <div class="features">
+        <article class="section-card">
+          <div class="feat-icon">🛒</div>
+          <div class="feat-title">Caisse rapide</div>
+          <div class="feat-text">Produits, panier, vente et encaissement sans détour. Téléphone, tablette ou ordinateur.</div>
+        </article>
+
+        <article class="section-card">
+          <div class="feat-icon">📦</div>
+          <div class="feat-title">Stock simple</div>
+          <div class="feat-text">Ruptures visibles, quantités claires, catalogue vivant. Pas besoin d’un cockpit de fusée pour vendre du terrain.</div>
+        </article>
+
+        <article class="section-card">
+          <div class="feat-icon">💰</div>
+          <div class="feat-title">TVA maîtrisée</div>
+          <div class="feat-text">Mode TVA souple selon la réalité du commerçant. Le module s’adapte au terrain, pas l’inverse.</div>
+        </article>
+
+        <article class="section-card">
+          <div class="feat-icon">📊</div>
+          <div class="feat-title">Vue claire</div>
+          <div class="feat-text">Recettes, rythme, historique et lecture rapide de l’activité sans noyer le pro sous les menus.</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2 class="section-title">Comment ça marche</h2>
+        <p class="section-sub">
+          La ligne DIGIY est propre : <b>voir gratuitement, utiliser avec abonnement</b>.
+        </p>
+      </div>
+
+      <div class="how-grid">
+        <article class="section-card">
+          <div class="step-num">1</div>
+          <div class="feat-title">Tu découvres</div>
+          <div class="feat-text">Cette page montre la valeur du module, le ton, la structure et la porte d’entrée.</div>
+        </article>
+
+        <article class="section-card">
+          <div class="step-num">2</div>
+          <div class="feat-title">Tu actives</div>
+          <div class="feat-text">L’abonnement se fait par la porte DIGIY. Pas de bricolage local, pas de faux essai qui salit la valeur.</div>
+        </article>
+
+        <article class="section-card">
+          <div class="step-num">3</div>
+          <div class="feat-title">Tu utilises</div>
+          <div class="feat-text">Une fois l’accès validé, la vraie page <b>caisse.html</b> devient la salle de travail.</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="pricing">
+      <div class="price-wrap">
+        <div class="price-card">
+          <div class="price-badge">Activation directe</div>
+          <div class="price-name">DIGIY CAISSE PRO</div>
+          <div class="price-amount">12.900 F</div>
+          <div class="price-period">CFA / mois • 0% commission</div>
+
+          <ul class="price-list">
+            <li>Accès réel à la caisse</li>
+            <li>Catalogue et stock</li>
+            <li>Suivi d’activité</li>
+            <li>Utilisation simple sur mobile et desktop</li>
+            <li>Porte propre vers l’écosystème DIGIY</li>
+          </ul>
+
+          <div class="cta-box">
+            <a class="btn btn-primary" id="btnPriceAction" href="https://commencer-a-payer.digiylyfe.com/">Activer mon module</a>
+            <a class="btn btn-secondary" href="https://wa.me/221771342889?text=Bonjour%20JB%2C%20je%20veux%20activer%20DIGIY%20CAISSE%20PRO" target="_blank" rel="noopener">WhatsApp</a>
+          </div>
         </div>
-        <button class="btn-submit" onclick="saveSettings()">💾 Enregistrer</button>
-        </div>
       </div>
+    </section>
 
-      <!-- Liste produits éditable -->
-      <div class="section-card" style="margin-top:14px">
-        <h3>📋 Catalogue complet</h3>
-        <input class="field" style="margin-bottom:12px" id="search-admin" placeholder="🔍 Filtrer..." oninput="renderAdminList(this.value)">
-        <div id="admin-prod-list"><div class="empty-state">Aucun produit</div></div>
+    <footer class="footer">
+      <div class="footer-inner">
+        <div>DIGIYLYFE — ancré terrain, branché futur.</div>
+        <div>Support : +221 77 134 28 89</div>
       </div>
-    </div>
+    </footer>
+  </main>
 
-  </div><!-- /app-content -->
-</div><!-- /screen-app -->
+  <script>
+    (() => {
+      "use strict";
 
-<!-- MODAL EDIT -->
-<div id="modal-overlay" onclick="closeModal()">
-  <div class="modal-box" onclick="event.stopPropagation()">
-    <div class="modal-title">✏️ Modifier le produit</div>
-    <input type="hidden" id="edit-id">
-    <div class="field-wrap"><label class="field-label">Nom</label><input class="field" id="edit-name"></div>
-    <div class="form-2col">
-      <div class="field-wrap"><label class="field-label">Prix HT</label><input class="field" id="edit-price" type="number"></div>
-      <div class="field-wrap"><label class="field-label">Stock</label><input class="field" id="edit-stock" type="number"></div>
-    </div>
-    <div class="field-wrap"><label class="field-label">Catégorie</label><input class="field" id="edit-cat"></div>
-    <div class="modal-actions">
-      <button class="btn-submit" style="background:transparent;border:1px solid var(--border);color:var(--muted);margin-top:0" onclick="closeModal()">Annuler</button>
-      <button class="btn-submit" style="margin-top:0" onclick="saveEdit()">💾 Enregistrer</button>
-    </div>
-  </div>
-</div>
+      const MODULE = "POS";
+      const MODULE_LABEL = "DIGIY CAISSE PRO";
+      const CAISSE_URL = "./caisse.html";
+      const ABOS_URL = "https://commencer-a-payer.digiylyfe.com/";
+      const SUPPORT_PHONE = "221771342889";
 
-<!-- UPGRADE MODAL -->
-<div id="upgrade-overlay" onclick="hideUpgrade()">
-  <div class="upgrade-box" onclick="event.stopPropagation()">
-    <div class="upgrade-icon">🌊</div>
-    <div class="upgrade-title">Activer votre abonnement</div>
-    <p class="upgrade-sub">Envoyez votre paiement Wave — votre accès Pro est activé dans la journée.</p>
-    <div class="step-list">
-      <div class="step-item"><div class="step-n">1</div><span>Ouvrez <strong style="color:#27ae60">Wave</strong> et envoyez le montant</span></div>
-      <div class="step-item"><div class="step-n">2</div><span>Envoyez la <strong style="color:#fff">capture + votre email</strong> sur WhatsApp</span></div>
-      <div class="step-item"><div class="step-n">3</div><span>Votre accès Pro est <strong style="color:#f0c040">activé dans la journée ✓</strong></span></div>
-    </div>
-    <div class="contact-card">
-      <div style="font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Votre contact DIGIYLYFE</div>
-      <div class="contact-name">JB BEAUVILLE</div>
-      <div class="contact-tel">+221 77 134 28 89</div>
-      <div class="contact-btns">
-        <a class="btn-wa" href="https://wa.me/221771342889?text=Bonjour%20JB%2C%20je%20veux%20activer%20DIGIY%20CAISSE%20PRO" target="_blank">💬 WhatsApp</a>
-        <a class="btn-tel" href="tel:+221771342889">📞 Appeler</a>
-      </div>
-    </div>
-    <div class="price-row">
-      <div class="price-box"><div class="price-amt">12.900 F</div><div class="price-period">MENSUEL · CFA</div></div>
-      <div class="price-box best"><div class="price-amt">24.900 F</div><div class="price-period">TRIMESTRIEL · CFA</div><div class="price-eco">Économisez 5.000 F !</div></div>
-    </div>
-    <button class="btn-skip" onclick="hideUpgrade()">← Retour à la caisse</button>
-  </div>
-</div>
+      const sb = window.supabase.createClient(
+        window.DIGIY_SUPABASE_URL,
+        window.DIGIY_SUPABASE_ANON_KEY,
+        {
+          auth: {
+            persistSession: false,
+            autoRefreshToken: false,
+            detectSessionInUrl: false
+          }
+        }
+      );
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-// ══════════════════════════════════════════════════════
-// ⚙️  CONFIG SUPABASE — Remplace par tes vraies clés
-// ══════════════════════════════════════════════════════
-const SUPABASE_URL      = 'https://TON_PROJECT_ID.supabase.co';
-const SUPABASE_ANON_KEY = 'TON_ANON_KEY';
+      const state = {
+        slug: "",
+        phone: "",
+        access: false,
+        storeName: "",
+        plan: "",
+        loading: false
+      };
 
-// ══════════════════════════════════════════════════════
-// MINI CLIENT SUPABASE — fetch() natif, zéro CDN
-// ══════════════════════════════════════════════════════
-const SB = {
-  _token: localStorage.getItem('cp_token') || null,
+      const $ = (id) => document.getElementById(id);
+      const diagLines = [];
 
-  h(extra){
-    return Object.assign({
-      'Content-Type':'application/json',
-      'apikey': SUPABASE_ANON_KEY,
-      'Authorization':'Bearer '+(this._token||SUPABASE_ANON_KEY)
-    }, extra||{});
-  },
-
-  async signUp(email,password,meta){
-    const r = await fetch(SUPABASE_URL+'/auth/v1/signup',{method:'POST',headers:this.h(),body:JSON.stringify({email,password,data:meta})});
-    return r.json();
-  },
-
-  async signIn(email,password){
-    const r = await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:this.h(),body:JSON.stringify({email,password})});
-    const d = await r.json();
-    if(d.access_token){this._token=d.access_token;localStorage.setItem('cp_token',d.access_token);}
-    return d;
-  },
-
-  async signOut(){
-    try{await fetch(SUPABASE_URL+'/auth/v1/logout',{method:'POST',headers:this.h()});}catch(_){}
-    this._token=null;localStorage.removeItem('cp_token');
-  },
-
-  async getUser(){
-    if(!this._token) return null;
-    try{
-      const r = await fetch(SUPABASE_URL+'/auth/v1/user',{headers:this.h()});
-      if(!r.ok){this._token=null;localStorage.removeItem('cp_token');return null;}
-      return await r.json();
-    }catch(_){return null;}
-  },
-
-  from(table){
-    const self=this;
-    return {
-      _t:table, _f:[], _o:null,
-      eq(c,v){this._f.push(c+'=eq.'+encodeURIComponent(v));return this;},
-      order(c){this._o='order='+c;return this;},
-      _url(extra){
-        let u=SUPABASE_URL+'/rest/v1/'+this._t+'?';
-        if(this._f.length) u+=this._f.join('&')+'&';
-        if(this._o) u+=this._o+'&';
-        if(extra) u+=extra;
-        return u;
-      },
-      _h(e){return self.h(Object.assign({'Prefer':'return=representation'},e));},
-      async select(c){
-        try{const r=await fetch(this._url('select='+(c||'*')),{headers:this._h()});const d=await r.json();return{data:Array.isArray(d)?d:[],error:d.message?d:null};}
-        catch(e){return{data:[],error:e};}
-      },
-      async single(){
-        try{const r=await fetch(this._url('select=*&limit=1'),{headers:this._h()});const d=await r.json();const a=Array.isArray(d)?d:[];return{data:a[0]||null,error:null};}
-        catch(e){return{data:null,error:e};}
-      },
-      async insert(obj){
-        try{const r=await fetch(SUPABASE_URL+'/rest/v1/'+this._t,{method:'POST',headers:this._h(),body:JSON.stringify(obj)});const d=await r.json();return{data:d,error:d.message?d:null};}
-        catch(e){return{data:null,error:e};}
-      },
-      async update(obj){
-        try{const r=await fetch(this._url(''),{method:'PATCH',headers:this._h(),body:JSON.stringify(obj)});const d=await r.json();return{data:d,error:d.message?d:null};}
-        catch(e){return{data:null,error:e};}
-      },
-      async upsert(obj,opts){
-        try{
-          const h=this._h({'Prefer':'resolution='+(opts?.onConflict?'merge-duplicates':'ignore-duplicates')+',return=representation'});
-          const r=await fetch(SUPABASE_URL+'/rest/v1/'+this._t,{method:'POST',headers:h,body:JSON.stringify(obj)});
-          const d=await r.json();return{data:d,error:d.message?d:null};
-        }catch(e){return{data:null,error:e};}
-      },
-      async delete(){
-        try{await fetch(this._url(''),{method:'DELETE',headers:this._h()});return{error:null};}
-        catch(e){return{error:e};}
+      function esc(v){
+        return String(v ?? "")
+          .replaceAll("&","&amp;")
+          .replaceAll("<","&lt;")
+          .replaceAll(">","&gt;")
+          .replaceAll('"',"&quot;")
+          .replaceAll("'","&#039;");
       }
-    };
-  }
-};
 
-// ══════════════════════════════════════════════════════
-// ÉTAT
-// ══════════════════════════════════════════════════════
-let currentUser    = null;
-let currentProfile = null;
-let products       = [];
-let filteredProds  = [];
-let sales          = [];
-let cart           = [];
-let currentCat     = 'Tous';
-let editTargetId   = null;
+      function log(msg, data){
+        const line = `[${new Date().toLocaleTimeString("fr-FR")}] ${msg}`;
+        diagLines.push(data === undefined ? line : `${line}\n${safeStringify(data)}`);
+        $("diagBox").textContent = diagLines.join("\n\n");
+        console.log("[DIGIY POS INDEX]", msg, data ?? "");
+      }
 
-// ══════════════════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════════════════
-window.addEventListener('DOMContentLoaded', async () => {
-  try{
-    const user = await SB.getUser();
-    if(!user||user.error){goTo('landing');return;}
-    currentUser = user;
-    await loadAll();
-    launchApp();
-  }catch(e){goTo('landing');}
-});
+      function safeStringify(v){
+        try { return JSON.stringify(v, null, 2); }
+        catch(_) { return String(v); }
+      }
 
-// ══════════════════════════════════════════════════════
-// NAV
-// ══════════════════════════════════════════════════════
-function goTo(screen){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('screen-'+screen).classList.add('active');
-  window.scrollTo(0,0);
-}
+      function getParam(name){
+        return new URL(location.href).searchParams.get(name) || "";
+      }
 
-function showTab(tab){
-  ['caisse','dashboard','stock','admin'].forEach(t=>{
-    document.getElementById('view-'+t).style.display = t===tab?'block':'none';
-    document.getElementById('tab-'+t).classList.toggle('active',t===tab);
-  });
-  if(tab==='dashboard') renderDashboard();
-  if(tab==='stock')     renderStock('');
-  if(tab==='admin')     renderAdminList('');
-}
+      function normPhone(v){
+        return String(v || "").replace(/[^\d]/g, "");
+      }
 
-// ══════════════════════════════════════════════════════
-// AUTH
-// ══════════════════════════════════════════════════════
-async function doRegister(){
-  const email    = document.getElementById('reg-email').value.trim();
-  const pass     = document.getElementById('reg-pass').value.trim();
-  const boutique = document.getElementById('reg-boutique').value.trim();
-  const prenom   = document.getElementById('reg-prenom').value.trim();
-  const nom      = document.getElementById('reg-nom').value.trim();
-  const btn      = document.getElementById('btn-register');
-  if(!email||!pass||!boutique){showAuthErr('reg-error','Remplissez tous les champs requis');return;}
-  if(pass.length<6){showAuthErr('reg-error','Mot de passe trop court (6 min)');return;}
-  btn.disabled=true;btn.textContent='Création...';
-  const data = await SB.signUp(email,pass,{nom_boutique:boutique,prenom,nom});
-  if(data.error_code||!data.id){showAuthErr('reg-error',data.msg||data.error_description||'Erreur inscription');btn.disabled=false;btn.textContent='Créer mon compte gratuit →';return;}
-  const login = await SB.signIn(email,pass);
-  if(!login.access_token){showAuthErr('reg-error','Compte créé ! Connectez-vous.');btn.disabled=false;btn.textContent='Créer mon compte gratuit →';goTo('login');return;}
-  currentUser = login.user;
-  await loadAll();
-  launchApp();
-}
+      function buildUrl(base, params){
+        const u = new URL(base, location.href);
+        Object.entries(params || {}).forEach(([k, v]) => {
+          if(v !== undefined && v !== null && String(v) !== ""){
+            u.searchParams.set(k, String(v));
+          }
+        });
+        return u.toString();
+      }
 
-async function doLogin(){
-  const email = document.getElementById('login-email').value.trim();
-  const pass  = document.getElementById('login-pass').value.trim();
-  const btn   = document.getElementById('btn-login');
-  if(!email||!pass){showAuthErr('login-error','Email et mot de passe requis');return;}
-  btn.disabled=true;btn.textContent='Connexion...';
-  const data = await SB.signIn(email,pass);
-  if(!data.access_token){showAuthErr('login-error','Email ou mot de passe incorrect');btn.disabled=false;btn.textContent='Se connecter →';return;}
-  currentUser = data.user;
-  await loadAll();
-  launchApp();
-}
+      function buildAbosUrl(){
+        return buildUrl(ABOS_URL, {
+          module: MODULE,
+          base_module: "CAISSE",
+          phone: state.phone || "",
+          slug: state.slug || ""
+        });
+      }
 
-async function doLogout(){
-  await SB.signOut();
-  currentUser=null;currentProfile=null;products=[];sales=[];cart=[];
-  goTo('landing');
-}
+      function buildCaisseUrl(){
+        return buildUrl(CAISSE_URL, {
+          slug: state.slug || "",
+          phone: state.phone || ""
+        });
+      }
 
-function showAuthErr(id,msg){
-  const el=document.getElementById(id);
-  if(!el)return;
-  el.textContent=msg;el.style.display='block';
-  setTimeout(()=>el.style.display='none',4000);
-}
+      function setDots(kind){
+        const map = {
+          ok: "dot ok",
+          bad: "dot bad",
+          warn: "dot"
+        };
+        $("statusDot").className = map[kind] || "dot";
+        $("statusDotSide").className = map[kind] || "dot";
+      }
 
-// ══════════════════════════════════════════════════════
-// LOAD DATA
-// ══════════════════════════════════════════════════════
-async function loadAll(){
-  await loadProfile();
-  await loadProducts();
-  await loadSales();
-}
+      function setStatus(kind, pillText, title, sub, helperHtml){
+        setDots(kind);
+        $("statusPillText").textContent = pillText;
+        $("statusTitle").textContent = title;
+        $("statusSub").textContent = sub;
+        $("statusHelper").innerHTML = helperHtml;
+      }
 
-async function loadProfile(){
-  // Try caisse_settings table
-  const {data} = await SB.from('caisse_settings').eq('owner_id',currentUser.id).single();
-  currentProfile = data;
-}
+      function paintMeta(){
+        $("metaSlug").textContent = state.slug || "—";
+        $("metaPhone").textContent = state.phone || "—";
+        $("metaStore").textContent = state.storeName || "Aperçu public";
+        $("metaPlan").textContent = state.plan || "—";
+      }
 
-async function loadProducts(){
-  const {data} = await SB.from('caisse_products').eq('owner_id',currentUser.id).eq('is_active',true).order('created_at').select('*');
-  products       = data||[];
-  filteredProds  = products;
-}
+      function wireButtons(){
+        const abos = buildAbosUrl();
+        const caisse = buildCaisseUrl();
 
-async function loadSales(){
-  const {data} = await SB.from('caisse_sales').eq('owner_id',currentUser.id).order('created_at').select('*');
-  sales = (data||[]).reverse();
-}
+        $("btnPriceAction").href = abos;
+        $("btnTopAction").href = state.access ? caisse : abos;
+        $("btnHeroPrimary").href = state.access ? caisse : abos;
+        $("btnOpenCaisse").href = state.access ? caisse : abos;
 
-// ══════════════════════════════════════════════════════
-// LAUNCH APP
-// ══════════════════════════════════════════════════════
-function launchApp(){
-  if(!currentProfile){
-    // Créer profil vide si premier login
-    createProfile();
-    return;
-  }
-  const trialEnd = new Date(currentProfile.trial_end||Date.now());
-  const daysLeft = Math.ceil((trialEnd-new Date())/86400000);
-  const isPro    = currentProfile.plan==='pro';
+        $("btnTopAction").textContent = state.access ? "Ouvrir la caisse" : "Activer mon module";
+        $("btnHeroPrimary").textContent = state.access ? "Entrer dans la caisse" : "Activer mon module";
+        $("btnOpenCaisse").textContent = state.access ? "Ouvrir la caisse" : "Activer pour ouvrir";
+      }
 
-  const trialBar = document.getElementById('trial-bar');
-  if(isPro){trialBar.style.display='none';}
-  else{
-    document.getElementById('trial-days').textContent = daysLeft+' jour'+(daysLeft>1?'s':'')+' restant'+(daysLeft>1?'s':'');
-    if(daysLeft<=7) trialBar.classList.add('urgent');
-    if(daysLeft<=0){showUpgrade();} // Expiré
-  }
+      async function resolvePhoneFromSlug(slug){
+        const { data, error } = await sb
+          .from("digiy_subscriptions_public")
+          .select("phone,module,slug")
+          .eq("slug", slug)
+          .eq("module", MODULE)
+          .limit(1)
+          .maybeSingle();
 
-  const boutique = currentProfile.nom_boutique||'Ma Boutique';
-  document.getElementById('store-name-display').textContent = boutique;
-  document.getElementById('user-av').textContent = boutique.charAt(0).toUpperCase();
-  const slugEl = document.getElementById('store-slug');
-  if(slugEl && currentProfile.slug) slugEl.textContent = '🔑 ' + currentProfile.slug;
-  const adminSlug = document.getElementById('admin-slug-display');
-  if(adminSlug && currentProfile.slug) adminSlug.textContent = currentProfile.slug;
+        if(error) throw error;
+        return normPhone(data?.phone || "");
+      }
 
-  // TVA
-  const tvaToggle = document.getElementById('tva-toggle');
-  if(tvaToggle) tvaToggle.checked = !!currentProfile.tva_active;
-  if(document.getElementById('tva-rate-display')) document.getElementById('tva-rate-display').textContent = currentProfile.tva_taux||18;
-  if(document.getElementById('p-tva-active')) document.getElementById('p-tva-active').checked = !!currentProfile.tva_active;
-  if(document.getElementById('p-tva-taux')) document.getElementById('p-tva-taux').value = currentProfile.tva_taux||18;
-  if(document.getElementById('p-tva-mode')) document.getElementById('p-tva-mode').value = currentProfile.tva_mode||'excl';
-  if(document.getElementById('p-store')) document.getElementById('p-store').value = currentProfile.nom_boutique||'';
-  if(document.getElementById('p-phone')) document.getElementById('p-phone').value = currentProfile.telephone||'';
-  if(document.getElementById('p-address')) document.getElementById('p-address').value = currentProfile.adresse||'';
-  toggleTVAAdmin();
+      async function rpcFirstSuccess(name, payloads){
+        let lastError = null;
 
-  goTo('app');
-  renderCaisse();
-}
+        for(const payload of payloads){
+          try{
+            log(`RPC ${name} tentative`, payload);
+            const { data, error } = await sb.rpc(name, payload);
+            if(error){
+              lastError = error;
+              log(`RPC ${name} erreur`, {
+                message: error.message,
+                details: error.details,
+                hint: error.hint
+              });
+              continue;
+            }
+            log(`RPC ${name} OK`, data);
+            return data;
+          }catch(err){
+            lastError = err;
+            log(`RPC ${name} exception`, { message: err?.message || String(err) });
+          }
+        }
 
-async function createProfile(){
-  await SB.from('caisse_settings').insert({
-    owner_id:currentUser.id,
-    email:currentUser.email,
-    nom_boutique:'Ma Boutique',
-    plan:'trial',
-    trial_start:new Date().toISOString(),
-    trial_end:new Date(Date.now()+30*86400000).toISOString(),
-    tva_active:false,tva_taux:18,tva_mode:'excl'
-  });
-  await loadProfile();
-  launchApp();
-}
+        throw lastError || new Error(`RPC ${name} échouée`);
+      }
 
-// ══════════════════════════════════════════════════════
-// CAISSE RENDER
-// ══════════════════════════════════════════════════════
-function renderCaisse(){
-  // Catégories
-  const cats = ['Tous',...new Set(products.map(p=>p.categorie||'Autre').filter(Boolean))];
-  document.getElementById('cat-filter').innerHTML = cats.map(c=>`
-    <span class="cat-chip${c===currentCat?' active':''}" onclick="setCat('${c}')">${c}</span>`).join('');
+      async function getAccess(phone){
+        const res = await rpcFirstSuccess("digiy_has_access", [
+          { p_phone: phone, p_module: MODULE },
+          { phone, module: MODULE }
+        ]);
 
-  document.getElementById('prod-count').textContent = filteredProds.length;
+        if(typeof res === "boolean") return res;
+        if(res && typeof res.ok === "boolean") return res.ok;
+        if(res && typeof res.has_access === "boolean") return res.has_access;
+        if(res && typeof res.allowed === "boolean") return res.allowed;
+        return !!res;
+      }
 
-  const grid = document.getElementById('prod-grid');
-  if(!filteredProds.length){
-    grid.innerHTML='<div class="empty-state" style="grid-column:1/-1">Aucun produit — onglet Admin pour en ajouter</div>';
-  } else {
-    grid.innerHTML = filteredProds.map(p=>{
-      const stk = Number(p.stock||0);
-      const rupt = stk<=0;
-      const prixHT = Number(p.prix||0);
-      const tvaOn  = document.getElementById('tva-toggle')?.checked;
-      const taux   = Number(currentProfile?.tva_taux||18)/100;
-      const prix   = tvaOn && currentProfile?.tva_mode!=='incl' ? Math.round(prixHT*(1+taux)) : prixHT;
-      const icons  = {'Plats':'🍽','Boissons':'🥤','Alimentation':'🛒','Vêtements':'👕','Pharmacie':'💊','Autre':'📦'};
-      const icon   = icons[p.categorie]||'🏷';
-      return `<div class="prod-card${rupt?' rupture':''}" onclick="addToCart('${p.id}')">
-        <div class="prod-icon">${icon}</div>
-        <div class="prod-name">${p.nom||'Article'}</div>
-        <div class="prod-price">${fmt(prix)} F${tvaOn?'<span style="font-size:9px;opacity:.7"> TTC</span>':''}</div>
-        <div class="prod-stock${stk<=0?' out':stk<=5?' low':''}">${stk<=0?'⚠️ Rupture':stk<=5?'⚠️ '+stk+' restants':stk+' en stock'}</div>
-      </div>`;
-    }).join('');
-  }
-  renderCart();
-}
+      async function getSubscription(phone){
+        try{
+          const data = await rpcFirstSuccess("digiy_get_subscription_status", [
+            { p_phone: phone, p_module: MODULE },
+            { phone, module: MODULE }
+          ]);
+          return data || null;
+        }catch(err){
+          log("digiy_get_subscription_status indisponible", { message: err?.message || String(err) });
+          return null;
+        }
+      }
 
-function filterProds(q){
-  const s=(q||'').toLowerCase().trim();
-  const base = currentCat==='Tous'?products:products.filter(p=>(p.categorie||'Autre')===currentCat);
-  filteredProds = s ? base.filter(p=>(p.nom||'').toLowerCase().includes(s)) : base;
-  renderCaisse();
-}
+      async function getStoreContext(slug){
+        try{
+          const data = await rpcFirstSuccess("pos_get_store_context_by_slug", [
+            { p_slug: slug },
+            { slug }
+          ]);
+          if(Array.isArray(data)) return data[0] || null;
+          return data || null;
+        }catch(err){
+          log("pos_get_store_context_by_slug indisponible", { message: err?.message || String(err) });
+          return null;
+        }
+      }
 
-function setCat(cat){
-  currentCat=cat;
-  filterProds(document.getElementById('search-prod')?.value||'');
-}
+      async function refreshStatus(){
+        if(state.loading) return;
+        state.loading = true;
 
-// ══════════════════════════════════════════════════════
-// CART
-// ══════════════════════════════════════════════════════
-function addToCart(id){
-  const p = products.find(x=>String(x.id)===String(id));
-  if(!p) return;
-  if(Number(p.stock||0)<=0){showToast('⚠️ Rupture de stock !','error');return;}
-  const found = cart.find(x=>String(x.id)===String(id));
-  if(found){
-    if(found.qty>=Number(p.stock||0)){showToast('⚠️ Stock maximum atteint');return;}
-    found.qty++;
-  } else {
-    cart.push({id:p.id,nom:p.nom,prix:Number(p.prix||0),stock:Number(p.stock||0),qty:1});
-  }
-  showToast('✓ '+p.nom+' ajouté');
-  renderCart();
-}
+        try{
+          state.slug = String(getParam("slug") || "").trim();
+          state.phone = normPhone(getParam("phone"));
+          state.access = false;
+          state.storeName = "";
+          state.plan = "";
+          paintMeta();
+          wireButtons();
 
-function changeQty(id,delta){
-  const i = cart.findIndex(x=>String(x.id)===String(id));
-  if(i<0) return;
-  cart[i].qty += delta;
-  if(cart[i].qty<=0) cart.splice(i,1);
-  else {
-    const p = products.find(x=>String(x.id)===String(id));
-    if(p && cart[i].qty>Number(p.stock||0)){cart[i].qty=Number(p.stock||0);showToast('⚠️ Stock max');}
-  }
-  renderCart();
-}
+          if(!state.slug){
+            setStatus(
+              "warn",
+              "Aperçu public",
+              "Hall prêt",
+              "La page de présentation fonctionne. Aucun slug n’a été reçu.",
+              "Tu peux déjà présenter le module. Avec <b>?slug=pos-2217...</b>, le hall saura reconnaître la boutique."
+            );
+            log("Aucun slug reçu : mode vitrine.");
+            return;
+          }
 
-function clearCart(){
-  if(cart.length&&!confirm('Vider le panier ?')) return;
-  cart=[];renderCart();
-}
+          if(!state.phone){
+            try{
+              state.phone = await resolvePhoneFromSlug(state.slug);
+              paintMeta();
+            }catch(err){
+              log("Résolution slug → phone impossible", { message: err?.message || String(err) });
+            }
+          }
 
-function renderCart(){
-  const list = document.getElementById('cart-list');
-  const totalItems = cart.reduce((s,i)=>s+i.qty,0);
-  document.getElementById('cart-count').textContent = totalItems+' article'+(totalItems>1?'s':'');
+          if(!state.phone){
+            setStatus(
+              "warn",
+              "Slug reconnu",
+              "Téléphone introuvable",
+              "Le hall voit le slug, mais il ne peut pas encore résoudre le téléphone de la boutique.",
+              "Ajoute <b>&phone=2217...</b> au lien, ou passe par la porte d’abonnement DIGIY."
+            );
+            wireButtons();
+            return;
+          }
 
-  if(!cart.length){
-    list.innerHTML='<div class="empty-state" style="padding:20px;font-size:14px">Panier vide</div>';
-  } else {
-    list.innerHTML = cart.map(i=>`
-      <div class="cart-row">
-        <div class="cart-row-info">
-          <div class="cart-row-name">${i.nom}</div>
-          <div class="cart-row-price">${fmt(i.prix)} F × ${i.qty} = <strong style="color:var(--gold)">${fmt(i.prix*i.qty)} F</strong></div>
-        </div>
-        <div class="qty-ctrl">
-          <button class="qty-btn" onclick="changeQty('${i.id}',-1)">−</button>
-          <span class="qty-num">${i.qty}</span>
-          <button class="qty-btn" onclick="changeQty('${i.id}',1)">+</button>
-        </div>
-      </div>`).join('');
-  }
+          const [access, store, sub] = await Promise.all([
+            getAccess(state.phone),
+            getStoreContext(state.slug),
+            getSubscription(state.phone)
+          ]);
 
-  const totalHT  = cart.reduce((s,i)=>s+(i.prix*i.qty),0);
-  const tvaOn    = document.getElementById('tva-toggle')?.checked;
-  const taux     = Number(currentProfile?.tva_taux||18)/100;
-  const mode     = currentProfile?.tva_mode||'excl';
-  const tvaDetail = document.getElementById('tva-detail');
-  const totalLabel = document.getElementById('total-label');
+          state.access = !!access;
+          state.storeName =
+            store?.display_name ||
+            store?.store_name ||
+            store?.nom ||
+            store?.title ||
+            "";
+          state.plan =
+            sub?.plan ||
+            sub?.plan_code ||
+            sub?.tier ||
+            (state.access ? "actif" : "—");
 
-  if(tvaOn && cart.length){
-    let ht,tva,ttc;
-    if(mode==='excl'){ht=totalHT;tva=Math.round(ht*taux);ttc=ht+tva;}
-    else{ttc=totalHT;ht=Math.round(ttc/(1+taux));tva=ttc-ht;}
-    tvaDetail.style.display='block';
-    document.getElementById('tva-ht').textContent    = fmt(ht)+' F';
-    document.getElementById('tva-pct-label').textContent = 'TVA '+(Number(currentProfile?.tva_taux||18))+'%';
-    document.getElementById('tva-montant').textContent = fmt(tva)+' F';
-    document.getElementById('tva-ttc').textContent   = fmt(ttc)+' F';
-    document.getElementById('total-amount').textContent = fmt(ttc)+' F';
-    if(totalLabel) totalLabel.textContent='Total TTC';
-  } else {
-    if(tvaDetail) tvaDetail.style.display='none';
-    document.getElementById('total-amount').textContent = fmt(totalHT)+' F';
-    if(totalLabel) totalLabel.textContent='Total';
-  }
-}
+          paintMeta();
+          wireButtons();
 
-// ══════════════════════════════════════════════════════
-// CHECKOUT
-// ══════════════════════════════════════════════════════
-async function checkout(method){
-  if(!cart.length){showToast('🛒 Panier vide !','error');return;}
+          if(state.access){
+            setStatus(
+              "ok",
+              "Accès actif",
+              "Module prêt",
+              "L’accès POS est validé. La vraie porte de travail peut s’ouvrir.",
+              "Tu peux maintenant entrer dans <b>caisse.html</b> avec le bon slug."
+            );
+            log("Accès validé", {
+              slug: state.slug,
+              phone: state.phone,
+              store: state.storeName,
+              plan: state.plan
+            });
+          } else {
+            setStatus(
+              "bad",
+              "Activation requise",
+              "Accès non actif",
+              "Le hall est bien là, mais la caisse réelle reste protégée tant que l’abonnement POS n’est pas actif.",
+              "La vitrine reste visible. Pour utiliser la caisse, active le module via DIGIY PAY."
+            );
+            log("Accès refusé / non actif", {
+              slug: state.slug,
+              phone: state.phone
+            });
+          }
+        } catch(err){
+          setStatus(
+            "bad",
+            "Blocage technique",
+            "Erreur de contrôle",
+            err?.message || "Impossible de vérifier l’accès pour le moment.",
+            "Regarde le diagnostic ci-dessus. Là, on verra tout de suite si c’est le lien, la RPC ou le contexte magasin."
+          );
+          log("Erreur refreshStatus", { message: err?.message || String(err) });
+        } finally {
+          wireButtons();
+          state.loading = false;
+        }
+      }
 
-  const totalHT = cart.reduce((s,i)=>s+(i.prix*i.qty),0);
-  const tvaOn   = document.getElementById('tva-toggle')?.checked;
-  const taux    = Number(currentProfile?.tva_taux||18)/100;
-  const mode    = currentProfile?.tva_mode||'excl';
-  let total=totalHT,tva_montant=0;
-  if(tvaOn){
-    if(mode==='excl'){tva_montant=Math.round(totalHT*taux);total=totalHT+tva_montant;}
-    else{const ht=Math.round(totalHT/(1+taux));tva_montant=totalHT-ht;total=totalHT;}
-  }
+      $("btnCheck").addEventListener("click", refreshStatus);
 
-  const items_snapshot = cart.map(i=>({id:i.id,nom:i.nom,prix:i.prix,qty:i.qty}));
-
-  const {error} = await SB.from('caisse_sales').insert({
-    owner_id:     currentUser.id,
-    methode:      method,
-    total:        total,
-    total_ht:     totalHT,
-    tva_montant:  tva_montant,
-    items_count:  cart.reduce((s,i)=>s+i.qty,0),
-    items:        items_snapshot,
-    created_at:   new Date().toISOString()
-  });
-
-  if(error){showToast('❌ Erreur enregistrement','error');return;}
-
-  // Décrémenter stock
-  for(const i of cart){
-    const p = products.find(x=>String(x.id)===String(i.id));
-    if(p){
-      const newStock = Math.max(0,Number(p.stock||0)-i.qty);
-      await SB.from('caisse_products').eq('id',i.id).eq('owner_id',currentUser.id).update({stock:newStock});
-    }
-  }
-
-  showToast(`✅ ${method} — ${fmt(total)} F encaissé !`);
-  cart=[];
-  await loadAll();
-  renderCaisse();
-}
-
-// ══════════════════════════════════════════════════════
-// DASHBOARD
-// ══════════════════════════════════════════════════════
-function renderDashboard(){
-  const today  = new Date().toISOString().slice(0,10);
-  const month  = new Date().toISOString().slice(0,7);
-  const meth   = document.getElementById('filter-method')?.value||'';
-  const date   = document.getElementById('filter-date')?.value||'';
-
-  const todays = sales.filter(s=>String(s.created_at||'').slice(0,10)===today);
-  const revDay = todays.reduce((a,b)=>a+Number(b.total||0),0);
-  const revMonth = sales.filter(s=>String(s.created_at||'').slice(0,7)===month).reduce((a,b)=>a+Number(b.total||0),0);
-  const avg    = todays.length ? Math.round(revDay/todays.length) : 0;
-
-  document.getElementById('stat-day').textContent    = fmt(revDay)+' F';
-  document.getElementById('stat-count-v').textContent = todays.length;
-  document.getElementById('stat-month').textContent  = fmt(revMonth)+' F';
-  document.getElementById('stat-avg').textContent    = fmt(avg)+' F';
-
-  let filtered = [...sales];
-  if(meth) filtered = filtered.filter(s=>(s.methode||'').toUpperCase()===meth);
-  if(date) filtered = filtered.filter(s=>String(s.created_at||'').slice(0,10)===date);
-
-  const list = document.getElementById('ventes-list');
-  if(!filtered.length){list.innerHTML='<div class="empty-state">Aucune vente trouvée</div>';return;}
-
-  const mc = {CASH:'method-cash',WAVE:'method-wave',OM:'method-om',CREDIT:'method-credit'};
-  list.innerHTML = filtered.slice(0,50).map(s=>{
-    const d = new Date(s.created_at);
-    const m = (s.methode||'—').toUpperCase();
-    const items = Array.isArray(s.items) ? s.items.map(i=>i.nom+'×'+i.qty).join(', ') : (s.items_count+' article(s)');
-    return `<div class="vente-row">
-      <div class="vente-info">
-        <div class="vente-time">${d.toLocaleDateString('fr-FR')} ${d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</div>
-        <div class="vente-items">${items}</div>
-      </div>
-      <div class="vente-right">
-        <div class="vente-amount">${fmt(s.total||0)} F</div>
-        <div class="vente-method ${mc[m]||''}">${m}</div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function resetFilters(){
-  if(document.getElementById('filter-method')) document.getElementById('filter-method').value='';
-  if(document.getElementById('filter-date'))   document.getElementById('filter-date').value='';
-  renderDashboard();
-}
-
-// ══════════════════════════════════════════════════════
-// STOCK
-// ══════════════════════════════════════════════════════
-function renderStock(q){
-  const s  = (q||'').toLowerCase().trim();
-  const list = s ? products.filter(p=>(p.nom||'').toLowerCase().includes(s)) : products;
-  const rupt = products.filter(p=>Number(p.stock||0)<=0);
-
-  const el = document.getElementById('stock-list');
-  if(!list.length){el.innerHTML='<div class="empty-state">Aucun produit</div>';}
-  else{
-    el.innerHTML = list.map(p=>{
-      const stk=Number(p.stock||0);
-      const cl  = stk<=0?'out':stk<=5?'low':'ok';
-      return `<div class="stock-item">
-        <div>
-          <div class="stock-name">${p.nom||'Article'}</div>
-          <div class="stock-meta">${fmt(p.prix)} F HT · ${p.categorie||'—'}</div>
-        </div>
-        <div class="stock-right">
-          <span class="stock-qty ${cl}">${stk<=0?'⚠️ Rupture':stk+' unités'}</span>
-          <button class="icon-btn" onclick="openEdit('${p.id}')">✏️</button>
-        </div>
-      </div>`;
-    }).join('');
-  }
-
-  const rel = document.getElementById('rupture-list');
-  if(!rupt.length){rel.innerHTML='<div class="empty-state" style="font-size:14px">✅ Aucune rupture</div>';}
-  else{
-    rel.innerHTML = rupt.map(p=>`
-      <div class="stock-item">
-        <div><div class="stock-name">${p.nom||'Article'}</div><div class="stock-meta">${fmt(p.prix)} F HT</div></div>
-        <div class="stock-right"><span class="stock-qty out">⚠️ Rupture</span><button class="icon-btn" onclick="openEdit('${p.id}')">✏️</button></div>
-      </div>`).join('');
-  }
-}
-
-// ══════════════════════════════════════════════════════
-// ADMIN — CATALOGUE
-// ══════════════════════════════════════════════════════
-function renderAdminList(q){
-  const s = (q||'').toLowerCase().trim();
-  const list = s ? products.filter(p=>(p.nom||'').toLowerCase().includes(s)) : products;
-  const el = document.getElementById('admin-prod-list');
-  if(!list.length){el.innerHTML='<div class="empty-state">Aucun produit</div>';return;}
-  el.innerHTML = list.map(p=>`
-    <div class="stock-item">
-      <div>
-        <div class="stock-name">${p.nom||'Article'}</div>
-        <div class="stock-meta">${fmt(p.prix)} F HT · Stock: ${p.stock||0} · ${p.categorie||'—'}</div>
-      </div>
-      <div class="stock-right">
-        <button class="icon-btn" onclick="openEdit('${p.id}')">✏️</button>
-        <button class="icon-btn" style="color:var(--red)" onclick="deleteProduct('${p.id}')">🗑</button>
-      </div>
-    </div>`).join('');
-}
-
-async function addProduct(){
-  const nom    = document.getElementById('add-name').value.trim();
-  const prix   = parseInt(document.getElementById('add-price').value||'0',10);
-  const stock  = parseInt(document.getElementById('add-stock').value||'0',10)||0;
-  const cat    = document.getElementById('add-cat').value.trim()||null;
-  if(!nom)       {showToast('⚠️ Nom requis','error');return;}
-  if(!prix||prix<=0){showToast('⚠️ Prix requis','error');return;}
-  const {error} = await SB.from('caisse_products').insert({
-    owner_id:currentUser.id,nom,prix,stock,categorie:cat,is_active:true,created_at:new Date().toISOString()
-  });
-  if(error){showToast('❌ Erreur : '+error.message,'error');return;}
-  ['add-name','add-price','add-stock','add-cat'].forEach(id=>{if(document.getElementById(id))document.getElementById(id).value='';});
-  await loadProducts();
-  renderCaisse();
-  renderAdminList('');
-  showToast('✅ '+nom+' ajouté !');
-}
-
-async function deleteProduct(id){
-  if(!confirm('Supprimer ce produit ?')) return;
-  await SB.from('caisse_products').eq('id',id).eq('owner_id',currentUser.id).update({is_active:false});
-  await loadProducts();renderCaisse();renderAdminList('');renderStock('');
-  showToast('🗑 Produit retiré');
-}
-
-// ══════════════════════════════════════════════════════
-// EDIT MODAL
-// ══════════════════════════════════════════════════════
-function openEdit(id){
-  const p = products.find(x=>String(x.id)===String(id));
-  if(!p) return;
-  editTargetId = id;
-  document.getElementById('edit-id').value    = id;
-  document.getElementById('edit-name').value  = p.nom||'';
-  document.getElementById('edit-price').value = p.prix||0;
-  document.getElementById('edit-stock').value = p.stock||0;
-  document.getElementById('edit-cat').value   = p.categorie||'';
-  document.getElementById('modal-overlay').classList.add('open');
-}
-
-function closeModal(){document.getElementById('modal-overlay').classList.remove('open');}
-
-async function saveEdit(){
-  const id    = document.getElementById('edit-id').value;
-  const nom   = document.getElementById('edit-name').value.trim();
-  const prix  = parseInt(document.getElementById('edit-price').value||'0',10);
-  const stock = parseInt(document.getElementById('edit-stock').value||'0',10)||0;
-  const cat   = document.getElementById('edit-cat').value.trim()||null;
-  if(!nom||!prix){showToast('⚠️ Nom et prix requis','error');return;}
-  const {error} = await SB.from('caisse_products').eq('id',id).eq('owner_id',currentUser.id).update({nom,prix,stock,categorie:cat});
-  if(error){showToast('❌ Erreur','error');return;}
-  closeModal();
-  await loadProducts();renderCaisse();renderAdminList('');renderStock('');
-  showToast('✅ Produit mis à jour !');
-}
-
-// ══════════════════════════════════════════════════════
-// SETTINGS / TVA
-// ══════════════════════════════════════════════════════
-function toggleTVAAdmin(){
-  const active = document.getElementById('p-tva-active')?.checked;
-  const fields = document.getElementById('tva-admin-fields');
-  if(fields) fields.style.display = active?'block':'none';
-}
-
-async function saveSettings(){
-  const boutique = document.getElementById('p-store').value.trim()||'Ma Boutique';
-  const phone    = document.getElementById('p-phone').value.trim()||null;
-  const address  = document.getElementById('p-address').value.trim()||null;
-  const tvaActive= document.getElementById('p-tva-active').checked;
-  const tvaTaux  = parseInt(document.getElementById('p-tva-taux').value||'18',10);
-  const tvaMode  = document.getElementById('p-tva-mode').value||'excl';
-
-  const {error} = await SB.from('caisse_settings').eq('owner_id',currentUser.id).update({
-    nom_boutique:boutique,telephone:phone,adresse:address,
-    tva_active:tvaActive,tva_taux:tvaTaux,tva_mode:tvaMode
-  });
-  if(error){showToast('❌ Erreur sauvegarde','error');return;}
-  await loadProfile();
-  document.getElementById('store-name-display').textContent = boutique;
-  document.getElementById('user-av').textContent = boutique.charAt(0).toUpperCase();
-  const slugEl = document.getElementById('store-slug');
-  if(slugEl && currentProfile.slug) slugEl.textContent = '🔑 ' + currentProfile.slug;
-  const adminSlug = document.getElementById('admin-slug-display');
-  if(adminSlug && currentProfile.slug) adminSlug.textContent = currentProfile.slug;
-  document.getElementById('tva-rate-display').textContent = tvaTaux;
-  if(currentProfile) currentProfile.tva_active=tvaActive;
-  renderCart();
-  showToast('✅ Paramètres enregistrés !');
-}
-
-// ══════════════════════════════════════════════════════
-// UPGRADE
-// ══════════════════════════════════════════════════════
-function showUpgrade(){document.getElementById('upgrade-overlay').classList.add('open');}
-function hideUpgrade(){document.getElementById('upgrade-overlay').classList.remove('open');}
-
-// ══════════════════════════════════════════════════════
-// UTILS
-// ══════════════════════════════════════════════════════
-function fmt(n){return Number(n||0).toLocaleString('fr-FR');}
-
-function showToast(msg,type='success'){
-  const
+      refreshStatus();
+    })();
+  </script>
+</body>
+</html>
