@@ -646,28 +646,40 @@
 
       const sb = ensureSupabase();
 
-      async function rpcFirstSuccess(name, payloads){
-        let lastError = null;
+     async function rpcFirstSuccess(name, payloads){
+  let lastError = null;
 
-        for(const payload of payloads){
-          try{
-            log(`RPC ${name} → tentative`, payload);
-            const { data, error } = await sb.rpc(name, payload);
-            if(error){
-              lastError = error;
-              log(`RPC ${name} → erreur`, { message: error.message, details: error.details, hint: error.hint });
-              continue;
-            }
-            log(`RPC ${name} → OK`, data);
-            return data;
-          }catch(err){
-            lastError = err;
-            log(`RPC ${name} → exception`, { message: err?.message || String(err) });
-          }
-        }
+  for (const payload of payloads){
+    try{
+      log(`RPC ${name} → tentative`, payload);
 
-        throw lastError || new Error(`RPC ${name} a échoué`);
+      const { data, error } = await sb.rpc(name, payload);
+
+      if (error){
+        lastError = error;
+        log(`RPC ${name} → erreur`, {
+          code: error.code || null,
+          message: error.message || null,
+          details: error.details || null,
+          hint: error.hint || null,
+          payload
+        });
+        continue;
       }
+
+      log(`RPC ${name} → OK`, data);
+      return data;
+    }catch(err){
+      lastError = err;
+      log(`RPC ${name} → exception`, {
+        message: err?.message || String(err),
+        payload
+      });
+    }
+  }
+
+  throw lastError || new Error(`RPC ${name} a échoué`);
+}
 
       async function getPhoneFromSlug(slug){
         const cleanSlug = String(slug || "").trim();
