@@ -13,10 +13,8 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
-const SUPABASE_ANON_KEY =
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
-
+    window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+    window.DIGIY_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
   </script>
 
   <style>
@@ -28,6 +26,7 @@ const SUPABASE_ANON_KEY =
       --bg2:#0d1c14;
       --bg3:#13261c;
       --card:rgba(16,31,24,.88);
+      --card2:rgba(10,20,16,.96);
       --text:#edf4ed;
       --muted:#8fa894;
       --line:rgba(240,192,64,.12);
@@ -140,7 +139,8 @@ const SUPABASE_ANON_KEY =
     .hero-main,
     .hero-side,
     .section-card,
-    .price-card{
+    .price-card,
+    .preview-shell{
       background:var(--card);
       border:1px solid var(--line);
       border-radius:var(--radius);
@@ -273,6 +273,174 @@ const SUPABASE_ANON_KEY =
       font-weight:900;font-size:13px;margin-bottom:12px;
     }
 
+    .preview-shell{
+      padding:18px;
+      overflow:hidden;
+    }
+    .preview-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+    .preview-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(99,102,241,.10);
+      border:1px solid rgba(99,102,241,.25);
+      color:#cfd6ff;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:1px;
+      text-transform:uppercase;
+    }
+
+    .cockpit{
+      background:var(--card2);
+      border:1px solid var(--line2);
+      border-radius:18px;
+      padding:16px;
+    }
+    .cockpit-head{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-bottom:14px;
+    }
+    .cockpit-title{
+      font-weight:900;
+      font-size:18px;
+    }
+    .cockpit-sub{
+      color:var(--muted);
+      font-size:12px;
+      margin-top:3px;
+    }
+
+    .cockpit-grid{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:14px;
+    }
+    @media(max-width:920px){
+      .cockpit-grid{grid-template-columns:1fr}
+    }
+
+    .pane{
+      border:1px solid var(--line2);
+      border-radius:16px;
+      background:rgba(255,255,255,.03);
+      padding:14px;
+    }
+
+    .pane-title{
+      font-size:13px;
+      font-weight:900;
+      margin-bottom:10px;
+    }
+
+    .demo-stats{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      margin-bottom:12px;
+    }
+    @media(max-width:700px){
+      .demo-stats{grid-template-columns:1fr}
+    }
+    .demo-stat{
+      padding:12px;
+      border-radius:14px;
+      border:1px solid var(--line2);
+      background:rgba(255,255,255,.03);
+    }
+    .demo-stat small{
+      display:block;
+      color:var(--muted);
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      font-weight:800;
+    }
+    .demo-stat strong{
+      display:block;
+      margin-top:6px;
+      font-size:22px;
+      font-weight:900;
+    }
+
+    .sale-form{
+      display:grid;
+      grid-template-columns:1.1fr .6fr .7fr;
+      gap:10px;
+      margin-top:12px;
+    }
+    @media(max-width:700px){
+      .sale-form{grid-template-columns:1fr}
+    }
+    .mock-field{
+      padding:12px;
+      border-radius:12px;
+      border:1px solid var(--line2);
+      background:rgba(255,255,255,.02);
+      color:#b7c7ba;
+      font-size:12px;
+      min-height:46px;
+      display:flex;
+      align-items:center;
+    }
+
+    .mock-list{
+      display:grid;
+      gap:8px;
+    }
+    .mock-item{
+      padding:11px 12px;
+      border-radius:12px;
+      border:1px solid var(--line2);
+      background:rgba(255,255,255,.03);
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .mock-item small{
+      display:block;
+      color:var(--muted);
+      font-size:11px;
+      margin-top:4px;
+    }
+
+    .mock-tag{
+      padding:6px 8px;
+      border-radius:999px;
+      border:1px solid rgba(240,192,64,.22);
+      background:rgba(240,192,64,.08);
+      color:var(--gold);
+      font-size:10px;
+      font-weight:900;
+      white-space:nowrap;
+    }
+
+    .lock-strip{
+      margin-top:14px;
+      padding:12px 14px;
+      border-radius:14px;
+      background:rgba(239,68,68,.08);
+      border:1px solid rgba(239,68,68,.18);
+      color:#ffc9c9;
+      font-size:12px;
+      font-weight:700;
+      line-height:1.7;
+    }
+
     .pricing{
       padding:30px 0 50px;
     }
@@ -401,7 +569,7 @@ const SUPABASE_ANON_KEY =
           <div class="hero-actions">
             <a class="btn btn-primary" id="btnHeroPrimary" href="https://commencer-a-payer.digiylyfe.com/">Activer mon module</a>
             <a class="btn btn-secondary" id="btnOpenCaisse" href="./caisse.html">Ouvrir la caisse</a>
-            <a class="btn btn-ghost" href="#aperçu">Voir l’aperçu</a>
+            <a class="btn btn-ghost" href="#apercu-cockpit">Voir le cockpit</a>
           </div>
 
           <div class="helper">
@@ -450,7 +618,129 @@ const SUPABASE_ANON_KEY =
       </div>
     </section>
 
-    <section class="section" id="aperçu">
+    <section class="section" id="apercu-cockpit">
+      <div class="section-head">
+        <h2 class="section-title">Petit œil sur le cockpit</h2>
+        <p class="section-sub">
+          Voilà la valeur. On montre la cabine, sans ouvrir la salle de travail complète à tout venant.
+        </p>
+      </div>
+
+      <div class="preview-shell">
+        <div class="preview-top">
+          <div class="preview-badge">Aperçu lecture seule</div>
+          <div class="helper" style="margin-top:0">
+            Démonstration visuelle. Les boutons métier réels s’ouvrent seulement avec accès actif.
+          </div>
+        </div>
+
+        <div class="cockpit">
+          <div class="cockpit-head">
+            <div>
+              <div class="cockpit-title">DIGIY CAISSE PRO — Cockpit</div>
+              <div class="cockpit-sub">Vue exemple pour montrer la valeur du module</div>
+            </div>
+            <div class="pill">
+              <span class="dot ok"></span>
+              <span>Mode démo</span>
+            </div>
+          </div>
+
+          <div class="cockpit-grid">
+            <div class="pane">
+              <div class="pane-title">Aujourd’hui</div>
+
+              <div class="demo-stats">
+                <div class="demo-stat">
+                  <small>Ventes jour</small>
+                  <strong>87 500 F</strong>
+                </div>
+                <div class="demo-stat">
+                  <small>Transactions</small>
+                  <strong>18</strong>
+                </div>
+                <div class="demo-stat">
+                  <small>Panier moyen</small>
+                  <strong>4 860 F</strong>
+                </div>
+              </div>
+
+              <div class="pane-title">Nouvelle vente</div>
+              <div class="sale-form">
+                <div class="mock-field">Produit / service</div>
+                <div class="mock-field">Qté</div>
+                <div class="mock-field">Prix</div>
+              </div>
+
+              <div class="sale-form" style="margin-top:10px">
+                <div class="mock-field">Mode de paiement</div>
+                <div class="mock-field">Référence</div>
+                <div class="mock-field">Client</div>
+              </div>
+
+              <div class="lock-strip">
+                Ici, le visiteur comprend la logique de travail.  
+                Mais l’enregistrement réel des ventes, du stock et de l’activité reste réservé au module actif.
+              </div>
+            </div>
+
+            <div class="pane">
+              <div class="pane-title">Dernières ventes</div>
+              <div class="mock-list">
+                <div class="mock-item">
+                  <div>
+                    <strong>Riz parfumé 5kg</strong>
+                    <small>Qté 1 • Wave • 10:42</small>
+                  </div>
+                  <div class="mock-tag">12 500 F</div>
+                </div>
+                <div class="mock-item">
+                  <div>
+                    <strong>Pack boissons</strong>
+                    <small>Qté 3 • Espèces • 10:26</small>
+                  </div>
+                  <div class="mock-tag">6 000 F</div>
+                </div>
+                <div class="mock-item">
+                  <div>
+                    <strong>Recharge divers</strong>
+                    <small>Qté 2 • OM • 09:58</small>
+                  </div>
+                  <div class="mock-tag">3 500 F</div>
+                </div>
+              </div>
+
+              <div class="pane-title" style="margin-top:14px">Stock visible</div>
+              <div class="mock-list">
+                <div class="mock-item">
+                  <div>
+                    <strong>Sucre</strong>
+                    <small>Stock exemple : 18 unités</small>
+                  </div>
+                  <div class="mock-tag">OK</div>
+                </div>
+                <div class="mock-item">
+                  <div>
+                    <strong>Huile 1L</strong>
+                    <small>Stock exemple : 6 unités</small>
+                  </div>
+                  <div class="mock-tag">Bas</div>
+                </div>
+                <div class="mock-item">
+                  <div>
+                    <strong>Eau 1.5L</strong>
+                    <small>Stock exemple : 42 unités</small>
+                  </div>
+                  <div class="mock-tag">OK</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
       <div class="section-head">
         <h2 class="section-title">Ce que le module apporte</h2>
         <p class="section-sub">
@@ -498,13 +788,13 @@ const SUPABASE_ANON_KEY =
         <article class="section-card">
           <div class="step-num">1</div>
           <div class="feat-title">Tu découvres</div>
-          <div class="feat-text">Cette page montre la valeur du module, le ton, la structure et la porte d’entrée.</div>
+          <div class="feat-text">Cette page montre la valeur du module, le ton, la structure et un aperçu du cockpit.</div>
         </article>
 
         <article class="section-card">
           <div class="step-num">2</div>
           <div class="feat-title">Tu actives</div>
-          <div class="feat-text">L’abonnement se fait par la porte DIGIY. Pas de bricolage local, pas de faux essai qui salit la valeur.</div>
+          <div class="feat-text">L’abonnement se fait par la porte DIGIY. Pas de gratuit illimité qui abîme la valeur du temps et du support.</div>
         </article>
 
         <article class="section-card">
@@ -552,22 +842,27 @@ const SUPABASE_ANON_KEY =
       "use strict";
 
       const MODULE = "POS";
-      const MODULE_LABEL = "DIGIY CAISSE PRO";
       const CAISSE_URL = "./caisse.html";
       const ABOS_URL = "https://commencer-a-payer.digiylyfe.com/";
-      const SUPPORT_PHONE = "221771342889";
 
-      const sb = window.supabase.createClient(
-        window.DIGIY_SUPABASE_URL,
-        window.DIGIY_SUPABASE_ANON_KEY,
-        {
-          auth: {
-            persistSession: false,
-            autoRefreshToken: false,
-            detectSessionInUrl: false
-          }
-        }
-      );
+      const SUPABASE_URL = String(window.DIGIY_SUPABASE_URL || "").trim();
+      const SUPABASE_ANON_KEY = String(window.DIGIY_SUPABASE_ANON_KEY || "").trim();
+
+      const canUseSupabase =
+        !!window.supabase &&
+        typeof window.supabase.createClient === "function" &&
+        !!SUPABASE_URL &&
+        !!SUPABASE_ANON_KEY;
+
+      const sb = canUseSupabase
+        ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: {
+              persistSession: false,
+              autoRefreshToken: false,
+              detectSessionInUrl: false
+            }
+          })
+        : null;
 
       const state = {
         slug: "",
@@ -581,13 +876,9 @@ const SUPABASE_ANON_KEY =
       const $ = (id) => document.getElementById(id);
       const diagLines = [];
 
-      function esc(v){
-        return String(v ?? "")
-          .replaceAll("&","&amp;")
-          .replaceAll("<","&lt;")
-          .replaceAll(">","&gt;")
-          .replaceAll('"',"&quot;")
-          .replaceAll("'","&#039;");
+      function safeStringify(v){
+        try { return JSON.stringify(v, null, 2); }
+        catch(_) { return String(v); }
       }
 
       function log(msg, data){
@@ -595,11 +886,6 @@ const SUPABASE_ANON_KEY =
         diagLines.push(data === undefined ? line : `${line}\n${safeStringify(data)}`);
         $("diagBox").textContent = diagLines.join("\n\n");
         console.log("[DIGIY POS INDEX]", msg, data ?? "");
-      }
-
-      function safeStringify(v){
-        try { return JSON.stringify(v, null, 2); }
-        catch(_) { return String(v); }
       }
 
       function getParam(name){
@@ -623,7 +909,7 @@ const SUPABASE_ANON_KEY =
       function buildAbosUrl(){
         return buildUrl(ABOS_URL, {
           module: MODULE,
-          base_module: "CAISSE",
+          base_module: MODULE,
           phone: state.phone || "",
           slug: state.slug || ""
         });
@@ -768,6 +1054,18 @@ const SUPABASE_ANON_KEY =
           paintMeta();
           wireButtons();
 
+          if(!canUseSupabase){
+            setStatus(
+              "warn",
+              "Aperçu public",
+              "Mode vitrine",
+              "La page de présentation fonctionne, mais Supabase n’est pas disponible pour vérifier l’accès.",
+              "L’aperçu cockpit reste visible. Pour le contrôle d’accès, vérifie la config Supabase dans l’en-tête."
+            );
+            log("Supabase indisponible sur la page.");
+            return;
+          }
+
           if(!state.slug){
             setStatus(
               "warn",
@@ -866,7 +1164,6 @@ const SUPABASE_ANON_KEY =
       }
 
       $("btnCheck").addEventListener("click", refreshStatus);
-
       refreshStatus();
     })();
   </script>
