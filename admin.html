@@ -1,0 +1,1058 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>DIGIY CAISSE PRO — Admin boutique</title>
+  <meta name="theme-color" content="#0b1020" />
+  <meta name="description" content="DIGIY CAISSE PRO — administration boutique, TVA et produits." />
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+    window.DIGIY_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
+  </script>
+
+  <style>
+    :root{
+      --bg:#0b1020;
+      --bg2:#0e1630;
+      --card:#121a33;
+      --card2:#172141;
+      --text:#eef1ff;
+      --muted:#a8b1d1;
+      --line:rgba(255,255,255,.09);
+      --accent:#6366f1;
+      --ok:#22c55e;
+      --warn:#f59e0b;
+      --danger:#ef4444;
+      --gold:#f0c040;
+      --shadow:0 12px 30px rgba(0,0,0,.35);
+      --radius:18px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(1200px 700px at 20% -20%, rgba(99,102,241,.25), transparent 70%),
+        radial-gradient(900px 600px at 100% 0%, rgba(34,197,94,.15), transparent 55%),
+        linear-gradient(180deg,var(--bg2),var(--bg));
+      color:var(--text);
+      min-height:100vh;
+    }
+
+    a{text-decoration:none;color:inherit}
+    button,input,select,textarea{font:inherit}
+
+    .wrap{max-width:1180px;margin:0 auto;padding:18px 14px 34px}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:12px;padding:10px 6px;margin-bottom:12px;flex-wrap:wrap;
+    }
+    .brand{
+      display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.2px
+    }
+    .brand .badge{
+      display:inline-flex;align-items:center;justify-content:center;
+      width:38px;height:38px;border-radius:12px;
+      background:rgba(99,102,241,.18);border:1px solid var(--line);font-size:20px;
+    }
+    .right{
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end
+    }
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--line);
+      color:var(--muted);
+      font-weight:700;font-size:13px;
+    }
+    .dot{width:10px;height:10px;border-radius:999px;background:var(--warn)}
+    .dot.ok{background:var(--ok)}
+    .dot.bad{background:var(--danger)}
+
+    .btn{
+      appearance:none;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      padding:10px 12px;border-radius:12px;
+      font-weight:800;cursor:pointer;transition:.15s ease;
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      min-height:44px;
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn.primary{
+      background:rgba(99,102,241,.22);
+      border-color:rgba(99,102,241,.35);
+    }
+    .btn.ok{
+      background:rgba(34,197,94,.12);
+      border-color:rgba(34,197,94,.30);
+    }
+    .btn.warn{
+      background:rgba(245,158,11,.12);
+      border-color:rgba(245,158,11,.30);
+    }
+    .btn.danger{
+      background:rgba(239,68,68,.10);
+      border-color:rgba(239,68,68,.30);
+    }
+    .btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+    }
+    @media(min-width:980px){
+      .grid{grid-template-columns:1.05fr .95fr}
+    }
+
+    .card{
+      background:rgba(18,26,51,.92);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+    .card h2,.card h3{margin:0 0 10px 0}
+    .muted{color:var(--muted)}
+    .small{font-size:12px}
+    .hr{height:1px;background:var(--line);margin:12px 0}
+
+    .statusLine{
+      display:flex;align-items:flex-start;gap:10px;
+      padding:12px;border-radius:14px;border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+    }
+    .statusLine.ok{
+      background:rgba(34,197,94,.08);
+      border-color:rgba(34,197,94,.22);
+    }
+    .statusLine.bad{
+      background:rgba(239,68,68,.08);
+      border-color:rgba(239,68,68,.22);
+    }
+    .statusLine.warn{
+      background:rgba(245,158,11,.08);
+      border-color:rgba(245,158,11,.22);
+    }
+
+    .tabs{
+      display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;
+    }
+    .tab{
+      padding:10px 12px;border-radius:12px;border:1px solid var(--line);
+      background:rgba(255,255,255,.03);color:var(--muted);font-weight:800;
+      cursor:pointer;
+    }
+    .tab.active{
+      background:rgba(99,102,241,.18);
+      border-color:rgba(99,102,241,.30);
+      color:var(--text);
+    }
+
+    .view{display:none}
+    .view.active{display:block}
+
+    .formGrid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+    @media(max-width:760px){
+      .formGrid{grid-template-columns:1fr}
+    }
+
+    .fieldWrap{display:flex;flex-direction:column;gap:6px}
+    .label{
+      font-size:12px;color:var(--muted);font-weight:800;
+      letter-spacing:.3px;
+    }
+    .input,.select,.textarea{
+      width:100%;
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--line);
+      border-radius:12px;
+      color:var(--text);
+      padding:12px 13px;
+      outline:none;
+    }
+    .textarea{min-height:92px;resize:vertical}
+
+    .switchRow{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:10px;padding:12px;border-radius:14px;
+      background:rgba(255,255,255,.03);border:1px solid var(--line);
+    }
+    .switch{
+      position:relative;width:48px;height:28px;display:inline-block;flex:0 0 auto;
+    }
+    .switch input{opacity:0;width:0;height:0}
+    .slider{
+      position:absolute;inset:0;border-radius:999px;
+      background:#253253;border:1px solid rgba(255,255,255,.10);cursor:pointer;transition:.2s;
+    }
+    .slider:before{
+      content:"";position:absolute;left:4px;top:3px;width:20px;height:20px;border-radius:999px;
+      background:#cfd6ff;transition:.2s;
+    }
+    .switch input:checked + .slider{
+      background:rgba(34,197,94,.35);
+    }
+    .switch input:checked + .slider:before{
+      transform:translateX(19px);background:#fff;
+    }
+
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .metaBox{
+      padding:12px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid var(--line);
+    }
+
+    .list{
+      display:grid;gap:10px;
+    }
+    .prodCard{
+      padding:14px;border-radius:14px;border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      display:grid;grid-template-columns:1fr auto;gap:12px;
+      align-items:start;
+    }
+    .prodName{font-weight:900}
+    .prodMeta{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.7}
+    .prodRight{
+      display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;
+    }
+
+    .tag{
+      display:inline-flex;padding:6px 8px;border-radius:999px;
+      border:1px solid var(--line);font-size:11px;font-weight:900;
+      color:var(--muted);white-space:nowrap;
+    }
+    .tag.ok{
+      background:rgba(34,197,94,.10);border-color:rgba(34,197,94,.25);color:#cbffd9;
+    }
+    .tag.warn{
+      background:rgba(245,158,11,.10);border-color:rgba(245,158,11,.25);color:#ffe1b2;
+    }
+    .tag.bad{
+      background:rgba(239,68,68,.10);border-color:rgba(239,68,68,.25);color:#ffd0d0;
+    }
+
+    .searchRow{
+      display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;
+    }
+
+    .diag{
+      background:#081119;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      color:#d6e0ff;
+      white-space:pre-wrap;
+      word-break:break-word;
+      max-height:260px;
+      overflow:auto;
+    }
+
+    .empty{
+      color:var(--muted);
+      font-weight:800;
+      padding:16px;
+      border-radius:14px;
+      border:1px dashed var(--line);
+      text-align:center;
+    }
+
+    .footerNote{
+      margin-top:12px;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.7;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <div class="topbar">
+      <div class="brand">
+        <div class="badge">⚙️</div>
+        <div>
+          <div style="font-size:18px">DIGIY CAISSE PRO — Admin</div>
+          <div class="muted small">Boutique, TVA, produits, stock</div>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="pill"><span id="dotStatus" class="dot"></span><span id="pillStatus">Chargement…</span></div>
+        <a class="btn" id="btnBackCaisse" href="./caisse.html">Ouvrir la caisse</a>
+        <a class="btn primary" id="btnBackHall" href="./index.html">Retour hall</a>
+      </div>
+    </div>
+
+    <div class="grid">
+      <section class="card">
+        <h2>Accès module</h2>
+        <div id="statusBox" class="statusLine">
+          <div>🧭</div>
+          <div>
+            <div style="font-weight:900" id="statusTitle">Initialisation…</div>
+            <div class="muted small" id="statusSub">Lecture du slug, du phone et du contexte boutique.</div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="tabs">
+          <button class="tab active" type="button" data-tab="shop">Boutique</button>
+          <button class="tab" type="button" data-tab="products">Produits</button>
+          <button class="tab" type="button" data-tab="diag">Diagnostic</button>
+        </div>
+
+        <div id="view-shop" class="view active">
+          <div class="formGrid">
+            <div class="fieldWrap">
+              <label class="label">Nom boutique</label>
+              <input id="shop_name" class="input" placeholder="Chez Astou" />
+            </div>
+            <div class="fieldWrap">
+              <label class="label">Ville</label>
+              <input id="shop_city" class="input" placeholder="Saly" />
+            </div>
+
+            <div class="fieldWrap">
+              <label class="label">Téléphone</label>
+              <input id="shop_phone" class="input" placeholder="221771234567" />
+            </div>
+            <div class="fieldWrap">
+              <label class="label">WhatsApp</label>
+              <input id="shop_whatsapp" class="input" placeholder="221771234567" />
+            </div>
+
+            <div class="fieldWrap">
+              <label class="label">Wave</label>
+              <input id="shop_wave" class="input" placeholder="221771234567" />
+            </div>
+            <div class="fieldWrap">
+              <label class="label">Adresse</label>
+              <input id="shop_address" class="input" placeholder="Rue, quartier, repère" />
+            </div>
+          </div>
+
+          <div class="fieldWrap" style="margin-top:12px">
+            <label class="label">Message commerçant</label>
+            <textarea id="shop_tagline" class="textarea" placeholder="Petite phrase utile sur la boutique"></textarea>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="switchRow">
+            <div>
+              <div style="font-weight:900">TVA active</div>
+              <div class="muted small">Active si la boutique doit travailler avec TVA.</div>
+            </div>
+            <label class="switch">
+              <input id="tva_active" type="checkbox" />
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="formGrid" style="margin-top:12px">
+            <div class="fieldWrap">
+              <label class="label">Taux TVA (%)</label>
+              <input id="tva_taux" class="input" type="number" min="0" max="100" step="1" placeholder="18" />
+            </div>
+            <div class="fieldWrap">
+              <label class="label">Mode TVA</label>
+              <select id="tva_mode" class="select">
+                <option value="excl">HT → TVA ajoutée</option>
+                <option value="incl">TTC → TVA incluse</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="btnSaveShop" class="btn ok" type="button">💾 Enregistrer la boutique</button>
+            <button id="btnReloadShop" class="btn" type="button">🔄 Recharger</button>
+          </div>
+
+          <div class="footerNote">
+            Ici le commerçant pose sa maison : nom, contacts, TVA, identité boutique.
+          </div>
+        </div>
+
+        <div id="view-products" class="view">
+          <div class="metaBox">
+            <div style="font-weight:900;margin-bottom:6px">Ajouter ou modifier un produit</div>
+            <div class="formGrid">
+              <div class="fieldWrap">
+                <label class="label">Nom produit</label>
+                <input id="prod_name" class="input" placeholder="Sucre 1kg" />
+              </div>
+              <div class="fieldWrap">
+                <label class="label">Catégorie</label>
+                <input id="prod_cat" class="input" placeholder="Épicerie" />
+              </div>
+
+              <div class="fieldWrap">
+                <label class="label">Prix (FCFA)</label>
+                <input id="prod_price" class="input" type="number" min="0" step="1" placeholder="2500" />
+              </div>
+              <div class="fieldWrap">
+                <label class="label">Stock</label>
+                <input id="prod_stock" class="input" type="number" min="0" step="1" placeholder="12" />
+              </div>
+            </div>
+
+            <div class="actions">
+              <button id="btnSaveProd" class="btn ok" type="button">➕ Enregistrer le produit</button>
+              <button id="btnResetProd" class="btn" type="button">Effacer</button>
+            </div>
+            <input type="hidden" id="prod_id" />
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="searchRow">
+            <input id="searchProd" class="input" placeholder="Rechercher un produit..." />
+            <button id="btnReloadProducts" class="btn" type="button">🔄 Recharger la liste</button>
+          </div>
+
+          <div id="productsList" class="list">
+            <div class="empty">Aucun produit pour le moment.</div>
+          </div>
+
+          <div class="footerNote">
+            Les suppressions sont douces : on désactive le produit au lieu de le casser dans la base.
+          </div>
+        </div>
+
+        <div id="view-diag" class="view">
+          <div class="diag" id="diagBox">Initialisation…</div>
+        </div>
+      </section>
+
+      <aside class="card">
+        <h2>Contexte courant</h2>
+        <div class="metaBox">
+          <div class="small muted">Slug</div>
+          <div id="metaSlug" style="font-weight:900;margin-top:4px">—</div>
+        </div>
+
+        <div class="metaBox" style="margin-top:10px">
+          <div class="small muted">Téléphone</div>
+          <div id="metaPhone" style="font-weight:900;margin-top:4px">—</div>
+        </div>
+
+        <div class="metaBox" style="margin-top:10px">
+          <div class="small muted">Magasin</div>
+          <div id="metaStore" style="font-weight:900;margin-top:4px">—</div>
+        </div>
+
+        <div class="metaBox" style="margin-top:10px">
+          <div class="small muted">Plan</div>
+          <div id="metaPlan" style="font-weight:900;margin-top:4px">—</div>
+        </div>
+
+        <div class="metaBox" style="margin-top:10px">
+          <div class="small muted">Module</div>
+          <div style="font-weight:900;margin-top:4px">POS</div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="actions">
+          <a id="btnGoHall2" class="btn" href="./index.html">Hall</a>
+          <a id="btnGoCaisse2" class="btn primary" href="./caisse.html">Caisse</a>
+        </div>
+
+        <div class="footerNote">
+          Admin protégé. Ouvre cette page avec un lien du style <b>?slug=pos-221771234567</b> ou <b>?slug=...&phone=...</b>.
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const MODULE = "POS";
+      const SUPABASE_URL = String(window.DIGIY_SUPABASE_URL || "").trim();
+      const SUPABASE_ANON_KEY = String(window.DIGIY_SUPABASE_ANON_KEY || "").trim();
+
+      const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false
+        }
+      });
+
+      const state = {
+        slug: "",
+        phone: "",
+        access: false,
+        storeName: "",
+        plan: "",
+        storeContext: null,
+        settingsRow: null,
+        products: [],
+        loading: false
+      };
+
+      const $ = (id) => document.getElementById(id);
+      const diagLines = [];
+
+      function log(msg, data){
+        const line = `[${new Date().toLocaleTimeString("fr-FR")}] ${msg}`;
+        diagLines.push(data === undefined ? line : `${line}\n${safeStringify(data)}`);
+        $("diagBox").textContent = diagLines.join("\n\n");
+        console.log("[DIGIY POS ADMIN]", msg, data ?? "");
+      }
+
+      function safeStringify(v){
+        try { return JSON.stringify(v, null, 2); }
+        catch(_) { return String(v); }
+      }
+
+      function getParam(name){
+        return new URL(location.href).searchParams.get(name) || "";
+      }
+
+      function normPhone(v){
+        return String(v || "").replace(/[^\d]/g, "");
+      }
+
+      function buildUrl(base, params){
+        const u = new URL(base, location.href);
+        Object.entries(params || {}).forEach(([k, v]) => {
+          if(v !== undefined && v !== null && String(v) !== ""){
+            u.searchParams.set(k, String(v));
+          }
+        });
+        return u.toString();
+      }
+
+      function setStatus(kind, title, sub){
+        const box = $("statusBox");
+        const dot = $("dotStatus");
+        box.className = `statusLine ${kind || ""}`.trim();
+        dot.className = `dot ${kind === "ok" ? "ok" : kind === "bad" ? "bad" : ""}`.trim();
+        $("pillStatus").textContent = kind === "ok" ? "Accès OK" : kind === "bad" ? "Bloqué" : "Contrôle";
+        $("statusTitle").textContent = title;
+        $("statusSub").textContent = sub;
+      }
+
+      function paintMeta(){
+        $("metaSlug").textContent = state.slug || "—";
+        $("metaPhone").textContent = state.phone || "—";
+        $("metaStore").textContent = state.storeName || "—";
+        $("metaPlan").textContent = state.plan || "—";
+
+        const q = { slug: state.slug || "", phone: state.phone || "" };
+        $("btnBackCaisse").href = buildUrl("./caisse.html", q);
+        $("btnBackHall").href = buildUrl("./index.html", q);
+        $("btnGoHall2").href = buildUrl("./index.html", q);
+        $("btnGoCaisse2").href = buildUrl("./caisse.html", q);
+      }
+
+      function activateTab(name){
+        document.querySelectorAll(".tab").forEach(el => {
+          el.classList.toggle("active", el.dataset.tab === name);
+        });
+        document.querySelectorAll(".view").forEach(el => el.classList.remove("active"));
+        $(`view-${name}`).classList.add("active");
+      }
+
+      async function rpcFirstSuccess(name, payloads){
+        let lastError = null;
+
+        for(const payload of payloads){
+          try{
+            log(`RPC ${name} tentative`, payload);
+            const { data, error } = await sb.rpc(name, payload);
+            if(error){
+              lastError = error;
+              log(`RPC ${name} erreur`, {
+                message: error.message,
+                details: error.details,
+                hint: error.hint
+              });
+              continue;
+            }
+            log(`RPC ${name} OK`, data);
+            return data;
+          }catch(err){
+            lastError = err;
+            log(`RPC ${name} exception`, { message: err?.message || String(err) });
+          }
+        }
+
+        throw lastError || new Error(`RPC ${name} échouée`);
+      }
+
+      async function resolvePhoneFromSlug(slug){
+        const { data, error } = await sb
+          .from("digiy_subscriptions_public")
+          .select("phone,module,slug")
+          .eq("slug", slug)
+          .eq("module", MODULE)
+          .limit(1)
+          .maybeSingle();
+
+        if(error) throw error;
+        return normPhone(data?.phone || "");
+      }
+
+      async function getAccess(phone){
+        const res = await rpcFirstSuccess("digiy_has_access", [
+          { p_phone: phone, p_module: MODULE },
+          { phone, module: MODULE }
+        ]);
+
+        if(typeof res === "boolean") return res;
+        if(res && typeof res.ok === "boolean") return res.ok;
+        if(res && typeof res.has_access === "boolean") return res.has_access;
+        if(res && typeof res.allowed === "boolean") return res.allowed;
+        return !!res;
+      }
+
+      async function getSubscription(phone){
+        try{
+          const data = await rpcFirstSuccess("digiy_get_subscription_status", [
+            { p_phone: phone, p_module: MODULE },
+            { phone, module: MODULE }
+          ]);
+          return data || null;
+        }catch(err){
+          log("digiy_get_subscription_status indisponible", { message: err?.message || String(err) });
+          return null;
+        }
+      }
+
+      async function getStoreContext(slug){
+        try{
+          const data = await rpcFirstSuccess("pos_get_store_context_by_slug", [
+            { p_slug: slug },
+            { slug }
+          ]);
+          if(Array.isArray(data)) return data[0] || null;
+          return data || null;
+        }catch(err){
+          log("pos_get_store_context_by_slug indisponible", { message: err?.message || String(err) });
+          return null;
+        }
+      }
+
+      function normalizeContext(ctx){
+        const s = ctx && typeof ctx === "object" ? ctx : {};
+        return {
+          display_name: s.display_name || s.store_name || "DIGIY CAISSE PRO",
+          city: s.city || "—",
+          phone: normPhone(s.phone || ""),
+          whatsapp: normPhone(s.whatsapp || s.whatsapp_phone || ""),
+          wave_phone: normPhone(s.wave_phone || s.wave || ""),
+          address: s.address || "",
+          bio: s.bio || s.tagline || "",
+          tva_active: !!(s.tva_assujeti || s.tva_active),
+          tva_taux: s.tva_taux ?? 18
+        };
+      }
+
+      async function loadShopSettings(){
+        const tries = [
+          () => sb.from("caisse_settings").select("*").eq("slug", state.slug).limit(1).maybeSingle(),
+          () => sb.from("caisse_settings").select("*").eq("owner_id", state.phone).limit(1).maybeSingle()
+        ];
+
+        for(const run of tries){
+          try{
+            const { data, error } = await run();
+            if(!error && data) return data;
+            if(error) log("Lecture caisse_settings erreur", error);
+          }catch(err){
+            log("Lecture caisse_settings exception", { message: err?.message || String(err) });
+          }
+        }
+        return null;
+      }
+
+      function mergeShopData(row, ctx){
+        const r = row || {};
+        const c = normalizeContext(ctx);
+
+        return {
+          nom_boutique: r.nom_boutique || c.display_name || "DIGIY CAISSE PRO",
+          city: r.city || c.city || "",
+          telephone: normPhone(r.telephone || c.phone || state.phone || ""),
+          whatsapp_phone: normPhone(r.whatsapp_phone || c.whatsapp || state.phone || ""),
+          wave_phone: normPhone(r.wave_phone || c.wave_phone || ""),
+          adresse: r.adresse || c.address || "",
+          tagline: r.tagline || c.bio || "",
+          tva_active: typeof r.tva_active === "boolean" ? r.tva_active : !!c.tva_active,
+          tva_taux: r.tva_taux ?? c.tva_taux ?? 18,
+          tva_mode: r.tva_mode || "excl"
+        };
+      }
+
+      async function saveShopSettings(){
+        const row = {
+          owner_id: state.phone,
+          slug: state.slug || null,
+          nom_boutique: $("shop_name").value.trim() || "DIGIY CAISSE PRO",
+          city: $("shop_city").value.trim() || null,
+          telephone: normPhone($("shop_phone").value),
+          whatsapp_phone: normPhone($("shop_whatsapp").value),
+          wave_phone: normPhone($("shop_wave").value),
+          adresse: $("shop_address").value.trim() || null,
+          tagline: $("shop_tagline").value.trim() || null,
+          tva_active: $("tva_active").checked,
+          tva_taux: Number($("tva_taux").value || 18),
+          tva_mode: $("tva_mode").value || "excl",
+          updated_at: new Date().toISOString()
+        };
+
+        log("Sauvegarde caisse_settings", row);
+
+        const { error } = await sb.from("caisse_settings").upsert(row, {
+          onConflict: "slug"
+        });
+
+        if(error) throw error;
+
+        state.settingsRow = await loadShopSettings();
+        fillShopForm(state.settingsRow, state.storeContext);
+        state.storeName = $("shop_name").value.trim() || state.storeName;
+        paintMeta();
+      }
+
+      function fillShopForm(row, ctx){
+        const v = mergeShopData(row, ctx);
+        $("shop_name").value = v.nom_boutique || "";
+        $("shop_city").value = v.city || "";
+        $("shop_phone").value = v.telephone || state.phone || "";
+        $("shop_whatsapp").value = v.whatsapp_phone || "";
+        $("shop_wave").value = v.wave_phone || "";
+        $("shop_address").value = v.adresse || "";
+        $("shop_tagline").value = v.tagline || "";
+        $("tva_active").checked = !!v.tva_active;
+        $("tva_taux").value = v.tva_taux ?? 18;
+        $("tva_mode").value = v.tva_mode || "excl";
+      }
+
+      async function loadProducts(){
+        const tries = [
+          () => sb.from("caisse_products").select("*").eq("slug", state.slug).order("created_at", { ascending: false }),
+          () => sb.from("caisse_products").select("*").eq("owner_id", state.phone).order("created_at", { ascending: false })
+        ];
+
+        for(const run of tries){
+          try{
+            const { data, error } = await run();
+            if(!error && Array.isArray(data)){
+              state.products = data;
+              renderProducts();
+              return;
+            }
+            if(error) log("Lecture caisse_products erreur", error);
+          }catch(err){
+            log("Lecture caisse_products exception", { message: err?.message || String(err) });
+          }
+        }
+
+        state.products = [];
+        renderProducts();
+      }
+
+      function productTag(stock, isActive){
+        if(!isActive) return `<span class="tag bad">désactivé</span>`;
+        const s = Number(stock || 0);
+        if(s <= 0) return `<span class="tag bad">rupture</span>`;
+        if(s <= 5) return `<span class="tag warn">stock bas</span>`;
+        return `<span class="tag ok">actif</span>`;
+      }
+
+      function renderProducts(){
+        const q = ($("searchProd").value || "").trim().toLowerCase();
+        const rows = state.products.filter(p => {
+          const hay = [
+            p.nom || "",
+            p.categorie || ""
+          ].join(" ").toLowerCase();
+          return !q || hay.includes(q);
+        });
+
+        const box = $("productsList");
+        if(!rows.length){
+          box.innerHTML = `<div class="empty">Aucun produit pour le moment.</div>`;
+          return;
+        }
+
+        box.innerHTML = rows.map(p => `
+          <div class="prodCard">
+            <div>
+              <div class="prodName">${escapeHtml(p.nom || "Produit")}</div>
+              <div class="prodMeta">
+                Catégorie : ${escapeHtml(p.categorie || "—")}<br>
+                Prix : ${Number(p.prix || 0).toLocaleString("fr-FR")} FCFA<br>
+                Stock : ${Number(p.stock || 0)}<br>
+                ID : ${escapeHtml(p.id || "—")}
+              </div>
+            </div>
+            <div class="prodRight">
+              ${productTag(p.stock, p.is_active !== false)}
+              <button class="btn" type="button" onclick="window.POS_ADMIN.editProduct('${String(p.id)}')">✏️ Modifier</button>
+              <button class="btn ${p.is_active === false ? "ok" : "danger"}" type="button" onclick="window.POS_ADMIN.toggleProduct('${String(p.id)}', ${p.is_active === false ? "true" : "false"})">
+                ${p.is_active === false ? "♻️ Réactiver" : "🗑 Désactiver"}
+              </button>
+            </div>
+          </div>
+        `).join("");
+      }
+
+      function escapeHtml(v){
+        return String(v ?? "")
+          .replaceAll("&","&amp;")
+          .replaceAll("<","&lt;")
+          .replaceAll(">","&gt;")
+          .replaceAll('"',"&quot;")
+          .replaceAll("'","&#039;");
+      }
+
+      function resetProductForm(){
+        $("prod_id").value = "";
+        $("prod_name").value = "";
+        $("prod_cat").value = "";
+        $("prod_price").value = "";
+        $("prod_stock").value = "";
+        $("btnSaveProd").textContent = "➕ Enregistrer le produit";
+      }
+
+      function fillProductForm(p){
+        $("prod_id").value = p.id || "";
+        $("prod_name").value = p.nom || "";
+        $("prod_cat").value = p.categorie || "";
+        $("prod_price").value = p.prix ?? "";
+        $("prod_stock").value = p.stock ?? "";
+        $("btnSaveProd").textContent = "💾 Mettre à jour le produit";
+        activateTab("products");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      async function saveProduct(){
+        const id = $("prod_id").value.trim();
+        const row = {
+          owner_id: state.phone,
+          slug: state.slug || null,
+          nom: $("prod_name").value.trim(),
+          categorie: $("prod_cat").value.trim() || null,
+          prix: Number($("prod_price").value || 0),
+          stock: Number($("prod_stock").value || 0),
+          is_active: true
+        };
+
+        if(!row.nom) throw new Error("Nom produit requis");
+        if(!Number.isFinite(row.prix) || row.prix < 0) throw new Error("Prix produit invalide");
+
+        log("Sauvegarde produit", row);
+
+        if(id){
+          const { error } = await sb
+            .from("caisse_products")
+            .update({
+              nom: row.nom,
+              categorie: row.categorie,
+              prix: row.prix,
+              stock: row.stock,
+              is_active: true,
+              updated_at: new Date().toISOString()
+            })
+            .eq("id", id)
+            .eq("slug", state.slug);
+
+          if(error) throw error;
+        } else {
+          const { error } = await sb
+            .from("caisse_products")
+            .insert({
+              ...row,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            });
+
+          if(error) throw error;
+        }
+
+        resetProductForm();
+        await loadProducts();
+      }
+
+      async function setProductActive(id, active){
+        const { error } = await sb
+          .from("caisse_products")
+          .update({
+            is_active: !!active,
+            updated_at: new Date().toISOString()
+          })
+          .eq("id", id)
+          .eq("slug", state.slug);
+
+        if(error) throw error;
+        await loadProducts();
+      }
+
+      async function boot(){
+        if(state.loading) return;
+        state.loading = true;
+
+        try{
+          state.slug = String(getParam("slug") || "").trim();
+          state.phone = normPhone(getParam("phone"));
+          paintMeta();
+
+          if(!state.slug){
+            setStatus("bad", "Slug manquant", "Ouvre cette page avec ?slug=pos-2217...");
+            log("Slug manquant");
+            return;
+          }
+
+          if(!state.phone){
+            state.phone = await resolvePhoneFromSlug(state.slug);
+            paintMeta();
+          }
+
+          if(!state.phone){
+            setStatus("bad", "Téléphone introuvable", "Le slug n’a pas remonté le phone boutique.");
+            log("Téléphone introuvable");
+            return;
+          }
+
+          state.access = await getAccess(state.phone);
+          const sub = await getSubscription(state.phone);
+          state.plan = sub?.plan || sub?.plan_code || (state.access ? "actif" : "standard");
+
+          if(!state.access){
+            setStatus("bad", "Accès refusé", "Le module POS n’est pas actif pour cette boutique.");
+            log("Accès refusé");
+            return;
+          }
+
+          state.storeContext = await getStoreContext(state.slug);
+          state.settingsRow = await loadShopSettings();
+          fillShopForm(state.settingsRow, state.storeContext);
+
+          state.storeName =
+            $("shop_name").value.trim() ||
+            state.storeContext?.display_name ||
+            state.storeContext?.store_name ||
+            "DIGIY CAISSE PRO";
+
+          paintMeta();
+          await loadProducts();
+
+          setStatus("ok", "Admin prêt", "Tu peux maintenant poser la boutique et les produits.");
+          log("Admin prêt", {
+            slug: state.slug,
+            phone: state.phone,
+            plan: state.plan
+          });
+        } catch(err){
+          setStatus("bad", "Blocage technique", err?.message || "Erreur admin POS");
+          log("BOOT ERROR", { message: err?.message || String(err) });
+        } finally {
+          state.loading = false;
+        }
+      }
+
+      document.querySelectorAll(".tab").forEach(btn => {
+        btn.addEventListener("click", () => activateTab(btn.dataset.tab));
+      });
+
+      $("btnReloadShop").addEventListener("click", async () => {
+        try{
+          $("btnReloadShop").disabled = true;
+          state.storeContext = await getStoreContext(state.slug);
+          state.settingsRow = await loadShopSettings();
+          fillShopForm(state.settingsRow, state.storeContext);
+          log("Boutique rechargée");
+        }catch(err){
+          log("Erreur reload boutique", { message: err?.message || String(err) });
+          alert(err?.message || "Erreur rechargement boutique");
+        }finally{
+          $("btnReloadShop").disabled = false;
+        }
+      });
+
+      $("btnSaveShop").addEventListener("click", async () => {
+        try{
+          $("btnSaveShop").disabled = true;
+          await saveShopSettings();
+          log("Boutique enregistrée");
+        } catch(err){
+          log("Erreur save boutique", { message: err?.message || String(err) });
+          alert(err?.message || "Erreur sauvegarde boutique");
+        } finally {
+          $("btnSaveShop").disabled = false;
+        }
+      });
+
+      $("btnSaveProd").addEventListener("click", async () => {
+        try{
+          $("btnSaveProd").disabled = true;
+          await saveProduct();
+          log("Produit enregistré");
+        } catch(err){
+          log("Erreur save produit", { message: err?.message || String(err) });
+          alert(err?.message || "Erreur sauvegarde produit");
+        } finally {
+          $("btnSaveProd").disabled = false;
+        }
+      });
+
+      $("btnResetProd").addEventListener("click", resetProductForm);
+
+      $("btnReloadProducts").addEventListener("click", async () => {
+        try{
+          $("btnReloadProducts").disabled = true;
+          await loadProducts();
+          log("Produits rechargés");
+        } catch(err){
+          log("Erreur reload produits", { message: err?.message || String(err) });
+          alert(err?.message || "Erreur rechargement produits");
+        } finally {
+          $("btnReloadProducts").disabled = false;
+        }
+      });
+
+      $("searchProd").addEventListener("input", renderProducts);
+
+      window.POS_ADMIN = {
+        editProduct(id){
+          const p = state.products.find(x => String(x.id) === String(id));
+          if(p) fillProductForm(p);
+        },
+        async toggleProduct(id, activate){
+          const label = activate ? "réactiver" : "désactiver";
+          if(!confirm(`Confirmer : ${label} ce produit ?`)) return;
+          try{
+            await setProductActive(id, activate);
+            log(activate ? "Produit réactivé" : "Produit désactivé", { id });
+          } catch(err){
+            log("Erreur changement statut produit", { message: err?.message || String(err) });
+            alert(err?.message || "Erreur changement statut produit");
+          }
+        }
+      };
+
+      boot();
+    })();
+  </script>
+</body>
+</html>
