@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>DIGIY CAISSE PRO — Admin boutique</title>
+  <title>DIGIY CAISSE PRO — Admin</title>
   <meta name="theme-color" content="#0b1020" />
-  <meta name="description" content="DIGIY CAISSE PRO — administration boutique, TVA, produits et stock." />
+  <meta name="description" content="DIGIY CAISSE PRO — bureau admin léger : boutique, TVA, produits." />
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
@@ -18,15 +18,13 @@
       --bg:#0b1020;
       --bg2:#0e1630;
       --card:#121a33;
-      --card2:#172141;
       --text:#eef1ff;
       --muted:#a8b1d1;
       --line:rgba(255,255,255,.09);
-      --accent:#6366f1;
       --ok:#22c55e;
       --warn:#f59e0b;
       --danger:#ef4444;
-      --gold:#f0c040;
+      --accent:#6366f1;
       --shadow:0 12px 30px rgba(0,0,0,.35);
       --radius:18px;
     }
@@ -51,17 +49,16 @@
       display:flex;align-items:center;justify-content:space-between;
       gap:12px;padding:10px 6px;margin-bottom:12px;flex-wrap:wrap;
     }
-    .brand{
-      display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.2px
-    }
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.2px}
     .brand .badge{
       display:inline-flex;align-items:center;justify-content:center;
       width:38px;height:38px;border-radius:12px;
       background:rgba(99,102,241,.18);border:1px solid var(--line);font-size:20px;
     }
     .right{
-      display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;
     }
+
     .pill{
       display:inline-flex;align-items:center;gap:8px;
       padding:8px 10px;border-radius:999px;
@@ -70,6 +67,7 @@
       color:var(--muted);
       font-weight:700;font-size:13px;
     }
+
     .dot{width:10px;height:10px;border-radius:999px;background:var(--warn)}
     .dot.ok{background:var(--ok)}
     .dot.bad{background:var(--danger)}
@@ -79,12 +77,16 @@
       border:1px solid var(--line);
       background:rgba(255,255,255,.05);
       color:var(--text);
-      padding:10px 12px;border-radius:12px;
-      font-weight:800;cursor:pointer;transition:.15s ease;
+      padding:10px 12px;
+      border-radius:12px;
+      font-weight:800;
+      cursor:pointer;
+      transition:.15s ease;
       display:inline-flex;align-items:center;justify-content:center;gap:8px;
       min-height:44px;
     }
     .btn:hover{transform:translateY(-1px)}
+    .btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
     .btn.primary{
       background:rgba(99,102,241,.22);
       border-color:rgba(99,102,241,.35);
@@ -101,7 +103,6 @@
       background:rgba(239,68,68,.10);
       border-color:rgba(239,68,68,.30);
     }
-    .btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
 
     .grid{
       display:grid;
@@ -119,6 +120,7 @@
       box-shadow:var(--shadow);
       padding:16px;
     }
+
     .card h2,.card h3{margin:0 0 10px 0}
     .muted{color:var(--muted)}
     .small{font-size:12px}
@@ -170,8 +172,7 @@
 
     .fieldWrap{display:flex;flex-direction:column;gap:6px}
     .label{
-      font-size:12px;color:var(--muted);font-weight:800;
-      letter-spacing:.3px;
+      font-size:12px;color:var(--muted);font-weight:800;letter-spacing:.3px;
     }
     .input,.select,.textarea{
       width:100%;
@@ -217,45 +218,28 @@
     .prodCard{
       padding:14px;border-radius:14px;border:1px solid var(--line);
       background:rgba(255,255,255,.03);
-      display:grid;grid-template-columns:1fr auto;gap:12px;
-      align-items:start;
+      display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start;
     }
     .prodName{font-weight:900}
     .prodMeta{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.7}
-    .prodRight{
-      display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;
-    }
+    .prodRight{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 
     .tag{
       display:inline-flex;padding:6px 8px;border-radius:999px;
       border:1px solid var(--line);font-size:11px;font-weight:900;
       color:var(--muted);white-space:nowrap;
     }
-    .tag.ok{
-      background:rgba(34,197,94,.10);border-color:rgba(34,197,94,.25);color:#cbffd9;
-    }
-    .tag.warn{
-      background:rgba(245,158,11,.10);border-color:rgba(245,158,11,.25);color:#ffe1b2;
-    }
-    .tag.bad{
-      background:rgba(239,68,68,.10);border-color:rgba(239,68,68,.25);color:#ffd0d0;
-    }
+    .tag.ok{background:rgba(34,197,94,.10);border-color:rgba(34,197,94,.25);color:#cbffd9}
+    .tag.warn{background:rgba(245,158,11,.10);border-color:rgba(245,158,11,.25);color:#ffe1b2}
+    .tag.bad{background:rgba(239,68,68,.10);border-color:rgba(239,68,68,.25);color:#ffd0d0}
 
-    .searchRow{
-      display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;
-    }
+    .searchRow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
 
     .diag{
-      background:#081119;
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:12px;
+      background:#081119;border:1px solid var(--line);border-radius:14px;padding:12px;
       font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      color:#d6e0ff;
-      white-space:pre-wrap;
-      word-break:break-word;
-      max-height:260px;
-      overflow:auto;
+      color:#d6e0ff;white-space:pre-wrap;word-break:break-word;
+      max-height:260px;overflow:auto;
     }
 
     .empty{
@@ -282,15 +266,15 @@
       <div class="brand">
         <div class="badge">⚙️</div>
         <div>
-          <div style="font-size:18px">DIGIY CAISSE PRO — Admin</div>
-          <div class="muted small">Boutique, TVA, produits, stock</div>
+          <div style="font-size:18px">DIGIY CAISSE PRO — Admin léger</div>
+          <div class="muted small">Boutique, TVA, produits</div>
         </div>
       </div>
 
       <div class="right">
         <div class="pill"><span id="dotStatus" class="dot"></span><span id="pillStatus">Chargement…</span></div>
-        <a class="btn" id="btnBackCaisse" href="./caisse.html">Ouvrir la caisse</a>
-        <a class="btn primary" id="btnBackHall" href="./index.html">Retour hall</a>
+        <a class="btn" id="btnBackCaisse" href="./caisse.html">Caisse</a>
+        <a class="btn primary" id="btnBackHall" href="./index.html">Hall</a>
       </div>
     </div>
 
@@ -438,6 +422,7 @@
 
       <aside class="card">
         <h2>Contexte courant</h2>
+
         <div class="metaBox">
           <div class="small muted">Slug</div>
           <div id="metaSlug" style="font-weight:900;margin-top:4px">—</div>
@@ -653,11 +638,11 @@
         const s = ctx && typeof ctx === "object" ? ctx : {};
         return {
           display_name: s.display_name || s.store_name || "DIGIY CAISSE PRO",
-          city: s.city || s.ville || "",
+          city: s.city || "—",
           phone: normPhone(s.phone || ""),
           whatsapp: normPhone(s.whatsapp || s.whatsapp_phone || ""),
           wave_phone: normPhone(s.wave_phone || s.wave || ""),
-          address: s.address || s.adresse || "",
+          address: s.address || "",
           bio: s.bio || s.tagline || "",
           tva_active: !!(s.tva_assujeti || s.tva_active),
           tva_taux: s.tva_taux ?? 18
@@ -695,7 +680,7 @@
           adresse: r.adresse || c.address || "",
           tagline: r.tagline || c.bio || "",
           tva_active: typeof r.tva_active === "boolean" ? r.tva_active : !!c.tva_active,
-          tva_taux: r.tva_taux ?? c.tva_taux ?? 18,
+          tva_taux: Number(r.tva_taux ?? c.tva_taux ?? 18),
           tva_mode: r.tva_mode || "excl"
         };
       }
@@ -719,11 +704,28 @@
 
         log("Sauvegarde caisse_settings", row);
 
-        const { error } = await sb.from("caisse_settings").upsert(row, {
-          onConflict: "slug"
-        });
+        let saved = false;
+        const tries = [
+          () => sb.from("caisse_settings").upsert(row, { onConflict: "slug" }),
+          () => sb.from("caisse_settings").upsert(row, { onConflict: "owner_id" })
+        ];
 
-        if(error) throw error;
+        for(const run of tries){
+          try{
+            const { error } = await run();
+            if(!error){
+              saved = true;
+              break;
+            }
+            log("Upsert caisse_settings erreur", error);
+          }catch(err){
+            log("Upsert caisse_settings exception", { message: err?.message || String(err) });
+          }
+        }
+
+        if(!saved){
+          throw new Error("Impossible d’enregistrer la boutique");
+        }
 
         state.settingsRow = await loadShopSettings();
         fillShopForm(state.settingsRow, state.storeContext);
@@ -862,20 +864,36 @@
         log("Sauvegarde produit", row);
 
         if(id){
-          const { error } = await sb
-            .from("caisse_products")
-            .update({
+          const tries = [
+            () => sb.from("caisse_products").update({
               nom: row.nom,
               categorie: row.categorie,
               prix: row.prix,
               stock: row.stock,
               is_active: true,
               updated_at: new Date().toISOString()
-            })
-            .eq("id", id)
-            .eq("owner_id", state.phone);
+            }).eq("id", id).eq("slug", state.slug),
+            () => sb.from("caisse_products").update({
+              nom: row.nom,
+              categorie: row.categorie,
+              prix: row.prix,
+              stock: row.stock,
+              is_active: true,
+              updated_at: new Date().toISOString()
+            }).eq("id", id).eq("owner_id", state.phone)
+          ];
 
-          if(error) throw error;
+          let ok = false;
+          for(const run of tries){
+            try{
+              const { error } = await run();
+              if(!error){ ok = true; break; }
+              log("Update produit erreur", error);
+            }catch(err){
+              log("Update produit exception", { message: err?.message || String(err) });
+            }
+          }
+          if(!ok) throw new Error("Impossible de mettre à jour le produit");
         } else {
           const { error } = await sb
             .from("caisse_products")
@@ -893,16 +911,29 @@
       }
 
       async function setProductActive(id, active){
-        const { error } = await sb
-          .from("caisse_products")
-          .update({
+        const tries = [
+          () => sb.from("caisse_products").update({
             is_active: !!active,
             updated_at: new Date().toISOString()
-          })
-          .eq("id", id)
-          .eq("owner_id", state.phone);
+          }).eq("id", id).eq("slug", state.slug),
+          () => sb.from("caisse_products").update({
+            is_active: !!active,
+            updated_at: new Date().toISOString()
+          }).eq("id", id).eq("owner_id", state.phone)
+        ];
 
-        if(error) throw error;
+        let ok = false;
+        for(const run of tries){
+          try{
+            const { error } = await run();
+            if(!error){ ok = true; break; }
+            log("Update statut produit erreur", error);
+          }catch(err){
+            log("Update statut produit exception", { message: err?.message || String(err) });
+          }
+        }
+
+        if(!ok) throw new Error("Impossible de modifier le statut du produit");
         await loadProducts();
       }
 
