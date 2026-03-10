@@ -2,8 +2,8 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>DIGIY CAISSE PRO — Dashboard</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>DIGIY CAISSE PRO — Caisse</title>
   <meta name="theme-color" content="#0b1020" />
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -15,567 +15,1014 @@
   <style>
     :root{
       --bg:#0b1020;
+      --bg2:#0e1630;
       --card:#121a33;
-      --muted:#a8b1d1;
+      --card2:#182344;
       --text:#eef1ff;
+      --muted:#a8b1d1;
+      --line:rgba(255,255,255,.09);
+      --accent:#6366f1;
       --ok:#22c55e;
       --warn:#f59e0b;
       --danger:#ef4444;
-      --accent:#6366f1;
-      --line:rgba(255,255,255,.09);
-      --shadow: 0 12px 30px rgba(0,0,0,.35);
+      --shadow:0 12px 30px rgba(0,0,0,.35);
       --radius:18px;
-      --pad:16px;
     }
+
     *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
     body{
-      margin:0;
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
-      background:
-        radial-gradient(1200px 700px at 20% -20%, rgba(99,102,241,.25), transparent 70%),
-        radial-gradient(900px 600px at 100% 0%, rgba(34,197,94,.15), transparent 55%),
-        var(--bg);
       color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 15% -20%, rgba(99,102,241,.24), transparent 70%),
+        radial-gradient(900px 580px at 100% 0%, rgba(34,197,94,.12), transparent 55%),
+        linear-gradient(180deg, var(--bg2), var(--bg));
+      min-height:100vh;
     }
-    .wrap{max-width:980px;margin:0 auto;padding:18px 14px 34px}
+
+    .wrap{
+      max-width:1150px;
+      margin:0 auto;
+      padding:16px 14px 40px;
+    }
+
     .topbar{
-      display:flex;align-items:center;justify-content:space-between;
-      gap:12px;padding:10px 6px;margin-bottom:10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+      flex-wrap:wrap;
     }
+
     .brand{
-      display:flex;align-items:center;gap:10px;
-      font-weight:800;letter-spacing:.2px
+      display:flex;
+      align-items:center;
+      gap:12px;
     }
-    .brand .badge{
-      display:inline-flex;align-items:center;justify-content:center;
-      width:34px;height:34px;border-radius:11px;
-      background:rgba(99,102,241,.18);border:1px solid var(--line)
+
+    .brandBadge{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(99,102,241,.16);
+      border:1px solid var(--line);
+      font-size:22px;
     }
-    .right{
-      display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end
+
+    .brandTitle{
+      font-weight:900;
+      letter-spacing:.2px;
+      font-size:18px;
     }
+
+    .brandSub{
+      color:var(--muted);
+      font-size:12px;
+      font-weight:700;
+      margin-top:2px;
+    }
+
+    .row{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
     .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 10px;border-radius:999px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 12px;
+      border-radius:999px;
       background:rgba(255,255,255,.04);
       border:1px solid var(--line);
       color:var(--muted);
-      font-weight:600;font-size:13px;
+      font-weight:700;
+      font-size:13px;
     }
-    .pill b{color:var(--text);font-weight:800}
+
+    .pill strong{color:var(--text)}
+
     .btn{
+      appearance:none;
       border:1px solid var(--line);
       background:rgba(255,255,255,.05);
       color:var(--text);
-      padding:10px 12px;border-radius:12px;
-      font-weight:800;cursor:pointer;
-      transition:.15s ease;
+      padding:11px 13px;
+      border-radius:13px;
+      font-weight:850;
+      cursor:pointer;
+      transition:transform .12s ease, opacity .12s ease, background .12s ease;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
     }
+
     .btn:hover{transform:translateY(-1px)}
+    .btn:disabled{opacity:.56;cursor:not-allowed;transform:none}
     .btn.primary{
       background:rgba(99,102,241,.22);
       border-color:rgba(99,102,241,.35);
     }
-    .btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+    .btn.ok{
+      background:rgba(34,197,94,.12);
+      border-color:rgba(34,197,94,.32);
+    }
+    .btn.warn{
+      background:rgba(245,158,11,.10);
+      border-color:rgba(245,158,11,.30);
+    }
+
     .grid{
       display:grid;
-      grid-template-columns:1fr;
       gap:12px;
-      margin-top:8px;
+      grid-template-columns:1fr;
     }
-    @media(min-width:920px){
-      .grid{grid-template-columns:1.05fr .95fr}
+
+    @media (min-width:980px){
+      .grid{
+        grid-template-columns:1.05fr .95fr;
+      }
     }
+
     .card{
       background:rgba(18,26,51,.92);
       border:1px solid var(--line);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
-      padding:var(--pad);
+      padding:16px;
     }
-    .card h3{margin:0 0 8px 0;font-size:15px;letter-spacing:.2px}
+
+    .card h3{
+      margin:0 0 10px 0;
+      font-size:15px;
+      letter-spacing:.2px;
+    }
+
     .muted{color:var(--muted)}
-    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .statusDot{width:10px;height:10px;border-radius:999px;background:var(--warn)}
-    .statusDot.ok{background:var(--ok)}
-    .statusDot.bad{background:var(--danger)}
-    .bigMoney{
-      font-size:34px;font-weight:900;letter-spacing:-.8px;margin:6px 0 2px 0
+    .tiny{font-size:12px}
+    .strong{font-weight:900}
+
+    .hero{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
     }
-    .mini{
-      display:flex;gap:10px;align-items:center;flex-wrap:wrap;
-      font-size:13px;color:var(--muted);font-weight:650
+
+    @media (min-width:980px){
+      .hero{
+        grid-template-columns:1.1fr .9fr;
+      }
     }
-    .hr{height:1px;background:var(--line);margin:12px 0}
-    .boostBox{
-      display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
-      padding:12px;border-radius:16px;
-      background:rgba(99,102,241,.10);
-      border:1px solid rgba(99,102,241,.25);
+
+    .statusLine{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
     }
-    .boostBox b{display:block;margin-bottom:4px}
-    .notifList{display:flex;flex-direction:column;gap:8px;margin-top:8px}
-    .notif{
-      padding:10px 12px;border-radius:14px;border:1px solid var(--line);
+
+    .dot{
+      width:11px;
+      height:11px;
+      border-radius:999px;
+      background:var(--warn);
+      margin-top:6px;
+      flex:0 0 auto;
+      box-shadow:0 0 0 4px rgba(255,255,255,.03);
+    }
+
+    .dot.ok{background:var(--ok)}
+    .dot.bad{background:var(--danger)}
+
+    .bigTitle{
+      margin:0;
+      font-size:28px;
+      line-height:1.08;
+      letter-spacing:-.6px;
+    }
+
+    .subInfo{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+
+    .miniCard{
+      flex:1 1 180px;
+      min-width:0;
+      padding:12px;
+      border-radius:16px;
       background:rgba(255,255,255,.03);
-      display:flex;align-items:flex-start;justify-content:space-between;gap:10px
+      border:1px solid var(--line);
     }
-    .tag{
-      font-size:12px;font-weight:900;
-      padding:6px 9px;border-radius:999px;border:1px solid var(--line);
-      color:var(--muted)
+
+    .value{
+      font-size:20px;
+      font-weight:900;
+      margin-top:4px;
+      line-height:1.1;
     }
-    .tag.warn{color:#ffe2b0;border-color:rgba(245,158,11,.35);background:rgba(245,158,11,.10)}
-    .tag.ok{color:#c9ffd9;border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.08)}
-    .tag.info{color:#cfd6ff;border-color:rgba(99,102,241,.35);background:rgba(99,102,241,.10)}
-    .footer{
-      margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end
+
+    .hr{
+      height:1px;
+      background:var(--line);
+      margin:12px 0;
     }
-    .smallLink{color:var(--muted);text-decoration:none;font-weight:750}
-    .smallLink:hover{color:var(--text)}
+
+    .notice{
+      padding:12px;
+      border-radius:15px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      margin-top:10px;
+    }
+
+    .notice.ok{
+      border-color:rgba(34,197,94,.25);
+      background:rgba(34,197,94,.08);
+    }
+
+    .notice.warn{
+      border-color:rgba(245,158,11,.25);
+      background:rgba(245,158,11,.08);
+    }
+
+    .notice.bad{
+      border-color:rgba(239,68,68,.25);
+      background:rgba(239,68,68,.08);
+    }
+
+    .cashGrid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+    }
+
+    @media (min-width:900px){
+      .cashGrid{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      margin-top:12px;
+    }
+
+    .field label{
+      font-size:13px;
+      font-weight:800;
+      color:var(--muted);
+    }
+
+    .input, .select{
+      width:100%;
+      padding:13px 14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      outline:none;
+      font-size:16px;
+      font-weight:700;
+    }
+
+    .input::placeholder{color:#92a0c7}
+
+    .actionRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    .helper{
+      color:var(--muted);
+      font-size:13px;
+      font-weight:700;
+      margin-top:8px;
+    }
+
+    .logBox{
+      background:#0a1023;
+      color:#cfdbff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      white-space:pre-wrap;
+      word-break:break-word;
+      max-height:240px;
+      overflow:auto;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:900;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:var(--muted);
+    }
+
+    .badge.ok{
+      background:rgba(34,197,94,.10);
+      border-color:rgba(34,197,94,.30);
+      color:#d7ffe1;
+    }
+
+    .badge.warn{
+      background:rgba(245,158,11,.10);
+      border-color:rgba(245,158,11,.30);
+      color:#ffe3b8;
+    }
+
+    .badge.bad{
+      background:rgba(239,68,68,.10);
+      border-color:rgba(239,68,68,.30);
+      color:#ffd2d2;
+    }
+
+    details{
+      margin-top:10px;
+    }
+
+    summary{
+      cursor:pointer;
+      font-weight:900;
+      color:var(--text);
+      outline:none;
+    }
+
+    .empty{
+      color:var(--muted);
+      font-weight:800;
+      font-size:13px;
+    }
   </style>
 </head>
-
 <body>
   <div class="wrap">
 
     <div class="topbar">
       <div class="brand">
-        <div class="badge">🏪</div>
+        <div class="brandBadge">🏪</div>
         <div>
-          <div id="brandTitle">DIGIY CAISSE PRO</div>
-          <div class="muted" style="font-size:12px;font-weight:700;margin-top:2px" id="brandSub">
-            Hall royal du module POS
-          </div>
+          <div class="brandTitle">DIGIY CAISSE PRO</div>
+          <div class="brandSub">Caisse vivante • accès contrôlé • contexte magasin</div>
         </div>
       </div>
 
-      <div class="right">
-        <div class="pill" id="pillStatus">Statut : <b>…</b></div>
-        <button class="btn" id="btnSettings" type="button">⚙️ Paramètres</button>
+      <div class="row">
+        <div class="pill">Slug : <strong id="pillSlug">—</strong></div>
+        <div class="pill">Téléphone : <strong id="pillPhone">—</strong></div>
+        <div class="pill">Statut : <strong id="pillStatus">Chargement…</strong></div>
       </div>
     </div>
 
-    <div class="grid">
-
-      <div class="card" id="cardStatus">
-        <h3>Statut & sécurité</h3>
-
-        <div class="row">
-          <div class="statusDot" id="dot"></div>
+    <div class="hero">
+      <div class="card">
+        <div class="statusLine">
+          <div class="dot" id="dotStatus"></div>
           <div style="flex:1">
-            <div style="font-weight:900" id="statusLine">Chargement…</div>
-            <div class="muted" style="font-weight:700;font-size:13px;margin-top:2px" id="expiryLine">—</div>
-          </div>
-        </div>
-
-        <div class="hr"></div>
-
-        <div class="mini" id="metaLine">
-          <span>Plan : —</span>
-          <span>•</span>
-          <span>Paiement : —</span>
-        </div>
-
-        <div class="footer">
-          <button class="btn" id="btnManageSub" type="button">Gérer mon abonnement</button>
-        </div>
-      </div>
-
-      <div class="card" id="cardMoney">
-        <h3>Argent</h3>
-
-        <div class="bigMoney" id="moneyMonth">— FCFA</div>
-        <div class="mini" id="moneyMeta">
-          <span id="txCount">— transactions</span>
-          <span>•</span>
-          <span id="todayHint">—</span>
-        </div>
-
-        <div class="hr"></div>
-
-        <div class="boostBox">
-          <div>
-            <b>🚀 BOOST visibilité</b>
-            <div class="muted" style="font-weight:750;font-size:13px" id="boostText">
-              +50% d’apparition • 7 jours • 5 000 FCFA
-            </div>
-            <div class="muted" style="font-weight:750;font-size:12px;margin-top:6px" id="boostStatus">
-              Statut boost : —
+            <div class="bigTitle" id="mainTitle">Chargement de la caisse…</div>
+            <div class="muted" style="margin-top:6px;font-weight:750" id="mainSub">
+              Vérification de l’accès et lecture du contexte magasin.
             </div>
           </div>
+        </div>
 
-          <div style="display:flex;flex-direction:column;gap:8px;min-width:160px">
-            <button class="btn primary" id="btnBoost" type="button">Activer</button>
-            <button class="btn" id="btnBoostInfo" type="button">Détails</button>
+        <div class="subInfo">
+          <div class="miniCard">
+            <div class="muted tiny strong">Boutique</div>
+            <div class="value" id="storeName">—</div>
+          </div>
+
+          <div class="miniCard">
+            <div class="muted tiny strong">Ville</div>
+            <div class="value" id="storeCity">—</div>
+          </div>
+
+          <div class="miniCard">
+            <div class="muted tiny strong">Plan</div>
+            <div class="value" id="planName">—</div>
+          </div>
+
+          <div class="miniCard">
+            <div class="muted tiny strong">Expiration</div>
+            <div class="value" id="expiresAt">—</div>
           </div>
         </div>
-      </div>
 
-      <div class="card" id="cardAction" style="grid-column:1/-1">
-        <h3>Action principale</h3>
-        <div class="muted" style="font-weight:750;margin-bottom:10px" id="actionDesc">
-          Une action. Simple. Efficace.
+        <div id="statusNotice" class="notice">
+          Le hall allume les lampes…
         </div>
 
-        <div class="row" style="justify-content:space-between">
-          <div class="muted" style="font-weight:800" id="actionHint">—</div>
-          <button class="btn primary" id="btnPrimaryAction" type="button">…</button>
+        <div class="actionRow">
+          <button class="btn ok" type="button" id="btnCheck">✅ Vérifier mon accès</button>
+          <button class="btn" type="button" id="btnReloadContext">🔄 Recharger contexte</button>
+          <a class="btn warn" id="btnAbos" href="https://commencer-a-payer.digiylyfe.com/">💳 Abonnement</a>
+          <a class="btn" id="btnSupport" href="https://wa.me/221771342889?text=Bonjour%20JB%2C%20j%E2%80%99ai%20besoin%20d%E2%80%99aide%20pour%20DIGIY%20CAISSE%20PRO">🛟 Support</a>
+        </div>
+
+        <details>
+          <summary>Diagnostic technique</summary>
+          <div class="helper">Très utile pour voir tout de suite si une RPC manque ou si un slug ne remonte rien.</div>
+          <div class="logBox" id="logBox">Aucun log pour l’instant.</div>
+        </details>
+      </div>
+
+      <div class="card">
+        <h3>État de la session</h3>
+        <div class="row" style="margin-bottom:10px">
+          <div class="badge" id="badgeAccess">ACCÈS —</div>
+          <div class="badge" id="badgeStore">MAGASIN —</div>
+          <div class="badge" id="badgeLink">LIEN —</div>
         </div>
 
         <div class="hr"></div>
 
-        <h3>Notifications</h3>
-        <div class="notifList" id="notifList"></div>
+        <div class="notice" id="sessionNotice">
+          Session en cours d’initialisation.
+        </div>
 
-        <div class="footer">
-          <a class="smallLink" href="#" id="linkSupport">Support</a>
-          <a class="smallLink" href="#" id="linkPayments">Mes paiements</a>
+        <div class="helper" id="sessionHint">
+          Ouvre la page avec un lien du style <b>?slug=pos-221771234567</b> ou <b>?slug=pos-221771234567&phone=221771234567</b>.
         </div>
       </div>
-
     </div>
+
+    <div class="grid" style="margin-top:12px">
+      <div class="card">
+        <h3>Encaissement rapide</h3>
+
+        <div class="field">
+          <label for="saleAmount">Montant</label>
+          <input class="input" id="saleAmount" type="number" inputmode="numeric" min="0" step="1" placeholder="Ex : 3500" />
+        </div>
+
+        <div class="field">
+          <label for="saleLabel">Libellé</label>
+          <input class="input" id="saleLabel" type="text" placeholder="Ex : Plat du jour / Article / Service" />
+        </div>
+
+        <div class="field">
+          <label for="saleMethod">Mode de paiement</label>
+          <select class="select" id="saleMethod">
+            <option value="cash">Espèces</option>
+            <option value="wave">Wave</option>
+            <option value="orange_money">Orange Money</option>
+            <option value="card">Carte</option>
+          </select>
+        </div>
+
+        <div class="actionRow">
+          <button class="btn primary" type="button" id="btnSaleReady">🧾 Préparer la vente</button>
+          <button class="btn" type="button" id="btnClearSale">Effacer</button>
+        </div>
+
+        <div class="helper" id="saleHelper">
+          Ici on prépare le front propre. La vraie écriture de vente se branche ensuite sur ta RPC métier POS.
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Résumé de préparation</h3>
+        <div id="salePreview" class="empty">
+          Rien de préparé pour le moment.
+        </div>
+
+        <div class="hr"></div>
+
+        <h3>Contexte magasin</h3>
+        <div id="storeContextBox" class="empty">
+          Contexte magasin pas encore chargé.
+        </div>
+      </div>
+    </div>
+
   </div>
 
-<script>
-(() => {
-  "use strict";
+  <script>
+    (() => {
+      "use strict";
 
-  const MODULE_CODE = "POS";
-  const MODULE_LABEL = "DIGIY CAISSE PRO";
-  const PRIMARY_ACTION_LABEL = "Ouvrir la caisse";
-  const PRIMARY_ACTION_HINT  = "Encaisse une vente, gère tes produits et ton stock.";
+      const MODULE_CODE = "POS";
+      const SUPPORT_PHONE = "221771342889";
+      const ABOS_URL = "https://commencer-a-payer.digiylyfe.com/";
 
-  const SUPABASE_URL = String(window.DIGIY_SUPABASE_URL || "").trim();
-  const SUPABASE_ANON = String(window.DIGIY_SUPABASE_ANON_KEY || "").trim();
+      const SUPABASE_URL = String(window.DIGIY_SUPABASE_URL || "").trim();
+      const SUPABASE_ANON_KEY = String(window.DIGIY_SUPABASE_ANON_KEY || "").trim();
 
-  if (!SUPABASE_URL || !SUPABASE_ANON) {
-    console.error("Config Supabase manquante");
-  }
+      const qs = (id) => document.getElementById(id);
 
-  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-      detectSessionInUrl: false
-    }
-  });
-
-  const ABOS_URL = "https://commencer-a-payer.digiylyfe.com/";
-  const CAISSE_URL = "./caisse.html";
-  const SETTINGS_URL = "./settings.html";
-  const SUPPORT_URL = "https://wa.me/221771342889?text=Bonjour%20JB%2C%20j%E2%80%99ai%20besoin%20d%E2%80%99aide%20pour%20DIGIY%20CAISSE%20PRO";
-
-  const BOOST = {
-    module: "BOOST",
-    plan: "boost_7d",
-    price_xof: 5000,
-    label: "BOOST visibilité",
-    duration_days: 7
-  };
-
-  const $ = (id) => document.getElementById(id);
-
-  function fmtDateFR(iso){
-    if(!iso) return "—";
-    const d = new Date(iso);
-    if(Number.isNaN(d.getTime())) return "—";
-    return d.toLocaleDateString("fr-FR", { year:"numeric", month:"long", day:"numeric" });
-  }
-
-  function getSlug(){
-    const u = new URL(location.href);
-    return (u.searchParams.get("slug") || "").trim();
-  }
-
-  function getPhone(){
-    const u = new URL(location.href);
-    return (u.searchParams.get("phone") || "").trim();
-  }
-
-  function buildUrl(base, params){
-    const u = new URL(base, location.href);
-    Object.entries(params || {}).forEach(([k, v]) => {
-      if (v !== null && v !== undefined && v !== "") u.searchParams.set(k, v);
-    });
-    return u.toString();
-  }
-
-  function setNotifs(items){
-    const box = $("notifList");
-    box.innerHTML = "";
-    if(!items.length){
-      box.innerHTML = `<div class="notif"><div><b>Rien à signaler</b><div class="muted" style="font-weight:750;margin-top:2px">Tout roule.</div></div><div class="tag ok">OK</div></div>`;
-      return;
-    }
-    for(const it of items){
-      const tagClass = it.level === "warn" ? "warn" : it.level === "ok" ? "ok" : "info";
-      const div = document.createElement("div");
-      div.className = "notif";
-      div.innerHTML = `
-        <div>
-          <b>${it.title}</b>
-          <div class="muted" style="font-weight:750;margin-top:2px">${it.text}</div>
-        </div>
-        <div class="tag ${tagClass}">${it.tag}</div>
-      `;
-      box.appendChild(div);
-    }
-  }
-
-  function daysBetween(aIso, bIso){
-    const a = new Date(aIso).getTime();
-    const b = new Date(bIso).getTime();
-    if (Number.isNaN(a) || Number.isNaN(b)) return null;
-    return Math.ceil((b - a) / (1000 * 60 * 60 * 24));
-  }
-
-  async function sbGetSubscriptionBySlug(slug){
-    const { data, error } = await sb
-      .from("digiy_subscriptions_public")
-      .select("phone,module,slug")
-      .eq("slug", slug)
-      .limit(1)
-      .maybeSingle();
-
-    if (error) throw error;
-    return data || null;
-  }
-
-  async function sbRpc(name, payload){
-    const { data, error } = await sb.rpc(name, payload || {});
-    if (error) {
-      console.error("RPC ERROR:", name, error);
-      throw new Error(`${name}: ${error.message || "RPC failed"}`);
-    }
-    return data;
-  }
-
-  async function digiyHasAccess(phone, module){
-    const res = await sbRpc("digiy_has_access", { p_phone: phone, p_module: module });
-    if(typeof res === "boolean") return res;
-    if(res && typeof res.ok === "boolean") return res.ok;
-    if(res && typeof res.has_access === "boolean") return res.has_access;
-    return !!res;
-  }
-
-  async function digiyGetSubscriptionFull(phone, module){
-    try{
-      return await sbRpc("digiy_get_subscription_status", { p_phone: phone, p_module: module });
-    }catch(_){
-      return null;
-    }
-  }
-
-  async function digiyGetDashboardStats(phone, module){
-    try{
-      return await sbRpc("digiy_get_dashboard_stats", { p_phone: phone, p_module: module });
-    }catch(_){
-      return { month_xof: null, tx_count: null, today_hint: "Aujourd’hui" };
-    }
-  }
-
-  async function digiyGetBoostStatus(phone){
-    try{
-      return await sbRpc("digiy_get_boost_status", { p_phone: phone });
-    }catch(_){
-      return null;
-    }
-  }
-
-  async function digiyBuildPayUrl(module, phone, plan){
-    return await sbRpc("digiy_build_pay_url", {
-      p_module: module,
-      p_phone: phone,
-      p_plan: plan
-    });
-  }
-
-  function buildAbosParams(phone, slug){
-    return {
-      base_module: "CAISSE",
-      module: MODULE_CODE,
-      phone,
-      slug
-    };
-  }
-
-  function bindCommonLinks(phone, slug){
-    $("btnManageSub").onclick = () => {
-      location.href = buildUrl(ABOS_URL, buildAbosParams(phone, slug));
-    };
-
-    $("btnSettings").onclick = () => {
-      location.href = buildUrl(SETTINGS_URL, { slug, phone });
-    };
-
-    $("linkSupport").onclick = (ev) => {
-      ev.preventDefault();
-      location.href = SUPPORT_URL;
-    };
-
-    $("linkPayments").onclick = (ev) => {
-      ev.preventDefault();
-      location.href = buildUrl(ABOS_URL, buildAbosParams(phone, slug));
-    };
-  }
-
-  (async function init(){
-    $("brandTitle").textContent = MODULE_LABEL;
-    $("brandSub").textContent = "Hall royal du module POS";
-    $("btnPrimaryAction").textContent = PRIMARY_ACTION_LABEL;
-    $("actionHint").textContent = PRIMARY_ACTION_HINT;
-    $("actionDesc").textContent = "Entre dans la caisse, pilote tes produits et ton stock depuis une seule porte.";
-    $("pillStatus").innerHTML = `Statut : <b>…</b>`;
-
-    const slug = getSlug();
-    const urlPhone = getPhone();
-
-    if(!slug){
-      $("statusLine").textContent = "Slug manquant";
-      $("expiryLine").textContent = "Ajoute ?slug=…";
-      $("dot").classList.add("bad");
-      $("pillStatus").innerHTML = `Statut : <b>Bloqué</b>`;
-      setNotifs([{level:"warn",tag:"ACTION",title:"Lien invalide",text:"Le lien doit contenir ?slug=…"}]);
-      return;
-    }
-
-    let phone = urlPhone;
-
-    if(!phone){
-      try{
-        const subPublic = await sbGetSubscriptionBySlug(slug);
-        phone = (subPublic?.phone || "").trim();
-      }catch(err){
-        console.error("Lecture slug -> phone impossible:", err);
-      }
-    }
-
-    if(!phone){
-      $("statusLine").textContent = "Téléphone introuvable";
-      $("expiryLine").textContent = "Ajoute ?phone=2217… ou repasse par le hall d’accès.";
-      $("dot").classList.add("bad");
-      $("pillStatus").innerHTML = `Statut : <b>Bloqué</b>`;
-      setNotifs([{level:"warn",tag:"PHONE",title:"Accès incomplet",text:"Le dashboard a besoin du phone pour transmettre proprement l’accès à la caisse."}]);
-      return;
-    }
-
-    bindCommonLinks(phone, slug);
-
-    let ok = false;
-    try{
-      ok = await digiyHasAccess(phone, MODULE_CODE);
-    }catch(err){
-      console.error("digiy_has_access failed:", err);
-      ok = false;
-    }
-
-    if(!ok){
-      $("statusLine").textContent = "Abonnement requis";
-      $("expiryLine").textContent = "Active ton accès en 1 clic.";
-      $("dot").classList.add("bad");
-      $("pillStatus").innerHTML = `Statut : <b>Inactif</b>`;
-
-      setNotifs([
-        {level:"warn",tag:"ABO",title:"Accès fermé",text:"Ton abonnement n’est pas actif sur ce module."}
-      ]);
-
-      $("btnPrimaryAction").onclick = () => {
-        location.href = buildUrl(ABOS_URL, buildAbosParams(phone, slug));
+      const DIAG = [];
+      let STATE = {
+        slug: "",
+        phone: "",
+        access: false,
+        storeContext: null,
+        subscription: null
       };
 
-      return;
-    }
+      function log(message, data){
+        const line = `[${new Date().toLocaleTimeString("fr-FR")}] ${message}`;
+        DIAG.push(data === undefined ? line : `${line}\n${safeStringify(data)}`);
+        qs("logBox").textContent = DIAG.join("\n\n");
+        console.log(message, data ?? "");
+      }
 
-    const status = await digiyGetSubscriptionFull(phone, MODULE_CODE);
-    const expiresAt = status?.expires_at || status?.current_period_end || null;
-    const plan = status?.plan || "standard";
-    const pay = status?.payment_ref ? "validé" : "ok";
+      function safeStringify(v){
+        try{
+          return JSON.stringify(v, null, 2);
+        }catch(_){
+          return String(v);
+        }
+      }
 
-    $("dot").classList.add("ok");
-    $("statusLine").textContent = "Abonnement actif";
-    $("expiryLine").textContent = expiresAt ? `Expire le ${fmtDateFR(expiresAt)}` : "Expiration : —";
-    $("pillStatus").innerHTML = `Statut : <b>Actif</b>`;
-    $("metaLine").innerHTML = `<span>Plan : ${plan}</span><span>•</span><span>Paiement : ${pay}</span>`;
+      function esc(v){
+        return String(v ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
 
-    const stats = await digiyGetDashboardStats(phone, MODULE_CODE);
-    const month = stats?.month_xof ?? null;
-    const tx = stats?.tx_count ?? null;
-
-    $("moneyMonth").textContent = month !== null ? `${Number(month).toLocaleString("fr-FR")} FCFA` : "— FCFA";
-    $("txCount").textContent = tx !== null ? `${tx} transactions` : "— transactions";
-    $("todayHint").textContent = stats?.today_hint || "Aujourd’hui";
-
-    const notifs = [];
-
-    if(expiresAt){
-      const d = daysBetween(new Date().toISOString(), expiresAt);
-      if(d !== null && d <= 3){
-        notifs.push({
-          level:"warn",
-          tag:"J-3",
-          title:"Abonnement bientôt expiré",
-          text:`Expire dans ${d} jour(s). Renouvelle pour éviter la coupure.`
-        });
-      } else {
-        notifs.push({
-          level:"ok",
-          tag:"OK",
-          title:"Abonnement",
-          text:"Actif — prochain contrôle : J-3."
+      function fmtDateFR(iso){
+        if(!iso) return "—";
+        const d = new Date(iso);
+        if(Number.isNaN(d.getTime())) return "—";
+        return d.toLocaleDateString("fr-FR", {
+          day:"2-digit",
+          month:"long",
+          year:"numeric"
         });
       }
-    }
 
-    const boost = await digiyGetBoostStatus(phone);
-    if(boost?.active){
-      $("boostStatus").textContent = `Statut boost : actif jusqu’au ${fmtDateFR(boost.expires_at)} • +${boost.views_today || 0} vues aujourd’hui`;
-      $("btnBoost").textContent = "Actif";
-      $("btnBoost").disabled = true;
-      notifs.push({level:"info",tag:"BOOST",title:"Boost actif",text:"Visibilité augmentée. Continue ton activité."});
-    } else {
-      $("boostStatus").textContent = "Statut boost : inactif";
-      notifs.push({level:"info",tag:"OPTION",title:"Boost disponible",text:"Active le BOOST si tu veux plus de visibilité."});
-    }
+      function fmtMoney(x){
+        const n = Number(x);
+        if(!Number.isFinite(n)) return "—";
+        return `${n.toLocaleString("fr-FR")} FCFA`;
+      }
 
-    if(month === null || tx === null){
-      notifs.push({level:"info",tag:"DATA",title:"Stats à brancher",text:"Le hall est vivant, mais les chiffres réels attendent la RPC stats si elle n’est pas encore posée."});
-    }
+      function normPhone(v){
+        return String(v || "").replace(/[^\d]/g, "");
+      }
 
-    setNotifs(notifs);
+      function getParam(name){
+        return new URL(location.href).searchParams.get(name) || "";
+      }
 
-    $("btnPrimaryAction").onclick = () => {
-      location.href = buildUrl(CAISSE_URL, { slug, phone });
-    };
+      function buildUrl(base, params){
+        const u = new URL(base, location.href);
+        Object.entries(params || {}).forEach(([k, v]) => {
+          if(v !== undefined && v !== null && String(v) !== ""){
+            u.searchParams.set(k, String(v));
+          }
+        });
+        return u.toString();
+      }
 
-    $("btnBoostInfo").onclick = () => {
-      alert("BOOST : +50% d’apparition pendant 7 jours. Paiement direct. Aucun spam.");
-    };
+      function setBadge(id, label, kind){
+        const el = qs(id);
+        el.className = `badge ${kind || ""}`.trim();
+        el.textContent = label;
+      }
 
-    $("btnBoost").onclick = async () => {
-      try{
-        $("btnBoost").disabled = true;
-        $("btnBoost").textContent = "…";
+      function setMainStatus(kind, title, sub){
+        const dot = qs("dotStatus");
+        dot.className = "dot";
+        if(kind === "ok") dot.classList.add("ok");
+        if(kind === "bad") dot.classList.add("bad");
 
-        const payUrlPayload = await digiyBuildPayUrl(BOOST.module, phone, BOOST.plan);
-        const url = (typeof payUrlPayload === "string")
-          ? payUrlPayload
-          : (payUrlPayload?.url || payUrlPayload?.pay_url || null);
+        qs("mainTitle").textContent = title;
+        qs("mainSub").textContent = sub;
+        qs("pillStatus").textContent = kind === "ok" ? "Actif" : kind === "bad" ? "Bloqué" : "Contrôle";
+      }
 
-        if(!url){
-          throw new Error("URL paiement BOOST manquante");
+      function setNotice(kind, html){
+        const box = qs("statusNotice");
+        box.className = `notice ${kind || ""}`.trim();
+        box.innerHTML = html;
+      }
+
+      function setSessionNotice(kind, html){
+        const box = qs("sessionNotice");
+        box.className = `notice ${kind || ""}`.trim();
+        box.innerHTML = html;
+      }
+
+      function ensureSupabase(){
+        if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
+          throw new Error("Configuration Supabase manquante");
+        }
+        if(!window.supabase || typeof window.supabase.createClient !== "function"){
+          throw new Error("Librairie Supabase non chargée");
+        }
+        return window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+          auth: {
+            persistSession: false,
+            autoRefreshToken: false,
+            detectSessionInUrl: false
+          }
+        });
+      }
+
+      const sb = ensureSupabase();
+
+      async function rpcFirstSuccess(name, payloads){
+        let lastError = null;
+
+        for(const payload of payloads){
+          try{
+            log(`RPC ${name} → tentative`, payload);
+            const { data, error } = await sb.rpc(name, payload);
+            if(error){
+              lastError = error;
+              log(`RPC ${name} → erreur`, { message: error.message, details: error.details, hint: error.hint });
+              continue;
+            }
+            log(`RPC ${name} → OK`, data);
+            return data;
+          }catch(err){
+            lastError = err;
+            log(`RPC ${name} → exception`, { message: err?.message || String(err) });
+          }
         }
 
-        location.href = url;
-      }catch(e){
-        console.error(e);
-        alert("Impossible d’activer le BOOST. Vérifie la config ou la RPC digiy_build_pay_url.");
-        $("btnBoost").disabled = false;
-        $("btnBoost").textContent = "Activer";
+        throw lastError || new Error(`RPC ${name} a échoué`);
       }
-    };
-  })();
-})();
-</script>
+
+      async function getPhoneFromSlug(slug){
+        const cleanSlug = String(slug || "").trim();
+        if(!cleanSlug) return "";
+
+        const { data, error } = await sb
+          .from("digiy_subscriptions_public")
+          .select("phone,module,slug")
+          .eq("slug", cleanSlug)
+          .eq("module", MODULE_CODE)
+          .limit(1)
+          .maybeSingle();
+
+        if(error){
+          log("Lecture digiy_subscriptions_public → erreur", error);
+          throw error;
+        }
+
+        log("Lecture digiy_subscriptions_public → OK", data);
+        return normPhone(data?.phone || "");
+      }
+
+      async function getAccess(phone){
+        const res = await rpcFirstSuccess("digiy_has_access", [
+          { p_phone: phone, p_module: MODULE_CODE },
+          { phone, module: MODULE_CODE }
+        ]);
+
+        if(typeof res === "boolean") return res;
+        if(res && typeof res.ok === "boolean") return res.ok;
+        if(res && typeof res.has_access === "boolean") return res.has_access;
+        if(res && typeof res.allowed === "boolean") return res.allowed;
+        return !!res;
+      }
+
+      async function getSubscription(phone){
+        try{
+          const data = await rpcFirstSuccess("digiy_get_subscription_status", [
+            { p_phone: phone, p_module: MODULE_CODE },
+            { phone, module: MODULE_CODE }
+          ]);
+          return data || null;
+        }catch(err){
+          log("digiy_get_subscription_status indisponible", { message: err?.message || String(err) });
+          return null;
+        }
+      }
+
+      async function getStoreContext(slug){
+        try{
+          const data = await rpcFirstSuccess("pos_get_store_context_by_slug", [
+            { p_slug: slug },
+            { slug }
+          ]);
+          return data || null;
+        }catch(err){
+          log("pos_get_store_context_by_slug indisponible", { message: err?.message || String(err) });
+          return null;
+        }
+      }
+
+      function normalizeStoreContext(ctx, slug, phone){
+        const source = ctx && typeof ctx === "object" ? ctx : {};
+        return {
+          display_name: source.display_name || source.store_name || source.nom || source.title || "Boutique POS",
+          city: source.city || source.ville || source.location_city || "—",
+          owner_name: source.owner_name || source.manager_name || source.owner || "—",
+          wave_phone: normPhone(source.wave_phone || source.whatsapp_phone || phone || ""),
+          slug: source.slug || slug || "",
+          is_open: typeof source.is_open === "boolean" ? source.is_open : null,
+          raw: source
+        };
+      }
+
+      function normalizeSubscription(sub){
+        const source = sub && typeof sub === "object" ? sub : {};
+        return {
+          plan: source.plan || source.plan_code || source.tier || "standard",
+          expires_at: source.expires_at || source.current_period_end || source.period_end || null,
+          payment_ref: source.payment_ref || source.ref || null,
+          raw: source
+        };
+      }
+
+      function renderStore(ctx){
+        qs("storeName").textContent = ctx.display_name || "Boutique POS";
+        qs("storeCity").textContent = ctx.city || "—";
+
+        qs("storeContextBox").innerHTML = `
+          <div class="notice ok">
+            <div><b>Nom</b> : ${esc(ctx.display_name || "Boutique POS")}</div>
+            <div style="margin-top:6px"><b>Ville</b> : ${esc(ctx.city || "—")}</div>
+            <div style="margin-top:6px"><b>Responsable</b> : ${esc(ctx.owner_name || "—")}</div>
+            <div style="margin-top:6px"><b>Slug</b> : ${esc(ctx.slug || "—")}</div>
+            <div style="margin-top:6px"><b>Wave / Contact</b> : ${esc(ctx.wave_phone || "—")}</div>
+          </div>
+        `;
+      }
+
+      function renderSubscription(sub){
+        qs("planName").textContent = sub.plan || "standard";
+        qs("expiresAt").textContent = fmtDateFR(sub.expires_at);
+
+        const payLine = sub.payment_ref
+          ? `Référence paiement détectée : <b>${esc(sub.payment_ref)}</b>`
+          : `Référence paiement non fournie, mais accès accepté.`;
+
+        setNotice("ok", `
+          <div><b>Accès POS validé.</b></div>
+          <div style="margin-top:6px">${payLine}</div>
+        `);
+      }
+
+      function renderBlocked(phone, slug, extraMessage){
+        const abosLink = buildUrl(ABOS_URL, {
+          module: MODULE_CODE,
+          base_module: "CAISSE",
+          phone,
+          slug
+        });
+
+        qs("btnAbos").href = abosLink;
+
+        setMainStatus("bad", "Accès POS non actif", "Le guard a parlé. Sans abonnement valide, la caisse reste fermée.");
+        setNotice("bad", `
+          <div><b>Accès fermé.</b></div>
+          <div style="margin-top:6px">${esc(extraMessage || "Active ou renouvelle l’abonnement pour utiliser la caisse.")}</div>
+        `);
+        setSessionNotice("bad", `
+          <div><b>La page est bien trouvée</b>, mais l’accès module n’est pas validé.</div>
+        `);
+
+        setBadge("badgeAccess", "ACCÈS FERMÉ", "bad");
+      }
+
+      function renderReady(ctx, sub){
+        setMainStatus("ok", "Caisse prête", "Accès validé, contexte magasin chargé. On peut refermer POS proprement.");
+
+        const openText =
+          ctx.is_open === true ? "Boutique marquée ouverte."
+          : ctx.is_open === false ? "Boutique marquée fermée."
+          : "Statut d’ouverture non fourni par le contexte.";
+
+        setSessionNotice("ok", `
+          <div><b>Session active.</b></div>
+          <div style="margin-top:6px">${esc(openText)}</div>
+        `);
+
+        setBadge("badgeAccess", "ACCÈS OK", "ok");
+        setBadge("badgeStore", ctx.display_name ? "MAGASIN OK" : "MAGASIN MINIMAL", ctx.display_name ? "ok" : "warn");
+        setBadge("badgeLink", STATE.slug ? "LIEN OK" : "LIEN KO", STATE.slug ? "ok" : "bad");
+
+        renderStore(ctx);
+        renderSubscription(sub);
+      }
+
+      async function hydrate(){
+        qs("pillSlug").textContent = "—";
+        qs("pillPhone").textContent = "—";
+        qs("salePreview").innerHTML = `<span class="empty">Rien de préparé pour le moment.</span>`;
+
+        const slug = String(getParam("slug") || "").trim();
+        let phone = normPhone(getParam("phone"));
+
+        STATE.slug = slug;
+        STATE.phone = phone;
+        STATE.access = false;
+        STATE.storeContext = null;
+        STATE.subscription = null;
+
+        qs("pillSlug").textContent = slug || "—";
+        qs("pillPhone").textContent = phone || "—";
+
+        setBadge("badgeAccess", "ACCÈS …", "");
+        setBadge("badgeStore", "MAGASIN …", "");
+        setBadge("badgeLink", slug ? "LIEN OK" : "LIEN KO", slug ? "ok" : "bad");
+
+        if(!slug){
+          setMainStatus("bad", "Slug manquant", "Ajoute ?slug=pos-2217… dans l’URL.");
+          setNotice("bad", `
+            <div><b>Le lien n’est pas exploitable.</b></div>
+            <div style="margin-top:6px">La caisse a besoin du slug du module POS.</div>
+          `);
+          setSessionNotice("bad", `
+            <div>Exemple d’ouverture : <b>?slug=pos-221771234567</b></div>
+          `);
+          setBadge("badgeAccess", "ACCÈS KO", "bad");
+          setBadge("badgeStore", "MAGASIN KO", "bad");
+          return;
+        }
+
+        try{
+          if(!phone){
+            phone = await getPhoneFromSlug(slug);
+            STATE.phone = phone;
+            qs("pillPhone").textContent = phone || "—";
+          }
+
+          if(!phone){
+            throw new Error("Téléphone introuvable depuis le slug");
+          }
+
+          const abosLink = buildUrl(ABOS_URL, {
+            module: MODULE_CODE,
+            base_module: "CAISSE",
+            phone,
+            slug
+          });
+          qs("btnAbos").href = abosLink;
+        }catch(err){
+          setMainStatus("bad", "Téléphone introuvable", "Le slug existe peut-être, mais la résolution phone → module n’a rien donné.");
+          setNotice("bad", `
+            <div><b>Impossible de résoudre le téléphone.</b></div>
+            <div style="margin-top:6px">${esc(err?.message || String(err))}</div>
+          `);
+          setSessionNotice("bad", `
+            <div>Essaie le lien avec <b>&phone=2217…</b> en plus du slug.</div>
+          `);
+          setBadge("badgeAccess", "ACCÈS KO", "bad");
+          setBadge("badgeStore", "MAGASIN KO", "bad");
+          return;
+        }
+
+        try{
+          const access = await getAccess(phone);
+          STATE.access = !!access;
+
+          if(!access){
+            renderBlocked(phone, slug, "La RPC digiy_has_access a répondu non.");
+            return;
+          }
+
+          const [storeContextRaw, subscriptionRaw] = await Promise.all([
+            getStoreContext(slug),
+            getSubscription(phone)
+          ]);
+
+          const storeContext = normalizeStoreContext(storeContextRaw, slug, phone);
+          const subscription = normalizeSubscription(subscriptionRaw);
+
+          STATE.storeContext = storeContext;
+          STATE.subscription = subscription;
+
+          renderReady(storeContext, subscription);
+        }catch(err){
+          log("Hydratation finale → erreur", { message: err?.message || String(err) });
+
+          setMainStatus("bad", "Erreur de contrôle", "La page a répondu, mais une brique technique coince encore.");
+          setNotice("bad", `
+            <div><b>Blocage technique détecté.</b></div>
+            <div style="margin-top:6px">${esc(err?.message || String(err))}</div>
+          `);
+          setSessionNotice("bad", `
+            <div>Regarde le diagnostic juste en dessous. Là on verra tout de suite si c’est la clé, la RPC, ou le contexte magasin.</div>
+          `);
+          setBadge("badgeAccess", "ACCÈS KO", "bad");
+        }
+      }
+
+      function initSalePreview(){
+        const amount = qs("saleAmount");
+        const label = qs("saleLabel");
+        const method = qs("saleMethod");
+        const preview = qs("salePreview");
+
+        function render(){
+          const rawAmount = String(amount.value || "").trim();
+          const rawLabel = String(label.value || "").trim();
+          const rawMethod = String(method.value || "").trim();
+
+          if(!rawAmount && !rawLabel){
+            preview.innerHTML = `<span class="empty">Rien de préparé pour le moment.</span>`;
+            return;
+          }
+
+          preview.innerHTML = `
+            <div class="notice ok">
+              <div><b>Montant</b> : ${esc(rawAmount ? fmtMoney(rawAmount) : "—")}</div>
+              <div style="margin-top:6px"><b>Libellé</b> : ${esc(rawLabel || "—")}</div>
+              <div style="margin-top:6px"><b>Paiement</b> : ${esc(rawMethod || "—")}</div>
+              <div style="margin-top:8px" class="muted">Préparation front OK. Il restera à brancher la RPC de création de vente.</div>
+            </div>
+          `;
+        }
+
+        amount.addEventListener("input", render);
+        label.addEventListener("input", render);
+        method.addEventListener("change", render);
+
+        qs("btnSaleReady").addEventListener("click", () => {
+          render();
+
+          if(!STATE.access){
+            alert("Accès POS non validé. On ne prépare pas une vente sur une porte fermée, frérot.");
+            return;
+          }
+
+          const rawAmount = Number(amount.value || 0);
+          if(!Number.isFinite(rawAmount) || rawAmount <= 0){
+            alert("Entre un montant propre avant de préparer la vente.");
+            amount.focus();
+            return;
+          }
+
+          alert("Préparation OK. Le front de caisse est vivant. Prochaine étape : brancher la RPC métier d’encaissement.");
+        });
+
+        qs("btnClearSale").addEventListener("click", () => {
+          amount.value = "";
+          label.value = "";
+          method.value = "cash";
+          render();
+        });
+      }
+
+      function bindActions(){
+        qs("btnCheck").addEventListener("click", async () => {
+          qs("btnCheck").disabled = true;
+          qs("btnCheck").textContent = "Contrôle…";
+          try{
+            await hydrate();
+          } finally {
+            qs("btnCheck").disabled = false;
+            qs("btnCheck").textContent = "✅ Vérifier mon accès";
+          }
+        });
+
+        qs("btnReloadContext").addEventListener("click", async () => {
+          qs("btnReloadContext").disabled = true;
+          qs("btnReloadContext").textContent = "Rechargement…";
+          try{
+            await hydrate();
+          } finally {
+            qs("btnReloadContext").disabled = false;
+            qs("btnReloadContext").textContent = "🔄 Recharger contexte";
+          }
+        });
+      }
+
+      async function init(){
+        try{
+          log("Initialisation caisse POS");
+          bindActions();
+          initSalePreview();
+          await hydrate();
+        }catch(err){
+          log("Initialisation fatale", { message: err?.message || String(err) });
+          setMainStatus("bad", "Erreur fatale", err?.message || "Impossible d’initialiser la caisse");
+          setNotice("bad", `<div><b>Erreur fatale.</b> ${esc(err?.message || String(err))}</div>`);
+          setSessionNotice("bad", "Vérifie la config Supabase, la clé anon, puis les RPC.");
+        }
+      }
+
+      init();
+    })();
+  </script>
 </body>
 </html>
