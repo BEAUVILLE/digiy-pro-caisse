@@ -3,9 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>DIGIY CAISSE PRO — Admin boutique</title>
+  <title>DIGIY CAISSE PRO — Paramètres boutique</title>
   <meta name="theme-color" content="#0b1020" />
-  <meta name="description" content="DIGIY CAISSE PRO — administration boutique, TVA et produits." />
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
@@ -18,464 +17,282 @@
       --bg:#0b1020;
       --bg2:#0e1630;
       --card:#121a33;
-      --card2:#172141;
       --text:#eef1ff;
       --muted:#a8b1d1;
       --line:rgba(255,255,255,.09);
-      --accent:#6366f1;
       --ok:#22c55e;
       --warn:#f59e0b;
       --danger:#ef4444;
-      --gold:#f0c040;
+      --accent:#6366f1;
       --shadow:0 12px 30px rgba(0,0,0,.35);
       --radius:18px;
     }
-
     *{box-sizing:border-box}
     html,body{margin:0;padding:0}
     body{
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background:
-        radial-gradient(1200px 700px at 20% -20%, rgba(99,102,241,.25), transparent 70%),
-        radial-gradient(900px 600px at 100% 0%, rgba(34,197,94,.15), transparent 55%),
-        linear-gradient(180deg,var(--bg2),var(--bg));
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
       color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 15% -20%, rgba(99,102,241,.24), transparent 70%),
+        radial-gradient(900px 580px at 100% 0%, rgba(34,197,94,.12), transparent 55%),
+        linear-gradient(180deg, var(--bg2), var(--bg));
       min-height:100vh;
     }
-
-    a{text-decoration:none;color:inherit}
-    button,input,select,textarea{font:inherit}
-
-    .wrap{max-width:1180px;margin:0 auto;padding:18px 14px 34px}
+    .wrap{max-width:1180px;margin:0 auto;padding:16px 14px 40px}
     .topbar{
-      display:flex;align-items:center;justify-content:space-between;
-      gap:12px;padding:10px 6px;margin-bottom:12px;flex-wrap:wrap;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      margin-bottom:14px;flex-wrap:wrap;
     }
-    .brand{
-      display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.2px
+    .brand{display:flex;align-items:center;gap:12px}
+    .brandBadge{
+      width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+      background:rgba(99,102,241,.16);border:1px solid var(--line);font-size:22px;
     }
-    .brand .badge{
-      display:inline-flex;align-items:center;justify-content:center;
-      width:38px;height:38px;border-radius:12px;
-      background:rgba(99,102,241,.18);border:1px solid var(--line);font-size:20px;
-    }
-    .right{
-      display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end
-    }
+    .brandTitle{font-weight:900;letter-spacing:.2px;font-size:18px}
+    .brandSub{color:var(--muted);font-size:12px;font-weight:700;margin-top:2px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
     .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 10px;border-radius:999px;
-      background:rgba(255,255,255,.04);
-      border:1px solid var(--line);
-      color:var(--muted);
-      font-weight:700;font-size:13px;
+      display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:999px;
+      background:rgba(255,255,255,.04);border:1px solid var(--line);
+      color:var(--muted);font-weight:700;font-size:13px;
     }
-    .dot{width:10px;height:10px;border-radius:999px;background:var(--warn)}
-    .dot.ok{background:var(--ok)}
-    .dot.bad{background:var(--danger)}
-
+    .pill strong{color:var(--text)}
     .btn{
-      appearance:none;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.05);
-      color:var(--text);
-      padding:10px 12px;border-radius:12px;
-      font-weight:800;cursor:pointer;transition:.15s ease;
-      display:inline-flex;align-items:center;justify-content:center;gap:8px;
-      min-height:44px;
+      appearance:none;border:1px solid var(--line);background:rgba(255,255,255,.05);
+      color:var(--text);padding:11px 13px;border-radius:13px;font-weight:850;cursor:pointer;
+      transition:transform .12s ease, opacity .12s ease, background .12s ease;
+      text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;
     }
     .btn:hover{transform:translateY(-1px)}
-    .btn.primary{
-      background:rgba(99,102,241,.22);
-      border-color:rgba(99,102,241,.35);
-    }
-    .btn.ok{
-      background:rgba(34,197,94,.12);
-      border-color:rgba(34,197,94,.30);
-    }
-    .btn.warn{
-      background:rgba(245,158,11,.12);
-      border-color:rgba(245,158,11,.30);
-    }
-    .btn.danger{
-      background:rgba(239,68,68,.10);
-      border-color:rgba(239,68,68,.30);
-    }
-    .btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
-
-    .grid{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:12px;
-    }
-    @media(min-width:980px){
-      .grid{grid-template-columns:1.05fr .95fr}
-    }
-
+    .btn:disabled{opacity:.56;cursor:not-allowed;transform:none}
+    .btn.primary{background:rgba(99,102,241,.22);border-color:rgba(99,102,241,.35)}
+    .btn.ok{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.32)}
+    .btn.warn{background:rgba(245,158,11,.10);border-color:rgba(245,158,11,.30)}
+    .btn.bad{background:rgba(239,68,68,.10);border-color:rgba(239,68,68,.30)}
+    .grid{display:grid;gap:12px;grid-template-columns:1fr}
+    @media (min-width:980px){.grid{grid-template-columns:1.05fr .95fr}}
     .card{
-      background:rgba(18,26,51,.92);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:16px;
+      background:rgba(18,26,51,.92);border:1px solid var(--line);border-radius:var(--radius);
+      box-shadow:var(--shadow);padding:16px;
     }
-    .card h2,.card h3{margin:0 0 10px 0}
+    .card h3{margin:0 0 10px 0;font-size:15px;letter-spacing:.2px}
     .muted{color:var(--muted)}
-    .small{font-size:12px}
-    .hr{height:1px;background:var(--line);margin:12px 0}
-
-    .statusLine{
-      display:flex;align-items:flex-start;gap:10px;
-      padding:12px;border-radius:14px;border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
+    .tiny{font-size:12px}
+    .strong{font-weight:900}
+    .statusLine{display:flex;align-items:flex-start;gap:10px}
+    .dot{
+      width:11px;height:11px;border-radius:999px;background:var(--warn);margin-top:6px;flex:0 0 auto;
+      box-shadow:0 0 0 4px rgba(255,255,255,.03);
     }
-    .statusLine.ok{
-      background:rgba(34,197,94,.08);
-      border-color:rgba(34,197,94,.22);
-    }
-    .statusLine.bad{
-      background:rgba(239,68,68,.08);
-      border-color:rgba(239,68,68,.22);
-    }
-    .statusLine.warn{
-      background:rgba(245,158,11,.08);
-      border-color:rgba(245,158,11,.22);
-    }
-
-    .tabs{
-      display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;
-    }
-    .tab{
-      padding:10px 12px;border-radius:12px;border:1px solid var(--line);
-      background:rgba(255,255,255,.03);color:var(--muted);font-weight:800;
-      cursor:pointer;
-    }
-    .tab.active{
-      background:rgba(99,102,241,.18);
-      border-color:rgba(99,102,241,.30);
-      color:var(--text);
-    }
-
-    .view{display:none}
-    .view.active{display:block}
-
-    .formGrid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-    }
-    @media(max-width:760px){
-      .formGrid{grid-template-columns:1fr}
-    }
-
-    .fieldWrap{display:flex;flex-direction:column;gap:6px}
-    .label{
-      font-size:12px;color:var(--muted);font-weight:800;
-      letter-spacing:.3px;
-    }
-    .input,.select,.textarea{
-      width:100%;
-      background:rgba(255,255,255,.04);
-      border:1px solid var(--line);
-      border-radius:12px;
-      color:var(--text);
-      padding:12px 13px;
-      outline:none;
-    }
-    .textarea{min-height:92px;resize:vertical}
-
-    .switchRow{
-      display:flex;align-items:center;justify-content:space-between;
-      gap:10px;padding:12px;border-radius:14px;
+    .dot.ok{background:var(--ok)}
+    .dot.bad{background:var(--danger)}
+    .bigTitle{margin:0;font-size:28px;line-height:1.08;letter-spacing:-.6px}
+    .subInfo{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .miniCard{
+      flex:1 1 180px;min-width:0;padding:12px;border-radius:16px;
       background:rgba(255,255,255,.03);border:1px solid var(--line);
     }
-    .switch{
-      position:relative;width:48px;height:28px;display:inline-block;flex:0 0 auto;
+    .value{font-size:20px;font-weight:900;margin-top:4px;line-height:1.1}
+    .notice{
+      padding:12px;border-radius:15px;border:1px solid var(--line);background:rgba(255,255,255,.03);margin-top:10px;
     }
-    .switch input{opacity:0;width:0;height:0}
-    .slider{
-      position:absolute;inset:0;border-radius:999px;
-      background:#253253;border:1px solid rgba(255,255,255,.10);cursor:pointer;transition:.2s;
+    .notice.ok{border-color:rgba(34,197,94,.25);background:rgba(34,197,94,.08)}
+    .notice.warn{border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.08)}
+    .notice.bad{border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.08)}
+    .field{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+    .field label{font-size:13px;font-weight:800;color:var(--muted)}
+    .input,.textarea{
+      width:100%;padding:13px 14px;border-radius:14px;border:1px solid var(--line);
+      background:rgba(255,255,255,.04);color:var(--text);outline:none;font-size:16px;font-weight:700;
     }
-    .slider:before{
-      content:"";position:absolute;left:4px;top:3px;width:20px;height:20px;border-radius:999px;
-      background:#cfd6ff;transition:.2s;
+    .textarea{min-height:110px;resize:vertical}
+    .actionRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .helper{color:var(--muted);font-size:13px;font-weight:700;margin-top:8px}
+    .hr{height:1px;background:var(--line);margin:12px 0}
+    .switchRow{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:12px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.03);margin-top:12px;
     }
-    .switch input:checked + .slider{
-      background:rgba(34,197,94,.35);
+    .check{
+      width:22px;height:22px;accent-color:#6366f1;cursor:pointer;
     }
-    .switch input:checked + .slider:before{
-      transform:translateX(19px);background:#fff;
+    .logBox{
+      background:#0a1023;color:#cfdbff;border:1px solid var(--line);border-radius:14px;padding:12px;
+      font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      white-space:pre-wrap;word-break:break-word;max-height:260px;overflow:auto;
     }
-
-    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-    .metaBox{
-      padding:12px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid var(--line);
+    .badge{
+      display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border-radius:999px;
+      font-size:12px;font-weight:900;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--muted);
     }
-
-    .list{
-      display:grid;gap:10px;
-    }
-    .prodCard{
-      padding:14px;border-radius:14px;border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      display:grid;grid-template-columns:1fr auto;gap:12px;
-      align-items:start;
-    }
-    .prodName{font-weight:900}
-    .prodMeta{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.7}
-    .prodRight{
-      display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;
-    }
-
-    .tag{
-      display:inline-flex;padding:6px 8px;border-radius:999px;
-      border:1px solid var(--line);font-size:11px;font-weight:900;
-      color:var(--muted);white-space:nowrap;
-    }
-    .tag.ok{
-      background:rgba(34,197,94,.10);border-color:rgba(34,197,94,.25);color:#cbffd9;
-    }
-    .tag.warn{
-      background:rgba(245,158,11,.10);border-color:rgba(245,158,11,.25);color:#ffe1b2;
-    }
-    .tag.bad{
-      background:rgba(239,68,68,.10);border-color:rgba(239,68,68,.25);color:#ffd0d0;
-    }
-
-    .searchRow{
-      display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;
-    }
-
-    .diag{
-      background:#081119;
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:12px;
-      font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      color:#d6e0ff;
-      white-space:pre-wrap;
-      word-break:break-word;
-      max-height:260px;
-      overflow:auto;
-    }
-
-    .empty{
-      color:var(--muted);
-      font-weight:800;
-      padding:16px;
-      border-radius:14px;
-      border:1px dashed var(--line);
-      text-align:center;
-    }
-
-    .footerNote{
-      margin-top:12px;
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.7;
+    .badge.ok{background:rgba(34,197,94,.10);border-color:rgba(34,197,94,.30);color:#d7ffe1}
+    .badge.warn{background:rgba(245,158,11,.10);border-color:rgba(245,158,11,.30);color:#ffe3b8}
+    .badge.bad{background:rgba(239,68,68,.10);border-color:rgba(239,68,68,.30);color:#ffd2d2}
+    .empty{color:var(--muted);font-weight:800;font-size:13px}
+    .summaryBox{
+      padding:12px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.03)
     }
   </style>
 </head>
 <body>
   <div class="wrap">
-
     <div class="topbar">
       <div class="brand">
-        <div class="badge">⚙️</div>
+        <div class="brandBadge">⚙️</div>
         <div>
-          <div style="font-size:18px">DIGIY CAISSE PRO — Admin</div>
-          <div class="muted small">Boutique, TVA, produits, stock</div>
+          <div class="brandTitle">DIGIY CAISSE PRO</div>
+          <div class="brandSub">Paramètres boutique • coordonnées • TVA</div>
         </div>
       </div>
 
-      <div class="right">
-        <div class="pill"><span id="dotStatus" class="dot"></span><span id="pillStatus">Chargement…</span></div>
-        <a class="btn" id="btnBackCaisse" href="./caisse.html">Ouvrir la caisse</a>
-        <a class="btn primary" id="btnBackHall" href="./index.html">Retour hall</a>
+      <div class="row">
+        <div class="pill">Slug : <strong id="pillSlug">—</strong></div>
+        <div class="pill">Téléphone : <strong id="pillPhone">—</strong></div>
+        <div class="pill">Statut : <strong id="pillStatus">Chargement…</strong></div>
       </div>
     </div>
 
     <div class="grid">
-      <section class="card">
-        <h2>Accès module</h2>
-        <div id="statusBox" class="statusLine">
-          <div>🧭</div>
-          <div>
-            <div style="font-weight:900" id="statusTitle">Initialisation…</div>
-            <div class="muted small" id="statusSub">Lecture du slug, du phone et du contexte boutique.</div>
-          </div>
-        </div>
-
-        <div class="hr"></div>
-
-        <div class="tabs">
-          <button class="tab active" type="button" data-tab="shop">Boutique</button>
-          <button class="tab" type="button" data-tab="products">Produits</button>
-          <button class="tab" type="button" data-tab="diag">Diagnostic</button>
-        </div>
-
-        <div id="view-shop" class="view active">
-          <div class="formGrid">
-            <div class="fieldWrap">
-              <label class="label">Nom boutique</label>
-              <input id="shop_name" class="input" placeholder="Chez Astou" />
-            </div>
-            <div class="fieldWrap">
-              <label class="label">Ville</label>
-              <input id="shop_city" class="input" placeholder="Saly" />
-            </div>
-
-            <div class="fieldWrap">
-              <label class="label">Téléphone</label>
-              <input id="shop_phone" class="input" placeholder="221771234567" />
-            </div>
-            <div class="fieldWrap">
-              <label class="label">WhatsApp</label>
-              <input id="shop_whatsapp" class="input" placeholder="221771234567" />
-            </div>
-
-            <div class="fieldWrap">
-              <label class="label">Wave</label>
-              <input id="shop_wave" class="input" placeholder="221771234567" />
-            </div>
-            <div class="fieldWrap">
-              <label class="label">Adresse</label>
-              <input id="shop_address" class="input" placeholder="Rue, quartier, repère" />
+      <div>
+        <div class="card">
+          <div class="statusLine">
+            <div class="dot" id="dotStatus"></div>
+            <div style="flex:1">
+              <div class="bigTitle" id="mainTitle">Chargement des paramètres…</div>
+              <div class="muted" style="margin-top:6px;font-weight:750" id="mainSub">
+                Vérification de l’accès et lecture du profil boutique.
+              </div>
             </div>
           </div>
 
-          <div class="fieldWrap" style="margin-top:12px">
-            <label class="label">Message commerçant</label>
-            <textarea id="shop_tagline" class="textarea" placeholder="Petite phrase utile sur la boutique"></textarea>
+          <div class="subInfo">
+            <div class="miniCard">
+              <div class="muted tiny strong">Boutique</div>
+              <div class="value" id="storeNameTop">—</div>
+            </div>
+            <div class="miniCard">
+              <div class="muted tiny strong">Ville</div>
+              <div class="value" id="storeCityTop">—</div>
+            </div>
+            <div class="miniCard">
+              <div class="muted tiny strong">Plan</div>
+              <div class="value" id="planNameTop">—</div>
+            </div>
+            <div class="miniCard">
+              <div class="muted tiny strong">Expiration</div>
+              <div class="value" id="expiresAtTop">—</div>
+            </div>
+          </div>
+
+          <div id="statusNotice" class="notice">Le bureau ouvre ses tiroirs…</div>
+
+          <div class="actionRow">
+            <button class="btn ok" type="button" id="btnCheck">✅ Vérifier mon accès</button>
+            <button class="btn" type="button" id="btnLoad">🔄 Recharger profil</button>
+            <a class="btn" id="btnBackCaisse" href="./caisse.html">🧾 Caisse</a>
+            <a class="btn" id="btnAdmin" href="./admin.html">📦 Produits</a>
+            <a class="btn warn" id="btnAbos" href="https://commencer-a-payer.digiylyfe.com/">💳 Abonnement</a>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <h3>Coordonnées boutique</h3>
+
+          <div class="field">
+            <label for="display_name">Nom boutique</label>
+            <input class="input" id="display_name" type="text" placeholder="Ex : Boutique Astou Saly" />
+          </div>
+
+          <div class="field">
+            <label for="owner_name">Responsable</label>
+            <input class="input" id="owner_name" type="text" placeholder="Ex : Astou Ndiaye" />
+          </div>
+
+          <div class="field">
+            <label for="phone_public">Téléphone boutique</label>
+            <input class="input" id="phone_public" type="text" placeholder="Ex : 221771234567" />
+          </div>
+
+          <div class="field">
+            <label for="whatsapp_phone">WhatsApp</label>
+            <input class="input" id="whatsapp_phone" type="text" placeholder="Ex : 221771234567" />
+          </div>
+
+          <div class="field">
+            <label for="wave_phone">Wave</label>
+            <input class="input" id="wave_phone" type="text" placeholder="Ex : 221771234567" />
+          </div>
+
+          <div class="field">
+            <label for="city">Ville</label>
+            <input class="input" id="city" type="text" placeholder="Ex : Saly" />
+          </div>
+
+          <div class="field">
+            <label for="address">Adresse</label>
+            <textarea class="textarea" id="address" placeholder="Ex : Route de Ngaparou, près du rond-point..."></textarea>
+          </div>
+
+          <div class="field">
+            <label for="merchant_message">Message commerçant</label>
+            <textarea class="textarea" id="merchant_message" placeholder="Un petit mot pour accueillir ou informer le client."></textarea>
           </div>
 
           <div class="hr"></div>
+
+          <h3>TVA & paramètres</h3>
 
           <div class="switchRow">
             <div>
-              <div style="font-weight:900">TVA active</div>
-              <div class="muted small">Active si la boutique doit travailler avec TVA.</div>
+              <div class="strong">TVA active</div>
+              <div class="helper" style="margin-top:4px">Active la TVA si ta boutique en a besoin.</div>
             </div>
-            <label class="switch">
-              <input id="tva_active" type="checkbox" />
-              <span class="slider"></span>
-            </label>
+            <input class="check" id="tva_enabled" type="checkbox" />
           </div>
 
-          <div class="formGrid" style="margin-top:12px">
-            <div class="fieldWrap">
-              <label class="label">Taux TVA (%)</label>
-              <input id="tva_taux" class="input" type="number" min="0" max="100" step="1" placeholder="18" />
-            </div>
-            <div class="fieldWrap">
-              <label class="label">Mode TVA</label>
-              <select id="tva_mode" class="select">
-                <option value="excl">HT → TVA ajoutée</option>
-                <option value="incl">TTC → TVA incluse</option>
-              </select>
-            </div>
+          <div class="field">
+            <label for="tva_rate">Taux TVA (%)</label>
+            <input class="input" id="tva_rate" type="number" min="0" step="0.01" placeholder="Ex : 18" />
           </div>
 
-          <div class="actions">
-            <button id="btnSaveShop" class="btn ok" type="button">💾 Enregistrer la boutique</button>
-            <button id="btnReloadShop" class="btn" type="button">🔄 Recharger</button>
+          <div class="actionRow">
+            <button class="btn primary" type="button" id="btnSaveProfile">💾 Enregistrer les paramètres</button>
+            <button class="btn" type="button" id="btnFillPhone">📲 Reprendre mon téléphone</button>
           </div>
 
-          <div class="footerNote">
-            Ici le commerçant pose sa maison : nom, contacts, TVA, identité boutique.
+          <div class="helper" id="saveHelper">
+            Si le backend admin n’est pas encore entièrement posé, le profil est gardé en brouillon local pour ne rien perdre.
           </div>
         </div>
+      </div>
 
-        <div id="view-products" class="view">
-          <div class="metaBox">
-            <div style="font-weight:900;margin-bottom:6px">Ajouter ou modifier un produit</div>
-            <div class="formGrid">
-              <div class="fieldWrap">
-                <label class="label">Nom produit</label>
-                <input id="prod_name" class="input" placeholder="Sucre 1kg" />
-              </div>
-              <div class="fieldWrap">
-                <label class="label">Catégorie</label>
-                <input id="prod_cat" class="input" placeholder="Épicerie" />
-              </div>
-
-              <div class="fieldWrap">
-                <label class="label">Prix (FCFA)</label>
-                <input id="prod_price" class="input" type="number" min="0" step="1" placeholder="2500" />
-              </div>
-              <div class="fieldWrap">
-                <label class="label">Stock</label>
-                <input id="prod_stock" class="input" type="number" min="0" step="1" placeholder="12" />
-              </div>
-            </div>
-
-            <div class="actions">
-              <button id="btnSaveProd" class="btn ok" type="button">➕ Enregistrer le produit</button>
-              <button id="btnResetProd" class="btn" type="button">Effacer</button>
-            </div>
-            <input type="hidden" id="prod_id" />
+      <div>
+        <div class="card">
+          <h3>État de la session</h3>
+          <div class="row" style="margin-bottom:10px">
+            <div class="badge" id="badgeAccess">ACCÈS —</div>
+            <div class="badge" id="badgeStore">PROFIL —</div>
+            <div class="badge" id="badgeSave">SAUVEGARDE —</div>
           </div>
 
-          <div class="hr"></div>
-
-          <div class="searchRow">
-            <input id="searchProd" class="input" placeholder="Rechercher un produit..." />
-            <button id="btnReloadProducts" class="btn" type="button">🔄 Recharger la liste</button>
-          </div>
-
-          <div id="productsList" class="list">
-            <div class="empty">Aucun produit pour le moment.</div>
-          </div>
-
-          <div class="footerNote">
-            Les suppressions sont douces : on désactive le produit au lieu de le casser dans la base.
+          <div class="notice" id="sessionNotice">Session en cours d’initialisation.</div>
+          <div class="helper" id="sessionHint">
+            Ouvre la page avec un lien du style <b>?slug=pos-221771234567</b> ou <b>?slug=pos-221771234567&phone=221771234567</b>.
           </div>
         </div>
 
-        <div id="view-diag" class="view">
-          <div class="diag" id="diagBox">Initialisation…</div>
-        </div>
-      </section>
-
-      <aside class="card">
-        <h2>Contexte courant</h2>
-        <div class="metaBox">
-          <div class="small muted">Slug</div>
-          <div id="metaSlug" style="font-weight:900;margin-top:4px">—</div>
+        <div class="card" style="margin-top:12px">
+          <h3>Résumé boutique</h3>
+          <div id="profilePreview" class="summaryBox">
+            <span class="empty">Aucun résumé chargé pour l’instant.</span>
+          </div>
         </div>
 
-        <div class="metaBox" style="margin-top:10px">
-          <div class="small muted">Téléphone</div>
-          <div id="metaPhone" style="font-weight:900;margin-top:4px">—</div>
+        <div class="card" style="margin-top:12px">
+          <h3>Diagnostic technique</h3>
+          <div class="logBox" id="logBox">Aucun log pour l’instant.</div>
         </div>
-
-        <div class="metaBox" style="margin-top:10px">
-          <div class="small muted">Magasin</div>
-          <div id="metaStore" style="font-weight:900;margin-top:4px">—</div>
-        </div>
-
-        <div class="metaBox" style="margin-top:10px">
-          <div class="small muted">Plan</div>
-          <div id="metaPlan" style="font-weight:900;margin-top:4px">—</div>
-        </div>
-
-        <div class="metaBox" style="margin-top:10px">
-          <div class="small muted">Module</div>
-          <div style="font-weight:900;margin-top:4px">POS</div>
-        </div>
-
-        <div class="hr"></div>
-
-        <div class="actions">
-          <a id="btnGoHall2" class="btn" href="./index.html">Hall</a>
-          <a id="btnGoCaisse2" class="btn primary" href="./caisse.html">Caisse</a>
-        </div>
-
-        <div class="footerNote">
-          Admin protégé. Ouvre cette page avec un lien du style <b>?slug=pos-221771234567</b> ou <b>?slug=...&phone=...</b>.
-        </div>
-      </aside>
+      </div>
     </div>
   </div>
 
@@ -483,50 +300,59 @@
     (() => {
       "use strict";
 
-      const MODULE = "POS";
+      const MODULE_CODE = "POS";
+      const ABOS_URL = "https://commencer-a-payer.digiylyfe.com/";
+      const LOCAL_KEY_PREFIX = "digiy_pos_settings::";
+
       const SUPABASE_URL = String(window.DIGIY_SUPABASE_URL || "").trim();
       const SUPABASE_ANON_KEY = String(window.DIGIY_SUPABASE_ANON_KEY || "").trim();
 
-      const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-        auth: {
-          persistSession: false,
-          autoRefreshToken: false,
-          detectSessionInUrl: false
-        }
-      });
+      const qs = (id) => document.getElementById(id);
+      const DIAG = [];
 
-      const state = {
+      let STATE = {
         slug: "",
         phone: "",
         access: false,
-        storeName: "",
-        plan: "",
-        settingsRow: null,
-        products: [],
-        loading: false
+        subscription: null,
+        storeContext: null,
+        lastSaveMode: null
       };
 
-      const $ = (id) => document.getElementById(id);
-      const diagLines = [];
-
-      function log(msg, data){
-        const line = `[${new Date().toLocaleTimeString("fr-FR")}] ${msg}`;
-        diagLines.push(data === undefined ? line : `${line}\n${safeStringify(data)}`);
-        $("diagBox").textContent = diagLines.join("\n\n");
-        console.log("[DIGIY POS ADMIN]", msg, data ?? "");
+      function log(message, data){
+        const line = `[${new Date().toLocaleTimeString("fr-FR")}] ${message}`;
+        DIAG.push(data === undefined ? line : `${line}\n${safeStringify(data)}`);
+        qs("logBox").textContent = DIAG.join("\n\n");
+        console.log("[DIGIY POS SETTINGS]", message, data ?? "");
       }
 
       function safeStringify(v){
-        try { return JSON.stringify(v, null, 2); }
-        catch(_) { return String(v); }
+        try{ return JSON.stringify(v, null, 2); }
+        catch(_){ return String(v); }
       }
 
-      function getParam(name){
-        return new URL(location.href).searchParams.get(name) || "";
+      function esc(v){
+        return String(v ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
       }
 
       function normPhone(v){
         return String(v || "").replace(/[^\d]/g, "");
+      }
+
+      function fmtDateFR(iso){
+        if(!iso) return "—";
+        const d = new Date(iso);
+        if(Number.isNaN(d.getTime())) return "—";
+        return d.toLocaleDateString("fr-FR", { day:"2-digit", month:"long", year:"numeric" });
+      }
+
+      function getParam(name){
+        return new URL(location.href).searchParams.get(name) || "";
       }
 
       function buildUrl(base, params){
@@ -539,70 +365,99 @@
         return u.toString();
       }
 
-      function setStatus(kind, title, sub){
-        const box = $("statusBox");
-        const dot = $("dotStatus");
-        box.className = `statusLine ${kind || ""}`.trim();
-        dot.className = `dot ${kind === "ok" ? "ok" : kind === "bad" ? "bad" : ""}`.trim();
-        $("pillStatus").textContent = kind === "ok" ? "Accès OK" : kind === "bad" ? "Bloqué" : "Contrôle";
-        $("statusTitle").textContent = title;
-        $("statusSub").textContent = sub;
+      function localKey(slug){
+        return `${LOCAL_KEY_PREFIX}${slug || "default"}`;
       }
 
-      function paintMeta(){
-        $("metaSlug").textContent = state.slug || "—";
-        $("metaPhone").textContent = state.phone || "—";
-        $("metaStore").textContent = state.storeName || "—";
-        $("metaPlan").textContent = state.plan || "—";
-
-        const q = { slug: state.slug || "", phone: state.phone || "" };
-        $("btnBackCaisse").href = buildUrl("./caisse.html", q);
-        $("btnBackHall").href = buildUrl("./index.html", q);
-        $("btnGoHall2").href = buildUrl("./index.html", q);
-        $("btnGoCaisse2").href = buildUrl("./caisse.html", q);
+      function readLocalProfile(slug){
+        try{
+          const raw = localStorage.getItem(localKey(slug));
+          const data = JSON.parse(raw || "null");
+          return data && typeof data === "object" ? data : null;
+        }catch(_){
+          return null;
+        }
       }
 
-      function activateTab(name){
-        document.querySelectorAll(".tab").forEach(el => {
-          el.classList.toggle("active", el.dataset.tab === name);
+      function writeLocalProfile(slug, profile){
+        localStorage.setItem(localKey(slug), JSON.stringify(profile || {}));
+      }
+
+      function setBadge(id, label, kind){
+        const el = qs(id);
+        el.className = `badge ${kind || ""}`.trim();
+        el.textContent = label;
+      }
+
+      function setMainStatus(kind, title, sub){
+        const dot = qs("dotStatus");
+        dot.className = "dot";
+        if(kind === "ok") dot.classList.add("ok");
+        if(kind === "bad") dot.classList.add("bad");
+        qs("mainTitle").textContent = title;
+        qs("mainSub").textContent = sub;
+        qs("pillStatus").textContent = kind === "ok" ? "Actif" : kind === "bad" ? "Bloqué" : "Contrôle";
+      }
+
+      function setNotice(kind, html){
+        const box = qs("statusNotice");
+        box.className = `notice ${kind || ""}`.trim();
+        box.innerHTML = html;
+      }
+
+      function setSessionNotice(kind, html){
+        const box = qs("sessionNotice");
+        box.className = `notice ${kind || ""}`.trim();
+        box.innerHTML = html;
+      }
+
+      function ensureSupabase(){
+        if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
+          throw new Error("Configuration Supabase manquante");
+        }
+        if(!window.supabase || typeof window.supabase.createClient !== "function"){
+          throw new Error("Librairie Supabase non chargée");
+        }
+        return window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+          auth: { persistSession:false, autoRefreshToken:false, detectSessionInUrl:false }
         });
-        document.querySelectorAll(".view").forEach(el => el.classList.remove("active"));
-        $(`view-${name}`).classList.add("active");
       }
+
+      const sb = ensureSupabase();
 
       async function rpcFirstSuccess(name, payloads){
         let lastError = null;
-
-        for(const payload of payloads){
+        for (const payload of payloads){
           try{
-            log(`RPC ${name} tentative`, payload);
+            log(`RPC ${name} → tentative`, payload);
             const { data, error } = await sb.rpc(name, payload);
-            if(error){
+            if (error){
               lastError = error;
-              log(`RPC ${name} erreur`, {
-                message: error.message,
-                details: error.details,
-                hint: error.hint
+              log(`RPC ${name} → erreur`, {
+                code: error.code || null,
+                message: error.message || null,
+                details: error.details || null,
+                hint: error.hint || null,
+                payload
               });
               continue;
             }
-            log(`RPC ${name} OK`, data);
+            log(`RPC ${name} → OK`, data);
             return data;
           }catch(err){
             lastError = err;
-            log(`RPC ${name} exception`, { message: err?.message || String(err) });
+            log(`RPC ${name} → exception`, { message: err?.message || String(err), payload });
           }
         }
-
-        throw lastError || new Error(`RPC ${name} échouée`);
+        throw lastError || new Error(`RPC ${name} a échoué`);
       }
 
-      async function resolvePhoneFromSlug(slug){
+      async function getPhoneFromSlug(slug){
         const { data, error } = await sb
           .from("digiy_subscriptions_public")
           .select("phone,module,slug")
           .eq("slug", slug)
-          .eq("module", MODULE)
+          .eq("module", MODULE_CODE)
           .limit(1)
           .maybeSingle();
 
@@ -612,10 +467,9 @@
 
       async function getAccess(phone){
         const res = await rpcFirstSuccess("digiy_has_access", [
-          { p_phone: phone, p_module: MODULE },
-          { phone, module: MODULE }
+          { p_phone: phone, p_module: MODULE_CODE },
+          { phone, module: MODULE_CODE }
         ]);
-
         if(typeof res === "boolean") return res;
         if(res && typeof res.ok === "boolean") return res.ok;
         if(res && typeof res.has_access === "boolean") return res.has_access;
@@ -626,8 +480,8 @@
       async function getSubscription(phone){
         try{
           const data = await rpcFirstSuccess("digiy_get_subscription_status", [
-            { p_phone: phone, p_module: MODULE },
-            { phone, module: MODULE }
+            { p_phone: phone, p_module: MODULE_CODE },
+            { phone, module: MODULE_CODE }
           ]);
           return data || null;
         }catch(err){
@@ -636,331 +490,417 @@
         }
       }
 
-      async function loadShopSettings(){
-        const { data, error } = await sb
-          .from("caisse_settings")
-          .select("*")
-          .eq("owner_id", state.phone)
-          .limit(1)
-          .maybeSingle();
-
-        if(error){
-          log("Lecture caisse_settings erreur", error);
+      async function getStoreContext(slug){
+        try{
+          const data = await rpcFirstSuccess("pos_get_store_context_by_slug", [
+            { p_slug: slug },
+            { slug }
+          ]);
+          if(Array.isArray(data)) return data[0] || null;
+          return data || null;
+        }catch(err){
+          log("pos_get_store_context_by_slug indisponible", { message: err?.message || String(err) });
           return null;
         }
-        return data || null;
       }
 
-      async function saveShopSettings(){
-        const row = {
-          owner_id: state.phone,
-          slug: state.slug || null,
-          nom_boutique: $("shop_name").value.trim() || "DIGIY CAISSE PRO",
-          city: $("shop_city").value.trim() || null,
-          telephone: normPhone($("shop_phone").value),
-          whatsapp_phone: normPhone($("shop_whatsapp").value),
-          wave_phone: normPhone($("shop_wave").value),
-          adresse: $("shop_address").value.trim() || null,
-          tagline: $("shop_tagline").value.trim() || null,
-          tva_active: $("tva_active").checked,
-          tva_taux: Number($("tva_taux").value || 18),
-          tva_mode: $("tva_mode").value || "excl",
+      function normalizeStoreProfile(source){
+        const s = source && typeof source === "object" ? source : {};
+
+        return {
+          display_name:
+            s.display_name ||
+            s.store_name ||
+            s.nom ||
+            s.title ||
+            "",
+
+          owner_name:
+            s.owner_name ||
+            s.manager_name ||
+            s.owner ||
+            "",
+
+          phone_public:
+            normPhone(
+              s.phone_public ||
+              s.phone ||
+              ""
+            ),
+
+          whatsapp_phone:
+            normPhone(
+              s.whatsapp_phone ||
+              s.whatsapp ||
+              ""
+            ),
+
+          wave_phone:
+            normPhone(
+              s.wave_phone ||
+              s.wave ||
+              ""
+            ),
+
+          city:
+            s.city ||
+            s.ville ||
+            "",
+
+          address:
+            s.address ||
+            s.adresse ||
+            "",
+
+          merchant_message:
+            s.merchant_message ||
+            s.tagline ||
+            s.message ||
+            s.bio ||
+            "",
+
+          tva_enabled:
+            !!(
+              s.tva_enabled ||
+              s.is_tva_enabled ||
+              s.vat_enabled ||
+              s.tva_assujeti
+            ),
+
+          tva_rate:
+            s.tva_rate ??
+            s.vat_rate ??
+            s.tva_taux ??
+            ""
+        };
+      }
+
+      function normalizeSubscription(sub){
+        const s = sub && typeof sub === "object" ? sub : {};
+
+        return {
+          plan:
+            s.plan ||
+            s.plan_code ||
+            s.tier ||
+            (STATE.access ? "actif" : "standard"),
+
+          expires_at:
+            s.expires_at ||
+            s.current_period_end ||
+            s.period_end ||
+            null
+        };
+      }
+
+      function fillProfile(profile){
+        qs("display_name").value = profile.display_name || "";
+        qs("owner_name").value = profile.owner_name || "";
+        qs("phone_public").value = profile.phone_public || "";
+        qs("whatsapp_phone").value = profile.whatsapp_phone || "";
+        qs("wave_phone").value = profile.wave_phone || "";
+        qs("city").value = profile.city || "";
+        qs("address").value = profile.address || "";
+        qs("merchant_message").value = profile.merchant_message || "";
+        qs("tva_enabled").checked = !!profile.tva_enabled;
+        qs("tva_rate").value = profile.tva_rate ?? "";
+        renderProfilePreview();
+      }
+
+      function collectProfile(){
+        return {
+          display_name: String(qs("display_name").value || "").trim(),
+          owner_name: String(qs("owner_name").value || "").trim(),
+          phone_public: normPhone(qs("phone_public").value || ""),
+          whatsapp_phone: normPhone(qs("whatsapp_phone").value || ""),
+          wave_phone: normPhone(qs("wave_phone").value || ""),
+          city: String(qs("city").value || "").trim(),
+          address: String(qs("address").value || "").trim(),
+          merchant_message: String(qs("merchant_message").value || "").trim(),
+          tva_enabled: !!qs("tva_enabled").checked,
+          tva_rate: String(qs("tva_rate").value || "").trim()
+        };
+      }
+
+      function renderProfilePreview(){
+        const p = collectProfile();
+        qs("profilePreview").innerHTML = `
+          <div class="summaryBox">
+            <div><b>Boutique</b> : ${esc(p.display_name || "—")}</div>
+            <div style="margin-top:6px"><b>Responsable</b> : ${esc(p.owner_name || "—")}</div>
+            <div style="margin-top:6px"><b>Téléphone</b> : ${esc(p.phone_public || "—")}</div>
+            <div style="margin-top:6px"><b>WhatsApp</b> : ${esc(p.whatsapp_phone || "—")}</div>
+            <div style="margin-top:6px"><b>Wave</b> : ${esc(p.wave_phone || "—")}</div>
+            <div style="margin-top:6px"><b>Ville</b> : ${esc(p.city || "—")}</div>
+            <div style="margin-top:6px"><b>Adresse</b> : ${esc(p.address || "—")}</div>
+            <div style="margin-top:6px"><b>Message</b> : ${esc(p.merchant_message || "—")}</div>
+            <div style="margin-top:6px"><b>TVA</b> : ${p.tva_enabled ? "Active" : "Inactive"} ${p.tva_enabled ? `• ${esc(p.tva_rate || "0")} %` : ""}</div>
+          </div>
+        `;
+      }
+
+      async function trySaveStoreRemote(slug, phone, profile){
+        const payloads = [
+          {
+            name: "pos_admin_upsert_store_profile",
+            variants: [
+              { p_slug: slug, p_phone: phone, p_profile: profile },
+              { slug, phone, profile }
+            ]
+          },
+          {
+            name: "pos_save_store_settings",
+            variants: [
+              { p_slug: slug, p_phone: phone, p_settings: profile },
+              { slug, phone, settings: profile }
+            ]
+          }
+        ];
+
+        for(const item of payloads){
+          try{
+            const data = await rpcFirstSuccess(item.name, item.variants);
+            return { ok:true, mode:"remote-rpc", source:item.name, data };
+          }catch(_){}
+        }
+
+        const tablePayload = {
+          slug,
+          phone,
+          display_name: profile.display_name || null,
+          owner_name: profile.owner_name || null,
+          whatsapp_phone: profile.whatsapp_phone || null,
+          wave_phone: profile.wave_phone || null,
+          city: profile.city || null,
+          address: profile.address || null,
+          merchant_message: profile.merchant_message || null,
+          tva_enabled: !!profile.tva_enabled,
+          tva_rate: profile.tva_rate === "" ? null : Number(profile.tva_rate),
           updated_at: new Date().toISOString()
         };
 
-        log("Sauvegarde caisse_settings", row);
+        const tables = ["digiy_pos_stores", "digiy_pos_businesses"];
+        for(const table of tables){
+          try{
+            log(`TABLE ${table} → tentative upsert`, tablePayload);
+            const { error } = await sb.from(table).upsert(tablePayload, { onConflict: "slug" });
+            if(!error){
+              log(`TABLE ${table} → OK`);
+              return { ok:true, mode:"remote-table", source:table };
+            }
+            log(`TABLE ${table} → erreur`, error);
+          }catch(err){
+            log(`TABLE ${table} → exception`, { message: err?.message || String(err) });
+          }
+        }
 
-        const { error } = await sb.from("caisse_settings").upsert(row, {
-          onConflict: "owner_id"
-        });
-
-        if(error) throw error;
-
-        state.settingsRow = await loadShopSettings();
-        fillShopForm(state.settingsRow);
-        state.storeName = state.settingsRow?.nom_boutique || state.storeName;
-        paintMeta();
+        return { ok:false };
       }
 
-      function fillShopForm(row){
-        const r = row || {};
-        $("shop_name").value = r.nom_boutique || state.storeName || "";
-        $("shop_city").value = r.city || "";
-        $("shop_phone").value = r.telephone || state.phone || "";
-        $("shop_whatsapp").value = r.whatsapp_phone || "";
-        $("shop_wave").value = r.wave_phone || "";
-        $("shop_address").value = r.adresse || "";
-        $("shop_tagline").value = r.tagline || "";
-        $("tva_active").checked = !!r.tva_active;
-        $("tva_taux").value = r.tva_taux ?? 18;
-        $("tva_mode").value = r.tva_mode || "excl";
-      }
+      async function hydrate(){
+        const slug = String(getParam("slug") || "").trim();
+        let phone = normPhone(getParam("phone"));
 
-      async function loadProducts(){
-        const { data, error } = await sb
-          .from("caisse_products")
-          .select("*")
-          .eq("owner_id", state.phone)
-          .order("created_at", { ascending: false });
+        STATE.slug = slug;
+        STATE.phone = phone;
+        STATE.access = false;
+        STATE.storeContext = null;
+        STATE.subscription = null;
+        STATE.lastSaveMode = null;
 
-        if(error) throw error;
-        state.products = Array.isArray(data) ? data : [];
-        renderProducts();
-      }
+        qs("pillSlug").textContent = slug || "—";
+        qs("pillPhone").textContent = phone || "—";
+        setBadge("badgeAccess", "ACCÈS …", "");
+        setBadge("badgeStore", "PROFIL …", "");
+        setBadge("badgeSave", "SAUVEGARDE —", "");
 
-      function productTag(stock, isActive){
-        if(!isActive) return `<span class="tag bad">désactivé</span>`;
-        const s = Number(stock || 0);
-        if(s <= 0) return `<span class="tag bad">rupture</span>`;
-        if(s <= 5) return `<span class="tag warn">stock bas</span>`;
-        return `<span class="tag ok">actif</span>`;
-      }
+        qs("btnBackCaisse").href = buildUrl("./caisse.html", { slug, phone });
+        qs("btnAdmin").href = buildUrl("./admin.html", { slug, phone });
 
-      function renderProducts(){
-        const q = ($("searchProd").value || "").trim().toLowerCase();
-        const rows = state.products.filter(p => {
-          const hay = [
-            p.nom || "",
-            p.categorie || ""
-          ].join(" ").toLowerCase();
-          return !q || hay.includes(q);
-        });
-
-        const box = $("productsList");
-        if(!rows.length){
-          box.innerHTML = `<div class="empty">Aucun produit pour le moment.</div>`;
+        if(!slug){
+          setMainStatus("bad", "Slug manquant", "Ajoute ?slug=pos-2217… dans l’URL.");
+          setNotice("bad", `<div><b>Le lien n’est pas exploitable.</b><div style="margin-top:6px">Le bureau a besoin du slug du module POS.</div></div>`);
+          setSessionNotice("bad", `Exemple d’ouverture : <b>?slug=pos-221771234567</b>`);
+          setBadge("badgeAccess", "ACCÈS KO", "bad");
+          setBadge("badgeStore", "PROFIL KO", "bad");
           return;
         }
 
-        box.innerHTML = rows.map(p => `
-          <div class="prodCard">
-            <div>
-              <div class="prodName">${escapeHtml(p.nom || "Produit")}</div>
-              <div class="prodMeta">
-                Catégorie : ${escapeHtml(p.categorie || "—")}<br>
-                Prix : ${Number(p.prix || 0).toLocaleString("fr-FR")} FCFA<br>
-                Stock : ${Number(p.stock || 0)}<br>
-                ID : ${escapeHtml(p.id || "—")}
-              </div>
-            </div>
-            <div class="prodRight">
-              ${productTag(p.stock, p.is_active !== false)}
-              <button class="btn" type="button" onclick="window.POS_ADMIN.editProduct('${String(p.id)}')">✏️ Modifier</button>
-              <button class="btn danger" type="button" onclick="window.POS_ADMIN.disableProduct('${String(p.id)}')">🗑 Désactiver</button>
-            </div>
-          </div>
-        `).join("");
-      }
-
-      function escapeHtml(v){
-        return String(v ?? "")
-          .replaceAll("&","&amp;")
-          .replaceAll("<","&lt;")
-          .replaceAll(">","&gt;")
-          .replaceAll('"',"&quot;")
-          .replaceAll("'","&#039;");
-      }
-
-      function resetProductForm(){
-        $("prod_id").value = "";
-        $("prod_name").value = "";
-        $("prod_cat").value = "";
-        $("prod_price").value = "";
-        $("prod_stock").value = "";
-        $("btnSaveProd").textContent = "➕ Enregistrer le produit";
-      }
-
-      function fillProductForm(p){
-        $("prod_id").value = p.id || "";
-        $("prod_name").value = p.nom || "";
-        $("prod_cat").value = p.categorie || "";
-        $("prod_price").value = p.prix ?? "";
-        $("prod_stock").value = p.stock ?? "";
-        $("btnSaveProd").textContent = "💾 Mettre à jour le produit";
-        activateTab("products");
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-
-      async function saveProduct(){
-        const id = $("prod_id").value.trim();
-        const row = {
-          owner_id: state.phone,
-          slug: state.slug || null,
-          nom: $("prod_name").value.trim(),
-          categorie: $("prod_cat").value.trim() || null,
-          prix: Number($("prod_price").value || 0),
-          stock: Number($("prod_stock").value || 0),
-          is_active: true
-        };
-
-        if(!row.nom) throw new Error("Nom produit requis");
-        if(!row.prix || row.prix < 0) throw new Error("Prix produit invalide");
-
-        log("Sauvegarde produit", row);
-
-        if(id){
-          const { error } = await sb
-            .from("caisse_products")
-            .update({
-              nom: row.nom,
-              categorie: row.categorie,
-              prix: row.prix,
-              stock: row.stock,
-              is_active: true,
-              updated_at: new Date().toISOString()
-            })
-            .eq("id", id)
-            .eq("owner_id", state.phone);
-
-          if(error) throw error;
-        } else {
-          const { error } = await sb
-            .from("caisse_products")
-            .insert({
-              ...row,
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString()
-            });
-
-          if(error) throw error;
+        try{
+          if(!phone){
+            phone = await getPhoneFromSlug(slug);
+            STATE.phone = phone;
+            qs("pillPhone").textContent = phone || "—";
+          }
+          if(!phone){
+            throw new Error("Téléphone introuvable depuis le slug");
+          }
+        }catch(err){
+          setMainStatus("bad", "Téléphone introuvable", "Le slug ne remonte pas le téléphone du commerçant.");
+          setNotice("bad", `<div><b>Impossible de résoudre le téléphone.</b><div style="margin-top:6px">${esc(err?.message || String(err))}</div></div>`);
+          setSessionNotice("bad", `Essaie le lien avec <b>&phone=2217…</b> en plus du slug.`);
+          setBadge("badgeAccess", "ACCÈS KO", "bad");
+          setBadge("badgeStore", "PROFIL KO", "bad");
+          return;
         }
 
-        resetProductForm();
-        await loadProducts();
-      }
-
-      async function disableProduct(id){
-        const { error } = await sb
-          .from("caisse_products")
-          .update({
-            is_active: false,
-            updated_at: new Date().toISOString()
-          })
-          .eq("id", id)
-          .eq("owner_id", state.phone);
-
-        if(error) throw error;
-        await loadProducts();
-      }
-
-      async function boot(){
-        if(state.loading) return;
-        state.loading = true;
+        const abosLink = buildUrl(ABOS_URL, {
+          module: MODULE_CODE,
+          base_module: "CAISSE",
+          phone,
+          slug
+        });
+        qs("btnAbos").href = abosLink;
+        qs("btnBackCaisse").href = buildUrl("./caisse.html", { slug, phone });
+        qs("btnAdmin").href = buildUrl("./admin.html", { slug, phone });
 
         try{
-          state.slug = String(getParam("slug") || "").trim();
-          state.phone = normPhone(getParam("phone"));
-          paintMeta();
+          const access = await getAccess(phone);
+          STATE.access = !!access;
 
-          if(!state.slug){
-            setStatus("bad", "Slug manquant", "Ouvre cette page avec ?slug=pos-2217...");
-            log("Slug manquant");
+          if(!access){
+            setMainStatus("bad", "Accès POS non actif", "Le guard a parlé. Sans abonnement valide, le bureau reste fermé.");
+            setNotice("bad", `<div><b>Accès fermé.</b><div style="margin-top:6px">Active ou renouvelle l’abonnement pour gérer ta boutique.</div></div>`);
+            setSessionNotice("bad", `<div><b>La page est trouvée</b>, mais l’accès module n’est pas validé.</div>`);
+            setBadge("badgeAccess", "ACCÈS FERMÉ", "bad");
             return;
           }
 
-          if(!state.phone){
-            state.phone = await resolvePhoneFromSlug(state.slug);
-            paintMeta();
-          }
+          const [storeRaw, subRaw] = await Promise.all([
+            getStoreContext(slug),
+            getSubscription(phone)
+          ]);
 
-          if(!state.phone){
-            setStatus("bad", "Téléphone introuvable", "Le slug n’a pas remonté le phone boutique.");
-            log("Téléphone introuvable");
-            return;
-          }
+          const profileRemote = normalizeStoreProfile(storeRaw);
+          const profileLocal = readLocalProfile(slug);
+          const profile = profileLocal ? { ...profileRemote, ...profileLocal } : profileRemote;
 
-          state.access = await getAccess(state.phone);
-          const sub = await getSubscription(state.phone);
-          state.plan = sub?.plan || sub?.plan_code || "standard";
+          STATE.storeContext = profile;
+          STATE.subscription = normalizeSubscription(subRaw);
 
-          if(!state.access){
-            setStatus("bad", "Accès refusé", "Le module POS n’est pas actif pour cette boutique.");
-            log("Accès refusé");
-            return;
-          }
+          fillProfile(profile);
 
-          setStatus("ok", "Admin prêt", "Tu peux maintenant poser la boutique et les produits.");
-          state.settingsRow = await loadShopSettings();
-          fillShopForm(state.settingsRow);
+          qs("storeNameTop").textContent = profile.display_name || "Boutique POS";
+          qs("storeCityTop").textContent = profile.city || "—";
+          qs("planNameTop").textContent = STATE.subscription.plan || "actif";
+          qs("expiresAtTop").textContent = fmtDateFR(STATE.subscription.expires_at);
 
-          state.storeName =
-            state.settingsRow?.nom_boutique ||
-            "DIGIY CAISSE PRO";
-
-          paintMeta();
-          await loadProducts();
-
-          log("Admin prêt", {
-            slug: state.slug,
-            phone: state.phone,
-            plan: state.plan
-          });
+          setMainStatus("ok", "Paramètres prêts", "Accès validé, profil boutique chargé.");
+          setNotice("ok", `<div><b>Bureau admin actif.</b><div style="margin-top:6px">Tu peux poser les coordonnées, message commerçant et TVA.</div></div>`);
+          setSessionNotice("ok", `<div><b>Session active.</b><div style="margin-top:6px">Le profil distant charge. Les brouillons locaux passent par-dessus s’il y en a.</div></div>`);
+          setBadge("badgeAccess", "ACCÈS OK", "ok");
+          setBadge("badgeStore", profile.display_name ? "PROFIL OK" : "PROFIL MINIMAL", profile.display_name ? "ok" : "warn");
+          setBadge("badgeSave", profileLocal ? "BROUILLON LOCAL" : "SYNC LECTURE", profileLocal ? "warn" : "ok");
         } catch(err){
-          setStatus("bad", "Blocage technique", err?.message || "Erreur admin POS");
-          log("BOOT ERROR", { message: err?.message || String(err) });
-        } finally {
-          state.loading = false;
+          log("Hydratation settings → erreur", { message: err?.message || String(err) });
+          setMainStatus("bad", "Erreur de contrôle", "Le bureau répond, mais une brique technique coince.");
+          setNotice("bad", `<div><b>Blocage technique détecté.</b><div style="margin-top:6px">${esc(err?.message || String(err))}</div></div>`);
+          setSessionNotice("bad", `Regarde le diagnostic à droite pour voir si c’est la clé, la RPC ou le contexte boutique.`);
+          setBadge("badgeAccess", "ACCÈS KO", "bad");
         }
       }
 
-      document.querySelectorAll(".tab").forEach(btn => {
-        btn.addEventListener("click", () => activateTab(btn.dataset.tab));
-      });
-
-      $("btnReloadShop").addEventListener("click", async () => {
-        state.settingsRow = await loadShopSettings();
-        fillShopForm(state.settingsRow);
-        log("Boutique rechargée");
-      });
-
-      $("btnSaveShop").addEventListener("click", async () => {
-        try{
-          $("btnSaveShop").disabled = true;
-          await saveShopSettings();
-          log("Boutique enregistrée");
-        } catch(err){
-          log("Erreur save boutique", { message: err?.message || String(err) });
-          alert(err?.message || "Erreur sauvegarde boutique");
-        } finally {
-          $("btnSaveShop").disabled = false;
+      async function saveProfile(){
+        if(!STATE.access){
+          alert("Accès POS non validé. On ne modifie pas la boutique sur une porte fermée, frérot.");
+          return;
         }
-      });
 
-      $("btnSaveProd").addEventListener("click", async () => {
-        try{
-          $("btnSaveProd").disabled = true;
-          await saveProduct();
-          log("Produit enregistré");
-        } catch(err){
-          log("Erreur save produit", { message: err?.message || String(err) });
-          alert(err?.message || "Erreur sauvegarde produit");
-        } finally {
-          $("btnSaveProd").disabled = false;
+        const profile = collectProfile();
+        if(!profile.display_name){
+          alert("Ajoute au moins le nom boutique.");
+          qs("display_name").focus();
+          return;
         }
-      });
 
-      $("btnResetProd").addEventListener("click", resetProductForm);
-      $("btnReloadProducts").addEventListener("click", loadProducts);
-      $("searchProd").addEventListener("input", renderProducts);
+        const btn = qs("btnSaveProfile");
+        btn.disabled = true;
+        btn.textContent = "Sauvegarde…";
 
-      window.POS_ADMIN = {
-        editProduct(id){
-          const p = state.products.find(x => String(x.id) === String(id));
-          if(p) fillProductForm(p);
-        },
-        async disableProduct(id){
-          if(!confirm("Désactiver ce produit ?")) return;
-          try{
-            await disableProduct(id);
-            log("Produit désactivé", { id });
-          } catch(err){
-            log("Erreur désactivation produit", { message: err?.message || String(err) });
-            alert(err?.message || "Erreur désactivation");
+        try{
+          const remote = await trySaveStoreRemote(STATE.slug, STATE.phone, profile);
+
+          if(remote.ok){
+            writeLocalProfile(STATE.slug, profile);
+            STATE.lastSaveMode = remote.mode;
+            setBadge("badgeSave", remote.mode === "remote-rpc" ? "SYNC RPC" : "SYNC TABLE", "ok");
+            setNotice("ok", `<div><b>Paramètres enregistrés.</b><div style="margin-top:6px">Sauvegarde distante via <b>${esc(remote.source)}</b>.</div></div>`);
+            setSessionNotice("ok", `<div><b>Profil mis à jour.</b><div style="margin-top:6px">La version locale a aussi été gardée comme filet de sécurité.</div></div>`);
+          } else {
+            writeLocalProfile(STATE.slug, profile);
+            STATE.lastSaveMode = "local";
+            setBadge("badgeSave", "BROUILLON LOCAL", "warn");
+            setNotice("warn", `<div><b>Sauvé localement.</b><div style="margin-top:6px">Le backend admin boutique n’est pas encore complètement posé, mais rien n’est perdu.</div></div>`);
+            setSessionNotice("warn", `<div><b>Brouillon local actif.</b><div style="margin-top:6px">Quand la RPC/table sera prête, on renverra ça proprement.</div></div>`);
           }
-        }
-      };
 
-      boot();
+          qs("storeNameTop").textContent = profile.display_name || "Boutique POS";
+          qs("storeCityTop").textContent = profile.city || "—";
+          renderProfilePreview();
+        }catch(err){
+          log("saveProfile → erreur", { message: err?.message || String(err) });
+          writeLocalProfile(STATE.slug, profile);
+          setBadge("badgeSave", "BROUILLON LOCAL", "warn");
+          setNotice("warn", `<div><b>Erreur distante, profil conservé.</b><div style="margin-top:6px">Le brouillon local a été gardé pour éviter toute perte.</div></div>`);
+        }finally{
+          btn.disabled = false;
+          btn.textContent = "💾 Enregistrer les paramètres";
+        }
+      }
+
+      function bindActions(){
+        [
+          "display_name","owner_name","phone_public","whatsapp_phone","wave_phone",
+          "city","address","merchant_message","tva_rate"
+        ].forEach((id) => qs(id).addEventListener("input", renderProfilePreview));
+
+        qs("tva_enabled").addEventListener("change", renderProfilePreview);
+
+        qs("btnCheck").addEventListener("click", async () => {
+          qs("btnCheck").disabled = true;
+          qs("btnCheck").textContent = "Contrôle…";
+          try{ await hydrate(); }
+          finally{
+            qs("btnCheck").disabled = false;
+            qs("btnCheck").textContent = "✅ Vérifier mon accès";
+          }
+        });
+
+        qs("btnLoad").addEventListener("click", async () => {
+          qs("btnLoad").disabled = true;
+          qs("btnLoad").textContent = "Rechargement…";
+          try{ await hydrate(); }
+          finally{
+            qs("btnLoad").disabled = false;
+            qs("btnLoad").textContent = "🔄 Recharger profil";
+          }
+        });
+
+        qs("btnSaveProfile").addEventListener("click", saveProfile);
+
+        qs("btnFillPhone").addEventListener("click", () => {
+          qs("phone_public").value = STATE.phone || "";
+          if(!qs("whatsapp_phone").value) qs("whatsapp_phone").value = STATE.phone || "";
+          if(!qs("wave_phone").value) qs("wave_phone").value = STATE.phone || "";
+          renderProfilePreview();
+        });
+      }
+
+      async function init(){
+        try{
+          log("Initialisation settings POS");
+          bindActions();
+          renderProfilePreview();
+          await hydrate();
+        }catch(err){
+          log("Initialisation fatale", { message: err?.message || String(err) });
+          setMainStatus("bad", "Erreur fatale", err?.message || "Impossible d’initialiser les paramètres");
+          setNotice("bad", `<div><b>Erreur fatale.</b> ${esc(err?.message || String(err))}</div>`);
+          setSessionNotice("bad", "Vérifie la config Supabase, la clé anon, puis les RPC.");
+        }
+      }
+
+      init();
     })();
   </script>
 </body>
