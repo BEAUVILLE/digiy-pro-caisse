@@ -3,13 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>DIGIY CAISSE PRO — Caisse</title>
+  <title>DIGIY POS — Caisse boutique</title>
   <meta name="theme-color" content="#0b1020" />
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
     window.DIGIY_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
+    window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
   </script>
 
   <style>
@@ -25,6 +26,7 @@
       --ok:#22c55e;
       --warn:#f59e0b;
       --danger:#ef4444;
+      --info:#60a5fa;
       --shadow:0 12px 30px rgba(0,0,0,.35);
       --radius:18px;
     }
@@ -140,6 +142,10 @@
       background:rgba(245,158,11,.10);
       border-color:rgba(245,158,11,.30);
     }
+    .btn.info{
+      background:rgba(96,165,250,.10);
+      border-color:rgba(96,165,250,.30);
+    }
 
     .grid{
       display:grid;
@@ -204,7 +210,7 @@
 
     .bigTitle{
       margin:0;
-      font-size:28px;
+      font-size:30px;
       line-height:1.08;
       letter-spacing:-.6px;
     }
@@ -230,6 +236,7 @@
       font-weight:900;
       margin-top:4px;
       line-height:1.1;
+      word-break:break-word;
     }
 
     .hr{
@@ -244,6 +251,7 @@
       border:1px solid var(--line);
       background:rgba(255,255,255,.03);
       margin-top:10px;
+      line-height:1.55;
     }
 
     .notice.ok{
@@ -259,6 +267,11 @@
     .notice.bad{
       border-color:rgba(239,68,68,.25);
       background:rgba(239,68,68,.08);
+    }
+
+    .notice.info{
+      border-color:rgba(96,165,250,.25);
+      background:rgba(96,165,250,.08);
     }
 
     .cashGrid{
@@ -312,6 +325,7 @@
       font-size:13px;
       font-weight:700;
       margin-top:8px;
+      line-height:1.55;
     }
 
     .logBox{
@@ -323,7 +337,7 @@
       font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
       white-space:pre-wrap;
       word-break:break-word;
-      max-height:240px;
+      max-height:260px;
       overflow:auto;
     }
 
@@ -358,6 +372,12 @@
       color:#ffd2d2;
     }
 
+    .badge.info{
+      background:rgba(96,165,250,.10);
+      border-color:rgba(96,165,250,.30);
+      color:#d8ecff;
+    }
+
     details{
       margin-top:10px;
     }
@@ -373,6 +393,40 @@
       color:var(--muted);
       font-weight:800;
       font-size:13px;
+      line-height:1.55;
+    }
+
+    .kpiGrid{
+      display:grid;
+      gap:12px;
+      grid-template-columns:repeat(2,1fr);
+      margin-top:12px;
+    }
+
+    @media(min-width:900px){
+      .kpiGrid{
+        grid-template-columns:repeat(3,1fr);
+      }
+    }
+
+    .kpi{
+      padding:12px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+    }
+
+    .kpi .k{
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+      margin-bottom:6px;
+    }
+
+    .kpi .v{
+      font-size:24px;
+      font-weight:1000;
+      line-height:1;
     }
   </style>
 </head>
@@ -383,14 +437,15 @@
       <div class="brand">
         <div class="brandBadge">🏪</div>
         <div>
-          <div class="brandTitle">DIGIY CAISSE PRO</div>
-          <div class="brandSub">Caisse vivante • accès contrôlé • contexte magasin</div>
+          <div class="brandTitle">DIGIY POS</div>
+          <div class="brandSub">Caisse boutique • lecture locale • accès contrôlé</div>
         </div>
       </div>
 
       <div class="row">
         <div class="pill">Slug : <strong id="pillSlug">—</strong></div>
         <div class="pill">Téléphone : <strong id="pillPhone">—</strong></div>
+        <div class="pill">Source : <strong id="pillSource">—</strong></div>
         <div class="pill">Statut : <strong id="pillStatus">Chargement…</strong></div>
       </div>
     </div>
@@ -400,9 +455,9 @@
         <div class="statusLine">
           <div class="dot" id="dotStatus"></div>
           <div style="flex:1">
-            <div class="bigTitle" id="mainTitle">Chargement de la caisse…</div>
+            <h1 class="bigTitle" id="mainTitle">Caisse boutique</h1>
             <div class="muted" style="margin-top:6px;font-weight:750" id="mainSub">
-              Vérification de l’accès et lecture du contexte magasin.
+              Initialisation du contexte boutique…
             </div>
           </div>
         </div>
@@ -419,13 +474,13 @@
           </div>
 
           <div class="miniCard">
-            <div class="muted tiny strong">Plan</div>
-            <div class="value" id="planName">—</div>
+            <div class="muted tiny strong">Produits actifs</div>
+            <div class="value" id="activeProductsHero">0</div>
           </div>
 
           <div class="miniCard">
-            <div class="muted tiny strong">Expiration</div>
-            <div class="value" id="expiresAt">—</div>
+            <div class="muted tiny strong">Revenu du jour</div>
+            <div class="value" id="todayRevenueHero">0 FCFA</div>
           </div>
         </div>
 
@@ -435,14 +490,15 @@
 
         <div class="actionRow">
           <button class="btn ok" type="button" id="btnCheck">✅ Vérifier mon accès</button>
-          <button class="btn" type="button" id="btnReloadContext">🔄 Recharger contexte</button>
+          <button class="btn info" type="button" id="btnReloadContext">🔄 Recharger contexte</button>
+          <button class="btn" type="button" id="btnUseCache">📦 Lire le cache local</button>
           <a class="btn warn" id="btnAbos" href="https://commencer-a-payer.digiylyfe.com/">💳 Abonnement</a>
           <a class="btn" id="btnSupport" href="#" target="_blank" rel="noopener">🛟 Support</a>
         </div>
 
         <details>
           <summary>Diagnostic technique</summary>
-          <div class="helper">Très utile pour voir tout de suite si une RPC manque ou si un slug ne remonte rien.</div>
+          <div class="helper">Le cache local évite de solliciter Supabase à chaque ouverture. Le direct est réservé au contrôle ou au rechargement volontaire.</div>
           <div class="logBox" id="logBox">Aucun log pour l’instant.</div>
         </details>
       </div>
@@ -451,8 +507,8 @@
         <h3>État de la session</h3>
         <div class="row" style="margin-bottom:10px">
           <div class="badge" id="badgeAccess">ACCÈS —</div>
-          <div class="badge" id="badgeStore">MAGASIN —</div>
-          <div class="badge" id="badgeLink">LIEN —</div>
+          <div class="badge" id="badgeStore">BOUTIQUE —</div>
+          <div class="badge" id="badgeCache">CACHE —</div>
         </div>
 
         <div class="hr"></div>
@@ -462,7 +518,34 @@
         </div>
 
         <div class="helper" id="sessionHint">
-          Ouvre la page avec un lien du style <b>?slug=pos-221771234567</b> ou <b>?slug=pos-221771234567&phone=221771234567</b>.
+          Ouvre la page avec un lien du style <b>?slug=chez-astou-saly</b>.
+        </div>
+
+        <div class="kpiGrid">
+          <div class="kpi">
+            <div class="k">Produits total</div>
+            <div class="v" id="kpiProductsTotal">0</div>
+          </div>
+          <div class="kpi">
+            <div class="k">Ventes total</div>
+            <div class="v" id="kpiSalesTotal">0</div>
+          </div>
+          <div class="kpi">
+            <div class="k">Revenu total</div>
+            <div class="v" id="kpiRevenueTotal">0 FCFA</div>
+          </div>
+          <div class="kpi">
+            <div class="k">Ventes du jour</div>
+            <div class="v" id="kpiSalesToday">0</div>
+          </div>
+          <div class="kpi">
+            <div class="k">Revenu du jour</div>
+            <div class="v" id="kpiRevenueToday">0 FCFA</div>
+          </div>
+          <div class="kpi">
+            <div class="k">Store ID</div>
+            <div class="v" id="kpiStoreId">—</div>
+          </div>
         </div>
       </div>
     </div>
@@ -478,7 +561,7 @@
 
         <div class="field">
           <label for="saleLabel">Libellé</label>
-          <input class="input" id="saleLabel" type="text" placeholder="Ex : Plat du jour / Article / Service" />
+          <input class="input" id="saleLabel" type="text" placeholder="Ex : Article / Service / Plat du jour" />
         </div>
 
         <div class="field">
@@ -497,7 +580,7 @@
         </div>
 
         <div class="helper" id="saleHelper">
-          Ici on prépare le front propre. La vraie écriture de vente se branche ensuite sur ta RPC métier POS.
+          Préparation locale uniquement. La vraie écriture de vente se branche ensuite sur la RPC métier POS.
         </div>
       </div>
 
@@ -509,9 +592,9 @@
 
         <div class="hr"></div>
 
-        <h3>Contexte magasin</h3>
+        <h3>Contexte boutique</h3>
         <div id="storeContextBox" class="empty">
-          Contexte magasin pas encore chargé.
+          Contexte boutique pas encore chargé.
         </div>
       </div>
     </div>
@@ -524,11 +607,12 @@
 
       const MODULE_CODE = "POS";
       const SUPPORT_PHONE = "221771342889";
-      const SUPPORT_URL = `https://wa.me/${SUPPORT_PHONE}?text=Bonjour%20JB%2C%20j%E2%80%99ai%20besoin%20d%E2%80%99aide%20pour%20DIGIY%20CAISSE%20PRO`;
+      const SUPPORT_URL = `https://wa.me/${SUPPORT_PHONE}?text=Bonjour%20JB%2C%20j%E2%80%99ai%20besoin%20d%E2%80%99aide%20pour%20DIGIY%20POS%20%C2%B7%20Caisse%20boutique`;
       const ABOS_URL = "https://commencer-a-payer.digiylyfe.com/";
+      const CACHE_TTL_MS = 5 * 60 * 1000;
 
       const SUPABASE_URL = String(window.DIGIY_SUPABASE_URL || "").trim();
-      const SUPABASE_ANON_KEY = String(window.DIGIY_SUPABASE_ANON_KEY || "").trim();
+      const SUPABASE_ANON_KEY = String(window.DIGIY_SUPABASE_ANON_KEY || window.DIGIY_SUPABASE_ANON || "").trim();
 
       const qs = (id) => document.getElementById(id);
 
@@ -537,9 +621,12 @@
         slug: "",
         phone: "",
         access: false,
-        storeContext: null,
-        subscription: null
+        caisse: null,
+        source: "none",
+        cachedAt: null
       };
+
+      let SB_CLIENT = null;
 
       function log(message, data){
         const line = `[${new Date().toLocaleTimeString("fr-FR")}] ${message}`;
@@ -565,20 +652,22 @@
           .replaceAll("'", "&#039;");
       }
 
-      function fmtDateFR(iso){
+      function fmtDateTimeFR(iso){
         if(!iso) return "—";
         const d = new Date(iso);
         if(Number.isNaN(d.getTime())) return "—";
-        return d.toLocaleDateString("fr-FR", {
+        return d.toLocaleString("fr-FR", {
           day:"2-digit",
-          month:"long",
-          year:"numeric"
+          month:"2-digit",
+          year:"numeric",
+          hour:"2-digit",
+          minute:"2-digit"
         });
       }
 
       function fmtMoney(x){
         const n = Number(x);
-        if(!Number.isFinite(n)) return "—";
+        if(!Number.isFinite(n)) return "0 FCFA";
         return `${n.toLocaleString("fr-FR")} FCFA`;
       }
 
@@ -588,6 +677,15 @@
 
       function getParam(name){
         return new URL(location.href).searchParams.get(name) || "";
+      }
+
+      function getResolvedSlug(){
+        return String(
+          getParam("slug") ||
+          localStorage.getItem("digiy_pos_last_slug") ||
+          sessionStorage.getItem("digiy_pos_last_slug") ||
+          ""
+        ).trim().toLowerCase();
       }
 
       function buildUrl(base, params){
@@ -606,13 +704,13 @@
         el.textContent = label;
       }
 
-      function setMainStatus(kind, title, sub){
+      function setMainStatus(kind, sub){
         const dot = qs("dotStatus");
         dot.className = "dot";
         if(kind === "ok") dot.classList.add("ok");
         if(kind === "bad") dot.classList.add("bad");
 
-        qs("mainTitle").textContent = title;
+        qs("mainTitle").textContent = "Caisse boutique";
         qs("mainSub").textContent = sub;
         qs("pillStatus").textContent = kind === "ok" ? "Actif" : kind === "bad" ? "Bloqué" : "Contrôle";
       }
@@ -629,370 +727,415 @@
         box.innerHTML = html;
       }
 
+      function cacheKey(slug){
+        return `digiy_pos_caisse_cache:${String(slug || "").trim().toLowerCase()}`;
+      }
+
+      function draftKey(slug){
+        return `digiy_pos_caisse_draft:${String(slug || "").trim().toLowerCase()}`;
+      }
+
+      function readCache(slug){
+        try{
+          const raw = localStorage.getItem(cacheKey(slug));
+          if(!raw) return null;
+          const parsed = JSON.parse(raw);
+          if(!parsed || typeof parsed !== "object") return null;
+          return parsed;
+        }catch{
+          return null;
+        }
+      }
+
+      function writeCache(slug, payload){
+        try{
+          localStorage.setItem(cacheKey(slug), JSON.stringify({
+            ts: Date.now(),
+            data: payload
+          }));
+        }catch(_){}
+      }
+
+      function cacheIsFresh(cache){
+        if(!cache || !cache.ts) return false;
+        return (Date.now() - Number(cache.ts)) <= CACHE_TTL_MS;
+      }
+
+      function readDraft(slug){
+        try{
+          const raw = localStorage.getItem(draftKey(slug));
+          return raw ? JSON.parse(raw) : null;
+        }catch{
+          return null;
+        }
+      }
+
+      function writeDraft(slug, draft){
+        try{
+          localStorage.setItem(draftKey(slug), JSON.stringify(draft));
+        }catch(_){}
+      }
+
+      function clearDraft(slug){
+        try{
+          localStorage.removeItem(draftKey(slug));
+        }catch(_){}
+      }
+
       function ensureSupabase(){
+        if(SB_CLIENT) return SB_CLIENT;
         if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
           throw new Error("Configuration Supabase manquante");
         }
         if(!window.supabase || typeof window.supabase.createClient !== "function"){
           throw new Error("Librairie Supabase non chargée");
         }
-        return window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        SB_CLIENT = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
           auth: {
             persistSession: false,
             autoRefreshToken: false,
-            detectSessionInUrl: false
+            detectSessionInUrl: false,
+            storageKey: "digiy-pos-caisse-boutique-v1"
           }
         });
+        return SB_CLIENT;
       }
 
-      const sb = ensureSupabase();
-
-      async function rpcFirstSuccess(name, payloads){
-        let lastError = null;
-
-        for (const payload of payloads){
-          try{
-            log(`RPC ${name} → tentative`, payload);
-
-            const { data, error } = await sb.rpc(name, payload);
-
-            if (error){
-              lastError = error;
-              log(`RPC ${name} → erreur`, {
-                code: error.code || null,
-                message: error.message || null,
-                details: error.details || null,
-                hint: error.hint || null,
-                payload
-              });
-              continue;
-            }
-
-            log(`RPC ${name} → OK`, data);
-            return data;
-          }catch(err){
-            lastError = err;
-            log(`RPC ${name} → exception`, {
-              message: err?.message || String(err),
-              payload
-            });
-          }
-        }
-
-        throw lastError || new Error(`RPC ${name} a échoué`);
+      async function rpc(client, name, args){
+        const { data, error } = await client.rpc(name, args);
+        if(error) throw error;
+        return data;
       }
 
-      async function getPhoneFromSlug(slug){
-        const cleanSlug = String(slug || "").trim();
-        if(!cleanSlug) return "";
+      async function getAccess(client, phone){
+        if(!phone) return false;
 
-        const { data, error } = await sb
-          .from("digiy_subscriptions_public")
-          .select("phone,module,slug")
-          .eq("slug", cleanSlug)
-          .eq("module", MODULE_CODE)
-          .limit(1)
-          .maybeSingle();
-
-        if(error){
-          log("Lecture digiy_subscriptions_public → erreur", error);
-          throw error;
-        }
-
-        log("Lecture digiy_subscriptions_public → OK", data);
-        return normPhone(data?.phone || "");
-      }
-
-      async function getAccess(phone){
-        const res = await rpcFirstSuccess("digiy_has_access", [
-          { p_phone: phone, p_module: MODULE_CODE },
-          { phone, module: MODULE_CODE }
-        ]);
-
-        if(typeof res === "boolean") return res;
-        if(res && typeof res.ok === "boolean") return res.ok;
-        if(res && typeof res.has_access === "boolean") return res.has_access;
-        if(res && typeof res.allowed === "boolean") return res.allowed;
-        return !!res;
-      }
-
-      async function getSubscription(phone){
         try{
-          const data = await rpcFirstSuccess("digiy_get_subscription_status", [
-            { p_phone: phone, p_module: MODULE_CODE },
-            { phone, module: MODULE_CODE }
-          ]);
-          return data || null;
-        }catch(err){
-          log("digiy_get_subscription_status indisponible", { message: err?.message || String(err) });
-          return null;
+          const res1 = await rpc(client, "digiy_has_access", {
+            p_phone: phone,
+            p_module: MODULE_CODE
+          });
+          if(typeof res1 === "boolean") return res1;
+          if(res1 && typeof res1.ok === "boolean") return res1.ok;
+          if(res1 && typeof res1.has_access === "boolean") return res1.has_access;
+          return !!res1;
+        }catch(err1){
+          log("digiy_has_access version p_phone/p_module KO", { message: err1?.message || String(err1) });
+          const res2 = await rpc(client, "digiy_has_access", {
+            phone,
+            module: MODULE_CODE
+          });
+          if(typeof res2 === "boolean") return res2;
+          if(res2 && typeof res2.ok === "boolean") return res2.ok;
+          if(res2 && typeof res2.has_access === "boolean") return res2.has_access;
+          return !!res2;
         }
       }
 
-      async function getStoreContext(slug){
-        try{
-          const data = await rpcFirstSuccess("pos_get_store_context_by_slug", [
-            { p_slug: slug },
-            { slug }
-          ]);
-          return data || null;
-        }catch(err){
-          log("pos_get_store_context_by_slug indisponible", { message: err?.message || String(err) });
-          return null;
+      async function fetchLivePayload(slug){
+        const client = ensureSupabase();
+
+        log("Lecture live digiy_pos_get_caisse_by_slug", { slug });
+
+        const caisse = await rpc(client, "digiy_pos_get_caisse_by_slug", {
+          p_slug: slug
+        });
+
+        log("digiy_pos_get_caisse_by_slug → OK", caisse);
+
+        if(!caisse || caisse.ok !== true){
+          throw new Error(caisse?.error || caisse?.reason || "caisse_not_available");
         }
+
+        const phone = normPhone(
+          caisse?.store?.owner_phone ||
+          caisse?.profile?.owner_phone ||
+          caisse?.profile?.whatsapp ||
+          ""
+        );
+
+        const access = await getAccess(client, phone);
+
+        const payload = {
+          ...caisse,
+          __phone: phone,
+          __has_access: !!access,
+          __fetched_at: new Date().toISOString()
+        };
+
+        writeCache(slug, payload);
+        localStorage.setItem("digiy_pos_last_slug", slug);
+        sessionStorage.setItem("digiy_pos_last_slug", slug);
+
+        return payload;
       }
 
-      function normalizeStoreContext(ctx, slug, phone){
-        const source = ctx && typeof ctx === "object" ? ctx : {};
+      function useCachedPayload(slug){
+        const cache = readCache(slug);
+        if(!cache || !cache.data) return null;
         return {
-          display_name: source.display_name || source.store_name || source.nom || source.title || "Boutique POS",
-          city: source.city || source.ville || source.location_city || "—",
-          owner_name: source.owner_name || source.manager_name || source.owner || "—",
-          wave_phone: normPhone(source.wave_phone || source.whatsapp_phone || phone || ""),
-          slug: source.slug || slug || "",
-          is_open: typeof source.is_open === "boolean" ? source.is_open : null,
-          raw: source
+          payload: cache.data,
+          ts: cache.ts,
+          fresh: cacheIsFresh(cache)
         };
       }
 
-      function normalizeSubscription(sub){
-        const source = sub && typeof sub === "object" ? sub : {};
-        return {
-          plan: source.plan || source.plan_code || source.tier || "standard",
-          expires_at: source.expires_at || source.current_period_end || source.period_end || null,
-          payment_ref: source.payment_ref || source.ref || null,
-          raw: source
-        };
+      function renderBlocked(slug, phone, reason){
+        STATE.slug = slug || "";
+        STATE.phone = phone || "";
+        STATE.access = false;
+        STATE.caisse = null;
+
+        qs("pillSlug").textContent = slug || "—";
+        qs("pillPhone").textContent = phone ? `+${phone}` : "—";
+        qs("pillSource").textContent = "—";
+
+        qs("storeName").textContent = "—";
+        qs("storeCity").textContent = "—";
+        qs("activeProductsHero").textContent = "0";
+        qs("todayRevenueHero").textContent = "0 FCFA";
+
+        qs("kpiProductsTotal").textContent = "0";
+        qs("kpiSalesTotal").textContent = "0";
+        qs("kpiRevenueTotal").textContent = "0 FCFA";
+        qs("kpiSalesToday").textContent = "0";
+        qs("kpiRevenueToday").textContent = "0 FCFA";
+        qs("kpiStoreId").textContent = "—";
+
+        setMainStatus("bad", "La caisse reste protégée tant que l’accès POS n’est pas validé.");
+        setNotice("bad", `<div><b>Accès fermé.</b></div><div style="margin-top:6px">${esc(reason || "Le contexte POS n’est pas accessible.")}</div>`);
+        setSessionNotice("bad", `<div><b>Session non ouverte.</b></div><div style="margin-top:6px">Contrôle du slug ou de l’accès nécessaire.</div>`);
+
+        setBadge("badgeAccess", "ACCÈS FERMÉ", "bad");
+        setBadge("badgeStore", "BOUTIQUE —", "warn");
+        setBadge("badgeCache", "CACHE —", "");
+
+        qs("storeContextBox").innerHTML = `<span class="empty">Contexte boutique non disponible.</span>`;
       }
 
-      function renderStore(ctx){
-        qs("storeName").textContent = ctx.display_name || "Boutique POS";
-        qs("storeCity").textContent = ctx.city || "—";
+      function renderReady(payload, source, cachedAt){
+        const slug = String(payload.workspace_slug || payload.slug || "").trim();
+        const phone = normPhone(payload.__phone || payload?.store?.owner_phone || payload?.profile?.whatsapp || "");
+        const profile = payload.profile || {};
+        const store = payload.store || {};
+        const stats = payload.stats || {};
+        const shopName = payload.shop_name || profile.display_name || store.name || "Caisse boutique";
+
+        STATE.slug = slug;
+        STATE.phone = phone;
+        STATE.access = !!payload.__has_access;
+        STATE.caisse = payload;
+        STATE.source = source;
+        STATE.cachedAt = cachedAt || null;
+
+        qs("pillSlug").textContent = slug || "—";
+        qs("pillPhone").textContent = phone ? `+${phone}` : "—";
+        qs("pillSource").textContent = source === "cache" ? "localStorage" : "live";
+
+        qs("storeName").textContent = shopName;
+        qs("storeCity").textContent = store.city || profile.city || "—";
+        qs("activeProductsHero").textContent = String(Number(stats.active_products || 0));
+        qs("todayRevenueHero").textContent = fmtMoney(stats.today_revenue || 0);
+
+        qs("kpiProductsTotal").textContent = String(Number(stats.total_products || 0));
+        qs("kpiSalesTotal").textContent = String(Number(stats.total_sales || 0));
+        qs("kpiRevenueTotal").textContent = fmtMoney(stats.total_revenue || 0);
+        qs("kpiSalesToday").textContent = String(Number(stats.today_sales || 0));
+        qs("kpiRevenueToday").textContent = fmtMoney(stats.today_revenue || 0);
+        qs("kpiStoreId").textContent = store.store_id || "—";
+
+        const abosLink = buildUrl(ABOS_URL, {
+          module: MODULE_CODE,
+          phone,
+          slug
+        });
+        qs("btnAbos").href = abosLink;
+
+        if(!payload.__has_access){
+          renderBlocked(slug, phone, "Le store existe, mais digiy_has_access a répondu non.");
+          return;
+        }
+
+        setMainStatus("ok", `${shopName} est prêt. Lecture ${source === "cache" ? "locale" : "directe"} de la caisse boutique.`);
+
+        const syncText = source === "cache"
+          ? `Lecture locale depuis le cache du navigateur. Dernière synchro : <b>${esc(fmtDateTimeFR(cachedAt || payload.__fetched_at))}</b>.`
+          : `Lecture directe validée. Dernière synchro : <b>${esc(fmtDateTimeFR(payload.__fetched_at))}</b>.`;
+
+        setNotice(source === "cache" ? "info" : "ok", `
+          <div><b>Caisse boutique prête.</b></div>
+          <div style="margin-top:6px">${syncText}</div>
+        `);
+
+        setSessionNotice(source === "cache" ? "info" : "ok", `
+          <div><b>Session active.</b></div>
+          <div style="margin-top:6px">
+            Boutique : <b>${esc(shopName)}</b> • Store ID : <b>${esc(store.store_id || "—")}</b> • Publication : <b>${payload.is_published ? "Oui" : "Non"}</b>
+          </div>
+        `);
+
+        setBadge("badgeAccess", "ACCÈS OK", "ok");
+        setBadge("badgeStore", (store.store_id || shopName) ? "BOUTIQUE OK" : "BOUTIQUE MINIMALE", (store.store_id || shopName) ? "ok" : "warn");
+        setBadge("badgeCache", source === "cache" ? "CACHE LOCAL" : "LIVE", source === "cache" ? "info" : "ok");
 
         qs("storeContextBox").innerHTML = `
           <div class="notice ok">
-            <div><b>Nom</b> : ${esc(ctx.display_name || "Boutique POS")}</div>
-            <div style="margin-top:6px"><b>Ville</b> : ${esc(ctx.city || "—")}</div>
-            <div style="margin-top:6px"><b>Responsable</b> : ${esc(ctx.owner_name || "—")}</div>
-            <div style="margin-top:6px"><b>Slug</b> : ${esc(ctx.slug || "—")}</div>
-            <div style="margin-top:6px"><b>Wave / Contact</b> : ${esc(ctx.wave_phone || "—")}</div>
+            <div><b>Nom</b> : ${esc(shopName)}</div>
+            <div style="margin-top:6px"><b>Slug</b> : ${esc(slug || "—")}</div>
+            <div style="margin-top:6px"><b>Store ID</b> : ${esc(store.store_id || "—")}</div>
+            <div style="margin-top:6px"><b>Ville</b> : ${esc(store.city || profile.city || "—")}</div>
+            <div style="margin-top:6px"><b>Adresse</b> : ${esc(store.address || profile.address || "—")}</div>
+            <div style="margin-top:6px"><b>WhatsApp</b> : ${esc(phone ? `+${phone}` : "—")}</div>
+            <div style="margin-top:6px"><b>Statut store</b> : ${esc(store.subscription_status || "—")}</div>
           </div>
         `;
       }
 
-      function renderSubscription(sub){
-        qs("planName").textContent = sub.plan || "standard";
-        qs("expiresAt").textContent = fmtDateFR(sub.expires_at);
+      function loadPayloadFromCache(slug){
+        const cached = useCachedPayload(slug);
+        if(!cached) return false;
 
-        const payLine = sub.payment_ref
-          ? `Référence paiement détectée : <b>${esc(sub.payment_ref)}</b>`
-          : `Référence paiement non fournie, mais accès accepté.`;
-
-        setNotice("ok", `
-          <div><b>Accès POS validé.</b></div>
-          <div style="margin-top:6px">${payLine}</div>
-        `);
-      }
-
-      function renderBlocked(phone, slug, extraMessage){
-        const abosLink = buildUrl(ABOS_URL, {
-          module: MODULE_CODE,
-          base_module: MODULE_CODE,
-          phone,
-          slug
+        renderReady(cached.payload, "cache", cached.ts);
+        log("Cache local utilisé", {
+          slug,
+          fresh: cached.fresh,
+          cached_at: new Date(cached.ts).toISOString()
         });
-
-        qs("btnAbos").href = abosLink;
-
-        setMainStatus("bad", "Accès POS non actif", "Le guard a parlé. Sans abonnement valide, la caisse reste fermée.");
-        setNotice("bad", `
-          <div><b>Accès fermé.</b></div>
-          <div style="margin-top:6px">${esc(extraMessage || "Active ou renouvelle l’abonnement pour utiliser la caisse.")}</div>
-        `);
-        setSessionNotice("bad", `
-          <div><b>La page est bien trouvée</b>, mais l’accès module n’est pas validé.</div>
-        `);
-
-        setBadge("badgeAccess", "ACCÈS FERMÉ", "bad");
+        return true;
       }
 
-      function renderReady(ctx, sub){
-        setMainStatus("ok", "Caisse prête", "Accès validé, contexte magasin chargé. On peut refermer POS proprement.");
-
-        const openText =
-          ctx.is_open === true ? "Boutique marquée ouverte."
-          : ctx.is_open === false ? "Boutique marquée fermée."
-          : "Statut d’ouverture non fourni par le contexte.";
-
-        setSessionNotice("ok", `
-          <div><b>Session active.</b></div>
-          <div style="margin-top:6px">${esc(openText)}</div>
-        `);
-
-        setBadge("badgeAccess", "ACCÈS OK", "ok");
-        setBadge("badgeStore", ctx.display_name ? "MAGASIN OK" : "MAGASIN MINIMAL", ctx.display_name ? "ok" : "warn");
-        setBadge("badgeLink", STATE.slug ? "LIEN OK" : "LIEN KO", STATE.slug ? "ok" : "bad");
-
-        renderStore(ctx);
-        renderSubscription(sub);
-      }
-
-      async function hydrate(){
-        qs("pillSlug").textContent = "—";
-        qs("pillPhone").textContent = "—";
-        qs("salePreview").innerHTML = `<span class="empty">Rien de préparé pour le moment.</span>`;
-
-        const slug = String(getParam("slug") || "").trim();
-        let phone = normPhone(getParam("phone"));
-
-        STATE.slug = slug;
-        STATE.phone = phone;
-        STATE.access = false;
-        STATE.storeContext = null;
-        STATE.subscription = null;
-
-        qs("pillSlug").textContent = slug || "—";
-        qs("pillPhone").textContent = phone || "—";
-
-        setBadge("badgeAccess", "ACCÈS …", "");
-        setBadge("badgeStore", "MAGASIN …", "");
-        setBadge("badgeLink", slug ? "LIEN OK" : "LIEN KO", slug ? "ok" : "bad");
+      async function hydrate(forceLive = false){
+        const slug = getResolvedSlug();
 
         if(!slug){
-          setMainStatus("bad", "Slug manquant", "Ajoute ?slug=pos-2217… dans l’URL.");
-          setNotice("bad", `
-            <div><b>Le lien n’est pas exploitable.</b></div>
-            <div style="margin-top:6px">La caisse a besoin du slug du module POS.</div>
-          `);
-          setSessionNotice("bad", `
-            <div>Exemple d’ouverture : <b>?slug=pos-221771234567</b></div>
-          `);
-          setBadge("badgeAccess", "ACCÈS KO", "bad");
-          setBadge("badgeStore", "MAGASIN KO", "bad");
+          renderBlocked("", "", "Slug manquant. Ouvre la page avec ?slug=chez-astou-saly");
           return;
         }
 
-        try{
-          if(!phone){
-            phone = await getPhoneFromSlug(slug);
-            STATE.phone = phone;
-            qs("pillPhone").textContent = phone || "—";
-          }
+        localStorage.setItem("digiy_pos_last_slug", slug);
+        sessionStorage.setItem("digiy_pos_last_slug", slug);
 
-          if(!phone){
-            throw new Error("Téléphone introuvable depuis le slug");
-          }
+        const cached = useCachedPayload(slug);
 
-          const abosLink = buildUrl(ABOS_URL, {
-            module: MODULE_CODE,
-            base_module: MODULE_CODE,
-            phone,
-            slug
+        if(!forceLive && cached && cached.fresh){
+          renderReady(cached.payload, "cache", cached.ts);
+          log("Boot sans appel Supabase grâce au cache local", {
+            slug,
+            cached_at: new Date(cached.ts).toISOString()
           });
-          qs("btnAbos").href = abosLink;
-        }catch(err){
-          setMainStatus("bad", "Téléphone introuvable", "Le slug existe peut-être, mais la résolution phone → module n’a rien donné.");
-          setNotice("bad", `
-            <div><b>Impossible de résoudre le téléphone.</b></div>
-            <div style="margin-top:6px">${esc(err?.message || String(err))}</div>
-          `);
-          setSessionNotice("bad", `
-            <div>Essaie le lien avec <b>&phone=2217…</b> en plus du slug.</div>
-          `);
-          setBadge("badgeAccess", "ACCÈS KO", "bad");
-          setBadge("badgeStore", "MAGASIN KO", "bad");
+          return;
+        }
+
+        if(!forceLive && cached && !cached.fresh){
+          renderReady(cached.payload, "cache", cached.ts);
+          log("Cache local affiché, mais vieilli", {
+            slug,
+            cached_at: new Date(cached.ts).toISOString()
+          });
           return;
         }
 
         try{
-          const access = await getAccess(phone);
-          STATE.access = !!access;
+          const payload = await fetchLivePayload(slug);
+          renderReady(payload, "live", payload.__fetched_at);
+        }catch(err){
+          log("Hydratation live KO", { message: err?.message || String(err) });
 
-          if(!access){
-            renderBlocked(phone, slug, "La RPC digiy_has_access a répondu non.");
+          if(cached){
+            renderReady(cached.payload, "cache", cached.ts);
+            setNotice("warn", `
+              <div><b>Cache local repris.</b></div>
+              <div style="margin-top:6px">Le direct a échoué, donc la page s’appuie sur la dernière synchro locale.</div>
+            `);
             return;
           }
 
-          const [storeContextRaw, subscriptionRaw] = await Promise.all([
-            getStoreContext(slug),
-            getSubscription(phone)
-          ]);
-
-          const storeContext = normalizeStoreContext(storeContextRaw, slug, phone);
-          const subscription = normalizeSubscription(subscriptionRaw);
-
-          STATE.storeContext = storeContext;
-          STATE.subscription = subscription;
-
-          renderReady(storeContext, subscription);
-        }catch(err){
-          log("Hydratation finale → erreur", { message: err?.message || String(err) });
-
-          setMainStatus("bad", "Erreur de contrôle", "La page a répondu, mais une brique technique coince encore.");
-          setNotice("bad", `
-            <div><b>Blocage technique détecté.</b></div>
-            <div style="margin-top:6px">${esc(err?.message || String(err))}</div>
-          `);
-          setSessionNotice("bad", `
-            <div>Regarde le diagnostic juste en dessous. Là on verra tout de suite si c’est la clé, la RPC, ou le contexte magasin.</div>
-          `);
-          setBadge("badgeAccess", "ACCÈS KO", "bad");
+          renderBlocked(slug, "", err?.message || "Impossible de charger la caisse");
         }
       }
 
-      function initSalePreview(){
-        const amount = qs("saleAmount");
-        const label = qs("saleLabel");
-        const method = qs("saleMethod");
-        const preview = qs("salePreview");
+      function currentDraft(){
+        return {
+          amount: qs("saleAmount").value || "",
+          label: qs("saleLabel").value || "",
+          method: qs("saleMethod").value || "cash"
+        };
+      }
 
-        function render(){
-          const rawAmount = String(amount.value || "").trim();
-          const rawLabel = String(label.value || "").trim();
-          const rawMethod = String(method.value || "").trim();
+      function restoreDraft(){
+        const slug = STATE.slug || getResolvedSlug();
+        if(!slug) return;
+        const draft = readDraft(slug);
+        if(!draft) return;
 
-          if(!rawAmount && !rawLabel){
-            preview.innerHTML = `<span class="empty">Rien de préparé pour le moment.</span>`;
-            return;
-          }
+        qs("saleAmount").value = draft.amount || "";
+        qs("saleLabel").value = draft.label || "";
+        qs("saleMethod").value = draft.method || "cash";
+      }
 
-          preview.innerHTML = `
-            <div class="notice ok">
-              <div><b>Montant</b> : ${esc(rawAmount ? fmtMoney(rawAmount) : "—")}</div>
-              <div style="margin-top:6px"><b>Libellé</b> : ${esc(rawLabel || "—")}</div>
-              <div style="margin-top:6px"><b>Paiement</b> : ${esc(rawMethod || "—")}</div>
-              <div style="margin-top:8px" class="muted">Préparation front OK. Il restera à brancher la RPC de création de vente.</div>
-            </div>
-          `;
+      function persistDraft(){
+        const slug = STATE.slug || getResolvedSlug();
+        if(!slug) return;
+        writeDraft(slug, currentDraft());
+      }
+
+      function renderSalePreview(){
+        const amount = String(qs("saleAmount").value || "").trim();
+        const label = String(qs("saleLabel").value || "").trim();
+        const method = String(qs("saleMethod").value || "").trim();
+
+        if(!amount && !label){
+          qs("salePreview").innerHTML = `<span class="empty">Rien de préparé pour le moment.</span>`;
+          return;
         }
 
-        amount.addEventListener("input", render);
-        label.addEventListener("input", render);
-        method.addEventListener("change", render);
+        qs("salePreview").innerHTML = `
+          <div class="notice ok">
+            <div><b>Montant</b> : ${esc(amount ? fmtMoney(amount) : "—")}</div>
+            <div style="margin-top:6px"><b>Libellé</b> : ${esc(label || "—")}</div>
+            <div style="margin-top:6px"><b>Paiement</b> : ${esc(method || "—")}</div>
+            <div style="margin-top:8px" class="muted">Préparation locale OK. La vraie écriture attend la RPC métier d’encaissement.</div>
+          </div>
+        `;
+      }
+
+      function bindSale(){
+        ["saleAmount","saleLabel"].forEach(id => {
+          qs(id).addEventListener("input", () => {
+            persistDraft();
+            renderSalePreview();
+          });
+        });
+
+        qs("saleMethod").addEventListener("change", () => {
+          persistDraft();
+          renderSalePreview();
+        });
 
         qs("btnSaleReady").addEventListener("click", () => {
-          render();
+          renderSalePreview();
 
           if(!STATE.access){
             alert("Accès POS non validé. On ne prépare pas une vente sur une porte fermée, frérot.");
             return;
           }
 
-          const rawAmount = Number(amount.value || 0);
+          const rawAmount = Number(qs("saleAmount").value || 0);
           if(!Number.isFinite(rawAmount) || rawAmount <= 0){
             alert("Entre un montant propre avant de préparer la vente.");
-            amount.focus();
+            qs("saleAmount").focus();
             return;
           }
 
-          alert("Préparation OK. Le front de caisse est vivant. Prochaine étape : brancher la RPC métier d’encaissement.");
+          alert("Préparation OK. La caisse boutique est vivante. Prochaine étape : brancher la RPC métier d’encaissement.");
         });
 
         qs("btnClearSale").addEventListener("click", () => {
-          amount.value = "";
-          label.value = "";
-          method.value = "cash";
-          render();
+          qs("saleAmount").value = "";
+          qs("saleLabel").value = "";
+          qs("saleMethod").value = "cash";
+          clearDraft(STATE.slug || getResolvedSlug());
+          renderSalePreview();
         });
       }
 
@@ -1003,7 +1146,7 @@
           qs("btnCheck").disabled = true;
           qs("btnCheck").textContent = "Contrôle…";
           try{
-            await hydrate();
+            await hydrate(true);
           } finally {
             qs("btnCheck").disabled = false;
             qs("btnCheck").textContent = "✅ Vérifier mon accès";
@@ -1014,25 +1157,37 @@
           qs("btnReloadContext").disabled = true;
           qs("btnReloadContext").textContent = "Rechargement…";
           try{
-            await hydrate();
+            await hydrate(true);
           } finally {
             qs("btnReloadContext").disabled = false;
             qs("btnReloadContext").textContent = "🔄 Recharger contexte";
+          }
+        });
+
+        qs("btnUseCache").addEventListener("click", () => {
+          const slug = getResolvedSlug();
+          const ok = loadPayloadFromCache(slug);
+          if(!ok){
+            setNotice("warn", `
+              <div><b>Aucun cache local trouvé.</b></div>
+              <div style="margin-top:6px">Il faut d’abord faire une lecture live au moins une fois.</div>
+            `);
           }
         });
       }
 
       async function init(){
         try{
-          log("Initialisation caisse POS");
+          log("Initialisation Caisse boutique");
           bindActions();
-          initSalePreview();
-          await hydrate();
+          bindSale();
+          restoreDraft();
+          renderSalePreview();
+          await hydrate(false);
         }catch(err){
           log("Initialisation fatale", { message: err?.message || String(err) });
-          setMainStatus("bad", "Erreur fatale", err?.message || "Impossible d’initialiser la caisse");
-          setNotice("bad", `<div><b>Erreur fatale.</b> ${esc(err?.message || String(err))}</div>`);
-          setSessionNotice("bad", "Vérifie la config Supabase, la clé anon, puis les RPC.");
+          renderBlocked("", "", err?.message || "Impossible d’initialiser la caisse boutique");
+          setNotice("bad", `<div><b>Erreur fatale.</b></div><div style="margin-top:6px">${esc(err?.message || String(err))}</div>`);
         }
       }
 
