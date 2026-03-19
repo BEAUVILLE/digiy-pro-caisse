@@ -5,18 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>MON COMMERCE PRO — DIGIY CAISSE PRO</title>
   <meta name="theme-color" content="#07140f" />
-  <meta name="description" content="MON COMMERCE by DIGIY — hall d’entrée POS. Aperçu de la caisse, statut d’accès, activation et ouverture de la vraie salle de travail." />
-
+  <meta name="description" content="MON COMMERCE by DIGIY — hall d'entrée POS." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- ✅ ÉTAPE 1 : config + anti-flash AVANT tout -->
   <script>
-    window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+    window.DIGIY_SUPABASE_URL     = "https://wesqmwjjtsefyjnluosj.supabase.co";
     window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
-    window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
-    window.DIGIY_MODULE = "POS";
+    window.DIGIY_SUPABASE_ANON    = window.DIGIY_SUPABASE_ANON_KEY;
+    window.DIGIY_MODULE           = "CAISSE";
+    window.DIGIY_LOGIN_URL        = "./pin.html";
+    document.documentElement.style.visibility = "hidden";
+  </script>
+
+  <!-- ✅ ÉTAPE 2 : guard en 2e, avant supabase -->
+  <script src="./guard.js"></script>
+
+  <!-- ✅ ÉTAPE 3 : supabase et reste APRÈS guard -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
 
     function digiyBasePath(){
       const parts = location.pathname.split("/").filter(Boolean);
