@@ -37,8 +37,9 @@
     }
   </script>
 
-  <script src="./guard.js"></script>
+  <!-- ordre propre : Supabase d'abord, guard ensuite -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./guard.js"></script>
 
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
@@ -845,10 +846,11 @@
 <body>
   <a
     class="floating-site-btn"
-    href="https://digiylyfe.com/"
-    aria-label="Retour au site DIGIYLYFE"
-    title="Retour au site DIGIYLYFE"
-  >⬅️ Retour site DIGIYLYFE</a>
+    id="btnBackPublic"
+    href="https://mon-commerce.digiylyfe.com/"
+    aria-label="Retour à la vitrine MON COMMERCE"
+    title="Retour à la vitrine MON COMMERCE"
+  >⬅️ Retour vitrine MON COMMERCE</a>
 
   <header class="topbar">
     <div class="topbar-inner">
@@ -866,6 +868,7 @@
           <span id="statusDot" class="dot"></span>
           <span id="statusPillText">Chargement…</span>
         </div>
+        <a class="btn-ghost" id="btnPinTop" href="./pin.html">🔐 PIN PRO</a>
         <button class="btn-outline" id="btnCheck" type="button">🔄 Vérifier mon accès</button>
         <a class="btn" id="btnTopAction" href="https://commencer-a-payer.digiylyfe.com/">💳 Activer mon module</a>
       </div>
@@ -885,7 +888,8 @@
 
           <p class="hero-sub">
             MON COMMERCE by DIGIY te donne une porte claire pour encaisser, suivre le stock, lire l’activité et travailler proprement.
-            Ici, on montre la valeur. L’usage réel de la caisse s’ouvre avec un accès actif, pas avec du flou ni du bricolage.
+            Ici, on montre la valeur. L’usage réel s’ouvre par le bon rail :
+            <strong>PIN puis dashboard pro</strong>, pas par des portes qui partent de travers.
           </p>
 
           <div class="hero-points">
@@ -897,12 +901,13 @@
 
           <div class="hero-actions">
             <a class="btn" id="btnHeroPrimary" href="https://commencer-a-payer.digiylyfe.com/">💳 Activer mon module</a>
+            <a class="btn-outline" id="btnOpenDashboard" href="./dashboard-pro.html">🧭 Dashboard Pro</a>
             <a class="btn-outline" id="btnOpenCaisse" href="./caisse.html">🧾 Ouvrir la caisse</a>
-            <a class="btn-ghost" href="#apercu-cockpit">👁️ Voir le cockpit</a>
+            <a class="btn-ghost" id="btnOpenPin" href="./pin.html">🔐 Ouvrir avec mon PIN</a>
           </div>
 
           <div class="helper">
-            Ici, le commerçant comprend vite ce qu’il achète. Ensuite, la vraie salle de travail s’ouvre proprement.
+            Le hall reste simple. La vraie cabine de pilotage s’ouvre dans <b>dashboard-pro.html</b>, puis la caisse est disponible dedans sans mélange.
           </div>
 
           <div class="hero-mini-grid">
@@ -1136,9 +1141,9 @@
     <section class="section">
       <div class="section-head">
         <div class="section-kicker">Parcours</div>
-        <h2 class="section-title">Tu vois. Tu actives. Tu travailles.</h2>
+        <h2 class="section-title">Tu vois. Tu actives. Tu entres proprement.</h2>
         <p class="section-sub">
-          La ligne DIGIY reste propre : voir librement, utiliser avec abonnement réel.
+          La ligne DIGIY reste claire : voir librement, puis entrer par le bon rail protégé.
         </p>
       </div>
 
@@ -1153,17 +1158,17 @@
 
         <article class="section-card">
           <div class="step-num">2</div>
-          <div class="feat-title">Tu actives</div>
+          <div class="feat-title">Tu valides</div>
           <div class="feat-text">
-            L’abonnement se fait par la porte DIGIY. On protège le vrai travail, on ne le brade pas.
+            Le QR ou le lien pro t’amène au PIN. Le PIN te renvoie ensuite vers le dashboard, pas dans un couloir bancal.
           </div>
         </article>
 
         <article class="section-card">
           <div class="step-num">3</div>
-          <div class="feat-title">Tu utilises</div>
+          <div class="feat-title">Tu travailles</div>
           <div class="feat-text">
-            Une fois l’accès validé, la vraie page <b>caisse.html</b> devient la salle de travail.
+            Une fois l’accès validé, le <b>dashboard-pro.html</b> devient la porte centrale, et la <b>caisse.html</b> reste l’outil métier.
           </div>
         </article>
       </div>
@@ -1178,10 +1183,10 @@
           <div class="price-period">CFA / mois • 0% commission</div>
 
           <ul class="price-list">
+            <li>Accès réel au dashboard pro</li>
             <li>Accès réel à la caisse</li>
             <li>Catalogue et stock</li>
             <li>Suivi d’activité</li>
-            <li>Utilisation simple sur mobile et desktop</li>
             <li>Porte propre vers l’écosystème DIGIY</li>
           </ul>
 
@@ -1212,7 +1217,10 @@
 
       const MODULE = "POS";
       const CAISSE_URL = digiyLocal("caisse.html");
+      const DASHBOARD_URL = digiyLocal("dashboard-pro.html");
+      const PIN_URL = digiyLocal("pin.html");
       const ABOS_URL = "https://commencer-a-payer.digiylyfe.com/";
+      const PUBLIC_URL = "https://mon-commerce.digiylyfe.com/";
       const SUPPORT_PHONE = "221771342889";
 
       const SUPABASE_URL = String(window.DIGIY_SUPABASE_URL || "").trim();
@@ -1323,6 +1331,12 @@
         return u.toString();
       }
 
+      function buildPublicUrl(){
+        return buildUrl(PUBLIC_URL, {
+          slug: state.slug || ""
+        });
+      }
+
       function buildAbosUrl(){
         return buildUrl(ABOS_URL, {
           module: MODULE,
@@ -1332,10 +1346,28 @@
         });
       }
 
+      function buildDashboardUrl(){
+        return buildUrl(DASHBOARD_URL, {
+          slug: state.slug || "",
+          phone: state.phone || "",
+          module: MODULE
+        });
+      }
+
       function buildCaisseUrl(){
         return buildUrl(CAISSE_URL, {
           slug: state.slug || "",
-          phone: state.phone || ""
+          phone: state.phone || "",
+          module: MODULE
+        });
+      }
+
+      function buildPinUrl(extra = {}){
+        return buildUrl(PIN_URL, {
+          slug: state.slug || "",
+          phone: state.phone || "",
+          module: MODULE,
+          ...extra
         });
       }
 
@@ -1376,17 +1408,40 @@
 
       function wireButtons(){
         const abos = buildAbosUrl();
+        const dashboard = buildDashboardUrl();
         const caisse = buildCaisseUrl();
+        const pinDefault = buildPinUrl({ return: DASHBOARD_URL });
+        const pinForCaisse = buildPinUrl({ target: "caisse" });
+        const publicUrl = buildPublicUrl();
 
+        $("btnBackPublic").href = publicUrl;
         $("btnPriceAction").href = abos;
-        $("btnTopAction").href = state.access ? caisse : abos;
-        $("btnHeroPrimary").href = state.access ? caisse : abos;
-        $("btnOpenCaisse").href = state.access ? caisse : abos;
-        $("btnCheck").setAttribute("data-support", buildSupportUrl());
+        $("btnPinTop").href = pinDefault;
+        $("btnOpenPin").href = pinDefault;
 
-        $("btnTopAction").textContent = state.access ? "🧾 Ouvrir la caisse" : "💳 Activer mon module";
-        $("btnHeroPrimary").textContent = state.access ? "🧾 Entrer dans la caisse" : "💳 Activer mon module";
-        $("btnOpenCaisse").textContent = state.access ? "🧾 Ouvrir la caisse" : "💳 Activer pour ouvrir";
+        if(state.access){
+          $("btnTopAction").href = dashboard;
+          $("btnHeroPrimary").href = dashboard;
+          $("btnOpenDashboard").href = dashboard;
+          $("btnOpenCaisse").href = caisse;
+
+          $("btnTopAction").textContent = "🧭 Ouvrir le dashboard";
+          $("btnHeroPrimary").textContent = "🧭 Entrer dans le dashboard";
+          $("btnOpenDashboard").textContent = "🧭 Dashboard Pro";
+          $("btnOpenCaisse").textContent = "🧾 Ouvrir la caisse";
+        } else {
+          $("btnTopAction").href = abos;
+          $("btnHeroPrimary").href = abos;
+          $("btnOpenDashboard").href = pinDefault;
+          $("btnOpenCaisse").href = pinForCaisse;
+
+          $("btnTopAction").textContent = "💳 Activer mon module";
+          $("btnHeroPrimary").textContent = "💳 Activer mon module";
+          $("btnOpenDashboard").textContent = "🔐 Dashboard via PIN";
+          $("btnOpenCaisse").textContent = "🔐 Caisse via PIN";
+        }
+
+        $("btnCheck").setAttribute("data-support", buildSupportUrl());
       }
 
       async function resolvePhoneFromSlug(slug){
@@ -1503,7 +1558,7 @@
               "APERÇU LIBRE",
               "Hall public prêt",
               "Le hall montre la valeur du module. Le vrai travail s’ouvre avec un slug et un accès valide.",
-              "Passe par ton lien pro avec <b>?slug=...</b> ou active ton module pour ouvrir la vraie caisse."
+              "Passe par ton lien pro avec <b>?slug=...</b> ou active ton module. Quand le slug est là, le rail normal devient <b>QR → PIN → dashboard-pro</b>."
             );
             state.storeName = "Aperçu public";
             state.plan = "—";
@@ -1579,16 +1634,16 @@
               "ok",
               "ACCÈS OUVERT",
               "Module reconnu",
-              "Ton commerce est reconnu. Tu peux entrer dans la vraie caisse.",
-              `Magasin détecté : <b>${state.storeName}</b><br>Le bouton principal t’ouvre maintenant <b>caisse.html</b> avec le bon contexte.`
+              "Ton commerce est reconnu. Le rail principal ouvre maintenant le dashboard pro.",
+              `Magasin détecté : <b>${state.storeName}</b><br>Le bouton principal mène à <b>dashboard-pro.html</b>. La <b>caisse.html</b> reste disponible comme outil métier.`
             );
           } else {
             setStatus(
               "warn",
               "APERÇU + CONTRÔLE",
               "Commerce repéré, accès fermé",
-              "Le hall a reconnu le contexte, mais la vraie caisse reste protégée tant que l’accès POS n’est pas actif.",
-              `Slug reconnu : <b>${state.slug}</b>${state.phone ? `<br>Téléphone : <b>+${state.phone}</b>` : ""}<br>Tu peux activer le module pour ouvrir la vraie salle de travail.`
+              "Le hall a reconnu le contexte, mais l’usage réel reste protégé tant que l’accès POS n’est pas actif.",
+              `Slug reconnu : <b>${state.slug}</b>${state.phone ? `<br>Téléphone : <b>+${state.phone}</b>` : ""}<br>Tu peux activer le module ou passer par le <b>PIN</b> pour vérifier ton accès.`
             );
           }
         }catch(err){
