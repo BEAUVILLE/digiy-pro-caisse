@@ -5,14 +5,18 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>MON COMMERCE — DIGIY CAISSE PRO</title>
   <meta name="theme-color" content="#07140f" />
-  <meta name="description" content="MON COMMERCE by DIGIY — caisse boutique moderne, lecture locale, accès contrôlé, encaissement rapide et contexte magasin." />
+  <meta
+    name="description"
+    content="MON COMMERCE by DIGIY — caisse boutique moderne, lecture locale, accès contrôlé, encaissement rapide et contexte magasin."
+  />
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
     window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
     window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
     window.DIGIY_MODULE = "POS";
+    window.DIGIY_LOGIN_URL = "./pin.html";
+    document.documentElement.style.visibility = "hidden";
 
     function digiyBasePath(){
       const parts = location.pathname.split("/").filter(Boolean);
@@ -26,6 +30,9 @@
       return digiyBasePath() + path;
     }
   </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./guard.js"></script>
 
   <style>
     :root{
@@ -56,7 +63,6 @@
     *{box-sizing:border-box}
     html,body{margin:0;padding:0}
     html{scroll-behavior:smooth}
-
     body{
       min-height:100vh;
       color:var(--text);
@@ -69,6 +75,9 @@
 
     a{text-decoration:none;color:inherit}
     button{font:inherit}
+
+    .app{display:none}
+    html.app-ready .app{display:block}
 
     .wrap{
       width:min(100%, var(--max));
@@ -206,7 +215,6 @@
       flex:0 0 auto;
       box-shadow:0 0 0 4px rgba(255,255,255,.03);
     }
-
     .dot.ok{background:var(--green)}
     .dot.bad{background:var(--danger)}
 
@@ -589,25 +597,46 @@
       max-width:64ch;
     }
 
+    .blockedShell{
+      display:none;
+      min-height:320px;
+      place-items:center;
+      text-align:center;
+      padding:24px;
+    }
+
+    .blockedInner{
+      max-width:680px;
+      padding:22px;
+      border-radius:22px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      box-shadow:var(--shadow-soft);
+    }
+
+    .blockedTitle{
+      font-size:26px;
+      font-weight:1000;
+      margin-bottom:8px;
+      line-height:1.1;
+    }
+
+    .blockedText{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.8;
+      font-weight:700;
+    }
+
     @media (max-width: 1020px){
-      .hero{
-        grid-template-columns:1fr;
-      }
-      .bigTitle{
-        max-width:none;
-      }
-      .subInfo{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
-      .sectionGrid{
-        grid-template-columns:1fr;
-      }
+      .hero{grid-template-columns:1fr}
+      .bigTitle{max-width:none}
+      .subInfo{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .sectionGrid{grid-template-columns:1fr}
     }
 
     @media (max-width: 760px){
-      .kpiGrid{
-        grid-template-columns:repeat(2,1fr);
-      }
+      .kpiGrid{grid-template-columns:repeat(2,1fr)}
     }
 
     @media (max-width: 700px){
@@ -619,33 +648,24 @@
         padding:14px 14px;
         font-size:12px;
       }
-      .wrap{
-        padding:12px 12px 92px;
-      }
-      .topbar-inner{
-        padding:12px;
-      }
-      .subInfo{
-        grid-template-columns:1fr;
-      }
-      .kpiGrid{
-        grid-template-columns:1fr;
-      }
-      .brandTitle{
-        white-space:normal;
-      }
+      .wrap{padding:12px 12px 92px}
+      .topbar-inner{padding:12px}
+      .subInfo{grid-template-columns:1fr}
+      .kpiGrid{grid-template-columns:1fr}
+      .brandTitle{white-space:normal}
     }
   </style>
 </head>
 <body>
   <a
     class="floating-site-btn"
-    href="https://digiylyfe.com/"
-    aria-label="Retour au site DIGIYLYFE"
-    title="Retour au site DIGIYLYFE"
-  >⬅️ Retour site DIGIYLYFE</a>
+    id="btnPublic"
+    href="https://mon-commerce.digiylyfe.com/"
+    aria-label="Retour à la vitrine MON COMMERCE"
+    title="Retour à la vitrine MON COMMERCE"
+  >⬅️ Retour vitrine MON COMMERCE</a>
 
-  <div class="wrap">
+  <div class="wrap app">
 
     <div class="topbar">
       <div class="topbar-inner">
@@ -667,178 +687,196 @@
       </div>
     </div>
 
-    <div class="hero">
-      <div class="card heroMain">
-        <div class="heroBadge">caisse réelle • accès contrôlé • zéro détour</div>
-
-        <div class="statusLine">
-          <div class="dot" id="dotStatus"></div>
-          <div style="flex:1">
-            <h1 class="bigTitle" id="mainTitle">
-              La caisse
-              <span class="accent">du terrain</span>
-            </h1>
-            <div class="mainSub" id="mainSub">
-              Initialisation du contexte boutique…
-            </div>
-          </div>
+    <div id="blockedShell" class="card blockedShell">
+      <div class="blockedInner">
+        <div class="blockedTitle" id="blockedTitle">Caisse protégée</div>
+        <div class="blockedText" id="blockedText">
+          Cette porte demande un slug POS actif et un accès valide.
         </div>
-
-        <div class="subInfo">
-          <div class="miniCard">
-            <div class="tiny">Boutique</div>
-            <div class="value" id="storeName">—</div>
-          </div>
-
-          <div class="miniCard">
-            <div class="tiny">Ville</div>
-            <div class="value" id="storeCity">—</div>
-          </div>
-
-          <div class="miniCard">
-            <div class="tiny">Produits actifs</div>
-            <div class="value" id="activeProductsHero">0</div>
-          </div>
-
-          <div class="miniCard">
-            <div class="tiny">Revenu du jour</div>
-            <div class="value" id="todayRevenueHero">0 FCFA</div>
-          </div>
-        </div>
-
-        <div id="statusNotice" class="notice">
-          Le module allume ses lampes…
-        </div>
-
-        <div class="moduleNav">
-          <a class="btn-ghost" id="btnHall" href="./index.html">🏠 Hall POS</a>
-          <a class="btn-ghost" id="btnAdmin" href="./admin.html">🧰 Admin</a>
-          <a class="btn-outline" id="btnSupport" href="#" target="_blank" rel="noopener">💬 Support</a>
-          <a class="btn" id="btnAbos" href="https://commencer-a-payer.digiylyfe.com/">💳 Abonnement</a>
-        </div>
-
-        <div class="actionRow">
-          <button class="btn-outline" type="button" id="btnCheck">✅ Vérifier mon accès</button>
-          <button class="btn-outline" type="button" id="btnReloadContext">🔄 Recharger contexte</button>
-          <button class="btn-ghost" type="button" id="btnUseCache">📦 Lire le cache local</button>
-        </div>
-
-        <div class="helper" id="sessionHint">
-          Ouvre la page avec un lien du style <b>?slug=chez-astou-saly</b> ou avec le slug mémorisé localement.
-        </div>
-
-        <details>
-          <summary>Diagnostic technique</summary>
-          <div class="helper">
-            Le cache local évite de solliciter Supabase à chaque ouverture. Le direct est réservé au contrôle ou au rechargement volontaire.
-          </div>
-          <div class="logBox" id="logBox">Aucun log pour l’instant.</div>
-        </details>
-      </div>
-
-      <div class="card">
-        <h3 class="sideTitle">État de la session</h3>
-
-        <div class="row" style="margin-bottom:10px">
-          <div class="badge" id="badgeAccess">ACCÈS —</div>
-          <div class="badge" id="badgeStore">BOUTIQUE —</div>
-          <div class="badge" id="badgeCache">CACHE —</div>
-        </div>
-
-        <div id="sessionNotice" class="notice">
-          Session en cours d’initialisation.
-        </div>
-
-        <div class="kpiGrid">
-          <div class="kpi">
-            <div class="k">Produits total</div>
-            <div class="v" id="kpiProductsTotal">0</div>
-          </div>
-          <div class="kpi">
-            <div class="k">Ventes total</div>
-            <div class="v" id="kpiSalesTotal">0</div>
-          </div>
-          <div class="kpi">
-            <div class="k">Revenu total</div>
-            <div class="v" id="kpiRevenueTotal">0 FCFA</div>
-          </div>
-          <div class="kpi">
-            <div class="k">Ventes du jour</div>
-            <div class="v" id="kpiSalesToday">0</div>
-          </div>
-          <div class="kpi">
-            <div class="k">Revenu du jour</div>
-            <div class="v" id="kpiRevenueToday">0 FCFA</div>
-          </div>
-          <div class="kpi">
-            <div class="k">Store ID</div>
-            <div class="v" id="kpiStoreId">—</div>
-          </div>
-        </div>
-
-        <div class="hr"></div>
-
-        <h3 class="sideTitle" style="margin-bottom:8px">Contexte boutique</h3>
-        <div id="storeContextBox" class="empty">
-          Contexte boutique pas encore chargé.
+        <div class="actionRow" style="justify-content:center">
+          <a class="btn-outline" id="btnBlockedPin" href="./pin.html">🔐 Ouvrir avec mon PIN</a>
+          <a class="btn" id="btnBlockedAbos" href="https://commencer-a-payer.digiylyfe.com/">💳 Gérer mon abonnement</a>
+          <a class="btn-ghost" id="btnBlockedDashboard" href="./dashboard-pro.html">🧭 Dashboard Pro</a>
         </div>
       </div>
     </div>
 
-    <div class="sectionGrid">
-      <div class="card">
-        <div class="cashHeader">
-          <div>
-            <h3 class="sideTitle" style="margin-bottom:6px">Encaissement rapide</h3>
-            <div class="cashHeaderText">
-              Préparation locale propre. La vraie écriture de vente se branche ensuite sur la RPC métier POS.
+    <div id="mainContent" style="display:none">
+      <div class="hero">
+        <div class="card heroMain">
+          <div class="heroBadge">caisse réelle • accès contrôlé • zéro détour</div>
+
+          <div class="statusLine">
+            <div class="dot" id="dotStatus"></div>
+            <div style="flex:1">
+              <h1 class="bigTitle" id="mainTitle">
+                La caisse
+                <span class="accent">du terrain</span>
+              </h1>
+              <div class="mainSub" id="mainSub">
+                Initialisation du contexte boutique…
+              </div>
             </div>
           </div>
-          <div class="badge info">caisse vivante</div>
+
+          <div class="subInfo">
+            <div class="miniCard">
+              <div class="tiny">Boutique</div>
+              <div class="value" id="storeName">—</div>
+            </div>
+
+            <div class="miniCard">
+              <div class="tiny">Ville</div>
+              <div class="value" id="storeCity">—</div>
+            </div>
+
+            <div class="miniCard">
+              <div class="tiny">Produits actifs</div>
+              <div class="value" id="activeProductsHero">0</div>
+            </div>
+
+            <div class="miniCard">
+              <div class="tiny">Revenu du jour</div>
+              <div class="value" id="todayRevenueHero">0 FCFA</div>
+            </div>
+          </div>
+
+          <div id="statusNotice" class="notice">
+            Le module allume ses lampes…
+          </div>
+
+          <div class="moduleNav">
+            <a class="btn-ghost" id="btnHall" href="./index.html">🏠 Hall POS</a>
+            <a class="btn-ghost" id="btnDashboard" href="./dashboard-pro.html">🧭 Dashboard</a>
+            <a class="btn-ghost" id="btnAdmin" href="./admin.html">🧰 Admin</a>
+            <a class="btn-outline" id="btnPin" href="./pin.html">🔐 PIN</a>
+            <a class="btn-outline" id="btnSupport" href="#" target="_blank" rel="noopener">💬 Support</a>
+            <a class="btn" id="btnAbos" href="https://commencer-a-payer.digiylyfe.com/">💳 Abonnement</a>
+          </div>
+
+          <div class="actionRow">
+            <button class="btn-outline" type="button" id="btnCheck">✅ Vérifier mon accès</button>
+            <button class="btn-outline" type="button" id="btnReloadContext">🔄 Recharger contexte</button>
+            <button class="btn-ghost" type="button" id="btnUseCache">📦 Lire le cache local</button>
+          </div>
+
+          <div class="helper" id="sessionHint">
+            Ouvre la page avec un lien du style <b>?slug=pos-2217...</b> ou avec le slug mémorisé localement.
+          </div>
+
+          <details>
+            <summary>Diagnostic technique</summary>
+            <div class="helper">
+              Le cache local évite de solliciter Supabase à chaque ouverture. Le direct est réservé au contrôle ou au rechargement volontaire.
+            </div>
+            <div class="logBox" id="logBox">Aucun log pour l’instant.</div>
+          </details>
         </div>
 
-        <div class="field">
-          <label for="saleAmount">Montant</label>
-          <input class="input" id="saleAmount" type="number" inputmode="numeric" min="0" step="1" placeholder="Ex : 3500" />
-        </div>
+        <div class="card">
+          <h3 class="sideTitle">État de la session</h3>
 
-        <div class="field">
-          <label for="saleLabel">Libellé</label>
-          <input class="input" id="saleLabel" type="text" placeholder="Ex : Article / Service / Plat du jour" />
-        </div>
+          <div class="row" style="margin-bottom:10px">
+            <div class="badge" id="badgeAccess">ACCÈS —</div>
+            <div class="badge" id="badgeStore">BOUTIQUE —</div>
+            <div class="badge" id="badgeCache">CACHE —</div>
+          </div>
 
-        <div class="field">
-          <label for="saleMethod">Mode de paiement</label>
-          <select class="select" id="saleMethod">
-            <option value="cash">Espèces</option>
-            <option value="wave">Wave</option>
-            <option value="orange_money">Orange Money</option>
-            <option value="card">Carte</option>
-          </select>
-        </div>
+          <div id="sessionNotice" class="notice">
+            Session en cours d’initialisation.
+          </div>
 
-        <div class="actionRow">
-          <button class="btn" type="button" id="btnSaleReady">🧾 Préparer la vente</button>
-          <button class="btn-ghost" type="button" id="btnClearSale">Effacer</button>
-        </div>
+          <div class="kpiGrid">
+            <div class="kpi">
+              <div class="k">Produits total</div>
+              <div class="v" id="kpiProductsTotal">0</div>
+            </div>
+            <div class="kpi">
+              <div class="k">Ventes total</div>
+              <div class="v" id="kpiSalesTotal">0</div>
+            </div>
+            <div class="kpi">
+              <div class="k">Revenu total</div>
+              <div class="v" id="kpiRevenueTotal">0 FCFA</div>
+            </div>
+            <div class="kpi">
+              <div class="k">Ventes du jour</div>
+              <div class="v" id="kpiSalesToday">0</div>
+            </div>
+            <div class="kpi">
+              <div class="k">Revenu du jour</div>
+              <div class="v" id="kpiRevenueToday">0 FCFA</div>
+            </div>
+            <div class="kpi">
+              <div class="k">Store ID</div>
+              <div class="v" id="kpiStoreId">—</div>
+            </div>
+          </div>
 
-        <div class="helper" id="saleHelper">
-          Ici on prépare proprement. La prochaine couture sera la RPC métier d’encaissement réel.
+          <div class="hr"></div>
+
+          <h3 class="sideTitle" style="margin-bottom:8px">Contexte boutique</h3>
+          <div id="storeContextBox" class="empty">
+            Contexte boutique pas encore chargé.
+          </div>
         </div>
       </div>
 
-      <div class="card">
-        <h3 class="sideTitle" style="margin-bottom:8px">Résumé de préparation</h3>
-        <div id="salePreview" class="empty">
-          Rien de préparé pour le moment.
+      <div class="sectionGrid">
+        <div class="card">
+          <div class="cashHeader">
+            <div>
+              <h3 class="sideTitle" style="margin-bottom:6px">Encaissement rapide</h3>
+              <div class="cashHeaderText">
+                Préparation locale propre. La vraie écriture de vente se branche ensuite sur la RPC métier POS.
+              </div>
+            </div>
+            <div class="badge info">caisse vivante</div>
+          </div>
+
+          <div class="field">
+            <label for="saleAmount">Montant</label>
+            <input class="input" id="saleAmount" type="number" inputmode="numeric" min="0" step="1" placeholder="Ex : 3500" />
+          </div>
+
+          <div class="field">
+            <label for="saleLabel">Libellé</label>
+            <input class="input" id="saleLabel" type="text" placeholder="Ex : Article / Service / Plat du jour" />
+          </div>
+
+          <div class="field">
+            <label for="saleMethod">Mode de paiement</label>
+            <select class="select" id="saleMethod">
+              <option value="cash">Espèces</option>
+              <option value="wave">Wave</option>
+              <option value="orange_money">Orange Money</option>
+              <option value="card">Carte</option>
+            </select>
+          </div>
+
+          <div class="actionRow">
+            <button class="btn" type="button" id="btnSaleReady">🧾 Préparer la vente</button>
+            <button class="btn-ghost" type="button" id="btnClearSale">Effacer</button>
+          </div>
+
+          <div class="helper" id="saleHelper">
+            Ici on prépare proprement. La prochaine couture sera la RPC métier d’encaissement réel.
+          </div>
         </div>
 
-        <div class="hr"></div>
+        <div class="card">
+          <h3 class="sideTitle" style="margin-bottom:8px">Résumé de préparation</h3>
+          <div id="salePreview" class="empty">
+            Rien de préparé pour le moment.
+          </div>
 
-        <h3 class="sideTitle" style="margin-bottom:8px">Lecture métier</h3>
-        <div class="helper">
-          La page distingue clairement deux états :
-          <b>lecture locale / cache</b> et <b>travail réel avec accès actif</b>.
+          <div class="hr"></div>
+
+          <h3 class="sideTitle" style="margin-bottom:8px">Lecture métier</h3>
+          <div class="helper">
+            La page distingue clairement deux états :
+            <b>lecture locale / cache</b> et <b>travail réel avec accès actif</b>.
+          </div>
         </div>
       </div>
     </div>
@@ -852,6 +890,11 @@
       const MODULE_CODE = "POS";
       const SUPPORT_PHONE = "221771342889";
       const ABOS_URL = "https://commencer-a-payer.digiylyfe.com/";
+      const DASHBOARD_URL = digiyLocal("dashboard-pro.html");
+      const HALL_URL = digiyLocal("index.html");
+      const ADMIN_URL = digiyLocal("admin.html");
+      const PIN_URL = digiyLocal("pin.html");
+      const PUBLIC_URL = "https://mon-commerce.digiylyfe.com/";
       const CACHE_TTL_MS = 5 * 60 * 1000;
 
       const SUPABASE_URL = String(window.DIGIY_SUPABASE_URL || "").trim();
@@ -871,11 +914,16 @@
 
       let SB_CLIENT = null;
 
+      function reveal(){
+        document.documentElement.classList.add("app-ready");
+        document.documentElement.style.visibility = "";
+      }
+
       function log(message, data){
         const line = `[${new Date().toLocaleTimeString("fr-FR")}] ${message}`;
         DIAG.push(data === undefined ? line : `${line}\n${safeStringify(data)}`);
         qs("logBox").textContent = DIAG.join("\n\n");
-        console.log(message, data ?? "");
+        console.log("[DIGIY POS CAISSE]", message, data ?? "");
       }
 
       function safeStringify(v){
@@ -918,17 +966,42 @@
         return String(v || "").replace(/[^\d]/g, "");
       }
 
+      function normSlug(v){
+        return String(v || "").trim().toLowerCase();
+      }
+
       function getParam(name){
         return new URL(location.href).searchParams.get(name) || "";
       }
 
+      function getGuardSession(){
+        if(typeof window.DIGIY_GUARD?.getSession === "function"){
+          try{ return window.DIGIY_GUARD.getSession() || {}; }
+          catch(_){}
+        }
+        return window.DIGIY_GUARD?.state || {};
+      }
+
       function getResolvedSlug(){
-        return String(
+        const gs = getGuardSession();
+        return normSlug(
           getParam("slug") ||
+          gs.slug ||
           localStorage.getItem("digiy_pos_last_slug") ||
           sessionStorage.getItem("digiy_pos_last_slug") ||
           ""
-        ).trim().toLowerCase();
+        );
+      }
+
+      function getResolvedPhone(){
+        const gs = getGuardSession();
+        return normPhone(
+          getParam("phone") ||
+          gs.phone ||
+          localStorage.getItem("digiy_pos_last_phone") ||
+          sessionStorage.getItem("digiy_pos_last_phone") ||
+          ""
+        );
       }
 
       function buildUrl(base, params){
@@ -951,17 +1024,40 @@
       }
 
       function buildHallUrl(slug, phone){
-        return buildUrl(digiyLocal("index.html"), {
+        return buildUrl(HALL_URL, {
           slug: slug || "",
-          phone: phone || ""
+          phone: phone || "",
+          module: MODULE_CODE
+        });
+      }
+
+      function buildDashboardUrl(slug, phone){
+        return buildUrl(DASHBOARD_URL, {
+          slug: slug || "",
+          phone: phone || "",
+          module: MODULE_CODE
         });
       }
 
       function buildAdminUrl(slug, phone){
-        return buildUrl(digiyLocal("admin.html"), {
+        return buildUrl(ADMIN_URL, {
           slug: slug || "",
-          phone: phone || ""
+          phone: phone || "",
+          module: MODULE_CODE
         });
+      }
+
+      function buildPinUrl(slug, phone){
+        return buildUrl(PIN_URL, {
+          slug: slug || "",
+          phone: phone || "",
+          module: MODULE_CODE,
+          target: "caisse"
+        });
+      }
+
+      function buildPublicUrl(slug){
+        return buildUrl(PUBLIC_URL, { slug: slug || "" });
       }
 
       function buildSupportUrl(slug, phone){
@@ -1061,79 +1157,154 @@
         }catch(_){}
       }
 
+      async function awaitGuardReady(){
+        try{
+          if(typeof window.DIGIY_GUARD?.ready === "function"){
+            await window.DIGIY_GUARD.ready();
+          } else if(window.DIGIY_GUARD?.ready && typeof window.DIGIY_GUARD.ready.then === "function"){
+            await window.DIGIY_GUARD.ready;
+          }
+        } catch(err){
+          log("guard ready KO", { message: err?.message || String(err) });
+        }
+      }
+
+      async function bootGuard(){
+        if(typeof window.DIGIY_GUARD?.boot !== "function") return true;
+
+        try{
+          const res = await window.DIGIY_GUARD.boot({
+            module: MODULE_CODE,
+            dashboard: DASHBOARD_URL,
+            login: PIN_URL,
+            pay: ABOS_URL,
+            requireSlug: true,
+            checkSubscription: false
+          });
+          log("guard boot", res);
+          if(res && res.ok === false) return false;
+          return true;
+        } catch(err){
+          log("guard boot erreur", { message: err?.message || String(err) });
+          return true;
+        }
+      }
+
       function ensureSupabase(){
         if(SB_CLIENT) return SB_CLIENT;
+
+        if(typeof window.DIGIY_GUARD?.getSb === "function"){
+          try{
+            const gsb = window.DIGIY_GUARD.getSb();
+            if(gsb){
+              SB_CLIENT = gsb;
+              return SB_CLIENT;
+            }
+          } catch(err){
+            log("guard getSb erreur", { message: err?.message || String(err) });
+          }
+        }
+
         if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
           throw new Error("Configuration Supabase manquante");
         }
         if(!window.supabase || typeof window.supabase.createClient !== "function"){
           throw new Error("Librairie Supabase non chargée");
         }
+
         SB_CLIENT = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
           auth: {
             persistSession: false,
             autoRefreshToken: false,
             detectSessionInUrl: false,
-            storageKey: "digiy-pos-caisse-boutique-v2"
+            storageKey: "digiy-pos-caisse-boutique-v3"
           }
         });
         return SB_CLIENT;
       }
 
-      async function rpc(client, name, args){
-        const { data, error } = await client.rpc(name, args);
-        if(error) throw error;
-        return data;
+      async function rpcFirstSuccess(name, payloads){
+        const client = ensureSupabase();
+        let lastError = null;
+
+        for(const args of payloads){
+          try{
+            log(`RPC ${name} tentative`, args);
+            const { data, error } = await client.rpc(name, args);
+            if(error){
+              lastError = error;
+              log(`RPC ${name} erreur`, {
+                message: error.message,
+                details: error.details,
+                hint: error.hint
+              });
+              continue;
+            }
+            log(`RPC ${name} OK`, data);
+            return data;
+          }catch(err){
+            lastError = err;
+            log(`RPC ${name} exception`, { message: err?.message || String(err) });
+          }
+        }
+
+        throw lastError || new Error(`RPC ${name} échouée`);
       }
 
-      async function getAccess(client, phone){
+      async function getAccess(phone){
         if(!phone) return false;
 
-        try{
-          const res1 = await rpc(client, "digiy_has_access", {
-            p_phone: phone,
-            p_module: MODULE_CODE
-          });
-          if(typeof res1 === "boolean") return res1;
-          if(res1 && typeof res1.ok === "boolean") return res1.ok;
-          if(res1 && typeof res1.has_access === "boolean") return res1.has_access;
-          return !!res1;
-        }catch(err1){
-          log("digiy_has_access version p_phone/p_module KO", { message: err1?.message || String(err1) });
-          const res2 = await rpc(client, "digiy_has_access", {
-            phone,
-            module: MODULE_CODE
-          });
-          if(typeof res2 === "boolean") return res2;
-          if(res2 && typeof res2.ok === "boolean") return res2.ok;
-          if(res2 && typeof res2.has_access === "boolean") return res2.has_access;
-          return !!res2;
-        }
+        const res = await rpcFirstSuccess("digiy_has_access", [
+          { p_phone: phone, p_module: MODULE_CODE },
+          { phone, module: MODULE_CODE }
+        ]);
+
+        if(typeof res === "boolean") return res;
+        if(res && typeof res.ok === "boolean") return res.ok;
+        if(res && typeof res.has_access === "boolean") return res.has_access;
+        if(res && typeof res.allowed === "boolean") return res.allowed;
+        if(res && typeof res.access === "boolean") return res.access;
+        return !!res;
+      }
+
+      async function resolvePhoneFromSlug(slug){
+        const client = ensureSupabase();
+        if(!slug) return "";
+
+        const { data, error } = await client
+          .from("digiy_subscriptions_public")
+          .select("phone,slug")
+          .eq("slug", slug)
+          .limit(1)
+          .maybeSingle();
+
+        if(error) throw error;
+        return normPhone(data?.phone || "");
       }
 
       async function fetchLivePayload(slug){
-        const client = ensureSupabase();
-
-        log("Lecture live digiy_pos_get_caisse_by_slug", { slug });
-
-        const caisse = await rpc(client, "digiy_pos_get_caisse_by_slug", {
-          p_slug: slug
-        });
-
-        log("digiy_pos_get_caisse_by_slug → OK", caisse);
+        const caisse = await rpcFirstSuccess("digiy_pos_get_caisse_by_slug", [
+          { p_slug: slug },
+          { slug }
+        ]);
 
         if(!caisse || caisse.ok !== true){
           throw new Error(caisse?.error || caisse?.reason || "caisse_not_available");
         }
 
-        const phone = normPhone(
+        let phone = normPhone(
           caisse?.store?.owner_phone ||
           caisse?.profile?.owner_phone ||
           caisse?.profile?.whatsapp ||
+          STATE.phone ||
           ""
         );
 
-        const access = await getAccess(client, phone);
+        if(!phone){
+          phone = await resolvePhoneFromSlug(slug);
+        }
+
+        const access = await getAccess(phone);
 
         const payload = {
           ...caisse,
@@ -1145,6 +1316,10 @@
         writeCache(slug, payload);
         localStorage.setItem("digiy_pos_last_slug", slug);
         sessionStorage.setItem("digiy_pos_last_slug", slug);
+        if(phone){
+          localStorage.setItem("digiy_pos_last_phone", phone);
+          sessionStorage.setItem("digiy_pos_last_phone", phone);
+        }
 
         return payload;
       }
@@ -1161,9 +1336,28 @@
 
       function wireNavLinks(slug, phone){
         qs("btnHall").href = buildHallUrl(slug, phone);
+        qs("btnDashboard").href = buildDashboardUrl(slug, phone);
         qs("btnAdmin").href = buildAdminUrl(slug, phone);
+        qs("btnPin").href = buildPinUrl(slug, phone);
         qs("btnAbos").href = buildAbosUrl(slug, phone);
         qs("btnSupport").href = buildSupportUrl(slug, phone);
+        qs("btnPublic").href = buildPublicUrl(slug);
+
+        qs("btnBlockedPin").href = buildPinUrl(slug, phone);
+        qs("btnBlockedAbos").href = buildAbosUrl(slug, phone);
+        qs("btnBlockedDashboard").href = buildDashboardUrl(slug, phone);
+      }
+
+      function showBlocked(title, text){
+        qs("mainContent").style.display = "none";
+        qs("blockedShell").style.display = "grid";
+        qs("blockedTitle").textContent = title;
+        qs("blockedText").innerHTML = text;
+      }
+
+      function showMain(){
+        qs("blockedShell").style.display = "none";
+        qs("mainContent").style.display = "block";
       }
 
       function renderBlocked(slug, phone, reason){
@@ -1213,11 +1407,15 @@
         setBadge("badgeCache", "CACHE —", "");
 
         qs("storeContextBox").innerHTML = `<span class="empty">Contexte boutique non disponible.</span>`;
+        showBlocked(
+          "Caisse protégée",
+          `${esc(reason || "Accès POS non valide.")}<br><br>Passe par le <b>PIN</b> ou retourne au <b>dashboard pro</b> pour reconstruire la session proprement.`
+        );
       }
 
       function renderReady(payload, source, cachedAt){
-        const slug = String(payload.workspace_slug || payload.slug || "").trim();
-        const phone = normPhone(payload.__phone || payload?.store?.owner_phone || payload?.profile?.whatsapp || "");
+        const slug = String(payload.workspace_slug || payload.slug || STATE.slug || "").trim();
+        const phone = normPhone(payload.__phone || payload?.store?.owner_phone || payload?.profile?.whatsapp || STATE.phone || "");
         const profile = payload.profile || {};
         const store = payload.store || {};
         const stats = payload.stats || {};
@@ -1249,9 +1447,11 @@
         qs("kpiStoreId").textContent = store.store_id || "—";
 
         if(!payload.__has_access){
-          renderBlocked(slug, phone, "Le store existe, mais digiy_has_access a répondu non.");
+          renderBlocked(slug, phone, "Le store existe, mais l’accès POS n’est pas validé.");
           return;
         }
+
+        showMain();
 
         setMainStatus(
           "ok",
@@ -1304,15 +1504,23 @@
       }
 
       async function hydrate(forceLive = false){
-        const slug = getResolvedSlug();
+        let slug = getResolvedSlug();
+        let phone = getResolvedPhone();
 
         if(!slug){
-          renderBlocked("", "", "Slug manquant. Ouvre la page avec ?slug=chez-astou-saly");
+          renderBlocked("", phone, "Slug manquant. Ouvre la page avec ?slug=pos-... ou passe par le PIN.");
           return;
         }
 
+        STATE.slug = slug;
+        STATE.phone = phone;
+
         localStorage.setItem("digiy_pos_last_slug", slug);
         sessionStorage.setItem("digiy_pos_last_slug", slug);
+        if(phone){
+          localStorage.setItem("digiy_pos_last_phone", phone);
+          sessionStorage.setItem("digiy_pos_last_phone", phone);
+        }
 
         const cached = useCachedPayload(slug);
 
@@ -1349,7 +1557,7 @@
             return;
           }
 
-          renderBlocked(slug, "", err?.message || "Impossible de charger la caisse");
+          renderBlocked(slug, phone, err?.message || "Impossible de charger la caisse");
         }
       }
 
@@ -1439,8 +1647,6 @@
       }
 
       function bindActions(){
-        qs("btnSupport").href = buildSupportUrl("", "");
-
         qs("btnCheck").addEventListener("click", async () => {
           qs("btnCheck").disabled = true;
           qs("btnCheck").textContent = "Contrôle…";
@@ -1477,6 +1683,9 @@
 
       async function init(){
         try{
+          await awaitGuardReady();
+          await bootGuard();
+
           log("Initialisation Caisse boutique");
           wireNavLinks("", "");
           bindActions();
@@ -1488,6 +1697,8 @@
           log("Initialisation fatale", { message: err?.message || String(err) });
           renderBlocked("", "", err?.message || "Impossible d’initialiser la caisse boutique");
           setNotice("bad", `<div><b>Erreur fatale.</b></div><div style="margin-top:6px">${esc(err?.message || String(err))}</div>`);
+        } finally {
+          reveal();
         }
       }
 
