@@ -4,8 +4,11 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <meta name="theme-color" content="#07140f"/>
-  <title>MON COMMERCE — PIN d’accès</title>
-  <meta name="description" content="MON COMMERCE by DIGIY — accès PIN sécurisé pour ouvrir la caisse, le hall ou l’admin POS."/>
+  <title>MON COMMERCE — PIN d’accès PRO</title>
+  <meta
+    name="description"
+    content="MON COMMERCE by DIGIY — accès PIN sécurisé pour ouvrir le dashboard pro, la caisse ou l’admin POS."
+  />
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
@@ -22,7 +25,7 @@
     }
 
     function digiyLocal(path){
-      path = String(path || "").replace(/^\/+/,"");
+      path = String(path || "").replace(/^\/+/, "");
       return digiyBasePath() + path;
     }
   </script>
@@ -94,7 +97,7 @@
     }
 
     .card{
-      width:min(640px, 96vw);
+      width:min(700px, 96vw);
       background:
         linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)),
         var(--card);
@@ -395,10 +398,10 @@
 <body>
   <a
     class="floating-site-btn"
-    href="https://digiylyfe.com/"
-    aria-label="Retour au site DIGIYLYFE"
-    title="Retour au site DIGIYLYFE"
-  >⬅️ Retour site DIGIYLYFE</a>
+    href="./index.html"
+    aria-label="Retour à la vitrine MON COMMERCE"
+    title="Retour à la vitrine MON COMMERCE"
+  >⬅️ Retour vitrine MON COMMERCE</a>
 
   <div class="card">
     <div class="top">
@@ -406,7 +409,7 @@
         <div class="ico">🔐</div>
         <div>
           <div class="kicker">DIGIYLYFE</div>
-          <div class="title">MON COMMERCE — PIN d’accès</div>
+          <div class="title">MON COMMERCE — PIN d’accès PRO</div>
           <div class="sub" id="subtitle">Chargement…</div>
         </div>
       </div>
@@ -416,7 +419,8 @@
     <div class="sep"></div>
 
     <div class="mini">
-      Cette porte ouvre le bon rail : <b>hall</b>, <b>caisse</b> ou <b>admin</b>.
+      Cette porte ouvre le bon rail :
+      <b>dashboard pro</b>, <b>caisse</b> ou <b>admin</b>.
       Le PIN ne remplace pas l’abonnement, il confirme l’accès.
     </div>
 
@@ -435,12 +439,13 @@
       </div>
       <div class="metaBox">
         <div class="metaLabel">Retour cible</div>
-        <div class="metaValue" id="returnBox">caisse.html</div>
+        <div class="metaValue" id="returnBox">dashboard-pro.html</div>
       </div>
     </div>
 
     <div class="navRow">
-      <a class="btn-ghost" id="btnHall" href="./index.html">🏠 Hall</a>
+      <a class="btn-ghost" id="btnPublic" href="./index.html">🏪 Vitrine</a>
+      <a class="btn-ghost" id="btnDashboard" href="./dashboard-pro.html">📊 Dashboard Pro</a>
       <a class="btn-ghost" id="btnCaisse" href="./caisse.html">🧾 Caisse</a>
       <a class="btn-ghost" id="btnAdmin" href="./admin.html">⚙️ Admin</a>
       <a class="btn-outline" id="btnSupportTop" href="#" target="_blank" rel="noopener">💬 Support</a>
@@ -528,10 +533,6 @@
   function cleanModule(v){ return String(v || "").toUpperCase().replace(/[^A-Z_]/g, ""); }
   function cleanPin(v){ return String(v || "").replace(/[^\d]/g, "").slice(0, 8); }
 
-  function getParam(name){
-    return new URL(location.href).searchParams.get(name) || "";
-  }
-
   function buildUrl(base, params){
     const u = new URL(base, location.href);
     Object.entries(params || {}).forEach(([k, v]) => {
@@ -583,6 +584,7 @@
     }
 
     const target = String(url.searchParams.get("target") || "").toLowerCase();
+
     if(target === "admin"){
       return buildUrl(digiyLocal("admin.html"), {
         slug: currentSlug || "",
@@ -591,7 +593,17 @@
         from: "pin"
       });
     }
-    if(target === "hall" || target === "index"){
+
+    if(target === "caisse"){
+      return buildUrl(digiyLocal("caisse.html"), {
+        slug: currentSlug || "",
+        phone: currentPhone || "",
+        module: TARGET_MODULE,
+        from: "pin"
+      });
+    }
+
+    if(target === "hall" || target === "index" || target === "public"){
       return buildUrl(digiyLocal("index.html"), {
         slug: currentSlug || "",
         phone: currentPhone || "",
@@ -600,7 +612,7 @@
       });
     }
 
-    return buildUrl(digiyLocal("caisse.html"), {
+    return buildUrl(digiyLocal("dashboard-pro.html"), {
       slug: currentSlug || "",
       phone: currentPhone || "",
       module: TARGET_MODULE,
@@ -615,19 +627,27 @@
     $("phoneBox").textContent = currentPhone ? `+${currentPhone}` : "—";
 
     const returnUrl = resolveReturnUrl();
-    const returnName = new URL(returnUrl, location.href).pathname.split("/").pop() || "caisse.html";
+    const returnName = new URL(returnUrl, location.href).pathname.split("/").pop() || "dashboard-pro.html";
     $("returnBox").textContent = returnName;
 
-    $("btnHall").href = buildUrl(digiyLocal("index.html"), {
+    $("btnPublic").href = buildUrl(digiyLocal("index.html"), {
       slug: currentSlug || "",
       phone: currentPhone || "",
       module: TARGET_MODULE
     });
+
+    $("btnDashboard").href = buildUrl(digiyLocal("dashboard-pro.html"), {
+      slug: currentSlug || "",
+      phone: currentPhone || "",
+      module: TARGET_MODULE
+    });
+
     $("btnCaisse").href = buildUrl(digiyLocal("caisse.html"), {
       slug: currentSlug || "",
       phone: currentPhone || "",
       module: TARGET_MODULE
     });
+
     $("btnAdmin").href = buildUrl(digiyLocal("admin.html"), {
       slug: currentSlug || "",
       phone: currentPhone || "",
@@ -650,16 +670,23 @@
       localStorage.setItem("digiy_pos_last_slug", currentSlug);
       sessionStorage.setItem("digiy_pos_last_slug", currentSlug);
     }
+
     if(currentPhone){
       localStorage.setItem("digiy_pos_last_phone", currentPhone);
       sessionStorage.setItem("digiy_pos_last_phone", currentPhone);
     }
 
-    localStorage.setItem("DIGIY_ACCESS", JSON.stringify({
-      slug: currentSlug,
-      phone: currentPhone,
+    const payload = {
+      slug: currentSlug || "",
+      phone: currentPhone || "",
       module: TARGET_MODULE,
       ts: Date.now()
+    };
+
+    localStorage.setItem("DIGIY_ACCESS", JSON.stringify(payload));
+    localStorage.setItem("DIGIY_POS_SESSION", JSON.stringify({
+      ...payload,
+      verified: true
     }));
   }
 
@@ -698,11 +725,57 @@
     return cleanDigits(data?.phone || "");
   }
 
+  async function verifyAccess(slug, pin, moduleCode){
+    try{
+      const { data, error } = await sb.rpc("digiy_verify_access", {
+        p_slug: slug,
+        p_pin: pin,
+        p_module: moduleCode
+      });
+
+      if(error) throw error;
+      return data;
+    } catch(err){
+      log("digiy_verify_access indisponible ou en erreur", {
+        message: err?.message || String(err)
+      });
+
+      let phone = currentPhone;
+      if(!phone){
+        try{
+          phone = await resolvePhoneFromSlug(slug);
+        } catch(innerErr){
+          log("resolvePhoneFromSlug fallback erreur", {
+            message: innerErr?.message || String(innerErr)
+          });
+        }
+      }
+
+      if(!phone){
+        throw err;
+      }
+
+      const { data, error } = await sb.rpc("digiy_verify_pin", {
+        p_phone: phone,
+        p_module: moduleCode,
+        p_pin: pin
+      });
+
+      if(error) throw error;
+
+      if(data?.ok && !currentPhone){
+        currentPhone = phone;
+      }
+
+      return data;
+    }
+  }
+
   async function enter(){
     const pin = cleanPin($("pin").value);
 
     if(!currentSlug){
-      msg(`<span class="bad">Slug manquant.</span> Passe d’abord par la récupération d’accès ou reviens par le hall.`);
+      msg(`<span class="bad">Slug manquant.</span> Passe d’abord par la récupération d’accès ou reviens par la vitrine.`);
       return;
     }
 
@@ -720,29 +793,27 @@
         module: TARGET_MODULE
       });
 
-      const { data, error } = await sb.rpc("digiy_verify_access", {
-        p_slug: currentSlug,
-        p_pin: pin,
-        p_module: TARGET_MODULE
-      });
-
-      if(error){
-        log("digiy_verify_access erreur", {
-          message: error.message,
-          details: error.details,
-          hint: error.hint
-        });
-        throw error;
-      }
-
-      log("digiy_verify_access OK", data);
+      const data = await verifyAccess(currentSlug, pin, TARGET_MODULE);
+      log("Vérification PIN résultat", data);
 
       if(!data?.ok){
         msg(`<span class="bad">Accès refusé.</span> Vérifie le PIN ou demande de l’aide.`);
         return;
       }
 
+      if(!currentPhone){
+        try{
+          currentPhone = await resolvePhoneFromSlug(currentSlug);
+        } catch(err){
+          log("Résolution phone après validation impossible", {
+            message: err?.message || String(err)
+          });
+        }
+      }
+
       saveLocalAccess();
+      paint();
+
       msg(`<span class="ok">Accès validé.</span> Ouverture du bon rail…`);
       setTimeout(goNext, 280);
     } catch(err){
@@ -818,7 +889,7 @@
       $("subtitle").textContent = "Mode récupération actif";
       msg(`<span class="warn">Slug manquant.</span> Renseigne ton téléphone pour retrouver l’accès.`);
     } else {
-      $("subtitle").textContent = "Accès sécurisé — PIN requis";
+      $("subtitle").textContent = "Accès sécurisé — QR → PIN → Dashboard Pro";
       if(!currentPhone){
         try{
           currentPhone = await resolvePhoneFromSlug(currentSlug);
