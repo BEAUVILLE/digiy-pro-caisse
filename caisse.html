@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="theme-color" content="#07140f"/>
   <title>MON COMMERCE — DIGIY CAISSE PRO</title>
-  <meta name="theme-color" content="#07140f" />
   <meta
     name="description"
     content="MON COMMERCE by DIGIY — caisse boutique moderne, lecture locale, accès contrôlé, encaissement rapide et contexte magasin."
@@ -26,7 +26,7 @@
     }
 
     function digiyLocal(path){
-      path = String(path || "").replace(/^\/+/,"");
+      path = String(path || "").replace(/^\/+/, "");
       return digiyBasePath() + path;
     }
   </script>
@@ -74,7 +74,7 @@
     }
 
     a{text-decoration:none;color:inherit}
-    button{font:inherit}
+    button,input,select{font:inherit}
 
     .app{display:none}
     html.app-ready .app{display:block}
@@ -640,6 +640,12 @@
     }
 
     @media (max-width: 700px){
+      .wrap{padding:12px 12px 96px}
+      .topbar-inner{padding:12px}
+      .heroMain,.card{padding:16px}
+      .brandTitle{white-space:normal}
+      .subInfo{grid-template-columns:1fr}
+      .kpiGrid{grid-template-columns:1fr}
       .floating-site-btn{
         left:12px;
         right:12px;
@@ -648,239 +654,198 @@
         padding:14px 14px;
         font-size:12px;
       }
-      .wrap{padding:12px 12px 92px}
-      .topbar-inner{padding:12px}
-      .subInfo{grid-template-columns:1fr}
-      .kpiGrid{grid-template-columns:1fr}
-      .brandTitle{white-space:normal}
     }
   </style>
 </head>
+
 <body>
   <a
     class="floating-site-btn"
-    id="btnPublic"
-    href="https://mon-commerce.digiylyfe.com/"
+    href="./index.html"
     aria-label="Retour à la vitrine MON COMMERCE"
     title="Retour à la vitrine MON COMMERCE"
   >⬅️ Retour vitrine MON COMMERCE</a>
 
-  <div class="wrap app">
-
-    <div class="topbar">
-      <div class="topbar-inner">
-        <div class="brand">
-          <div class="brandBadge">🏪</div>
-          <div>
-            <div class="brandKicker">DIGIYLYFE</div>
-            <div class="brandTitle">MON COMMERCE</div>
-            <div class="brandSub">DIGIY CAISSE PRO • travail réel • lecture locale</div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="pill">Slug : <strong id="pillSlug">—</strong></div>
-          <div class="pill">Téléphone : <strong id="pillPhone">—</strong></div>
-          <div class="pill">Source : <strong id="pillSource">—</strong></div>
-          <div class="pill">Statut : <strong id="pillStatus">Chargement…</strong></div>
-        </div>
-      </div>
-    </div>
-
-    <div id="blockedShell" class="card blockedShell">
-      <div class="blockedInner">
-        <div class="blockedTitle" id="blockedTitle">Caisse protégée</div>
-        <div class="blockedText" id="blockedText">
-          Cette porte demande un slug POS actif et un accès valide.
-        </div>
-        <div class="actionRow" style="justify-content:center">
-          <a class="btn-outline" id="btnBlockedPin" href="./pin.html">🔐 Ouvrir avec mon PIN</a>
-          <a class="btn" id="btnBlockedAbos" href="https://commencer-a-payer.digiylyfe.com/">💳 Gérer mon abonnement</a>
-          <a class="btn-ghost" id="btnBlockedDashboard" href="./dashboard-pro.html">🧭 Dashboard Pro</a>
-        </div>
-      </div>
-    </div>
-
-    <div id="mainContent" style="display:none">
-      <div class="hero">
-        <div class="card heroMain">
-          <div class="heroBadge">caisse réelle • accès contrôlé • zéro détour</div>
-
-          <div class="statusLine">
-            <div class="dot" id="dotStatus"></div>
-            <div style="flex:1">
-              <h1 class="bigTitle" id="mainTitle">
-                La caisse
-                <span class="accent">du terrain</span>
-              </h1>
-              <div class="mainSub" id="mainSub">
-                Initialisation du contexte boutique…
-              </div>
-            </div>
-          </div>
-
-          <div class="subInfo">
-            <div class="miniCard">
-              <div class="tiny">Boutique</div>
-              <div class="value" id="storeName">—</div>
-            </div>
-
-            <div class="miniCard">
-              <div class="tiny">Ville</div>
-              <div class="value" id="storeCity">—</div>
-            </div>
-
-            <div class="miniCard">
-              <div class="tiny">Produits actifs</div>
-              <div class="value" id="activeProductsHero">0</div>
-            </div>
-
-            <div class="miniCard">
-              <div class="tiny">Revenu du jour</div>
-              <div class="value" id="todayRevenueHero">0 FCFA</div>
-            </div>
-          </div>
-
-          <div id="statusNotice" class="notice">
-            Le module allume ses lampes…
-          </div>
-
-          <div class="moduleNav">
-            <a class="btn-ghost" id="btnHall" href="./index.html">🏠 Hall POS</a>
-            <a class="btn-ghost" id="btnDashboard" href="./dashboard-pro.html">🧭 Dashboard</a>
-            <a class="btn-ghost" id="btnAdmin" href="./admin.html">🧰 Admin</a>
-            <a class="btn-outline" id="btnPin" href="./pin.html">🔐 PIN</a>
-            <a class="btn-outline" id="btnSupport" href="#" target="_blank" rel="noopener">💬 Support</a>
-            <a class="btn" id="btnAbos" href="https://commencer-a-payer.digiylyfe.com/">💳 Abonnement</a>
-          </div>
-
-          <div class="actionRow">
-            <button class="btn-outline" type="button" id="btnCheck">✅ Vérifier mon accès</button>
-            <button class="btn-outline" type="button" id="btnReloadContext">🔄 Recharger contexte</button>
-            <button class="btn-ghost" type="button" id="btnUseCache">📦 Lire le cache local</button>
-          </div>
-
-          <div class="helper" id="sessionHint">
-            Ouvre la page avec un lien du style <b>?slug=pos-2217...</b> ou avec le slug mémorisé localement.
-          </div>
-
-          <details>
-            <summary>Diagnostic technique</summary>
-            <div class="helper">
-              Le cache local évite de solliciter Supabase à chaque ouverture. Le direct est réservé au contrôle ou au rechargement volontaire.
-            </div>
-            <div class="logBox" id="logBox">Aucun log pour l’instant.</div>
-          </details>
-        </div>
-
-        <div class="card">
-          <h3 class="sideTitle">État de la session</h3>
-
-          <div class="row" style="margin-bottom:10px">
-            <div class="badge" id="badgeAccess">ACCÈS —</div>
-            <div class="badge" id="badgeStore">BOUTIQUE —</div>
-            <div class="badge" id="badgeCache">CACHE —</div>
-          </div>
-
-          <div id="sessionNotice" class="notice">
-            Session en cours d’initialisation.
-          </div>
-
-          <div class="kpiGrid">
-            <div class="kpi">
-              <div class="k">Produits total</div>
-              <div class="v" id="kpiProductsTotal">0</div>
-            </div>
-            <div class="kpi">
-              <div class="k">Ventes total</div>
-              <div class="v" id="kpiSalesTotal">0</div>
-            </div>
-            <div class="kpi">
-              <div class="k">Revenu total</div>
-              <div class="v" id="kpiRevenueTotal">0 FCFA</div>
-            </div>
-            <div class="kpi">
-              <div class="k">Ventes du jour</div>
-              <div class="v" id="kpiSalesToday">0</div>
-            </div>
-            <div class="kpi">
-              <div class="k">Revenu du jour</div>
-              <div class="v" id="kpiRevenueToday">0 FCFA</div>
-            </div>
-            <div class="kpi">
-              <div class="k">Store ID</div>
-              <div class="v" id="kpiStoreId">—</div>
-            </div>
-          </div>
-
-          <div class="hr"></div>
-
-          <h3 class="sideTitle" style="margin-bottom:8px">Contexte boutique</h3>
-          <div id="storeContextBox" class="empty">
-            Contexte boutique pas encore chargé.
-          </div>
-        </div>
-      </div>
-
-      <div class="sectionGrid">
-        <div class="card">
-          <div class="cashHeader">
+  <div class="app" id="appRoot">
+    <div class="wrap">
+      <header class="topbar">
+        <div class="topbar-inner">
+          <div class="brand">
+            <div class="brandBadge">🧾</div>
             <div>
-              <h3 class="sideTitle" style="margin-bottom:6px">Encaissement rapide</h3>
-              <div class="cashHeaderText">
-                Préparation locale propre. La vraie écriture de vente se branche ensuite sur la RPC métier POS.
+              <div class="brandKicker">DIGIYLYFE</div>
+              <div class="brandTitle">MON COMMERCE</div>
+              <div class="brandSub">DIGIY CAISSE PRO • travail réel • lecture locale</div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="pill">
+              <span class="dot" id="dotAccess"></span>
+              <span id="pillAccess">Accès…</span>
+            </div>
+            <div class="pill">
+              <strong id="pillStore">Boutique…</strong>
+            </div>
+            <button class="btn-outline" type="button" id="btnReloadTop">🔄 Recharger</button>
+          </div>
+        </div>
+      </header>
+
+      <section id="blockedShell" class="blockedShell">
+        <div class="blockedInner">
+          <div class="blockedTitle">Caisse protégée</div>
+          <div class="blockedText" id="blockedText">
+            Cette caisse attend un accès actif.
+          </div>
+
+          <div class="actionRow" style="justify-content:center">
+            <a class="btn" id="btnBlockedPin" href="./pin.html">🔐 Ouvrir avec mon PIN</a>
+            <a class="btn-outline" id="btnBlockedAbos" href="https://commencer-a-payer.digiylyfe.com/">💳 Gérer mon abonnement</a>
+            <a class="btn-ghost" id="btnBlockedDash" href="./dashboard-pro.html">🧭 Dashboard Pro</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="liveShell">
+        <div class="hero">
+          <div class="card heroMain">
+            <div class="heroBadge">DIGIY CAISSE PRO</div>
+
+            <div class="statusLine">
+              <div>
+                <h1 class="bigTitle"><span class="accent">Caisse</span> prête</h1>
+                <div class="mainSub">
+                  Lecture claire du terrain commerce. La page affiche le vrai rail actif quand il existe,
+                  et reprend un fallback POS propre si la RPC principale ne renvoie pas encore tout le profil.
+                </div>
               </div>
             </div>
-            <div class="badge info">caisse vivante</div>
+
+            <div class="subInfo">
+              <div class="miniCard">
+                <div class="tiny">Slug</div>
+                <div class="value" id="metaSlug">—</div>
+              </div>
+              <div class="miniCard">
+                <div class="tiny">Téléphone</div>
+                <div class="value" id="metaPhone">—</div>
+              </div>
+              <div class="miniCard">
+                <div class="tiny">Boutique</div>
+                <div class="value" id="metaStoreName">—</div>
+              </div>
+              <div class="miniCard">
+                <div class="tiny">Source</div>
+                <div class="value" id="metaSource">—</div>
+              </div>
+            </div>
+
+            <div class="notice info" id="noticeBox">
+              Initialisation…
+            </div>
+
+            <div class="moduleNav">
+              <span class="badge" id="badgeAccess">Accès…</span>
+              <span class="badge" id="badgeStore">Boutique…</span>
+              <span class="badge" id="badgeCache">Cache…</span>
+              <span class="badge" id="badgePlan">Plan…</span>
+            </div>
+
+            <div class="actionRow">
+              <a class="btn-outline" id="btnGoPin" href="./pin.html">🔐 PIN</a>
+              <a class="btn-outline" id="btnGoDashboard" href="./dashboard-pro.html">🧭 Dashboard Pro</a>
+              <a class="btn-outline" id="btnGoAdmin" href="./admin.html">⚙️ Admin</a>
+              <a class="btn-ghost" id="btnGoHall" href="./index.html">🏠 Hall</a>
+            </div>
+
+            <details>
+              <summary>Diagnostic</summary>
+              <div class="logBox" id="diagBox">Initialisation…</div>
+            </details>
           </div>
 
-          <div class="field">
-            <label for="saleAmount">Montant</label>
-            <input class="input" id="saleAmount" type="number" inputmode="numeric" min="0" step="1" placeholder="Ex : 3500" />
-          </div>
+          <div class="card">
+            <h2 class="sideTitle">Contexte magasin</h2>
+            <div id="storeContextBox" class="notice">Chargement du contexte…</div>
 
-          <div class="field">
-            <label for="saleLabel">Libellé</label>
-            <input class="input" id="saleLabel" type="text" placeholder="Ex : Article / Service / Plat du jour" />
-          </div>
+            <div class="kpiGrid">
+              <div class="kpi">
+                <div class="k">Produits actifs</div>
+                <div class="v" id="kpiProducts">0</div>
+              </div>
+              <div class="kpi">
+                <div class="k">Ventes du jour</div>
+                <div class="v" id="kpiSales">0</div>
+              </div>
+              <div class="kpi">
+                <div class="k">Revenu du jour</div>
+                <div class="v" id="kpiRevenue">0 F</div>
+              </div>
+            </div>
 
-          <div class="field">
-            <label for="saleMethod">Mode de paiement</label>
-            <select class="select" id="saleMethod">
-              <option value="cash">Espèces</option>
-              <option value="wave">Wave</option>
-              <option value="orange_money">Orange Money</option>
-              <option value="card">Carte</option>
-            </select>
-          </div>
-
-          <div class="actionRow">
-            <button class="btn" type="button" id="btnSaleReady">🧾 Préparer la vente</button>
-            <button class="btn-ghost" type="button" id="btnClearSale">Effacer</button>
-          </div>
-
-          <div class="helper" id="saleHelper">
-            Ici on prépare proprement. La prochaine couture sera la RPC métier d’encaissement réel.
+            <div class="helper">
+              Ici on garde une lecture simple : accès, boutique, plan, cache local, contexte boutique.
+            </div>
           </div>
         </div>
 
-        <div class="card">
-          <h3 class="sideTitle" style="margin-bottom:8px">Résumé de préparation</h3>
-          <div id="salePreview" class="empty">
-            Rien de préparé pour le moment.
+        <div class="sectionGrid">
+          <div class="card">
+            <div class="cashHeader">
+              <div>
+                <h2 class="sideTitle">Préparer une vente</h2>
+                <div class="cashHeaderText">
+                  On prépare une vente proprement. Le prochain cran métier pourra brancher l’encaissement réel.
+                </div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="saleAmount">Montant</label>
+              <input class="input" id="saleAmount" type="number" inputmode="numeric" min="0" step="1" placeholder="Ex : 3500"/>
+            </div>
+
+            <div class="field">
+              <label for="saleLabel">Libellé</label>
+              <input class="input" id="saleLabel" type="text" placeholder="Ex : Article / Service / Plat du jour"/>
+            </div>
+
+            <div class="field">
+              <label for="saleMethod">Mode de paiement</label>
+              <select class="select" id="saleMethod">
+                <option value="cash">Espèces</option>
+                <option value="wave">Wave</option>
+                <option value="orange_money">Orange Money</option>
+                <option value="card">Carte</option>
+              </select>
+            </div>
+
+            <div class="actionRow">
+              <button class="btn" type="button" id="btnSaleReady">🧾 Préparer la vente</button>
+              <button class="btn-ghost" type="button" id="btnClearSale">Effacer</button>
+            </div>
+
+            <div class="helper" id="saleHelper">
+              Ici on prépare proprement. La prochaine couture sera la RPC métier d’encaissement réel.
+            </div>
           </div>
 
-          <div class="hr"></div>
+          <div class="card">
+            <h2 class="sideTitle">Résumé de préparation</h2>
+            <div id="salePreview" class="empty">Rien de préparé pour le moment.</div>
 
-          <h3 class="sideTitle" style="margin-bottom:8px">Lecture métier</h3>
-          <div class="helper">
-            La page distingue clairement deux états :
-            <b>lecture locale / cache</b> et <b>travail réel avec accès actif</b>.
+            <div class="hr"></div>
+
+            <h2 class="sideTitle">Lecture métier</h2>
+            <div class="helper">
+              La page distingue clairement deux états :
+              <b>lecture locale / cache</b> et <b>travail réel avec accès actif</b>.
+            </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
-
   </div>
 
   <script>
@@ -919,89 +884,26 @@
         document.documentElement.style.visibility = "";
       }
 
-      function log(message, data){
-        const line = `[${new Date().toLocaleTimeString("fr-FR")}] ${message}`;
+      function log(msg, data){
+        const line = `[${new Date().toLocaleTimeString("fr-FR")}] ${msg}`;
         DIAG.push(data === undefined ? line : `${line}\n${safeStringify(data)}`);
-        qs("logBox").textContent = DIAG.join("\n\n");
-        console.log("[DIGIY POS CAISSE]", message, data ?? "");
+        const box = qs("diagBox");
+        if(box) box.textContent = DIAG.join("\n\n");
+        console.log("[DIGIY POS CAISSE]", msg, data ?? "");
       }
 
       function safeStringify(v){
-        try{
-          return JSON.stringify(v, null, 2);
-        }catch(_){
-          return String(v);
-        }
+        try{ return JSON.stringify(v, null, 2); }
+        catch(_){ return String(v); }
       }
 
       function esc(v){
         return String(v ?? "")
-          .replaceAll("&", "&amp;")
-          .replaceAll("<", "&lt;")
-          .replaceAll(">", "&gt;")
-          .replaceAll('"', "&quot;")
-          .replaceAll("'", "&#039;");
-      }
-
-      function fmtDateTimeFR(iso){
-        if(!iso) return "—";
-        const d = new Date(iso);
-        if(Number.isNaN(d.getTime())) return "—";
-        return d.toLocaleString("fr-FR", {
-          day:"2-digit",
-          month:"2-digit",
-          year:"numeric",
-          hour:"2-digit",
-          minute:"2-digit"
-        });
-      }
-
-      function fmtMoney(x){
-        const n = Number(x);
-        if(!Number.isFinite(n)) return "0 FCFA";
-        return `${n.toLocaleString("fr-FR")} FCFA`;
-      }
-
-      function normPhone(v){
-        return String(v || "").replace(/[^\d]/g, "");
-      }
-
-      function normSlug(v){
-        return String(v || "").trim().toLowerCase();
-      }
-
-      function getParam(name){
-        return new URL(location.href).searchParams.get(name) || "";
-      }
-
-      function getGuardSession(){
-        if(typeof window.DIGIY_GUARD?.getSession === "function"){
-          try{ return window.DIGIY_GUARD.getSession() || {}; }
-          catch(_){}
-        }
-        return window.DIGIY_GUARD?.state || {};
-      }
-
-      function getResolvedSlug(){
-        const gs = getGuardSession();
-        return normSlug(
-          getParam("slug") ||
-          gs.slug ||
-          localStorage.getItem("digiy_pos_last_slug") ||
-          sessionStorage.getItem("digiy_pos_last_slug") ||
-          ""
-        );
-      }
-
-      function getResolvedPhone(){
-        const gs = getGuardSession();
-        return normPhone(
-          getParam("phone") ||
-          gs.phone ||
-          localStorage.getItem("digiy_pos_last_phone") ||
-          sessionStorage.getItem("digiy_pos_last_phone") ||
-          ""
-        );
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
       }
 
       function buildUrl(base, params){
@@ -1014,141 +916,77 @@
         return u.toString();
       }
 
-      function buildAbosUrl(slug, phone){
-        return buildUrl(ABOS_URL, {
-          module: MODULE_CODE,
-          base_module: MODULE_CODE,
-          slug: slug || "",
-          phone: phone || ""
-        });
+      function normPhone(v){
+        return String(v || "").replace(/[^\d]/g, "").slice(0, 15);
       }
 
-      function buildHallUrl(slug, phone){
-        return buildUrl(HALL_URL, {
-          slug: slug || "",
-          phone: phone || "",
-          module: MODULE_CODE
-        });
-      }
-
-      function buildDashboardUrl(slug, phone){
-        return buildUrl(DASHBOARD_URL, {
-          slug: slug || "",
-          phone: phone || "",
-          module: MODULE_CODE
-        });
-      }
-
-      function buildAdminUrl(slug, phone){
-        return buildUrl(ADMIN_URL, {
-          slug: slug || "",
-          phone: phone || "",
-          module: MODULE_CODE
-        });
-      }
-
-      function buildPinUrl(slug, phone){
-        return buildUrl(PIN_URL, {
-          slug: slug || "",
-          phone: phone || "",
-          module: MODULE_CODE,
-          target: "caisse"
-        });
-      }
-
-      function buildPublicUrl(slug){
-        return buildUrl(PUBLIC_URL, { slug: slug || "" });
-      }
-
-      function buildSupportUrl(slug, phone){
-        const text = [
-          "Bonjour JB,",
-          "j’ai besoin d’aide pour DIGIY POS · Caisse boutique.",
-          slug ? `Slug : ${slug}` : "",
-          phone ? `Téléphone : +${phone}` : ""
-        ].filter(Boolean).join(" ");
-        return `https://wa.me/${SUPPORT_PHONE}?text=${encodeURIComponent(text)}`;
-      }
-
-      function setBadge(id, label, kind){
-        const el = qs(id);
-        el.className = `badge ${kind || ""}`.trim();
-        el.textContent = label;
-      }
-
-      function setMainStatus(kind, title, sub){
-        const dot = qs("dotStatus");
-        dot.className = "dot";
-        if(kind === "ok") dot.classList.add("ok");
-        if(kind === "bad") dot.classList.add("bad");
-
-        qs("mainTitle").innerHTML = title;
-        qs("mainSub").textContent = sub;
-        qs("pillStatus").textContent =
-          kind === "ok" ? "Actif" :
-          kind === "bad" ? "Bloqué" :
-          "Contrôle";
+      function money(n){
+        const value = Number(n || 0);
+        if(!Number.isFinite(value)) return "0 F";
+        return `${value.toLocaleString("fr-FR")} F`;
       }
 
       function setNotice(kind, html){
-        const box = qs("statusNotice");
-        box.className = `notice ${kind || ""}`.trim();
+        const box = qs("noticeBox");
+        if(!box) return;
+        box.className = `notice ${kind || "info"}`;
         box.innerHTML = html;
       }
 
-      function setSessionNotice(kind, html){
-        const box = qs("sessionNotice");
-        box.className = `notice ${kind || ""}`.trim();
-        box.innerHTML = html;
+      function setBadge(id, text, tone){
+        const el = qs(id);
+        if(!el) return;
+        el.className = `badge ${tone || ""}`.trim();
+        el.textContent = text;
       }
 
       function cacheKey(slug){
-        return `digiy_pos_caisse_cache:${String(slug || "").trim().toLowerCase()}`;
+        return `digiy_pos_caisse_cache:${slug}`;
       }
 
       function draftKey(slug){
-        return `digiy_pos_caisse_draft:${String(slug || "").trim().toLowerCase()}`;
-      }
-
-      function readCache(slug){
-        try{
-          const raw = localStorage.getItem(cacheKey(slug));
-          if(!raw) return null;
-          const parsed = JSON.parse(raw);
-          if(!parsed || typeof parsed !== "object") return null;
-          return parsed;
-        }catch{
-          return null;
-        }
+        return `digiy_pos_caisse_draft:${slug}`;
       }
 
       function writeCache(slug, payload){
         try{
           localStorage.setItem(cacheKey(slug), JSON.stringify({
             ts: Date.now(),
-            data: payload
+            payload
           }));
         }catch(_){}
       }
 
-      function cacheIsFresh(cache){
-        if(!cache || !cache.ts) return false;
-        return (Date.now() - Number(cache.ts)) <= CACHE_TTL_MS;
+      function useCachedPayload(slug){
+        try{
+          const raw = localStorage.getItem(cacheKey(slug));
+          if(!raw) return null;
+          const parsed = JSON.parse(raw);
+          if(!parsed || !parsed.payload) return null;
+          const ts = Number(parsed.ts || 0);
+          return {
+            ts,
+            payload: parsed.payload,
+            fresh: !!ts && (Date.now() - ts) < CACHE_TTL_MS
+          };
+        }catch(_){
+          return null;
+        }
+      }
+
+      function writeDraft(slug, payload){
+        try{
+          localStorage.setItem(draftKey(slug), JSON.stringify(payload || {}));
+        }catch(_){}
       }
 
       function readDraft(slug){
         try{
           const raw = localStorage.getItem(draftKey(slug));
           return raw ? JSON.parse(raw) : null;
-        }catch{
+        }catch(_){
           return null;
         }
-      }
-
-      function writeDraft(slug, draft){
-        try{
-          localStorage.setItem(draftKey(slug), JSON.stringify(draft));
-        }catch(_){}
       }
 
       function clearDraft(slug){
@@ -1217,7 +1055,7 @@
             persistSession: false,
             autoRefreshToken: false,
             detectSessionInUrl: false,
-            storageKey: "digiy-pos-caisse-boutique-v3"
+            storageKey: "digiy-pos-caisse-boutique-v4"
           }
         });
         return SB_CLIENT;
@@ -1251,6 +1089,84 @@
         throw lastError || new Error(`RPC ${name} échouée`);
       }
 
+      function normalizeContext(ctx){
+        const s = ctx && typeof ctx === "object" ? ctx : {};
+        return {
+          display_name: s.display_name || s.store_name || "MON COMMERCE",
+          city: s.city || s.ville || "",
+          phone: normPhone(s.phone || ""),
+          whatsapp: normPhone(s.whatsapp || s.whatsapp_phone || ""),
+          wave_phone: normPhone(s.wave_phone || s.wave || ""),
+          address: s.address || s.adresse || "",
+          bio: s.bio || s.tagline || "",
+          tva_active: !!(s.tva_assujeti || s.tva_active),
+          tva_taux: s.tva_taux ?? 18
+        };
+      }
+
+      function mergeShopData(row, ctx){
+        const r = row || {};
+        const c = normalizeContext(ctx);
+
+        return {
+          nom_boutique: r.nom_boutique || c.display_name || "MON COMMERCE",
+          city: r.city || c.city || "",
+          telephone: normPhone(r.telephone || c.phone || STATE.phone || ""),
+          whatsapp_phone: normPhone(r.whatsapp_phone || c.whatsapp || STATE.phone || ""),
+          wave_phone: normPhone(r.wave_phone || c.wave_phone || ""),
+          adresse: r.adresse || c.address || "",
+          tagline: r.tagline || c.bio || "",
+          tva_active: typeof r.tva_active === "boolean" ? r.tva_active : !!c.tva_active,
+          tva_taux: Number(r.tva_taux ?? c.tva_taux ?? 18),
+          tva_mode: r.tva_mode || "excl"
+        };
+      }
+
+      function getUrlParam(name){
+        return new URL(location.href).searchParams.get(name);
+      }
+
+      function getResolvedSlug(){
+        const guardState = window.DIGIY_GUARD?.state || {};
+        return String(
+          getUrlParam("slug") ||
+          guardState.slug ||
+          guardState.session?.slug ||
+          guardState.identity?.slug ||
+          localStorage.getItem("digiy_pos_last_slug") ||
+          sessionStorage.getItem("digiy_pos_last_slug") ||
+          ""
+        ).trim().toLowerCase();
+      }
+
+      function getResolvedPhone(){
+        const guardState = window.DIGIY_GUARD?.state || {};
+        return normPhone(
+          getUrlParam("phone") ||
+          guardState.phone ||
+          guardState.session?.phone ||
+          guardState.identity?.phone ||
+          localStorage.getItem("digiy_pos_last_phone") ||
+          sessionStorage.getItem("digiy_pos_last_phone") ||
+          ""
+        );
+      }
+
+      async function resolvePhoneFromSlug(slug){
+        const client = ensureSupabase();
+        if(!slug) return "";
+
+        const { data, error } = await client
+          .from("digiy_subscriptions_public")
+          .select("phone,slug,module")
+          .eq("slug", slug)
+          .limit(1)
+          .maybeSingle();
+
+        if(error) throw error;
+        return normPhone(data?.phone || "");
+      }
+
       async function getAccess(phone){
         if(!phone) return false;
 
@@ -1267,49 +1183,165 @@
         return !!res;
       }
 
-      async function resolvePhoneFromSlug(slug){
+      async function getSubscription(phone){
+        try{
+          const data = await rpcFirstSuccess("digiy_get_subscription_status", [
+            { p_phone: phone, p_module: MODULE_CODE },
+            { phone, module: MODULE_CODE }
+          ]);
+          return data || null;
+        }catch(err){
+          log("digiy_get_subscription_status indisponible", { message: err?.message || String(err) });
+          return null;
+        }
+      }
+
+      async function getStoreContextFallback(slug){
+        try{
+          const data = await rpcFirstSuccess("pos_get_store_context_by_slug", [
+            { p_slug: slug },
+            { slug }
+          ]);
+          if(Array.isArray(data)) return data[0] || null;
+          return data || null;
+        }catch(err){
+          log("pos_get_store_context_by_slug indisponible", { message: err?.message || String(err) });
+          return null;
+        }
+      }
+
+      async function loadCaisseSettingsFallback(slug, phone){
         const client = ensureSupabase();
-        if(!slug) return "";
+        const tries = [
+          () => client.from("caisse_settings").select("*").eq("slug", slug).limit(1).maybeSingle(),
+          () => client.from("caisse_settings").select("*").eq("owner_id", phone).limit(1).maybeSingle()
+        ];
 
-        const { data, error } = await client
-          .from("digiy_subscriptions_public")
-          .select("phone,slug")
-          .eq("slug", slug)
-          .limit(1)
-          .maybeSingle();
+        for(const run of tries){
+          try{
+            const { data, error } = await run();
+            if(!error && data) return data;
+            if(error){
+              log("Lecture caisse_settings erreur", {
+                message: error.message,
+                details: error.details,
+                hint: error.hint
+              });
+            }
+          }catch(err){
+            log("Lecture caisse_settings exception", { message: err?.message || String(err) });
+          }
+        }
 
-        if(error) throw error;
-        return normPhone(data?.phone || "");
+        return null;
       }
 
       async function fetchLivePayload(slug){
-        const caisse = await rpcFirstSuccess("digiy_pos_get_caisse_by_slug", [
-          { p_slug: slug },
-          { slug }
-        ]);
-
-        if(!caisse || caisse.ok !== true){
-          throw new Error(caisse?.error || caisse?.reason || "caisse_not_available");
-        }
-
-        let phone = normPhone(
-          caisse?.store?.owner_phone ||
-          caisse?.profile?.owner_phone ||
-          caisse?.profile?.whatsapp ||
-          STATE.phone ||
-          ""
-        );
-
+        let phone = STATE.phone || "";
         if(!phone){
           phone = await resolvePhoneFromSlug(slug);
         }
 
         const access = await getAccess(phone);
+        if(!access){
+          throw new Error("forbidden");
+        }
+
+        let subscription = null;
+        try{
+          subscription = await getSubscription(phone);
+        }catch(_){}
+
+        try{
+          const caisse = await rpcFirstSuccess("digiy_pos_get_caisse_by_slug", [
+            { p_slug: slug },
+            { slug }
+          ]);
+
+          if(caisse && caisse.ok === true){
+            const resolvedPhone = normPhone(
+              caisse?.store?.owner_phone ||
+              caisse?.profile?.owner_phone ||
+              caisse?.profile?.whatsapp ||
+              phone ||
+              ""
+            ) || phone;
+
+            const payload = {
+              ...caisse,
+              slug: caisse.slug || slug,
+              workspace_slug: caisse.workspace_slug || slug,
+              __phone: resolvedPhone,
+              __has_access: true,
+              __subscription: subscription,
+              __fetched_at: new Date().toISOString()
+            };
+
+            writeCache(slug, payload);
+            localStorage.setItem("digiy_pos_last_slug", slug);
+            sessionStorage.setItem("digiy_pos_last_slug", slug);
+            if(resolvedPhone){
+              localStorage.setItem("digiy_pos_last_phone", resolvedPhone);
+              sessionStorage.setItem("digiy_pos_last_phone", resolvedPhone);
+            }
+
+            return payload;
+          }
+
+          log("digiy_pos_get_caisse_by_slug fallback", caisse);
+        }catch(err){
+          log("digiy_pos_get_caisse_by_slug KO, fallback contexte", {
+            message: err?.message || String(err)
+          });
+        }
+
+        const ctx = await getStoreContextFallback(slug);
+        const row = await loadCaisseSettingsFallback(slug, phone);
+
+        if(!ctx && !row){
+          throw new Error("profile_not_found");
+        }
+
+        const merged = mergeShopData(row, ctx);
+        const displayName = merged.nom_boutique || "MON COMMERCE";
+        const city = merged.city || "";
+        const whatsapp = normPhone(merged.whatsapp_phone || phone);
+        const wavePhone = normPhone(merged.wave_phone || "");
 
         const payload = {
-          ...caisse,
+          ok: true,
+          slug,
+          workspace_slug: slug,
+          shop_name: displayName,
+          profile: {
+            display_name: displayName,
+            city,
+            whatsapp,
+            address: merged.adresse || "",
+            bio: merged.tagline || ""
+          },
+          store: {
+            name: displayName,
+            city,
+            owner_phone: phone,
+            whatsapp_phone: whatsapp,
+            wave_phone: wavePhone,
+            address: merged.adresse || "",
+            tagline: merged.tagline || "",
+            store_id: row?.id || row?.store_id || "LOCAL",
+            subscription_status: subscription?.status || subscription?.plan_status || "active"
+          },
+          stats: {
+            active_products: 0,
+            total_products: 0,
+            total_sales: 0,
+            total_revenue: 0,
+            today_sales: 0,
+            today_revenue: 0
+          },
           __phone: phone,
-          __has_access: !!access,
+          __has_access: true,
+          __subscription: subscription,
           __fetched_at: new Date().toISOString()
         };
 
@@ -1324,183 +1356,116 @@
         return payload;
       }
 
-      function useCachedPayload(slug){
-        const cache = readCache(slug);
-        if(!cache || !cache.data) return null;
-        return {
-          payload: cache.data,
-          ts: cache.ts,
-          fresh: cacheIsFresh(cache)
-        };
-      }
+      function paintPills(access, storeName){
+        const dot = qs("dotAccess");
+        const pill = qs("pillAccess");
+        const pillStore = qs("pillStore");
 
-      function wireNavLinks(slug, phone){
-        qs("btnHall").href = buildHallUrl(slug, phone);
-        qs("btnDashboard").href = buildDashboardUrl(slug, phone);
-        qs("btnAdmin").href = buildAdminUrl(slug, phone);
-        qs("btnPin").href = buildPinUrl(slug, phone);
-        qs("btnAbos").href = buildAbosUrl(slug, phone);
-        qs("btnSupport").href = buildSupportUrl(slug, phone);
-        qs("btnPublic").href = buildPublicUrl(slug);
-
-        qs("btnBlockedPin").href = buildPinUrl(slug, phone);
-        qs("btnBlockedAbos").href = buildAbosUrl(slug, phone);
-        qs("btnBlockedDashboard").href = buildDashboardUrl(slug, phone);
-      }
-
-      function showBlocked(title, text){
-        qs("mainContent").style.display = "none";
-        qs("blockedShell").style.display = "grid";
-        qs("blockedTitle").textContent = title;
-        qs("blockedText").innerHTML = text;
-      }
-
-      function showMain(){
-        qs("blockedShell").style.display = "none";
-        qs("mainContent").style.display = "block";
+        dot.className = `dot ${access ? "ok" : "bad"}`;
+        pill.textContent = access ? "ACCÈS OK" : "ACCÈS BLOQUÉ";
+        pillStore.textContent = storeName || "MON COMMERCE";
       }
 
       function renderBlocked(slug, phone, reason){
-        STATE.slug = slug || "";
-        STATE.phone = phone || "";
-        STATE.access = false;
-        STATE.caisse = null;
-        STATE.source = "none";
-        STATE.cachedAt = null;
+        qs("liveShell").style.display = "none";
+        qs("blockedShell").style.display = "grid";
 
-        wireNavLinks(slug, phone);
+        qs("blockedText").innerHTML = `
+          <div><b>Slug :</b> ${esc(slug || "—")}</div>
+          <div style="margin-top:8px"><b>Téléphone :</b> ${esc(phone ? `+${phone}` : "—")}</div>
+          <div style="margin-top:8px"><b>Source :</b> —</div>
+          <div style="margin-top:8px"><b>Statut :</b> Bloqué</div>
+          <div style="margin-top:12px"><b>${esc(reason || "Accès refusé")}</b></div>
+          <div style="margin-top:12px">Passe par le PIN ou retourne au dashboard pro pour reconstruire la session proprement.</div>
+        `;
 
-        qs("pillSlug").textContent = slug || "—";
-        qs("pillPhone").textContent = phone ? `+${phone}` : "—";
-        qs("pillSource").textContent = "—";
+        const q = { slug: slug || "", phone: phone || "", module: MODULE_CODE };
+        qs("btnBlockedPin").href = buildUrl(PIN_URL, { ...q, target: "caisse" });
+        qs("btnBlockedAbos").href = buildUrl(ABOS_URL, q);
+        qs("btnBlockedDash").href = buildUrl(DASHBOARD_URL, q);
 
-        qs("storeName").textContent = "—";
-        qs("storeCity").textContent = "—";
-        qs("activeProductsHero").textContent = "0";
-        qs("todayRevenueHero").textContent = "0 FCFA";
-
-        qs("kpiProductsTotal").textContent = "0";
-        qs("kpiSalesTotal").textContent = "0";
-        qs("kpiRevenueTotal").textContent = "0 FCFA";
-        qs("kpiSalesToday").textContent = "0";
-        qs("kpiRevenueToday").textContent = "0 FCFA";
-        qs("kpiStoreId").textContent = "—";
-
-        setMainStatus(
-          "bad",
-          `La caisse <span class="accent">reste fermée</span>`,
-          "Le travail réel reste protégé tant que l’accès POS n’est pas validé."
-        );
-
-        setNotice(
-          "bad",
-          `<div><b>Accès fermé.</b></div><div style="margin-top:6px">${esc(reason || "Le contexte POS n’est pas accessible.")}</div>`
-        );
-
-        setSessionNotice(
-          "bad",
-          `<div><b>Session non ouverte.</b></div><div style="margin-top:6px">Contrôle du slug ou de l’accès nécessaire.</div>`
-        );
-
-        setBadge("badgeAccess", "ACCÈS FERMÉ", "bad");
-        setBadge("badgeStore", "BOUTIQUE —", "warn");
-        setBadge("badgeCache", "CACHE —", "");
-
-        qs("storeContextBox").innerHTML = `<span class="empty">Contexte boutique non disponible.</span>`;
-        showBlocked(
-          "Caisse protégée",
-          `${esc(reason || "Accès POS non valide.")}<br><br>Passe par le <b>PIN</b> ou retourne au <b>dashboard pro</b> pour reconstruire la session proprement.`
-        );
+        paintPills(false, "Boutique fermée");
+        reveal();
       }
 
-      function renderReady(payload, source, cachedAt){
-        const slug = String(payload.workspace_slug || payload.slug || STATE.slug || "").trim();
-        const phone = normPhone(payload.__phone || payload?.store?.owner_phone || payload?.profile?.whatsapp || STATE.phone || "");
-        const profile = payload.profile || {};
-        const store = payload.store || {};
-        const stats = payload.stats || {};
-        const shopName = payload.shop_name || profile.display_name || store.name || "Caisse boutique";
+      function renderReady(payload, source, fetchedAt){
+        qs("blockedShell").style.display = "none";
+        qs("liveShell").style.display = "block";
 
-        STATE.slug = slug;
-        STATE.phone = phone;
-        STATE.access = !!payload.__has_access;
         STATE.caisse = payload;
-        STATE.source = source;
-        STATE.cachedAt = cachedAt || null;
+        STATE.source = source || "live";
+        STATE.cachedAt = fetchedAt || null;
+        STATE.slug = String(payload.slug || payload.workspace_slug || STATE.slug || "").toLowerCase();
+        STATE.phone = normPhone(payload.__phone || payload.store?.owner_phone || STATE.phone || "");
+        STATE.access = !!payload.__has_access;
 
-        wireNavLinks(slug, phone);
+        const store = payload.store || {};
+        const profile = payload.profile || {};
+        const stats = payload.stats || {};
+        const subscription = payload.__subscription || {};
 
-        qs("pillSlug").textContent = slug || "—";
-        qs("pillPhone").textContent = phone ? `+${phone}` : "—";
-        qs("pillSource").textContent = source === "cache" ? "localStorage" : "live";
+        const shopName =
+          payload.shop_name ||
+          store.name ||
+          profile.display_name ||
+          "MON COMMERCE";
 
-        qs("storeName").textContent = shopName;
-        qs("storeCity").textContent = store.city || profile.city || "—";
-        qs("activeProductsHero").textContent = String(Number(stats.active_products || 0));
-        qs("todayRevenueHero").textContent = fmtMoney(stats.today_revenue || 0);
+        const city =
+          store.city ||
+          profile.city ||
+          "—";
 
-        qs("kpiProductsTotal").textContent = String(Number(stats.total_products || 0));
-        qs("kpiSalesTotal").textContent = String(Number(stats.total_sales || 0));
-        qs("kpiRevenueTotal").textContent = fmtMoney(stats.total_revenue || 0);
-        qs("kpiSalesToday").textContent = String(Number(stats.today_sales || 0));
-        qs("kpiRevenueToday").textContent = fmtMoney(stats.today_revenue || 0);
-        qs("kpiStoreId").textContent = store.store_id || "—";
+        qs("metaSlug").textContent = STATE.slug || "—";
+        qs("metaPhone").textContent = STATE.phone ? `+${STATE.phone}` : "—";
+        qs("metaStoreName").textContent = shopName;
+        qs("metaSource").textContent = source === "cache" ? "cache" : "live";
 
-        if(!payload.__has_access){
-          renderBlocked(slug, phone, "Le store existe, mais l’accès POS n’est pas validé.");
-          return;
-        }
+        paintPills(STATE.access, shopName);
 
-        showMain();
-
-        setMainStatus(
-          "ok",
-          `La caisse <span class="accent">est ouverte</span>`,
-          `${shopName} est prêt. Lecture ${source === "cache" ? "locale" : "directe"} de la caisse boutique.`
-        );
-
-        const syncText = source === "cache"
-          ? `Lecture locale depuis le cache du navigateur. Dernière synchro : <b>${esc(fmtDateTimeFR(cachedAt || payload.__fetched_at))}</b>.`
-          : `Lecture directe validée. Dernière synchro : <b>${esc(fmtDateTimeFR(payload.__fetched_at))}</b>.`;
-
-        setNotice(
-          source === "cache" ? "info" : "ok",
-          `<div><b>Caisse boutique prête.</b></div><div style="margin-top:6px">${syncText}</div>`
-        );
-
-        setSessionNotice(
-          source === "cache" ? "info" : "ok",
-          `<div><b>Session active.</b></div><div style="margin-top:6px">Boutique : <b>${esc(shopName)}</b> • Store ID : <b>${esc(store.store_id || "—")}</b> • Publication : <b>${payload.is_published ? "Oui" : "Non"}</b></div>`
-        );
-
-        setBadge("badgeAccess", "ACCÈS OK", "ok");
+        setBadge("badgeAccess", STATE.access ? "ACCÈS OK" : "ACCÈS BLOQUÉ", STATE.access ? "ok" : "bad");
         setBadge("badgeStore", (store.store_id || shopName) ? "BOUTIQUE OK" : "BOUTIQUE MINIMALE", (store.store_id || shopName) ? "ok" : "warn");
         setBadge("badgeCache", source === "cache" ? "CACHE LOCAL" : "LIVE", source === "cache" ? "info" : "ok");
+        setBadge("badgePlan", subscription?.plan || subscription?.plan_code || subscription?.status || "PLAN ACTIF", "info");
 
         qs("storeContextBox").innerHTML = `
           <div class="notice ok">
             <div><b>Nom</b> : ${esc(shopName)}</div>
-            <div style="margin-top:6px"><b>Slug</b> : ${esc(slug || "—")}</div>
+            <div style="margin-top:6px"><b>Slug</b> : ${esc(STATE.slug || "—")}</div>
             <div style="margin-top:6px"><b>Store ID</b> : ${esc(store.store_id || "—")}</div>
-            <div style="margin-top:6px"><b>Ville</b> : ${esc(store.city || profile.city || "—")}</div>
+            <div style="margin-top:6px"><b>Ville</b> : ${esc(city || "—")}</div>
             <div style="margin-top:6px"><b>Adresse</b> : ${esc(store.address || profile.address || "—")}</div>
-            <div style="margin-top:6px"><b>WhatsApp</b> : ${esc(phone ? `+${phone}` : "—")}</div>
-            <div style="margin-top:6px"><b>Statut store</b> : ${esc(store.subscription_status || "—")}</div>
+            <div style="margin-top:6px"><b>WhatsApp</b> : ${esc(STATE.phone ? `+${STATE.phone}` : "—")}</div>
+            <div style="margin-top:6px"><b>Statut store</b> : ${esc(store.subscription_status || subscription?.status || "—")}</div>
           </div>
         `;
+
+        qs("kpiProducts").textContent = String(stats.active_products ?? stats.total_products ?? 0);
+        qs("kpiSales").textContent = String(stats.today_sales ?? stats.total_sales ?? 0);
+        qs("kpiRevenue").textContent = money(stats.today_revenue ?? stats.total_revenue ?? 0);
+
+        const freshness = fetchedAt ? new Date(fetchedAt).toLocaleString("fr-FR") : "maintenant";
+        setNotice(
+          source === "cache" ? "warn" : "ok",
+          `
+            <div><b>${source === "cache" ? "Lecture cache locale" : "Lecture live active"}</b></div>
+            <div style="margin-top:6px">Boutique : <b>${esc(shopName)}</b></div>
+            <div style="margin-top:6px">Mise à jour : <b>${esc(freshness)}</b></div>
+          `
+        );
+
+        wireNav();
+        restoreDraft();
+        renderSalePreview();
+        reveal();
       }
 
-      function loadPayloadFromCache(slug){
-        const cached = useCachedPayload(slug);
-        if(!cached) return false;
+      function wireNav(){
+        const q = { slug: STATE.slug || "", phone: STATE.phone || "", module: MODULE_CODE };
 
-        renderReady(cached.payload, "cache", cached.ts);
-        log("Cache local utilisé", {
-          slug,
-          fresh: cached.fresh,
-          cached_at: new Date(cached.ts).toISOString()
-        });
-        return true;
+        qs("btnGoPin").href = buildUrl(PIN_URL, { ...q, target: "caisse" });
+        qs("btnGoDashboard").href = buildUrl(DASHBOARD_URL, q);
+        qs("btnGoAdmin").href = buildUrl(ADMIN_URL, q);
+        qs("btnGoHall").href = buildUrl(HALL_URL, q);
       }
 
       async function hydrate(forceLive = false){
@@ -1539,7 +1504,6 @@
             slug,
             cached_at: new Date(cached.ts).toISOString()
           });
-          return;
         }
 
         try{
@@ -1597,112 +1561,71 @@
         }
 
         qs("salePreview").innerHTML = `
-          <div class="notice ok">
-            <div><b>Montant</b> : ${esc(amount ? fmtMoney(amount) : "—")}</div>
+          <div class="notice info" style="margin-top:0">
+            <div><b>Montant</b> : ${esc(amount ? money(amount) : "—")}</div>
             <div style="margin-top:6px"><b>Libellé</b> : ${esc(label || "—")}</div>
-            <div style="margin-top:6px"><b>Paiement</b> : ${esc(method || "—")}</div>
-            <div style="margin-top:8px" class="muted">Préparation locale OK. La vraie écriture attend la RPC métier d’encaissement.</div>
+            <div style="margin-top:6px"><b>Paiement</b> : ${esc(method || "cash")}</div>
+            <div style="margin-top:6px"><b>Slug</b> : ${esc(STATE.slug || "—")}</div>
           </div>
         `;
       }
 
-      function bindSale(){
-        ["saleAmount","saleLabel"].forEach(id => {
-          qs(id).addEventListener("input", () => {
-            persistDraft();
-            renderSalePreview();
-          });
-        });
-
-        qs("saleMethod").addEventListener("change", () => {
-          persistDraft();
-          renderSalePreview();
-        });
-
-        qs("btnSaleReady").addEventListener("click", () => {
-          renderSalePreview();
-
-          if(!STATE.access){
-            alert("Accès POS non validé. On ne prépare pas une vente sur une porte fermée, frérot.");
-            return;
-          }
-
-          const rawAmount = Number(qs("saleAmount").value || 0);
-          if(!Number.isFinite(rawAmount) || rawAmount <= 0){
-            alert("Entre un montant propre avant de préparer la vente.");
-            qs("saleAmount").focus();
-            return;
-          }
-
-          alert("Préparation OK. La caisse boutique est vivante. Prochaine étape : brancher la RPC métier d’encaissement.");
-        });
-
-        qs("btnClearSale").addEventListener("click", () => {
-          qs("saleAmount").value = "";
-          qs("saleLabel").value = "";
-          qs("saleMethod").value = "cash";
-          clearDraft(STATE.slug || getResolvedSlug());
-          renderSalePreview();
-        });
+      function clearSaleForm(){
+        qs("saleAmount").value = "";
+        qs("saleLabel").value = "";
+        qs("saleMethod").value = "cash";
+        if(STATE.slug) clearDraft(STATE.slug);
+        renderSalePreview();
       }
 
-      function bindActions(){
-        qs("btnCheck").addEventListener("click", async () => {
-          qs("btnCheck").disabled = true;
-          qs("btnCheck").textContent = "Contrôle…";
-          try{
-            await hydrate(true);
-          } finally {
-            qs("btnCheck").disabled = false;
-            qs("btnCheck").textContent = "✅ Vérifier mon accès";
-          }
-        });
+      function prepareSale(){
+        persistDraft();
+        renderSalePreview();
 
-        qs("btnReloadContext").addEventListener("click", async () => {
-          qs("btnReloadContext").disabled = true;
-          qs("btnReloadContext").textContent = "Rechargement…";
-          try{
-            await hydrate(true);
-          } finally {
-            qs("btnReloadContext").disabled = false;
-            qs("btnReloadContext").textContent = "🔄 Recharger contexte";
-          }
-        });
+        const amount = String(qs("saleAmount").value || "").trim();
+        const label = String(qs("saleLabel").value || "").trim();
+        if(!amount || !label){
+          qs("saleHelper").innerHTML = `Complète le montant et le libellé pour préparer une vente propre.`;
+          return;
+        }
 
-        qs("btnUseCache").addEventListener("click", () => {
-          const slug = getResolvedSlug();
-          const ok = loadPayloadFromCache(slug);
-          if(!ok){
-            setNotice(
-              "warn",
-              `<div><b>Aucun cache local trouvé.</b></div><div style="margin-top:6px">Il faut d’abord faire une lecture live au moins une fois.</div>`
-            );
-          }
-        });
+        qs("saleHelper").innerHTML = `
+          Préparation enregistrée localement pour <b>${esc(STATE.slug || "—")}</b>.
+          Prochain cran : brancher la RPC métier d’encaissement réel.
+        `;
       }
 
-      async function init(){
+      async function boot(){
         try{
+          log("Boot caisse POS", {
+            href: location.href,
+            module: MODULE_CODE
+          });
+
           await awaitGuardReady();
           await bootGuard();
+          ensureSupabase();
 
-          log("Initialisation Caisse boutique");
-          wireNavLinks("", "");
-          bindActions();
-          bindSale();
-          restoreDraft();
-          renderSalePreview();
+          qs("btnReloadTop").addEventListener("click", () => hydrate(true));
+          qs("btnSaleReady").addEventListener("click", prepareSale);
+          qs("btnClearSale").addEventListener("click", clearSaleForm);
+          ["saleAmount", "saleLabel", "saleMethod"].forEach(id => {
+            qs(id).addEventListener("input", () => {
+              persistDraft();
+              renderSalePreview();
+            });
+          });
+
           await hydrate(false);
         }catch(err){
-          log("Initialisation fatale", { message: err?.message || String(err) });
-          renderBlocked("", "", err?.message || "Impossible d’initialiser la caisse boutique");
-          setNotice("bad", `<div><b>Erreur fatale.</b></div><div style="margin-top:6px">${esc(err?.message || String(err))}</div>`);
+          log("Boot général KO", { message: err?.message || String(err) });
+          renderBlocked(getResolvedSlug(), getResolvedPhone(), err?.message || "Erreur de boot");
         } finally {
           reveal();
         }
       }
 
-      init();
+      boot();
     })();
   </script>
 </body>
