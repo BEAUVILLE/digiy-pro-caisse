@@ -1,1044 +1,668 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <meta name="theme-color" content="#07140f"/>
-  <title>MON COMMERCE — PIN d’accès PRO</title>
-  <meta
-    name="description"
-    content="MON COMMERCE by DIGIY — accès PIN sécurisé pour ouvrir le dashboard pro, la caisse ou l’admin POS."
-  />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#08111f" />
+  <title>MON COMMERCE — Accès PIN</title>
+  <meta name="description" content="Accès sécurisé MON COMMERCE / DIGIY CAISSE PRO par téléphone + PIN." />
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
     window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
     window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
     window.DIGIY_MODULE = "POS";
-
-    function digiyBasePath(){
-      const parts = location.pathname.split("/").filter(Boolean);
-      const isGh = /\.github\.io$/i.test(location.hostname);
-      if(isGh && parts.length > 0) return "/" + parts[0] + "/";
-      return "/";
-    }
-
-    function digiyLocal(path){
-      path = String(path || "").replace(/^\/+/, "");
-      return digiyBasePath() + path;
-    }
+    window.DIGIY_LOGIN_URL = "./pin.html";
+    window.DIGIY_PAY_URL = "https://commencer-a-payer.digiylyfe.com/";
   </script>
 
   <style>
     :root{
-      --bg:#04110d;
-      --bg2:#071a14;
-      --card:rgba(8,24,18,.82);
-      --card2:rgba(9,28,21,.92);
+      --bg:#06101d;
+      --bg2:#020617;
+      --card:rgba(255,255,255,.05);
       --line:rgba(255,255,255,.10);
-      --line2:rgba(255,255,255,.15);
-      --text:#f7fbf8;
-      --muted:#bfd3c8;
+      --text:#f8fafc;
+      --muted:#cbd5e1;
       --gold:#facc15;
       --gold2:#f59e0b;
-      --ok:#22c55e;
-      --bad:#fb7185;
-      --warn:#f59e0b;
-      --info:#60a5fa;
-      --shadow:0 22px 56px rgba(0,0,0,.32);
-      --shadow-soft:0 14px 34px rgba(0,0,0,.22);
+      --green:#22c55e;
+      --red:#ef4444;
+      --blue:#60a5fa;
+      --radius:24px;
+      --shadow:0 20px 60px rgba(0,0,0,.35);
+      --max:560px;
     }
-
     *{box-sizing:border-box}
     html,body{margin:0;padding:0}
     body{
-      min-height:100vh;
-      display:grid;
-      place-items:center;
-      padding:18px;
+      min-height:100dvh;
       color:var(--text);
-      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(250,204,21,.10), transparent 28%),
-        radial-gradient(circle at top right, rgba(96,165,250,.08), transparent 22%),
-        linear-gradient(180deg, #07140f 0%, #04110d 42%, #020906 100%);
-    }
-
-    a{text-decoration:none;color:inherit}
-    button,input{font:inherit}
-
-    .floating-site-btn{
-      position:fixed;
-      left:16px;
-      bottom:calc(16px + env(safe-area-inset-bottom, 0px));
-      z-index:90;
-      display:inline-flex;
+        radial-gradient(circle at top, rgba(250,204,21,.10), transparent 28%),
+        linear-gradient(180deg,var(--bg),var(--bg2));
+      display:flex;
       align-items:center;
       justify-content:center;
-      gap:8px;
-      min-height:48px;
-      padding:14px 16px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(5,16,12,.88);
-      backdrop-filter:blur(10px);
-      color:var(--text);
-      font-size:13px;
-      font-weight:900;
-      letter-spacing:.2px;
-      box-shadow:0 16px 36px rgba(0,0,0,.28);
-      transition:transform .14s ease, border-color .14s ease, background .14s ease;
+      padding:20px;
     }
-    .floating-site-btn:hover{
-      transform:translateY(-1px);
-      border-color:rgba(250,204,21,.28);
-      background:rgba(8,20,15,.94);
-    }
-
+    .wrap{width:100%;max-width:var(--max)}
     .card{
-      width:min(700px, 96vw);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)),
-        var(--card);
+      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
       border:1px solid var(--line);
-      border-radius:30px;
+      border-radius:var(--radius);
       box-shadow:var(--shadow);
-      padding:22px;
       overflow:hidden;
-      position:relative;
+      backdrop-filter:blur(12px);
     }
-
-    .card::after{
-      content:"";
-      position:absolute;
-      right:-90px;
-      bottom:-110px;
-      width:240px;
-      height:240px;
-      border-radius:999px;
-      background:radial-gradient(circle, rgba(34,197,94,.14), transparent 70%);
-      pointer-events:none;
+    .hero{
+      padding:22px 22px 10px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      background:radial-gradient(circle at top right, rgba(250,204,21,.14), transparent 36%);
     }
-
-    .top{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width:0;
-    }
-
-    .ico{
-      width:52px;
-      height:52px;
-      border-radius:18px;
-      display:grid;
-      place-items:center;
-      background:linear-gradient(135deg, rgba(250,204,21,.16), rgba(245,158,11,.08));
-      border:1px solid rgba(250,204,21,.18);
-      box-shadow:0 16px 34px rgba(250,204,21,.10);
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:50px;height:50px;border-radius:16px;display:grid;place-items:center;
+      background:linear-gradient(135deg,rgba(250,204,21,.18),rgba(96,165,250,.14));
+      border:1px solid rgba(250,204,21,.22);
       font-size:24px;
-      flex:0 0 auto;
     }
-
-    .kicker{
-      color:var(--gold);
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      font-size:12px;
-      margin-bottom:3px;
-    }
-
-    .title{
-      font-size:22px;
-      font-weight:1000;
-      line-height:1.05;
-      letter-spacing:-.02em;
-    }
-
-    .sub{
-      font-size:13px;
-      color:var(--muted);
-      margin-top:4px;
-      line-height:1.5;
-      font-weight:700;
-    }
-
-    .pill{
-      border:1px solid var(--line);
-      background:rgba(250,204,21,.10);
-      padding:8px 11px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:950;
-      white-space:nowrap;
-      color:var(--gold);
-    }
-
-    .sep{
-      height:1px;
-      background:var(--line);
-      margin:16px 0;
-    }
-
-    .mini{
-      font-size:13px;
-      color:var(--muted);
-      line-height:1.65;
-      font-weight:700;
-    }
-
-    .mini b{
-      color:var(--text);
-      font-weight:950;
-    }
-
-    .topMeta{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-      margin-top:12px;
-    }
-
-    .metaBox{
-      min-width:0;
-      padding:12px;
-      border-radius:18px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.08);
-    }
-
-    .metaLabel{
-      color:var(--muted);
-      font-size:11px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      font-weight:900;
-    }
-
-    .metaValue{
-      margin-top:6px;
-      font-size:14px;
-      font-weight:950;
-      word-break:break-word;
-    }
-
-    .navRow{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:14px;
-    }
-
-    .btn,
-    .btn-outline,
-    .btn-ghost{
-      appearance:none;
-      border:none;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      min-height:46px;
-      padding:12px 16px;
-      border-radius:999px;
-      font-weight:900;
-      font-size:13px;
-      letter-spacing:.02em;
-      white-space:nowrap;
-      transition:transform .12s ease, opacity .12s ease, background .12s ease, border-color .12s ease;
-    }
-
-    .btn:hover,
-    .btn-outline:hover,
-    .btn-ghost:hover{transform:translateY(-1px)}
-
-    .btn:disabled,
-    .btn-outline:disabled,
-    .btn-ghost:disabled{
-      opacity:.6;
-      cursor:not-allowed;
-      transform:none;
-    }
-
-    .btn{
-      background:linear-gradient(135deg,var(--ok),var(--gold));
-      color:#062015;
-      box-shadow:0 14px 30px rgba(34,197,94,.18);
-    }
-
-    .btn-outline{
-      background:rgba(255,255,255,.04);
-      border:1px solid var(--line2);
-      color:var(--text);
-    }
-
-    .btn-ghost{
-      background:transparent;
-      border:1px solid var(--line2);
-      color:var(--muted);
-    }
-
-    .rescueBox,
-    .pinBox{
-      border:1px solid var(--line);
-      border-radius:20px;
-      padding:14px;
-      background:rgba(0,0,0,.12);
-      margin-top:16px;
-    }
-
-    .sectionTitle{
-      font-size:16px;
-      font-weight:950;
-      margin-bottom:6px;
-      line-height:1.2;
-    }
-
-    .sectionSub{
-      font-size:13px;
-      color:var(--muted);
-      line-height:1.65;
-      font-weight:700;
-    }
-
-    .row{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:10px;
-    }
-
-    .row > *{
-      flex:1;
-      min-width:220px;
-    }
-
-    label{
-      display:block;
-      font-size:12px;
-      color:var(--muted);
-      margin:12px 0 7px;
-      font-weight:900;
-      letter-spacing:.04em;
-      text-transform:uppercase;
-    }
-
+    h1{margin:0;font-size:1.1rem}
+    .sub{margin:4px 0 0;color:var(--muted);font-size:.92rem}
+    .body{padding:20px}
+    .intro{margin:0 0 16px;color:var(--muted);line-height:1.5}
+    .field{margin-bottom:12px}
+    label{display:block;margin-bottom:7px;font-weight:700;font-size:.92rem}
     input{
-      width:100%;
-      padding:14px;
-      border-radius:16px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      font-size:15px;
-      font-weight:800;
-      outline:none;
+      width:100%;min-height:52px;border-radius:16px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);color:var(--text);padding:0 14px;font-size:1rem;outline:none;
     }
-
-    #pin{
-      letter-spacing:.18em;
-      font-size:19px;
-      text-align:center;
+    input:focus{border-color:rgba(250,204,21,.55);box-shadow:0 0 0 4px rgba(250,204,21,.12)}
+    .pin-row{display:flex;gap:10px}
+    .pin-row input{flex:1;text-align:center;letter-spacing:.25em;font-weight:800}
+    .mini{
+      min-width:56px;min-height:52px;border:none;border-radius:16px;cursor:pointer;
+      background:rgba(255,255,255,.06);color:var(--text);font-size:1rem;font-weight:800;
     }
-
-    .msg{
-      margin-top:12px;
-      font-size:13px;
-      color:var(--muted);
-      line-height:1.6;
-      font-weight:700;
+    .actions{display:grid;gap:10px;margin-top:16px}
+    .btn{
+      appearance:none;border:none;min-height:54px;border-radius:18px;padding:0 16px;
+      text-decoration:none;display:flex;align-items:center;justify-content:center;cursor:pointer;
+      font-weight:800;font-size:1rem;
     }
-
-    .ok{color:var(--ok);font-weight:950}
-    .bad{color:var(--bad);font-weight:950}
-    .warn{color:var(--warn);font-weight:950}
-    .info{color:var(--info);font-weight:950}
-
-    .diag{
-      margin-top:14px;
-      background:#081119;
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:12px;
-      font:12px/1.58 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      color:#d6e0ff;
-      white-space:pre-wrap;
-      word-break:break-word;
-      max-height:220px;
-      overflow:auto;
+    .btn.primary{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111827}
+    .btn.secondary{background:rgba(255,255,255,.06);color:var(--text);border:1px solid rgba(255,255,255,.08)}
+    .btn.ghost{background:transparent;color:var(--blue);border:1px solid rgba(96,165,250,.25)}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+    .status{
+      margin-top:16px;border-radius:16px;padding:12px 14px;min-height:48px;line-height:1.5;
+      background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);color:var(--muted);
+      white-space:pre-line;
     }
-
-    @media(max-width:700px){
-      body{padding:12px}
-      .card{padding:18px}
-      .topMeta{grid-template-columns:1fr}
-      .floating-site-btn{
-        left:12px;
-        right:12px;
-        bottom:calc(12px + env(safe-area-inset-bottom, 0px));
-        min-height:46px;
-        padding:14px 14px;
-        font-size:12px;
-      }
+    .status.ok{background:rgba(34,197,94,.10);border-color:rgba(34,197,94,.28);color:#dcfce7}
+    .status.err{background:rgba(239,68,68,.10);border-color:rgba(239,68,68,.28);color:#fee2e2}
+    .meta{
+      display:grid;gap:8px;margin-top:16px;padding:14px;border-radius:18px;
+      background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06)
     }
+    .row{display:flex;justify-content:space-between;gap:12px}
+    .k{color:var(--muted)}
+    .v{font-weight:700;text-align:right;word-break:break-word}
+    .hidden{display:none!important}
+    .foot{padding:0 20px 20px;text-align:center;color:#94a3b8;font-size:.84rem}
+    @media (max-width:560px){.grid{grid-template-columns:1fr}}
   </style>
 </head>
-
 <body>
-  <a
-    class="floating-site-btn"
-    href="./index.html"
-    aria-label="Retour à la vitrine MON COMMERCE"
-    title="Retour à la vitrine MON COMMERCE"
-  >⬅️ Retour vitrine MON COMMERCE</a>
-
-  <div class="card">
-    <div class="top">
-      <div class="brand">
-        <div class="ico">🔐</div>
-        <div>
-          <div class="kicker">DIGIYLYFE</div>
-          <div class="title">MON COMMERCE — PIN d’accès PRO</div>
-          <div class="sub" id="subtitle">Chargement…</div>
-        </div>
-      </div>
-      <div class="pill" id="modulePill">POS</div>
-    </div>
-
-    <div class="sep"></div>
-
-    <div class="mini">
-      Cette porte ouvre le bon rail :
-      <b>dashboard pro</b>, <b>caisse</b> ou <b>admin</b>.
-      Le PIN ne remplace pas l’abonnement, il confirme l’accès.
-    </div>
-
-    <div class="topMeta">
-      <div class="metaBox">
-        <div class="metaLabel">Module</div>
-        <div class="metaValue" id="moduleBox">POS</div>
-      </div>
-      <div class="metaBox">
-        <div class="metaLabel">Slug</div>
-        <div class="metaValue" id="slugBox">—</div>
-      </div>
-      <div class="metaBox">
-        <div class="metaLabel">Téléphone</div>
-        <div class="metaValue" id="phoneBox">—</div>
-      </div>
-      <div class="metaBox">
-        <div class="metaLabel">Retour cible</div>
-        <div class="metaValue" id="returnBox">dashboard-pro.html</div>
-      </div>
-    </div>
-
-    <div class="navRow">
-      <a class="btn-ghost" id="btnPublic" href="./index.html">🏪 Vitrine</a>
-      <a class="btn-ghost" id="btnDashboard" href="./dashboard-pro.html">📊 Dashboard Pro</a>
-      <a class="btn-ghost" id="btnCaisse" href="./caisse.html">🧾 Caisse</a>
-      <a class="btn-ghost" id="btnAdmin" href="./admin.html">⚙️ Admin</a>
-      <a class="btn-outline" id="btnSupportTop" href="#" target="_blank" rel="noopener">💬 Support</a>
-    </div>
-
-    <div class="rescueBox" id="rescueBox" style="display:none;">
-      <div class="sectionTitle">Retrouver mon accès</div>
-      <div class="sectionSub">
-        Si tu es arrivé sans slug, entre ton téléphone et le module pour retrouver la bonne porte.
-      </div>
-
-      <div class="row">
-        <div>
-          <label for="rescuePhone">Téléphone</label>
-          <input id="rescuePhone" inputmode="numeric" placeholder="Ex : 221771234567" maxlength="15"/>
-        </div>
-        <div>
-          <label for="rescueModule">Module</label>
-          <input id="rescueModule" placeholder="POS / CAISSE / RESTO / LOC..." maxlength="20"/>
+  <div class="wrap">
+    <section class="card">
+      <div class="hero">
+        <div class="brand">
+          <div class="logo">🏪</div>
+          <div>
+            <h1>MON COMMERCE</h1>
+            <p class="sub">DIGIY CAISSE PRO — Accès PIN</p>
+          </div>
         </div>
       </div>
 
-      <div class="navRow" style="margin-top:12px">
-        <button class="btn-outline" id="btnFindSlug" type="button">🧭 Trouver mon accès</button>
+      <div class="body">
+        <p class="intro">
+          Entre avec ton <strong>slug</strong> ou ton <strong>téléphone</strong>, puis ton <strong>PIN</strong>.
+          Une fois validé, le nouveau guard prend le relais avec une session fraîche.
+        </p>
+
+        <div class="field">
+          <label for="slug">Slug</label>
+          <input id="slug" type="text" placeholder="pos-221771342889" autocomplete="off" />
+        </div>
+
+        <div class="field">
+          <label for="phone">Téléphone</label>
+          <input id="phone" type="tel" inputmode="numeric" placeholder="221771342889" autocomplete="tel" />
+        </div>
+
+        <div class="field">
+          <label for="pin">PIN</label>
+          <div class="pin-row">
+            <input id="pin" type="password" inputmode="numeric" maxlength="8" placeholder="••••" autocomplete="one-time-code" />
+            <button id="togglePin" class="mini" type="button" aria-label="Afficher le PIN">👁️</button>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="btnOpen" class="btn primary" type="button">🔓 Ouvrir mon espace</button>
+          <a id="btnReturn" class="btn secondary hidden" href="./dashboard-pro.html">↩️ Retour cible</a>
+          <a id="btnPay" class="btn ghost" href="https://commencer-a-payer.digiylyfe.com/" target="_blank" rel="noopener">💳 Gérer mon abonnement</a>
+        </div>
+
+        <div class="grid">
+          <a id="btnDashboard" class="btn secondary hidden" href="./dashboard-pro.html">🧭 Dashboard</a>
+          <a id="btnCaisse" class="btn secondary hidden" href="./caisse.html">🧾 Caisse</a>
+          <a id="btnAdmin" class="btn secondary hidden" href="./admin.html">🛠️ Admin</a>
+          <a class="btn secondary" href="https://wa.me/221771342889" target="_blank" rel="noopener">💬 Support</a>
+        </div>
+
+        <div id="status" class="status">Prêt.</div>
+
+        <div class="meta">
+          <div class="row"><div class="k">Module</div><div class="v">POS</div></div>
+          <div class="row"><div class="k">Retour cible</div><div id="returnInfo" class="v">dashboard-pro.html</div></div>
+          <div class="row"><div class="k">Session</div><div id="sessionInfo" class="v">Aucune</div></div>
+        </div>
       </div>
 
-      <div class="msg" id="rescueMsg"></div>
-    </div>
-
-    <div class="pinBox">
-      <div class="sectionTitle">Entrer avec mon PIN</div>
-      <div class="sectionSub">
-        Une fois le slug trouvé ou déjà présent, entre ton PIN pour ouvrir la vraie porte du module.
-      </div>
-
-      <label for="pin">PIN</label>
-      <input id="pin" type="password" inputmode="numeric" maxlength="8" placeholder="••••"/>
-
-      <div class="navRow" style="margin-top:12px">
-        <button id="go" class="btn" type="button">🚀 Entrer</button>
-        <button class="btn-outline" id="btnSupport" type="button">🛟 Support WhatsApp</button>
-      </div>
-
-      <div class="msg" id="msg"></div>
-    </div>
-
-    <details style="margin-top:14px">
-      <summary style="cursor:pointer;font-weight:950;color:var(--text)">Diagnostic technique</summary>
-      <div class="diag" id="diagBox">Initialisation…</div>
-    </details>
+      <div class="foot">DIGIYLYFE • MON COMMERCE • PIN MASTER POS</div>
+    </section>
   </div>
 
-<script>
-(async () => {
-  "use strict";
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    (() => {
+      "use strict";
 
-  const SUPPORT_WA = "221771342889";
-
-  const SUPABASE_URL = String(window.DIGIY_SUPABASE_URL || "").trim();
-  const SUPABASE_ANON_KEY = String(window.DIGIY_SUPABASE_ANON_KEY || window.DIGIY_SUPABASE_ANON || "").trim();
-
-  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    auth:{ persistSession:false, autoRefreshToken:false, detectSessionInUrl:false }
-  });
-
-  const $ = (id) => document.getElementById(id);
-  const DIAG = [];
-
-  function log(msg, data){
-    const line = `[${new Date().toLocaleTimeString("fr-FR")}] ${msg}`;
-    DIAG.push(data === undefined ? line : `${line}\n${safeStringify(data)}`);
-    $("diagBox").textContent = DIAG.join("\n\n");
-    console.log("[DIGIY POS PIN]", msg, data ?? "");
-  }
-
-  function safeStringify(v){
-    try{ return JSON.stringify(v, null, 2); }
-    catch(_){ return String(v); }
-  }
-
-  function msg(html){ $("msg").innerHTML = html; }
-  function msgRescue(html){ $("rescueMsg").innerHTML = html; }
-
-  function cleanDigits(v){ return String(v || "").replace(/[^\d]/g, "").slice(0, 15); }
-  function cleanModule(v){ return String(v || "").toUpperCase().replace(/[^A-Z_]/g, ""); }
-  function cleanPin(v){ return String(v || "").replace(/[^\d]/g, "").slice(0, 8); }
-
-  function buildUrl(base, params){
-    const u = new URL(base, location.href);
-    Object.entries(params || {}).forEach(([k, v]) => {
-      if(v !== undefined && v !== null && String(v) !== ""){
-        u.searchParams.set(k, String(v));
-      }
-    });
-    return u.toString();
-  }
-
-  function buildSupportUrl(text){
-    return `https://wa.me/${SUPPORT_WA}?text=${encodeURIComponent(text)}`;
-  }
-
-  function normalizeAccessResult(data, fallback = {}){
-    if(Array.isArray(data)){
-      return normalizeAccessResult(data[0] ?? null, fallback);
-    }
-
-    if(data === null || data === undefined){
-      return { ok:false, reason:"empty", ...fallback };
-    }
-
-    if(typeof data === "boolean"){
-      return { ok:data, ...fallback };
-    }
-
-    if(typeof data === "string"){
-      const raw = String(data);
-      const lowered = raw.toLowerCase();
-      return {
-        ok: lowered === "true" || lowered === "ok",
-        reason: lowered,
-        raw,
-        ...fallback
+      const CFG = {
+        MODULE: "POS",
+        MODULE_LOWER: "pos",
+        PUBLIC_NAME: "MON COMMERCE",
+        DEFAULT_NEXT: "./dashboard-pro.html",
+        LOGIN_URL: "./pin.html",
+        PAY_URL: window.DIGIY_PAY_URL || "https://commencer-a-payer.digiylyfe.com/",
+        SUPPORT_WA: "221771342889",
+        KEEP_PHONE_IN_URL: true,
+        SESSION_MAX_AGE_MS: 8 * 60 * 60 * 1000,
+        STORAGE_KEYS: [
+          "DIGIY_POS_PIN_SESSION",
+          "DIGIY_POS_SESSION",
+          "DIGIY_PIN_SESSION",
+          "DIGIY_ACCESS",
+          "DIGIY_SESSION_POS",
+          "digiy_pos_session"
+        ],
+        SLUG_KEY: "digiy_pos_slug",
+        PHONE_KEY: "digiy_pos_phone",
+        LAST_SLUG_KEY: "digiy_pos_last_slug",
+        RPC_VERIFY_PIN: "digiy_verify_pin",
+        TABLE_SUBS: "digiy_subscriptions_public"
       };
-    }
 
-    if(typeof data === "object"){
-      const ok = Boolean(
-        data.ok ??
-        data.success ??
-        data.allowed ??
-        data.verified ??
-        data.is_valid ??
-        false
-      );
+      const SUPABASE_URL = String(window.DIGIY_SUPABASE_URL || "").trim();
+      const SUPABASE_KEY = String(window.DIGIY_SUPABASE_ANON || window.DIGIY_SUPABASE_ANON_KEY || "").trim();
+      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-      return {
-        ...fallback,
-        ...data,
-        ok
+      const el = {
+        slug: document.getElementById("slug"),
+        phone: document.getElementById("phone"),
+        pin: document.getElementById("pin"),
+        togglePin: document.getElementById("togglePin"),
+        btnOpen: document.getElementById("btnOpen"),
+        btnReturn: document.getElementById("btnReturn"),
+        btnPay: document.getElementById("btnPay"),
+        btnDashboard: document.getElementById("btnDashboard"),
+        btnCaisse: document.getElementById("btnCaisse"),
+        btnAdmin: document.getElementById("btnAdmin"),
+        status: document.getElementById("status"),
+        returnInfo: document.getElementById("returnInfo"),
+        sessionInfo: document.getElementById("sessionInfo")
       };
-    }
 
-    return {
-      ok:false,
-      raw:data,
-      ...fallback
-    };
-  }
-
-  const MODULE_ALIAS = {
-    CAISSE: "POS",
-    POINTDEVENTE: "POS",
-    POINT_DE_VENTE: "POS"
-  };
-
-  const url = new URL(location.href);
-  const rawModule = (url.searchParams.get("module") || "").toUpperCase();
-  const rawReturn = (url.searchParams.get("return") || "").trim();
-
-  let currentSlug = String(
-    url.searchParams.get("slug") ||
-    localStorage.getItem("digiy_pos_last_slug") ||
-    sessionStorage.getItem("digiy_pos_last_slug") ||
-    ""
-  ).trim().toLowerCase();
-
-  let currentPhone = cleanDigits(
-    url.searchParams.get("phone") ||
-    localStorage.getItem("digiy_pos_last_phone") ||
-    sessionStorage.getItem("digiy_pos_last_phone") ||
-    ""
-  );
-
-  const TARGET_MODULE = MODULE_ALIAS[rawModule] || rawModule || "POS";
-
-  function resolveReturnUrl(){
-    if(rawReturn){
-      return buildUrl(rawReturn, {
-        slug: currentSlug || "",
-        phone: currentPhone || "",
-        module: TARGET_MODULE,
-        from: "pin"
-      });
-    }
-
-    const target = String(url.searchParams.get("target") || "").toLowerCase();
-
-    if(target === "admin"){
-      return buildUrl(digiyLocal("admin.html"), {
-        slug: currentSlug || "",
-        phone: currentPhone || "",
-        module: TARGET_MODULE,
-        from: "pin"
-      });
-    }
-
-    if(target === "caisse"){
-      return buildUrl(digiyLocal("caisse.html"), {
-        slug: currentSlug || "",
-        phone: currentPhone || "",
-        module: TARGET_MODULE,
-        from: "pin"
-      });
-    }
-
-    if(target === "hall" || target === "index" || target === "public"){
-      return buildUrl(digiyLocal("index.html"), {
-        slug: currentSlug || "",
-        phone: currentPhone || "",
-        module: TARGET_MODULE,
-        from: "pin"
-      });
-    }
-
-    return buildUrl(digiyLocal("dashboard-pro.html"), {
-      slug: currentSlug || "",
-      phone: currentPhone || "",
-      module: TARGET_MODULE,
-      from: "pin"
-    });
-  }
-
-  function paint(){
-    $("moduleBox").textContent = TARGET_MODULE;
-    $("modulePill").textContent = TARGET_MODULE;
-    $("slugBox").textContent = currentSlug || "—";
-    $("phoneBox").textContent = currentPhone ? `+${currentPhone}` : "—";
-
-    const returnUrl = resolveReturnUrl();
-    const returnName = new URL(returnUrl, location.href).pathname.split("/").pop() || "dashboard-pro.html";
-    $("returnBox").textContent = returnName;
-
-    $("btnPublic").href = buildUrl(digiyLocal("index.html"), {
-      slug: currentSlug || "",
-      phone: currentPhone || "",
-      module: TARGET_MODULE
-    });
-
-    $("btnDashboard").href = buildUrl(digiyLocal("dashboard-pro.html"), {
-      slug: currentSlug || "",
-      phone: currentPhone || "",
-      module: TARGET_MODULE
-    });
-
-    $("btnCaisse").href = buildUrl(digiyLocal("caisse.html"), {
-      slug: currentSlug || "",
-      phone: currentPhone || "",
-      module: TARGET_MODULE
-    });
-
-    $("btnAdmin").href = buildUrl(digiyLocal("admin.html"), {
-      slug: currentSlug || "",
-      phone: currentPhone || "",
-      module: TARGET_MODULE
-    });
-
-    const supportText = [
-      "Bonjour JB,",
-      "j’ai besoin d’aide pour MON COMMERCE by DIGIY.",
-      `Module : ${TARGET_MODULE}`,
-      `Slug : ${currentSlug || "-"}`,
-      currentPhone ? `Téléphone : +${currentPhone}` : ""
-    ].filter(Boolean).join(" ");
-
-    $("btnSupportTop").href = buildSupportUrl(supportText);
-  }
-
-  function saveLocalAccess(){
-    if(currentSlug){
-      localStorage.setItem("digiy_pos_last_slug", currentSlug);
-      sessionStorage.setItem("digiy_pos_last_slug", currentSlug);
-    }
-
-    if(currentPhone){
-      localStorage.setItem("digiy_pos_last_phone", currentPhone);
-      sessionStorage.setItem("digiy_pos_last_phone", currentPhone);
-    }
-
-    const payload = {
-      slug: currentSlug || "",
-      phone: currentPhone || "",
-      module: TARGET_MODULE,
-      ts: Date.now()
-    };
-
-    localStorage.setItem("DIGIY_ACCESS", JSON.stringify(payload));
-    sessionStorage.setItem("DIGIY_ACCESS", JSON.stringify(payload));
-
-    localStorage.setItem("DIGIY_POS_SESSION", JSON.stringify({
-      ...payload,
-      verified: true
-    }));
-    sessionStorage.setItem("DIGIY_POS_SESSION", JSON.stringify({
-      ...payload,
-      verified: true
-    }));
-  }
-
-  function goNext(){
-    location.href = resolveReturnUrl();
-  }
-
-  async function findSlugByPhoneAndModule(phone, moduleCode){
-    const { data, error } = await sb
-      .from("digiy_subscriptions_public")
-      .select("slug,module,phone")
-      .eq("phone", phone)
-      .limit(20);
-
-    if(error) throw error;
-    if(!Array.isArray(data) || !data.length) return null;
-
-    const wanted = cleanModule(moduleCode);
-    const row =
-      data.find(x => String(x.module || "").toUpperCase() === wanted) ||
-      data.find(x => String(x.module || "").toUpperCase() === MODULE_ALIAS[wanted]) ||
-      data[0];
-
-    return row || null;
-  }
-
-  async function resolvePhoneFromSlug(slug){
-    const { data, error } = await sb
-      .from("digiy_subscriptions_public")
-      .select("slug,phone")
-      .eq("slug", slug)
-      .limit(1)
-      .maybeSingle();
-
-    if(error) throw error;
-    return cleanDigits(data?.phone || "");
-  }
-
-  async function callVerifyPin(phone, pin, moduleCode){
-    const { data, error } = await sb.rpc("digiy_verify_pin", {
-      p_phone: phone,
-      p_module: moduleCode,
-      p_pin: pin
-    });
-
-    if(error) throw error;
-
-    return normalizeAccessResult(data, {
-      phone,
-      module: moduleCode,
-      slug: currentSlug || ""
-    });
-  }
-
-  async function callVerifyAccessBySlug(slug, pin, moduleCode){
-    const { data, error } = await sb.rpc("digiy_verify_access", {
-      p_slug: slug,
-      p_pin: pin,
-      p_module: moduleCode
-    });
-
-    if(error) throw error;
-
-    return normalizeAccessResult(data, {
-      slug,
-      module: moduleCode,
-      phone: currentPhone || ""
-    });
-  }
-
-  async function verifyAccess(slug, pin, moduleCode){
-    let phone = currentPhone;
-
-    if(!phone && slug){
-      try{
-        phone = await resolvePhoneFromSlug(slug);
-        if(phone && !currentPhone){
-          currentPhone = phone;
-        }
-        if(phone){
-          log("Téléphone résolu depuis le slug", { slug, phone, module: moduleCode });
-        }
-      } catch(err){
-        log("Résolution slug → phone impossible avant contrôle", {
-          message: err?.message || String(err)
-        });
+      function qs(name) {
+        return new URLSearchParams(window.location.search).get(name);
       }
-    }
 
-    if(phone){
-      try{
-        log("Contrôle prioritaire par téléphone", {
-          phone,
-          module: moduleCode,
-          slug
-        });
+      function normSlug(value) {
+        return String(value || "")
+          .trim()
+          .toLowerCase()
+          .replace(/\s+/g, "-")
+          .replace(/[^a-z0-9-]/g, "")
+          .replace(/-+/g, "-")
+          .replace(/^-|-$/g, "");
+      }
 
-        const pinResult = await callVerifyPin(phone, pin, moduleCode);
-        log("digiy_verify_pin résultat", pinResult);
+      function normPhone(value) {
+        const raw = String(value || "").trim();
+        const cleaned = raw.replace(/[^\d+]/g, "");
+        const digits = cleaned.replace(/[^\d]/g, "");
+        if (!digits) return "";
+        return cleaned.startsWith("+") ? `+${digits}` : digits;
+      }
 
-        if(pinResult?.ok){
-          currentPhone = phone;
-          return pinResult;
+      function normPin(value) {
+        return String(value || "").trim().replace(/\s+/g, "");
+      }
+
+      function safeJsonParse(raw) {
+        try { return JSON.parse(raw); } catch { return null; }
+      }
+
+      function setStatus(message, type = "") {
+        el.status.className = `status${type ? " " + type : ""}`;
+        el.status.textContent = message;
+      }
+
+      function nowMs() {
+        return Date.now();
+      }
+
+      function nowIso() {
+        return new Date().toISOString();
+      }
+
+      function isRecent(ts) {
+        const n = Number(ts || 0);
+        if (!n) return false;
+        return (Date.now() - n) <= CFG.SESSION_MAX_AGE_MS;
+      }
+
+      function buildNormalizedSession({ slug, phone, owner_id = null }) {
+        const t = nowMs();
+        return {
+          slug: normSlug(slug),
+          phone: normPhone(phone),
+          owner_id: owner_id || null,
+          module: CFG.MODULE,
+
+          access: true,
+          access_ok: true,
+          ok: true,
+          verified: true,
+
+          verified_at: t,
+          validated_at: new Date(t).toISOString(),
+          ts: t,
+
+          reason: "pin_ok"
+        };
+      }
+
+      function saveSession(payload) {
+        const session = buildNormalizedSession(payload);
+
+        for (const key of CFG.STORAGE_KEYS) {
+          try { localStorage.setItem(key, JSON.stringify(session)); } catch (_) {}
+          try { sessionStorage.setItem(key, JSON.stringify(session)); } catch (_) {}
         }
 
-        return pinResult;
-      } catch(err){
-        log("digiy_verify_pin en erreur, fallback slug-only", {
-          message: err?.message || String(err)
-        });
-      }
-    }
+        try { localStorage.setItem(CFG.SLUG_KEY, session.slug); } catch (_) {}
+        try { sessionStorage.setItem(CFG.SLUG_KEY, session.slug); } catch (_) {}
+        try { localStorage.setItem(CFG.PHONE_KEY, session.phone); } catch (_) {}
+        try { sessionStorage.setItem(CFG.PHONE_KEY, session.phone); } catch (_) {}
+        try { localStorage.setItem(CFG.LAST_SLUG_KEY, session.slug); } catch (_) {}
+        try { sessionStorage.setItem(CFG.LAST_SLUG_KEY, session.slug); } catch (_) {}
 
-    if(!slug){
-      return {
-        ok:false,
-        reason:"missing_slug",
-        module: moduleCode,
-        phone: phone || ""
-      };
-    }
+        try {
+          window.DIGIY_ACCESS = Object.assign({}, window.DIGIY_ACCESS || {}, session);
+        } catch (_) {}
 
-    log("Fallback contrôle par slug", {
-      slug,
-      module: moduleCode
-    });
-
-    const accessResult = await callVerifyAccessBySlug(slug, pin, moduleCode);
-    log("digiy_verify_access résultat", accessResult);
-
-    if(accessResult?.ok && !currentPhone){
-      try{
-        currentPhone = await resolvePhoneFromSlug(slug);
-      } catch(err){
-        log("Résolution phone après fallback impossible", {
-          message: err?.message || String(err)
-        });
-      }
-    }
-
-    return accessResult;
-  }
-
-  async function enter(){
-    const pin = cleanPin($("pin").value);
-
-    if(!currentSlug){
-      msg(`<span class="bad">Slug manquant.</span> Passe d’abord par la récupération d’accès ou reviens par la vitrine.`);
-      return;
-    }
-
-    if(pin.length < 3){
-      msg(`<span class="bad">PIN invalide.</span> Entre un PIN propre.`);
-      return;
-    }
-
-    $("go").disabled = true;
-    $("go").textContent = "Contrôle…";
-
-    try{
-      log("Vérification PIN", {
-        slug: currentSlug,
-        phone: currentPhone || null,
-        module: TARGET_MODULE
-      });
-
-      const data = await verifyAccess(currentSlug, pin, TARGET_MODULE);
-      log("Vérification PIN résultat", data);
-
-      if(!data?.ok){
-        const reason = String(data?.reason || "").toLowerCase();
-        let human = "Accès refusé.";
-
-        if(reason.includes("forbidden")) human = "Accès refusé par le rail demandé.";
-        else if(reason.includes("pin")) human = "PIN incorrect.";
-        else if(reason.includes("empty")) human = "Réponse vide du backend.";
-        else if(reason.includes("missing_phone")) human = "Téléphone introuvable pour ce slug.";
-        else if(reason.includes("missing_slug")) human = "Slug manquant.";
-
-        msg(`<span class="bad">${human}</span> Vérifie le PIN ou demande de l’aide.`);
-        return;
+        return session;
       }
 
-      if(!currentPhone){
-        try{
-          currentPhone = await resolvePhoneFromSlug(currentSlug);
-        } catch(err){
-          log("Résolution phone après validation impossible", {
-            message: err?.message || String(err)
+      function readSession() {
+        for (const key of CFG.STORAGE_KEYS) {
+          let parsed = null;
+          try {
+            parsed = safeJsonParse(localStorage.getItem(key));
+            if (!parsed) parsed = safeJsonParse(sessionStorage.getItem(key));
+          } catch (_) {}
+
+          if (!parsed || typeof parsed !== "object") continue;
+
+          const moduleName = String(parsed.module || parsed.module_code || "").trim().toUpperCase();
+          if (moduleName && moduleName !== CFG.MODULE) continue;
+
+          const access = !!parsed.access || !!parsed.access_ok || !!parsed.ok || !!parsed.has_access;
+          const verifiedAt = Number(parsed.verified_at || parsed.validated_at_ms || parsed.ts || 0) || 0;
+          const validatedAt = parsed.validated_at || null;
+
+          let recent = false;
+          if (verifiedAt && isRecent(verifiedAt)) recent = true;
+          if (!recent && validatedAt) {
+            const dt = new Date(validatedAt).getTime();
+            if (dt && isRecent(dt)) recent = true;
+          }
+
+          if (!access || !recent) continue;
+
+          return {
+            slug: normSlug(parsed.slug || ""),
+            phone: normPhone(parsed.phone || ""),
+            owner_id: parsed.owner_id || null,
+            verified_at: verifiedAt,
+            validated_at: validatedAt
+          };
+        }
+        return null;
+      }
+
+      async function resolveSubBySlug(slug) {
+        const s = normSlug(slug);
+        if (!s) return null;
+
+        const tries = [
+          { select: "phone,slug,module", slug: `eq.${s}`, module: `eq.${CFG.MODULE}`, limit: "1" },
+          { select: "phone,slug,module", slug: `eq.${s}`, module: `eq.${CFG.MODULE_LOWER}`, limit: "1" },
+          { select: "phone,slug,module", slug: `eq.${s}`, limit: "1" }
+        ];
+
+        for (const q of tries) {
+          const { data, error } = await supabase
+            .from(CFG.TABLE_SUBS)
+            .select("phone,slug,module")
+            .match(Object.fromEntries(
+              Object.entries(q)
+                .filter(([k]) => !["select", "limit"].includes(k))
+                .map(([k, v]) => [k, String(v).replace(/^eq\./, "")])
+            ))
+            .limit(1);
+
+          if (!error && Array.isArray(data) && data[0]) {
+            return {
+              slug: normSlug(data[0].slug),
+              phone: normPhone(data[0].phone),
+              module: String(data[0].module || CFG.MODULE).toUpperCase()
+            };
+          }
+        }
+        return null;
+      }
+
+      async function resolveSubByPhone(phone) {
+        const p = normPhone(phone);
+        if (!p) return null;
+
+        const tries = [
+          { phone: p, module: CFG.MODULE },
+          { phone: p, module: CFG.MODULE_LOWER },
+          { phone: p }
+        ];
+
+        for (const q of tries) {
+          const { data, error } = await supabase
+            .from(CFG.TABLE_SUBS)
+            .select("phone,slug,module")
+            .match(q)
+            .limit(1);
+
+          if (!error && Array.isArray(data) && data[0]) {
+            return {
+              slug: normSlug(data[0].slug),
+              phone: normPhone(data[0].phone),
+              module: String(data[0].module || CFG.MODULE).toUpperCase()
+            };
+          }
+        }
+        return null;
+      }
+
+      function parseVerifyPinPayload(raw, fallbackPhone = "") {
+        const data = Array.isArray(raw) ? raw[0] : raw;
+        if (!data) return null;
+
+        if (typeof data === "object" && !Array.isArray(data)) {
+          if (data.ok === true) {
+            return {
+              ok: true,
+              phone: normPhone(data.phone || data.p_phone || fallbackPhone || ""),
+              module: String(data.module || data.p_module || CFG.MODULE).toUpperCase(),
+              owner_id: data.owner_id || null
+            };
+          }
+          const vals = Object.values(data);
+          if (vals.length >= 3) {
+            const okLike = vals[0] === true || vals[0] === "t" || vals[0] === "true" || vals[0] === 1;
+            if (okLike) {
+              return {
+                ok: true,
+                module: String(vals[1] || CFG.MODULE).toUpperCase(),
+                phone: normPhone(vals[2] || fallbackPhone || ""),
+                owner_id: vals[4] || null
+              };
+            }
+          }
+        }
+
+        if (typeof data === "string") {
+          const txt = data.trim();
+          if (txt.startsWith("(") && txt.endsWith(")")) {
+            const m = txt.match(/^\(([^,]+),([^,]+),([^,]+),?(.*)\)$/);
+            if (m) {
+              const okToken = String(m[1] || "").trim().replace(/^"|"$/g, "");
+              const moduleToken = String(m[2] || "").trim().replace(/^"|"$/g, "");
+              const phoneToken = String(m[3] || "").trim().replace(/^"|"$/g, "");
+              const okLike = okToken === "t" || okToken === "true" || okToken === "1";
+              if (okLike) {
+                return {
+                  ok: true,
+                  module: String(moduleToken || CFG.MODULE).toUpperCase(),
+                  phone: normPhone(phoneToken || fallbackPhone || ""),
+                  owner_id: null
+                };
+              }
+            }
+          }
+        }
+
+        return null;
+      }
+
+      async function verifyPin(phone, pin) {
+        const p = normPhone(phone);
+        const code = normPin(pin);
+
+        const tries = [
+          { p_phone: p, p_module: CFG.MODULE, p_pin: code },
+          { p_phone: p, p_module: CFG.MODULE_LOWER, p_pin: code }
+        ];
+
+        for (const body of tries) {
+          const { data, error } = await supabase.rpc(CFG.RPC_VERIFY_PIN, body);
+          if (error) continue;
+          const parsed = parseVerifyPinPayload(data, p);
+          if (parsed?.ok) return parsed;
+        }
+
+        return null;
+      }
+
+      function isAllowedReturnPath(pathname) {
+        const allowed = [
+          "/dashboard-pro.html",
+          "/dashboard.html",
+          "/caisse.html",
+          "/admin.html",
+          "/index.html",
+          "/"
+        ];
+        return allowed.includes(pathname);
+      }
+
+      function buildReturnUrl(session) {
+        const ret = qs("return");
+        if (ret) {
+          try {
+            const u = new URL(ret, location.href);
+            if (u.origin === location.origin && isAllowedReturnPath(u.pathname)) {
+              u.searchParams.set("slug", session.slug);
+              if (CFG.KEEP_PHONE_IN_URL && session.phone) u.searchParams.set("phone", session.phone);
+              u.searchParams.set("module", CFG.MODULE);
+              u.searchParams.set("from", "pin");
+              return u.toString();
+            }
+          } catch (_) {}
+        }
+
+        const target = (qs("target") || "").trim().toLowerCase();
+        let next = CFG.DEFAULT_NEXT;
+        if (target === "caisse") next = "./caisse.html";
+        if (target === "admin") next = "./admin.html";
+        if (target === "dashboard") next = "./dashboard-pro.html";
+
+        const u = new URL(next, location.href);
+        u.searchParams.set("slug", session.slug);
+        if (CFG.KEEP_PHONE_IN_URL && session.phone) u.searchParams.set("phone", session.phone);
+        u.searchParams.set("module", CFG.MODULE);
+        u.searchParams.set("from", "pin");
+        return u.toString();
+      }
+
+      function refreshLinks(slug, phone) {
+        const s = normSlug(slug);
+        const p = normPhone(phone);
+        const add = (base) => {
+          const u = new URL(base, location.href);
+          if (s) u.searchParams.set("slug", s);
+          if (CFG.KEEP_PHONE_IN_URL && p) u.searchParams.set("phone", p);
+          return u.toString();
+        };
+
+        el.btnDashboard.href = add("./dashboard-pro.html");
+        el.btnCaisse.href = add("./caisse.html");
+        el.btnAdmin.href = add("./admin.html");
+
+        if (s) {
+          el.btnDashboard.classList.remove("hidden");
+          el.btnCaisse.classList.remove("hidden");
+          el.btnAdmin.classList.remove("hidden");
+        }
+
+        const dummy = { slug: s, phone: p };
+        el.btnReturn.href = buildReturnUrl(dummy);
+        el.btnReturn.classList.remove("hidden");
+        el.returnInfo.textContent = new URL(el.btnReturn.href).pathname.split("/").pop() || "dashboard-pro.html";
+      }
+
+      function hydrate() {
+        const qSlug = normSlug(qs("slug"));
+        const qPhone = normPhone(qs("phone"));
+        const saved = readSession();
+
+        el.slug.value =
+          qSlug ||
+          saved?.slug ||
+          normSlug(sessionStorage.getItem(CFG.SLUG_KEY) || localStorage.getItem(CFG.SLUG_KEY) || localStorage.getItem(CFG.LAST_SLUG_KEY) || "");
+
+        el.phone.value =
+          qPhone ||
+          saved?.phone ||
+          normPhone(sessionStorage.getItem(CFG.PHONE_KEY) || localStorage.getItem(CFG.PHONE_KEY) || "");
+
+        if (saved?.slug || saved?.phone) {
+          refreshLinks(saved.slug || el.slug.value, saved.phone || el.phone.value);
+        } else if (el.slug.value || el.phone.value) {
+          refreshLinks(el.slug.value, el.phone.value);
+        }
+
+        if (saved?.verified_at || saved?.validated_at) {
+          el.sessionInfo.textContent = "Active";
+          setStatus("Session locale déjà fraîche. Tu peux reprendre la route.", "ok");
+        }
+      }
+
+      async function login() {
+        try {
+          let slug = normSlug(el.slug.value);
+          let phone = normPhone(el.phone.value);
+          const pin = normPin(el.pin.value);
+
+          if (!slug && !phone) {
+            setStatus("Renseigne au moins le slug ou le téléphone.", "err");
+            return;
+          }
+
+          if (!pin) {
+            setStatus("Entre ton PIN.", "err");
+            return;
+          }
+
+          el.btnOpen.disabled = true;
+          setStatus("Vérification du PIN...");
+
+          if (slug && !phone) {
+            const sub = await resolveSubBySlug(slug);
+            if (sub?.phone) phone = sub.phone;
+          }
+
+          if (phone && !slug) {
+            const sub = await resolveSubByPhone(phone);
+            if (sub?.slug) slug = sub.slug;
+          }
+
+          if (!slug) {
+            setStatus("Slug inconnu.", "err");
+            return;
+          }
+
+          if (!phone) {
+            setStatus("Téléphone introuvable pour ce slug.", "err");
+            return;
+          }
+
+          const auth = await verifyPin(phone, pin);
+          if (!auth?.ok) {
+            setStatus("PIN invalide.", "err");
+            return;
+          }
+
+          const session = saveSession({
+            slug,
+            phone: auth.phone || phone,
+            owner_id: auth.owner_id || null
           });
+
+          el.sessionInfo.textContent = "Active";
+          refreshLinks(session.slug, session.phone);
+          setStatus("PIN validé. Ouverture de ton espace POS...", "ok");
+
+          setTimeout(() => {
+            window.location.href = buildReturnUrl(session);
+          }, 220);
+        } catch (err) {
+          console.error(err);
+          setStatus(err?.message || "Erreur de vérification.", "err");
+        } finally {
+          el.btnOpen.disabled = false;
         }
       }
 
-      saveLocalAccess();
-      paint();
-
-      msg(`<span class="ok">Accès validé.</span> Ouverture du bon rail…`);
-      setTimeout(goNext, 280);
-    } catch(err){
-      msg(`<span class="bad">Blocage technique.</span> ${String(err?.message || err)}`);
-      log("Erreur enter()", {
-        message: err?.message || String(err)
+      el.togglePin.addEventListener("click", () => {
+        const visible = el.pin.type === "text";
+        el.pin.type = visible ? "password" : "text";
+        el.togglePin.textContent = visible ? "👁️" : "🙈";
       });
-    } finally {
-      $("go").disabled = false;
-      $("go").textContent = "🚀 Entrer";
-    }
-  }
 
-  $("btnFindSlug").addEventListener("click", async () => {
-    const phone = cleanDigits($("rescuePhone").value);
-    const mod = cleanModule($("rescueModule").value || TARGET_MODULE);
+      el.btnOpen.addEventListener("click", login);
+      [el.slug, el.phone, el.pin].forEach(node => {
+        node.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") login();
+        });
+      });
+      el.slug.addEventListener("input", () => refreshLinks(el.slug.value, el.phone.value));
+      el.phone.addEventListener("input", () => refreshLinks(el.slug.value, el.phone.value));
 
-    if(phone.length < 9){
-      msgRescue(`<span class="bad">Téléphone invalide.</span>`);
-      return;
-    }
-
-    $("btnFindSlug").disabled = true;
-    $("btnFindSlug").textContent = "Recherche…";
-
-    try{
-      log("Recherche accès par téléphone", { phone, module: mod });
-
-      const row = await findSlugByPhoneAndModule(phone, mod);
-
-      if(!row){
-        msgRescue(`<span class="bad">Aucun accès trouvé.</span>`);
-        return;
-      }
-
-      currentSlug = String(row.slug || "").toLowerCase();
-      currentPhone = cleanDigits(row.phone || phone);
-
-      saveLocalAccess();
-      paint();
-
-      msgRescue(`<span class="ok">Accès trouvé.</span> Entre ton PIN.`);
-      msg(`<span class="info">Slug retrouvé.</span> Tu peux maintenant entrer ton PIN.`);
-      log("Accès retrouvé", row);
-    } catch(err){
-      log("Recherche accès erreur", { message: err?.message || String(err) });
-      msgRescue(`<span class="bad">Recherche impossible.</span> ${String(err?.message || err)}`);
-    } finally {
-      $("btnFindSlug").disabled = false;
-      $("btnFindSlug").textContent = "🧭 Trouver mon accès";
-    }
-  });
-
-  $("go").addEventListener("click", enter);
-  $("pin").addEventListener("keydown", (e) => {
-    if(e.key === "Enter") enter();
-  });
-
-  $("btnSupport").addEventListener("click", () => {
-    const supportText = [
-      "Bonjour JB,",
-      "j’ai un problème de PIN sur MON COMMERCE by DIGIY.",
-      `Module : ${TARGET_MODULE}`,
-      `Slug : ${currentSlug || "-"}`,
-      currentPhone ? `Téléphone : +${currentPhone}` : ""
-    ].filter(Boolean).join(" ");
-    location.href = buildSupportUrl(supportText);
-  });
-
-  try{
-    paint();
-
-    if(!currentSlug){
-      $("rescueBox").style.display = "block";
-      $("rescueModule").value = TARGET_MODULE;
-      $("subtitle").textContent = "Mode récupération actif";
-      msg(`<span class="warn">Slug manquant.</span> Renseigne ton téléphone pour retrouver l’accès.`);
-    } else {
-      $("subtitle").textContent = "Accès sécurisé — QR → PIN → Dashboard Pro";
-      if(!currentPhone){
-        try{
-          currentPhone = await resolvePhoneFromSlug(currentSlug);
-          saveLocalAccess();
-          paint();
-        } catch(err){
-          log("Résolution slug → phone impossible", { message: err?.message || String(err) });
-        }
-      }
-      msg(`<span class="info">Slug prêt.</span> Entre ton PIN pour ouvrir la bonne porte.`);
-    }
-
-    log("PIN POS prêt", {
-      slug: currentSlug || null,
-      phone: currentPhone || null,
-      module: TARGET_MODULE,
-      return_to: resolveReturnUrl()
-    });
-  } catch(err){
-    msg(`<span class="bad">Erreur d’initialisation.</span> ${String(err?.message || err)}`);
-    log("Erreur init", { message: err?.message || String(err) });
-  }
-})();
-</script>
+      hydrate();
+    })();
+  </script>
 </body>
 </html>
