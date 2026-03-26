@@ -5,43 +5,24 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>MON COMMERCE — Dashboard Pro</title>
   <meta name="theme-color" content="#07140f" />
-  <meta
-    name="description"
-    content="MON COMMERCE by DIGIY — dashboard pro POS : abonnement, activité, boost et porte centrale vers la caisse."
-  />
+  <meta name="description" content="MON COMMERCE by DIGIY — dashboard pro POS : abonnement, activité, boost et porte centrale vers la caisse." />
 
- <script>
-  window.DIGIY_SUPABASE_URL      = "https://wesqmwjjtsefyjnluosj.supabase.co";
-  window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
-  window.DIGIY_SUPABASE_ANON     = window.DIGIY_SUPABASE_ANON_KEY;
-  window.DIGIY_MODULE            = "POS";
-  window.DIGIY_LOGIN_URL         = "./pin.html";
-  document.documentElement.style.visibility = "hidden";
+  <script>
+    window.DIGIY_SUPABASE_URL      = "https://wesqmwjjtsefyjnluosj.supabase.co";
+    window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
+    window.DIGIY_SUPABASE_ANON     = window.DIGIY_SUPABASE_ANON_KEY;
+    window.DIGIY_MODULE            = "POS";
+    window.DIGIY_LOGIN_URL         = "./pin.html";
+    document.documentElement.style.visibility = "hidden";
 
-  function digiyBasePath() {
-    const parts = location.pathname.split("/").filter(Boolean);
-    const isGh  = /\.github\.io$/i.test(location.hostname);
-    if (isGh && parts.length > 0) return "/" + parts[0] + "/";
-    return "/";
-  }
-
-  function digiyLocal(path) {
-    path = String(path || "").replace(/^\/+/, "");
-    return digiyBasePath() + path;
-  }
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./guard.js"></script>
-<script src="./claw-tools-pos.js"></script>
-    function digiyBasePath(){
+    function digiyBasePath() {
       const parts = location.pathname.split("/").filter(Boolean);
-      const isGh = /\.github\.io$/i.test(location.hostname);
-      if(isGh && parts.length > 0) return "/" + parts[0] + "/";
+      const isGh  = /\.github\.io$/i.test(location.hostname);
+      if (isGh && parts.length > 0) return "/" + parts[0] + "/";
       return "/";
     }
 
-    function digiyLocal(path){
+    function digiyLocal(path) {
       path = String(path || "").replace(/^\/+/, "");
       return digiyBasePath() + path;
     }
@@ -49,6 +30,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./guard.js"></script>
+  <script src="./claw-tools-pos.js"></script>
 
   <style>
     :root{
@@ -88,423 +70,141 @@
     a{text-decoration:none;color:inherit}
     button{font:inherit}
 
-    .wrap{
-      width:min(100%, var(--max));
-      margin:0 auto;
-      padding:16px 14px 92px;
-    }
+    .wrap{width:min(100%, var(--max));margin:0 auto;padding:16px 14px 92px}
 
     .app{display:none}
     html.app-ready .app{display:block}
 
     .floating-site-btn{
-      position:fixed;
-      left:16px;
+      position:fixed;left:16px;
       bottom:calc(16px + env(safe-area-inset-bottom, 0px));
-      z-index:90;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      min-height:48px;
-      padding:14px 16px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(5,16,12,.88);
-      backdrop-filter:blur(10px);
-      color:var(--text);
-      font-size:13px;
-      font-weight:900;
+      z-index:90;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      min-height:48px;padding:14px 16px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);background:rgba(5,16,12,.88);
+      backdrop-filter:blur(10px);color:var(--text);font-size:13px;font-weight:900;
       box-shadow:0 16px 36px rgba(0,0,0,.28);
       transition:transform .14s ease, border-color .14s ease, background .14s ease;
     }
-    .floating-site-btn:hover{
-      transform:translateY(-1px);
-      border-color:rgba(250,204,21,.28);
-      background:rgba(8,20,15,.94);
-    }
+    .floating-site-btn:hover{transform:translateY(-1px);border-color:rgba(250,204,21,.28);background:rgba(8,20,15,.94)}
 
     .topbar{
-      position:sticky;
-      top:0;
-      z-index:70;
-      margin-bottom:12px;
-      backdrop-filter:blur(12px);
-      background:rgba(4,17,13,.76);
-      border:1px solid rgba(255,255,255,.07);
-      border-radius:24px;
-      box-shadow:var(--shadow-soft);
+      position:sticky;top:0;z-index:70;margin-bottom:12px;
+      backdrop-filter:blur(12px);background:rgba(4,17,13,.76);
+      border:1px solid rgba(255,255,255,.07);border-radius:24px;box-shadow:var(--shadow-soft);
     }
+    .topbar-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px}
 
-    .topbar-inner{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-      padding:14px;
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width:0;
-    }
-
+    .brand{display:flex;align-items:center;gap:12px;min-width:0}
     .brand-badge{
-      width:48px;
-      height:48px;
-      border-radius:18px;
-      display:grid;
-      place-items:center;
+      width:48px;height:48px;border-radius:18px;display:grid;place-items:center;
       background:linear-gradient(135deg, rgba(250,204,21,.16), rgba(245,158,11,.08));
-      border:1px solid rgba(250,204,21,.16);
-      box-shadow:0 16px 34px rgba(250,204,21,.10);
-      font-size:24px;
-      flex:0 0 auto;
+      border:1px solid rgba(250,204,21,.16);box-shadow:0 16px 34px rgba(250,204,21,.10);
+      font-size:24px;flex:0 0 auto;
     }
+    .brand-kicker{color:var(--gold);font-size:12px;font-weight:950;letter-spacing:.14em;text-transform:uppercase;margin-bottom:3px}
+    .brand-title{font-size:20px;font-weight:1000;line-height:1.08;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .brand-sub{color:var(--muted);font-size:12px;font-weight:800;margin-top:3px;letter-spacing:.04em}
 
-    .brand-kicker{
-      color:var(--gold);
-      font-size:12px;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      margin-bottom:3px;
-    }
-
-    .brand-title{
-      font-size:20px;
-      font-weight:1000;
-      line-height:1.08;
-      letter-spacing:-.02em;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .brand-sub{
-      color:var(--muted);
-      font-size:12px;
-      font-weight:800;
-      margin-top:3px;
-      letter-spacing:.04em;
-    }
-
-    .right{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
+    .right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
 
     .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 13px;
-      border-radius:999px;
-      background:rgba(255,255,255,.04);
-      border:1px solid var(--line);
-      color:var(--muted);
-      font-weight:900;
-      font-size:12px;
-      backdrop-filter:blur(10px);
+      display:inline-flex;align-items:center;gap:8px;padding:10px 13px;border-radius:999px;
+      background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--muted);
+      font-weight:900;font-size:12px;backdrop-filter:blur(10px);
     }
-
     .pill b{color:var(--text);font-weight:950}
 
-    .btn,
-    .btn-outline,
-    .btn-ghost{
-      appearance:none;
-      border:none;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      min-height:46px;
-      padding:12px 16px;
-      border-radius:999px;
-      font-weight:900;
-      font-size:13px;
-      white-space:nowrap;
-      transition:.14s ease;
+    .btn,.btn-outline,.btn-ghost{
+      appearance:none;border:none;cursor:pointer;
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      min-height:46px;padding:12px 16px;border-radius:999px;
+      font-weight:900;font-size:13px;white-space:nowrap;transition:.14s ease;
     }
+    .btn:hover,.btn-outline:hover,.btn-ghost:hover{transform:translateY(-1px)}
+    .btn:disabled,.btn-outline:disabled,.btn-ghost:disabled{opacity:.55;cursor:not-allowed;transform:none}
+    .btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#07110d;box-shadow:0 14px 30px rgba(250,204,21,.18)}
+    .btn-outline{background:rgba(255,255,255,.04);border:1px solid var(--line2);color:var(--text)}
+    .btn-ghost{background:transparent;border:1px solid var(--line2);color:var(--muted)}
 
-    .btn:hover,
-    .btn-outline:hover,
-    .btn-ghost:hover{transform:translateY(-1px)}
-
-    .btn:disabled,
-    .btn-outline:disabled,
-    .btn-ghost:disabled{
-      opacity:.55;
-      cursor:not-allowed;
-      transform:none;
-    }
-
-    .btn{
-      background:linear-gradient(135deg,var(--gold),var(--gold2));
-      color:#07110d;
-      box-shadow:0 14px 30px rgba(250,204,21,.18);
-    }
-
-    .btn-outline{
-      background:rgba(255,255,255,.04);
-      border:1px solid var(--line2);
-      color:var(--text);
-    }
-
-    .btn-ghost{
-      background:transparent;
-      border:1px solid var(--line2);
-      color:var(--muted);
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:1.05fr .95fr;
-      gap:12px;
-      margin-top:8px;
-    }
+    .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:12px;margin-top:8px}
 
     .card{
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)),
-        var(--card);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:18px;
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)),var(--card);
+      border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;
     }
-
-    .card h3{
-      margin:0 0 10px 0;
-      font-size:16px;
-      letter-spacing:.01em;
-      line-height:1.2;
-    }
+    .card h3{margin:0 0 10px 0;font-size:16px;letter-spacing:.01em;line-height:1.2}
 
     .heroBadge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 12px;
-      border-radius:999px;
-      background:rgba(250,204,21,.10);
-      border:1px solid rgba(250,204,21,.18);
-      color:var(--gold);
-      font-size:12px;
-      font-weight:950;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      margin-bottom:14px;
+      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
+      background:rgba(250,204,21,.10);border:1px solid rgba(250,204,21,.18);color:var(--gold);
+      font-size:12px;font-weight:950;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px;
     }
 
     .muted{color:var(--muted)}
     .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 
-    .statusDot{
-      width:10px;
-      height:10px;
-      border-radius:999px;
-      background:var(--warn);
-      box-shadow:0 0 0 4px rgba(255,255,255,.03);
-    }
+    .statusDot{width:10px;height:10px;border-radius:999px;background:var(--warn);box-shadow:0 0 0 4px rgba(255,255,255,.03)}
     .statusDot.ok{background:var(--ok)}
     .statusDot.bad{background:var(--danger)}
 
-    .bigMoney{
-      font-size:38px;
-      font-weight:1000;
-      letter-spacing:-.04em;
-      margin:8px 0 4px 0;
-      line-height:1;
-    }
+    .bigMoney{font-size:38px;font-weight:1000;letter-spacing:-.04em;margin:8px 0 4px 0;line-height:1}
 
-    .mini{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      flex-wrap:wrap;
-      font-size:13px;
-      color:var(--muted);
-      font-weight:800;
-      line-height:1.6;
-    }
+    .mini{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--muted);font-weight:800;line-height:1.6}
 
     .diag{
-      margin-top:12px;
-      padding:12px;
-      border-radius:16px;
-      background:#081119;
-      border:1px solid var(--line);
-      color:#d8e1ff;
-      font:12px/1.58 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      white-space:pre-wrap;
-      word-break:break-word;
-      max-height:240px;
-      overflow:auto;
+      margin-top:12px;padding:12px;border-radius:16px;background:#081119;border:1px solid var(--line);
+      color:#d8e1ff;font:12px/1.58 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      white-space:pre-wrap;word-break:break-word;max-height:240px;overflow:auto;
     }
 
-    .hr{
-      height:1px;
-      background:var(--line);
-      margin:14px 0;
-    }
+    .hr{height:1px;background:var(--line);margin:14px 0}
 
     .boostBox{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      padding:14px;
-      border-radius:20px;
-      background:rgba(96,165,250,.08);
-      border:1px solid rgba(96,165,250,.20);
+      display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+      padding:14px;border-radius:20px;background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.20);
     }
+    .boostBox b{display:block;margin-bottom:5px;font-size:15px}
 
-    .boostBox b{
-      display:block;
-      margin-bottom:5px;
-      font-size:15px;
-    }
-
-    .notifList{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      margin-top:8px;
-    }
+    .notifList{display:flex;flex-direction:column;gap:8px;margin-top:8px}
 
     .notif{
-      padding:12px 13px;
-      border-radius:16px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:10px;
+      padding:12px 13px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.03);
+      display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
     }
 
-    .tag{
-      font-size:11px;
-      font-weight:950;
-      padding:7px 10px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      color:var(--muted);
-      white-space:nowrap;
-    }
-
+    .tag{font-size:11px;font-weight:950;padding:7px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
     .tag.warn{color:#ffe2b0;border-color:rgba(245,158,11,.35);background:rgba(245,158,11,.10)}
     .tag.ok{color:#c9ffd9;border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.08)}
     .tag.info{color:#cfd6ff;border-color:rgba(96,165,250,.35);background:rgba(96,165,250,.10)}
 
-    .footer{
-      margin-top:14px;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
+    .footer{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
 
-    .smallLink{
-      color:var(--muted);
-      text-decoration:none;
-      font-weight:850;
-    }
+    .smallLink{color:var(--muted);text-decoration:none;font-weight:850}
     .smallLink:hover{color:var(--text)}
 
-    .navRow{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom:12px;
-    }
+    .navRow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
 
-    .subPills{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:12px;
-    }
+    .subPills{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .subPill{padding:10px 12px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--muted);font-size:12px;font-weight:900}
 
-    .subPill{
-      padding:10px 12px;
-      border-radius:16px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.08);
-      color:var(--muted);
-      font-size:12px;
-      font-weight:900;
-    }
+    .shell{min-height:280px;display:grid;place-items:center;text-align:center;padding:24px}
+    .shellCard{max-width:640px;padding:22px;border-radius:22px;border:1px solid var(--line);background:rgba(255,255,255,.03);box-shadow:var(--shadow-soft)}
+    .shellTitle{font-size:24px;font-weight:1000;margin-bottom:8px;line-height:1.1}
+    .shellText{color:var(--muted);font-size:14px;line-height:1.8;font-weight:700}
 
-    .shell{
-      min-height:280px;
-      display:grid;
-      place-items:center;
-      text-align:center;
-      padding:24px;
-    }
-
-    .shellCard{
-      max-width:640px;
-      padding:22px;
-      border-radius:22px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      box-shadow:var(--shadow-soft);
-    }
-
-    .shellTitle{
-      font-size:24px;
-      font-weight:1000;
-      margin-bottom:8px;
-      line-height:1.1;
-    }
-
-    .shellText{
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.8;
-      font-weight:700;
-    }
-
-    @media(max-width:920px){
-      .grid{grid-template-columns:1fr}
-    }
-
+    @media(max-width:920px){.grid{grid-template-columns:1fr}}
     @media(max-width:700px){
       .wrap{padding:12px 12px 92px}
       .topbar-inner{padding:12px}
       .brand-title{white-space:normal}
       .boostBox{flex-direction:column}
-      .floating-site-btn{
-        left:12px;
-        right:12px;
-        bottom:calc(12px + env(safe-area-inset-bottom, 0px));
-        min-height:46px;
-        padding:14px 14px;
-        font-size:12px;
-      }
+      .floating-site-btn{left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom, 0px));min-height:46px;padding:14px;font-size:12px}
     }
   </style>
 </head>
 
 <body>
-  <a
-    class="floating-site-btn"
-    id="btnPublicFloating"
-    href="https://mon-commerce.digiylyfe.com/"
-    aria-label="Retour à la vitrine MON COMMERCE"
-    title="Retour à la vitrine MON COMMERCE"
-  >⬅️ Retour vitrine MON COMMERCE</a>
+  <a class="floating-site-btn" id="btnPublicFloating" href="https://mon-commerce.digiylyfe.com/" aria-label="Retour à la vitrine MON COMMERCE">⬅️ Retour vitrine MON COMMERCE</a>
 
   <div class="wrap app">
 
@@ -518,7 +218,6 @@
             <div id="brandSub" class="brand-sub">Pilotage abonnement, activité et boost</div>
           </div>
         </div>
-
         <div class="right">
           <div class="pill" id="pillStatus">Statut : <b>…</b></div>
           <a class="btn-outline" id="btnPinTop" href="./pin.html">🔐 PIN</a>
@@ -528,22 +227,20 @@
     </div>
 
     <div class="navRow">
-      <a class="btn-ghost" id="btnHall" href="./index.html">🏠 Hall</a>
-      <a class="btn-ghost" id="btnCaisse" href="./caisse.html">🧾 Caisse</a>
-      <a class="btn-ghost" id="btnAdmin" href="./admin.html">⚙️ Admin</a>
-      <a class="btn-outline" id="btnAbosTop" href="https://commencer-a-payer.digiylyfe.com/">💳 Abonnement</a>
+      <a class="btn-ghost" id="btnHall"     href="./index.html">🏠 Hall</a>
+      <a class="btn-ghost" id="btnCaisse"   href="./caisse.html">🧾 Caisse</a>
+      <a class="btn-ghost" id="btnAdmin"    href="./admin.html">⚙️ Admin</a>
+      <a class="btn-outline" id="btnAbosTop"   href="https://commencer-a-payer.digiylyfe.com/">💳 Abonnement</a>
       <a class="btn-outline" id="btnSupportTop" href="#" target="_blank" rel="noopener">💬 Support</a>
     </div>
 
     <div id="blockedShell" class="card shell" style="display:none">
       <div class="shellCard">
         <div class="shellTitle" id="blockedTitle">Accès contrôlé</div>
-        <div class="shellText" id="blockedText">
-          Cette porte demande un slug actif et un accès POS valide.
-        </div>
+        <div class="shellText" id="blockedText">Cette porte demande un slug actif et un accès POS valide.</div>
         <div class="footer" style="justify-content:center;margin-top:18px">
-          <a class="btn-outline" id="btnBlockedPin" href="./pin.html">🔐 Ouvrir avec mon PIN</a>
-          <a class="btn" id="btnBlockedAbos" href="https://commencer-a-payer.digiylyfe.com/">💳 Gérer mon abonnement</a>
+          <a class="btn-outline" id="btnBlockedPin"  href="./pin.html">🔐 Ouvrir avec mon PIN</a>
+          <a class="btn"         id="btnBlockedAbos" href="https://commencer-a-payer.digiylyfe.com/">💳 Gérer mon abonnement</a>
         </div>
       </div>
     </div>
@@ -553,7 +250,7 @@
 
         <div class="card" id="cardStatus">
           <div class="heroBadge">dashboard pro • abonnement • argent • boost</div>
-          <h3>Statut & sécurité</h3>
+          <h3>Statut &amp; sécurité</h3>
 
           <div class="row">
             <div class="statusDot" id="dot"></div>
@@ -571,11 +268,7 @@
 
           <div class="hr"></div>
 
-          <div class="mini" id="metaLine">
-            <span>Plan : —</span>
-            <span>•</span>
-            <span>Paiement : —</span>
-          </div>
+          <div class="mini" id="metaLine"><span>Plan : —</span><span>•</span><span>Paiement : —</span></div>
 
           <div class="diag" id="diagBox">Initialisation…</div>
 
@@ -586,7 +279,6 @@
 
         <div class="card" id="cardMoney">
           <h3>Argent</h3>
-
           <div class="bigMoney" id="moneyMonth">— FCFA</div>
           <div class="mini" id="moneyMeta">
             <span id="txCount">— transactions</span>
@@ -599,16 +291,11 @@
           <div class="boostBox">
             <div>
               <b>🚀 BOOST visibilité</b>
-              <div class="muted" style="font-weight:800;font-size:13px" id="boostText">
-                +50% d’apparition • 7 jours • 5 000 FCFA
-              </div>
-              <div class="muted" style="font-weight:800;font-size:12px;margin-top:6px" id="boostStatus">
-                Statut boost : —
-              </div>
+              <div class="muted" style="font-weight:800;font-size:13px" id="boostText">+50% d'apparition • 7 jours • 5 000 FCFA</div>
+              <div class="muted" style="font-weight:800;font-size:12px;margin-top:6px" id="boostStatus">Statut boost : —</div>
             </div>
-
             <div style="display:flex;flex-direction:column;gap:8px;min-width:170px">
-              <button class="btn" id="btnBoost" type="button">Activer</button>
+              <button class="btn"         id="btnBoost"     type="button">Activer</button>
               <button class="btn-outline" id="btnBoostInfo" type="button">Détails</button>
             </div>
           </div>
@@ -616,9 +303,7 @@
 
         <div class="card" id="cardAction" style="grid-column:1/-1">
           <h3>Action principale</h3>
-          <div class="muted" style="font-weight:800;margin-bottom:10px" id="actionDesc">
-            Une action. Simple. Efficace.
-          </div>
+          <div class="muted" style="font-weight:800;margin-bottom:10px" id="actionDesc">Une action. Simple. Efficace.</div>
 
           <div class="row" style="justify-content:space-between">
             <div class="muted" style="font-weight:900" id="actionHint">—</div>
@@ -645,633 +330,390 @@
 (() => {
   "use strict";
 
-  const MODULE_CODE = "POS";
-  const MODULE_LABEL = "MON COMMERCE";
+  const MODULE_CODE          = "POS";
+  const MODULE_LABEL         = "MON COMMERCE";
   const PRIMARY_ACTION_LABEL = "Ouvrir la caisse";
-  const PRIMARY_ACTION_HINT = "Encaisse une vente, gère tes produits et ton stock.";
-  const SUPPORT_PHONE = "221771342889";
+  const PRIMARY_ACTION_HINT  = "Encaisse une vente, gère tes produits et ton stock.";
+  const SUPPORT_PHONE        = "221771342889";
 
-  const SUPABASE_URL = String(window.DIGIY_SUPABASE_URL || "").trim();
+  const SUPABASE_URL  = String(window.DIGIY_SUPABASE_URL  || "").trim();
   const SUPABASE_ANON = String(window.DIGIY_SUPABASE_ANON_KEY || window.DIGIY_SUPABASE_ANON || "").trim();
 
-  const ABOS_URL = "https://commencer-a-payer.digiylyfe.com/";
-  const CAISSE_URL = digiyLocal("caisse.html");
-  const HALL_URL = digiyLocal("index.html");
-  const ADMIN_URL = digiyLocal("admin.html");
-  const PIN_URL = digiyLocal("pin.html");
+  const ABOS_URL     = "https://commencer-a-payer.digiylyfe.com/";
+  const CAISSE_URL   = digiyLocal("caisse.html");
+  const HALL_URL     = digiyLocal("index.html");
+  const ADMIN_URL    = digiyLocal("admin.html");
+  const PIN_URL      = digiyLocal("pin.html");
   const DASHBOARD_URL = digiyLocal("dashboard-pro.html");
-  const PUBLIC_URL = "https://mon-commerce.digiylyfe.com/";
+  const PUBLIC_URL   = "https://mon-commerce.digiylyfe.com/";
 
-  const BOOST = {
-    module: "BOOST",
-    plan: "boost_7d",
-    price_xof: 5000,
-    label: "BOOST visibilité",
-    duration_days: 7
-  };
+  const BOOST = { module:"BOOST", plan:"boost_7d", price_xof:5000, label:"BOOST visibilité", duration_days:7 };
 
   const $ = (id) => document.getElementById(id);
   const diagLines = [];
   let sb = null;
 
-  const state = {
-    slug: "",
-    phone: "",
-    access: false,
-    storeName: "",
-    plan: "",
-    statusPayload: null
-  };
+  const state = { slug:"", phone:"", access:false, storeName:"", plan:"", statusPayload:null };
 
-  function reveal(){
+  function reveal() {
     document.documentElement.classList.add("app-ready");
     document.documentElement.style.visibility = "";
   }
 
-  function safeStringify(v){
-    try { return JSON.stringify(v, null, 2); }
-    catch(_) { return String(v); }
+  function safeStringify(v) {
+    try { return JSON.stringify(v, null, 2); } catch(_) { return String(v); }
   }
 
-  function log(msg, data){
+  function log(msg, data) {
     const line = `[${new Date().toLocaleTimeString("fr-FR")}] ${msg}`;
     diagLines.push(data === undefined ? line : `${line}\n${safeStringify(data)}`);
     if ($("diagBox")) $("diagBox").textContent = diagLines.join("\n\n");
     console.log("[DIGIY POS DASHBOARD]", msg, data ?? "");
   }
 
-  function fmtDateFR(iso){
-    if(!iso) return "—";
+  function fmtDateFR(iso) {
+    if (!iso) return "—";
     const d = new Date(iso);
-    if(Number.isNaN(d.getTime())) return "—";
+    if (Number.isNaN(d.getTime())) return "—";
     return d.toLocaleDateString("fr-FR", { year:"numeric", month:"long", day:"numeric" });
   }
 
-  function cleanDigits(v){
-    return String(v || "").replace(/[^\d]/g, "");
-  }
+  function cleanDigits(v)  { return String(v || "").replace(/[^\d]/g, ""); }
+  function normSlug(v)     { return String(v || "").trim().toLowerCase(); }
 
-  function normSlug(v){
-    return String(v || "").trim().toLowerCase();
-  }
-
-  function buildUrl(base, params){
+  function buildUrl(base, params) {
     const u = new URL(base, location.href);
     Object.entries(params || {}).forEach(([k, v]) => {
-      if(v !== null && v !== undefined && v !== "") u.searchParams.set(k, String(v));
+      if (v !== null && v !== undefined && v !== "") u.searchParams.set(k, String(v));
     });
     return u.toString();
   }
 
-  function buildSupportUrl(phone, slug){
-    const text = [
-      "Bonjour JB,",
-      "j’ai besoin d’aide pour MON COMMERCE by DIGIY.",
-      slug ? `Slug : ${slug}` : "",
-      phone ? `Téléphone : +${phone}` : ""
+  function buildSupportUrl(phone, slug) {
+    const text = ["Bonjour JB,", "j'ai besoin d'aide pour MON COMMERCE by DIGIY.",
+      slug  ? `Slug : ${slug}`         : "",
+      phone ? `Téléphone : +${phone}`  : ""
     ].filter(Boolean).join(" ");
     return `https://wa.me/${SUPPORT_PHONE}?text=${encodeURIComponent(text)}`;
   }
 
-  function buildAbosParams(phone, slug, moduleCode = MODULE_CODE){
-    return {
-      base_module: MODULE_CODE,
-      module: moduleCode,
-      phone,
-      slug
-    };
+  function buildAbosParams(phone, slug, moduleCode = MODULE_CODE) {
+    return { base_module: MODULE_CODE, module: moduleCode, phone, slug };
   }
 
-  function saveLocalAccess(slug, phone){
-    if(slug){
-      localStorage.setItem("digiy_pos_last_slug", slug);
-      sessionStorage.setItem("digiy_pos_last_slug", slug);
-    }
-    if(phone){
-      localStorage.setItem("digiy_pos_last_phone", phone);
-      sessionStorage.setItem("digiy_pos_last_phone", phone);
-    }
-    const payload = {
-      slug: slug || "",
-      phone: phone || "",
-      module: MODULE_CODE,
-      verified: true,
-      ts: Date.now()
-    };
+  function saveLocalAccess(slug, phone) {
+    if (slug)  { localStorage.setItem("digiy_pos_last_slug",  slug);  sessionStorage.setItem("digiy_pos_last_slug",  slug); }
+    if (phone) { localStorage.setItem("digiy_pos_last_phone", phone); sessionStorage.setItem("digiy_pos_last_phone", phone); }
+    const payload = { slug: slug||"", phone: phone||"", module: MODULE_CODE, verified:true, ts: Date.now() };
     localStorage.setItem("DIGIY_POS_SESSION", JSON.stringify(payload));
-    localStorage.setItem("DIGIY_ACCESS", JSON.stringify(payload));
+    localStorage.setItem("DIGIY_ACCESS",      JSON.stringify(payload));
   }
 
-  function getParam(name){
-    return new URL(location.href).searchParams.get(name) || "";
-  }
+  function getParam(name) { return new URL(location.href).searchParams.get(name) || ""; }
 
-  function getGuardSession(){
+  function getGuardSession() {
     if (typeof window.DIGIY_GUARD?.getSession === "function") {
-      try { return window.DIGIY_GUARD.getSession() || {}; }
-      catch(_) {}
+      try { return window.DIGIY_GUARD.getSession() || {}; } catch(_) {}
     }
     return window.DIGIY_GUARD?.state || {};
   }
 
-  function getSlug(){
+  function getSlug() {
     const gs = getGuardSession();
-    return normSlug(
-      getParam("slug") ||
-      gs.slug ||
-      localStorage.getItem("digiy_pos_last_slug") ||
-      sessionStorage.getItem("digiy_pos_last_slug") ||
-      ""
-    );
+    return normSlug(getParam("slug") || gs.slug || localStorage.getItem("digiy_pos_last_slug") || sessionStorage.getItem("digiy_pos_last_slug") || "");
   }
 
-  function getPhone(){
+  function getPhone() {
     const gs = getGuardSession();
-    return cleanDigits(
-      getParam("phone") ||
-      gs.phone ||
-      localStorage.getItem("digiy_pos_last_phone") ||
-      sessionStorage.getItem("digiy_pos_last_phone") ||
-      ""
-    );
+    return cleanDigits(getParam("phone") || gs.phone || localStorage.getItem("digiy_pos_last_phone") || sessionStorage.getItem("digiy_pos_last_phone") || "");
   }
 
-  function setNotifs(items){
+  function setNotifs(items) {
     const box = $("notifList");
     box.innerHTML = "";
-    if(!items.length){
-      box.innerHTML = `
-        <div class="notif">
-          <div>
-            <b>Rien à signaler</b>
-            <div class="muted" style="font-weight:800;margin-top:2px">Tout roule.</div>
-          </div>
-          <div class="tag ok">OK</div>
-        </div>
-      `;
+    if (!items.length) {
+      box.innerHTML = `<div class="notif"><div><b>Rien à signaler</b><div class="muted" style="font-weight:800;margin-top:2px">Tout roule.</div></div><div class="tag ok">OK</div></div>`;
       return;
     }
-
-    for(const it of items){
+    for (const it of items) {
       const tagClass = it.level === "warn" ? "warn" : it.level === "ok" ? "ok" : "info";
       const div = document.createElement("div");
       div.className = "notif";
-      div.innerHTML = `
-        <div>
-          <b>${it.title}</b>
-          <div class="muted" style="font-weight:800;margin-top:2px">${it.text}</div>
-        </div>
-        <div class="tag ${tagClass}">${it.tag}</div>
-      `;
+      div.innerHTML = `<div><b>${it.title}</b><div class="muted" style="font-weight:800;margin-top:2px">${it.text}</div></div><div class="tag ${tagClass}">${it.tag}</div>`;
       box.appendChild(div);
     }
   }
 
-  function daysBetween(aIso, bIso){
-    const a = new Date(aIso).getTime();
-    const b = new Date(bIso).getTime();
-    if(Number.isNaN(a) || Number.isNaN(b)) return null;
+  function daysBetween(aIso, bIso) {
+    const a = new Date(aIso).getTime(), b = new Date(bIso).getTime();
+    if (Number.isNaN(a) || Number.isNaN(b)) return null;
     return Math.ceil((b - a) / (1000 * 60 * 60 * 24));
   }
 
-  async function awaitGuardReady(){
-    try{
-      if(typeof window.DIGIY_GUARD?.ready === "function"){
-        await window.DIGIY_GUARD.ready();
-      } else if(window.DIGIY_GUARD?.ready && typeof window.DIGIY_GUARD.ready.then === "function"){
-        await window.DIGIY_GUARD.ready;
-      }
-    } catch(err){
-      log("guard ready KO", { message: err?.message || String(err) });
-    }
+  async function awaitGuardReady() {
+    try {
+      if (typeof window.DIGIY_GUARD?.ready === "function") await window.DIGIY_GUARD.ready();
+      else if (window.DIGIY_GUARD?.ready?.then) await window.DIGIY_GUARD.ready;
+    } catch(err) { log("guard ready KO", { message: err?.message || String(err) }); }
   }
 
-  async function bootGuard(){
-    if(typeof window.DIGIY_GUARD?.boot !== "function") return true;
-
-    try{
-      const res = await window.DIGIY_GUARD.boot({
-        module: MODULE_CODE,
-        dashboard: DASHBOARD_URL,
-        login: PIN_URL,
-        pay: ABOS_URL,
-        requireSlug: true,
-        checkSubscription: false
-      });
-
+  async function bootGuard() {
+    if (typeof window.DIGIY_GUARD?.boot !== "function") return true;
+    try {
+      const res = await window.DIGIY_GUARD.boot({ module: MODULE_CODE, dashboard: DASHBOARD_URL, login: PIN_URL, pay: ABOS_URL, requireSlug:true, checkSubscription:false });
       log("guard boot", res);
-      if(res && res.ok === false) return false;
+      if (res && res.ok === false) return false;
       return true;
-    } catch(err){
-      log("guard boot erreur", { message: err?.message || String(err) });
-      return true;
-    }
+    } catch(err) { log("guard boot erreur", { message: err?.message || String(err) }); return true; }
   }
 
-  function makeFallbackSb(){
-    if(window.supabase?.createClient && SUPABASE_URL && SUPABASE_ANON){
-      return window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
-        auth:{
-          persistSession:false,
-          autoRefreshToken:false,
-          detectSessionInUrl:false
-        }
-      });
+  function makeFallbackSb() {
+    if (window.supabase?.createClient && SUPABASE_URL && SUPABASE_ANON) {
+      return window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON, { auth:{ persistSession:false, autoRefreshToken:false, detectSessionInUrl:false } });
     }
     return null;
   }
 
-  async function getSb(){
-    if(sb) return sb;
-    if(typeof window.DIGIY_GUARD?.getSb === "function"){
-      try{
-        sb = window.DIGIY_GUARD.getSb();
-        if(sb) return sb;
-      } catch(err){
-        log("guard getSb erreur", { message: err?.message || String(err) });
-      }
+  async function getSb() {
+    if (sb) return sb;
+    if (typeof window.DIGIY_GUARD?.getSb === "function") {
+      try { sb = window.DIGIY_GUARD.getSb(); if (sb) return sb; } catch(err) { log("guard getSb erreur", { message: err?.message || String(err) }); }
     }
     sb = makeFallbackSb();
     return sb;
   }
 
-  async function rpcFirstSuccess(name, payloads){
+  async function rpcFirstSuccess(name, payloads) {
     const client = await getSb();
-    if(!client) throw new Error("supabase_not_ready");
-
+    if (!client) throw new Error("supabase_not_ready");
     let lastError = null;
-
-    for(const payload of payloads){
-      try{
+    for (const payload of payloads) {
+      try {
         log(`RPC ${name} tentative`, payload);
         const { data, error } = await client.rpc(name, payload);
-        if(error){
-          lastError = error;
-          log(`RPC ${name} erreur`, {
-            message: error.message,
-            details: error.details,
-            hint: error.hint
-          });
-          continue;
-        }
+        if (error) { lastError = error; log(`RPC ${name} erreur`, { message: error.message, details: error.details, hint: error.hint }); continue; }
         log(`RPC ${name} OK`, data);
         return data;
-      } catch(err){
-        lastError = err;
-        log(`RPC ${name} exception`, { message: err?.message || String(err) });
-      }
+      } catch(err) { lastError = err; log(`RPC ${name} exception`, { message: err?.message || String(err) }); }
     }
-
     throw lastError || new Error(`RPC ${name} échouée`);
   }
 
-  async function resolvePhoneFromSlug(slug){
+  async function resolvePhoneFromSlug(slug) {
     const client = await getSb();
-    if(!client || !slug) return "";
-
-    const { data, error } = await client
-      .from("digiy_subscriptions_public")
-      .select("phone,module,slug")
-      .eq("slug", slug)
-      .limit(1)
-      .maybeSingle();
-
-    if(error) throw error;
+    if (!client || !slug) return "";
+    const { data, error } = await client.from("digiy_subscriptions_public").select("phone,module,slug").eq("slug", slug).limit(1).maybeSingle();
+    if (error) throw error;
     return cleanDigits(data?.phone || "");
   }
 
-  async function digiyHasAccess(phone, module){
-    const res = await rpcFirstSuccess("digiy_has_access", [
-      { p_phone: phone, p_module: module },
-      { phone, module }
-    ]);
-
-    if(typeof res === "boolean") return res;
-    if(res && typeof res.ok === "boolean") return res.ok;
-    if(res && typeof res.has_access === "boolean") return res.has_access;
-    if(res && typeof res.allowed === "boolean") return res.allowed;
-    if(res && typeof res.access === "boolean") return res.access;
+  async function digiyHasAccess(phone, module) {
+    const res = await rpcFirstSuccess("digiy_has_access", [{ p_phone: phone, p_module: module }, { phone, module }]);
+    if (typeof res === "boolean") return res;
+    if (res && typeof res.ok          === "boolean") return res.ok;
+    if (res && typeof res.has_access  === "boolean") return res.has_access;
+    if (res && typeof res.allowed     === "boolean") return res.allowed;
+    if (res && typeof res.access      === "boolean") return res.access;
     return !!res;
   }
 
-  async function digiyGetSubscriptionFull(phone, module){
-    try{
-      return await rpcFirstSuccess("digiy_get_subscription_status", [
-        { p_phone: phone, p_module: module },
-        { phone, module }
-      ]);
-    } catch(err){
-      log("digiy_get_subscription_status indisponible", { message: err?.message || String(err) });
-      return null;
+  async function digiyGetSubscriptionFull(phone, module) {
+    try { return await rpcFirstSuccess("digiy_get_subscription_status", [{ p_phone: phone, p_module: module }, { phone, module }]); }
+    catch(err) { log("digiy_get_subscription_status indisponible", { message: err?.message || String(err) }); return null; }
+  }
+
+  async function digiyGetDashboardStats(phone, module) {
+    try { return await rpcFirstSuccess("digiy_get_dashboard_stats", [{ p_phone: phone, p_module: module }, { phone, module }]); }
+    catch(err) { log("digiy_get_dashboard_stats indisponible", { message: err?.message || String(err) }); return { month_xof:null, tx_count:null, today_hint:"Aujourd'hui" }; }
+  }
+
+  async function digiyGetBoostStatus(phone) {
+    try { return await rpcFirstSuccess("digiy_get_boost_status", [{ p_phone: phone }, { phone }]); }
+    catch(err) { log("digiy_get_boost_status indisponible", { message: err?.message || String(err) }); return null; }
+  }
+
+  async function digiyBuildPayUrl(module, phone, plan) {
+    return await rpcFirstSuccess("digiy_build_pay_url", [{ p_module: module, p_phone: phone, p_plan: plan }, { module, phone, plan }]);
+  }
+
+  async function getStoreContext(slug) {
+    try { return await rpcFirstSuccess("digiy_pos_get_store_context_by_slug", [{ p_slug: slug }, { slug }]); }
+    catch(err1) {
+      try { return await rpcFirstSuccess("pos_get_store_context_by_slug", [{ p_slug: slug }, { slug }]); }
+      catch(err2) { log("store context indisponible", { first: err1?.message || String(err1), second: err2?.message || String(err2) }); return null; }
     }
   }
 
-  async function digiyGetDashboardStats(phone, module){
-    try{
-      return await rpcFirstSuccess("digiy_get_dashboard_stats", [
-        { p_phone: phone, p_module: module },
-        { phone, module }
-      ]);
-    } catch(err){
-      log("digiy_get_dashboard_stats indisponible", { message: err?.message || String(err) });
-      return { month_xof:null, tx_count:null, today_hint:"Aujourd’hui" };
-    }
-  }
-
-  async function digiyGetBoostStatus(phone){
-    try{
-      return await rpcFirstSuccess("digiy_get_boost_status", [
-        { p_phone: phone },
-        { phone }
-      ]);
-    } catch(err){
-      log("digiy_get_boost_status indisponible", { message: err?.message || String(err) });
-      return null;
-    }
-  }
-
-  async function digiyBuildPayUrl(module, phone, plan){
-    return await rpcFirstSuccess("digiy_build_pay_url", [
-      { p_module: module, p_phone: phone, p_plan: plan },
-      { module, phone, plan }
-    ]);
-  }
-
-  async function getStoreContext(slug){
-    try{
-      return await rpcFirstSuccess("digiy_pos_get_store_context_by_slug", [
-        { p_slug: slug },
-        { slug }
-      ]);
-    } catch(err1){
-      try{
-        return await rpcFirstSuccess("pos_get_store_context_by_slug", [
-          { p_slug: slug },
-          { slug }
-        ]);
-      } catch(err2){
-        log("store context indisponible", {
-          first: err1?.message || String(err1),
-          second: err2?.message || String(err2)
-        });
-        return null;
-      }
-    }
-  }
-
-  function wireNav(phone, slug){
+  function wireNav(phone, slug) {
     const q = { slug, phone, module: MODULE_CODE };
-
-    $("btnHall").href = buildUrl(HALL_URL, q);
-    $("btnCaisse").href = buildUrl(CAISSE_URL, q);
-    $("btnAdmin").href = buildUrl(ADMIN_URL, q);
-    $("btnSettings").href = buildUrl(ADMIN_URL, q);
-    $("btnAbosTop").href = buildUrl(ABOS_URL, buildAbosParams(phone, slug));
-    $("btnSupportTop").href = buildSupportUrl(phone, slug);
-    $("linkSupport").href = buildSupportUrl(phone, slug);
-    $("linkPayments").href = buildUrl(ABOS_URL, buildAbosParams(phone, slug));
-    $("btnPinTop").href = buildUrl(PIN_URL, { slug, phone, module: MODULE_CODE, return: DASHBOARD_URL });
+    $("btnHall").href          = buildUrl(HALL_URL,  q);
+    $("btnCaisse").href        = buildUrl(CAISSE_URL, q);
+    $("btnAdmin").href         = buildUrl(ADMIN_URL,  q);
+    $("btnSettings").href      = buildUrl(ADMIN_URL,  q);
+    $("btnAbosTop").href       = buildUrl(ABOS_URL,   buildAbosParams(phone, slug));
+    $("btnSupportTop").href    = buildSupportUrl(phone, slug);
+    $("linkSupport").href      = buildSupportUrl(phone, slug);
+    $("linkPayments").href     = buildUrl(ABOS_URL, buildAbosParams(phone, slug));
+    $("btnPinTop").href        = buildUrl(PIN_URL, { slug, phone, module: MODULE_CODE, return: DASHBOARD_URL });
     $("btnPublicFloating").href = buildUrl(PUBLIC_URL, { slug });
-    $("btnBlockedPin").href = buildUrl(PIN_URL, { slug, phone, module: MODULE_CODE, return: DASHBOARD_URL });
-    $("btnBlockedAbos").href = buildUrl(ABOS_URL, buildAbosParams(phone, slug));
+    $("btnBlockedPin").href    = buildUrl(PIN_URL, { slug, phone, module: MODULE_CODE, return: DASHBOARD_URL });
+    $("btnBlockedAbos").href   = buildUrl(ABOS_URL, buildAbosParams(phone, slug));
   }
 
-  function showBlocked(title, text, pill = "Bloqué"){
+  function showBlocked(title, text, pill = "Bloqué") {
     $("dashboardContent").style.display = "none";
-    $("blockedShell").style.display = "grid";
-    $("blockedTitle").textContent = title;
-    $("blockedText").innerHTML = text;
-    $("pillStatus").innerHTML = `Statut : <b>${pill}</b>`;
+    $("blockedShell").style.display     = "grid";
+    $("blockedTitle").textContent        = title;
+    $("blockedText").innerHTML           = text;
+    $("pillStatus").innerHTML            = `Statut : <b>${pill}</b>`;
   }
 
-  function showDashboard(){
-    $("blockedShell").style.display = "none";
+  function showDashboard() {
+    $("blockedShell").style.display     = "none";
     $("dashboardContent").style.display = "block";
   }
 
-  async function init(){
-    $("brandTitle").textContent = `${MODULE_LABEL} — Dashboard Pro`;
-    $("brandSub").textContent = "Pilotage abonnement, activité et boost";
+  async function init() {
+    $("brandTitle").textContent      = `${MODULE_LABEL} — Dashboard Pro`;
+    $("brandSub").textContent        = "Pilotage abonnement, activité et boost";
     $("btnPrimaryAction").textContent = PRIMARY_ACTION_LABEL;
-    $("actionHint").textContent = PRIMARY_ACTION_HINT;
-    $("actionDesc").textContent = "Entre dans la caisse, pilote tes produits et ton stock depuis une seule porte.";
-    $("pillStatus").innerHTML = `Statut : <b>…</b>`;
+    $("actionHint").textContent      = PRIMARY_ACTION_HINT;
+    $("actionDesc").textContent      = "Entre dans la caisse, pilote tes produits et ton stock depuis une seule porte.";
+    $("pillStatus").innerHTML        = `Statut : <b>…</b>`;
 
     await awaitGuardReady();
     await bootGuard();
 
-    let slug = getSlug();
+    let slug  = getSlug();
     let phone = getPhone();
 
-    state.slug = slug;
+    state.slug  = slug;
     state.phone = phone;
 
-    $("slugBox").textContent = slug || "—";
+    $("slugBox").textContent  = slug  || "—";
     $("phoneBox").textContent = phone ? `+${phone}` : "—";
     wireNav(phone, slug);
     reveal();
 
-    if(!slug){
+    if (!slug) {
       log("slug manquant");
-      showBlocked(
-        "Slug manquant",
-        "Cette porte a besoin d’un <b>slug POS</b> valide. Passe par ton QR ou par <b>pin.html?slug=…</b> pour rouvrir le bon rail.",
-        "Bloqué"
-      );
+      showBlocked("Slug manquant", "Cette porte a besoin d'un <b>slug POS</b> valide. Passe par ton QR ou par <b>pin.html?slug=…</b> pour rouvrir le bon rail.", "Bloqué");
       return;
     }
 
-    try{
-      if(!phone){
-        phone = await resolvePhoneFromSlug(slug);
-        log("phone résolu depuis slug", { slug, phone });
-      }
-    } catch(err){
-      log("resolvePhoneFromSlug KO", { message: err?.message || String(err) });
-    }
+    try {
+      if (!phone) { phone = await resolvePhoneFromSlug(slug); log("phone résolu depuis slug", { slug, phone }); }
+    } catch(err) { log("resolvePhoneFromSlug KO", { message: err?.message || String(err) }); }
 
-    state.slug = slug;
+    state.slug  = slug;
     state.phone = phone || "";
     saveLocalAccess(slug, state.phone);
 
-    $("slugBox").textContent = slug || "—";
+    $("slugBox").textContent  = slug  || "—";
     $("phoneBox").textContent = state.phone ? `+${state.phone}` : "—";
     wireNav(state.phone, slug);
 
     let access = false;
-    if(state.phone){
-      try{
-        access = await digiyHasAccess(state.phone, MODULE_CODE);
-      } catch(err){
-        log("digiyHasAccess KO", { message: err?.message || String(err) });
-        access = false;
-      }
+    if (state.phone) {
+      try { access = await digiyHasAccess(state.phone, MODULE_CODE); }
+      catch(err) { log("digiyHasAccess KO", { message: err?.message || String(err) }); }
     }
-
     state.access = !!access;
 
-    if(!state.phone){
-      showBlocked(
-        "Téléphone introuvable",
-        "Le slug est là, mais le téléphone n’a pas pu être résolu. Passe par le <b>PIN</b> pour reconstruire la session proprement.",
-        "Contrôle"
-      );
+    if (!state.phone) {
+      showBlocked("Téléphone introuvable", "Le slug est là, mais le téléphone n'a pas pu être résolu. Passe par le <b>PIN</b> pour reconstruire la session proprement.", "Contrôle");
       return;
     }
 
-    if(!state.access){
-      showBlocked(
-        "Abonnement requis",
-        "Le contexte du commerce est bien reconnu, mais l’accès POS n’est pas actif. Active ton module ou repasse par le <b>PIN</b> pour vérifier ton accès.",
-        "Inactif"
-      );
+    if (!state.access) {
+      showBlocked("Abonnement requis", "Le contexte du commerce est bien reconnu, mais l'accès POS n'est pas actif. Active ton module ou repasse par le <b>PIN</b> pour vérifier ton accès.", "Inactif");
       return;
     }
 
     showDashboard();
 
     const storeCtx = await getStoreContext(slug);
-    state.storeName = String(
-      storeCtx?.shop_name ||
-      storeCtx?.display_name ||
-      storeCtx?.store?.name ||
-      storeCtx?.profile?.display_name ||
-      MODULE_LABEL
-    ).trim();
+    state.storeName = String(storeCtx?.shop_name || storeCtx?.display_name || storeCtx?.store?.name || storeCtx?.profile?.display_name || MODULE_LABEL).trim();
 
-    const status = await digiyGetSubscriptionFull(state.phone, MODULE_CODE);
+    const status    = await digiyGetSubscriptionFull(state.phone, MODULE_CODE);
     state.statusPayload = status || null;
 
     const expiresAt = status?.expires_at || status?.current_period_end || null;
-    const plan = status?.plan || status?.plan_code || "standard";
-    const pay = status?.payment_ref ? "validé" : "ok";
-
-    state.plan = plan;
+    const plan      = status?.plan || status?.plan_code || "standard";
+    const pay       = status?.payment_ref ? "validé" : "ok";
+    state.plan      = plan;
 
     $("dot").classList.remove("bad");
     $("dot").classList.add("ok");
     $("statusLine").textContent = "Abonnement actif";
     $("expiryLine").textContent = expiresAt ? `Expire le ${fmtDateFR(expiresAt)}` : "Expiration : —";
-    $("pillStatus").innerHTML = `Statut : <b>Actif</b>`;
-    $("metaLine").innerHTML = `<span>Plan : ${plan}</span><span>•</span><span>Paiement : ${pay}</span>`;
-    $("brandSub").textContent = `${state.storeName} • pilotage abonnement, activité et boost`;
+    $("pillStatus").innerHTML   = `Statut : <b>Actif</b>`;
+    $("metaLine").innerHTML     = `<span>Plan : ${plan}</span><span>•</span><span>Paiement : ${pay}</span>`;
+    $("brandSub").textContent   = `${state.storeName} • pilotage abonnement, activité et boost`;
 
     const stats = await digiyGetDashboardStats(state.phone, MODULE_CODE);
     const month = stats?.month_xof ?? null;
-    const tx = stats?.tx_count ?? null;
+    const tx    = stats?.tx_count  ?? null;
 
     $("moneyMonth").textContent = month !== null ? `${Number(month).toLocaleString("fr-FR")} FCFA` : "— FCFA";
-    $("txCount").textContent = tx !== null ? `${tx} transactions` : "— transactions";
-    $("todayHint").textContent = stats?.today_hint || "Aujourd’hui";
+    $("txCount").textContent    = tx    !== null ? `${tx} transactions` : "— transactions";
+    $("todayHint").textContent  = stats?.today_hint || "Aujourd'hui";
 
     const notifs = [];
 
-    if(expiresAt){
+    if (expiresAt) {
       const d = daysBetween(new Date().toISOString(), expiresAt);
-      if(d !== null && d <= 3){
-        notifs.push({
-          level:"warn",
-          tag:"J-3",
-          title:"Abonnement bientôt expiré",
-          text:`Expire dans ${d} jour(s). Renouvelle pour éviter la coupure.`
-        });
-      } else {
-        notifs.push({
-          level:"ok",
-          tag:"OK",
-          title:"Abonnement",
-          text:"Actif — prochain contrôle : J-3."
-        });
-      }
+      notifs.push(d !== null && d <= 3
+        ? { level:"warn", tag:"J-3", title:"Abonnement bientôt expiré", text:`Expire dans ${d} jour(s). Renouvelle pour éviter la coupure.` }
+        : { level:"ok",   tag:"OK",  title:"Abonnement",                text:"Actif — prochain contrôle : J-3." }
+      );
     }
 
     const boost = await digiyGetBoostStatus(state.phone);
-    if(boost?.active){
-      $("boostStatus").textContent = `Statut boost : actif jusqu’au ${fmtDateFR(boost.expires_at)} • +${boost.views_today || 0} vues aujourd’hui`;
-      $("btnBoost").textContent = "Actif";
-      $("btnBoost").disabled = true;
-      notifs.push({
-        level:"info",
-        tag:"BOOST",
-        title:"Boost actif",
-        text:"Visibilité augmentée. Continue ton activité."
-      });
+    if (boost?.active) {
+      $("boostStatus").textContent = `Statut boost : actif jusqu'au ${fmtDateFR(boost.expires_at)} • +${boost.views_today || 0} vues aujourd'hui`;
+      $("btnBoost").textContent    = "Actif";
+      $("btnBoost").disabled       = true;
+      notifs.push({ level:"info", tag:"BOOST", title:"Boost actif", text:"Visibilité augmentée. Continue ton activité." });
     } else {
       $("boostStatus").textContent = "Statut boost : inactif";
-      notifs.push({
-        level:"info",
-        tag:"OPTION",
-        title:"Boost disponible",
-        text:"Active le BOOST si tu veux plus de visibilité."
-      });
+      notifs.push({ level:"info", tag:"OPTION", title:"Boost disponible", text:"Active le BOOST si tu veux plus de visibilité." });
     }
 
-    if(month === null || tx === null){
-      notifs.push({
-        level:"info",
-        tag:"DATA",
-        title:"Stats à brancher",
-        text:"Le dashboard vit déjà, mais les chiffres réels attendent la RPC stats si elle n’est pas encore posée."
-      });
+    if (month === null || tx === null) {
+      notifs.push({ level:"info", tag:"DATA", title:"Stats à brancher", text:"Le dashboard vit déjà, mais les chiffres réels attendent la RPC stats si elle n'est pas encore posée." });
     }
 
     setNotifs(notifs);
 
-    $("btnManageSub").onclick = () => {
-      location.href = buildUrl(ABOS_URL, buildAbosParams(state.phone, slug));
-    };
-
-    $("btnPrimaryAction").onclick = () => {
-      location.href = buildUrl(CAISSE_URL, {
-        slug,
-        phone: state.phone,
-        module: MODULE_CODE
-      });
-    };
-
-    $("btnBoostInfo").onclick = () => {
-      alert("BOOST : +50% d’apparition pendant 7 jours. Paiement direct. Aucun spam.");
-    };
+    $("btnManageSub").onclick    = () => { location.href = buildUrl(ABOS_URL, buildAbosParams(state.phone, slug)); };
+    $("btnPrimaryAction").onclick = () => { location.href = buildUrl(CAISSE_URL, { slug, phone: state.phone, module: MODULE_CODE }); };
+    $("btnBoostInfo").onclick    = () => { alert("BOOST : +50% d'apparition pendant 7 jours. Paiement direct. Aucun spam."); };
 
     $("btnBoost").onclick = async () => {
-      try{
-        $("btnBoost").disabled = true;
+      try {
+        $("btnBoost").disabled    = true;
         $("btnBoost").textContent = "…";
-
         const payUrlPayload = await digiyBuildPayUrl(BOOST.module, state.phone, BOOST.plan);
-        const url =
-          typeof payUrlPayload === "string"
-            ? payUrlPayload
-            : (payUrlPayload?.url || payUrlPayload?.pay_url || null);
-
-        if(!url) throw new Error("URL paiement BOOST manquante");
+        const url = typeof payUrlPayload === "string" ? payUrlPayload : (payUrlPayload?.url || payUrlPayload?.pay_url || null);
+        if (!url) throw new Error("URL paiement BOOST manquante");
         location.href = url;
-      } catch(e){
+      } catch(e) {
         console.error(e);
-        alert("Impossible d’activer le BOOST. Vérifie la config ou la RPC digiy_build_pay_url.");
-        $("btnBoost").disabled = false;
+        alert("Impossible d'activer le BOOST. Vérifie la config ou la RPC digiy_build_pay_url.");
+        $("btnBoost").disabled    = false;
         $("btnBoost").textContent = "Activer";
       }
     };
 
-    log("dashboard ready", {
-      slug,
-      phone: state.phone,
-      access: state.access,
-      plan: state.plan,
-      store: state.storeName
-    });
+    log("dashboard ready", { slug, phone: state.phone, access: state.access, plan: state.plan, store: state.storeName });
   }
 
   init().catch((err) => {
     console.error(err);
     log("init fatale", { message: err?.message || String(err) });
     reveal();
-    showBlocked(
-      "Erreur de chargement",
-      "Le dashboard n’a pas pu finir sa lecture. Passe par le <b>PIN</b> ou relance avec un slug propre.",
-      "Erreur"
-    );
+    showBlocked("Erreur de chargement", "Le dashboard n'a pas pu finir sa lecture. Passe par le <b>PIN</b> ou relance avec un slug propre.", "Erreur");
   });
 })();
 </script>
