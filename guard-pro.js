@@ -1,4 +1,5 @@
-// guard.js — DIGIY JOBS PRO
+===== guard.js =====
+// guard.js — DIGIY POS PRO
 // Doctrine : PIN une seule fois -> session locale fraîche -> navigation interne directe
 // Rail d'accès/session = slug + phone
 // Rail métier = owner_id / candidate.id / offer_id
@@ -15,8 +16,8 @@
       window.DIGIY_SUPABASE_ANON_KEY ||
       "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3",
 
-    MODULE_CODE: "JOBS",
-    MODULE_CODE_LOWER: "jobs",
+    MODULE_CODE: "POS",
+    MODULE_CODE_LOWER: "pos",
 
     SESSION_MAX_AGE_MS: 8 * 60 * 60 * 1000, // 8h
 
@@ -27,15 +28,15 @@
 
     STORAGE: {
       SESSION_KEYS: [
-        "DIGIY_JOBS_PIN_SESSION",
+        "DIGIY_POS_PIN_SESSION",
         "DIGIY_PIN_SESSION",
         "DIGIY_ACCESS",
-        "DIGIY_SESSION_JOBS",
-        "digiy_jobs_session"
+        "DIGIY_SESSION_POS",
+        "digiy_pos_session"
       ],
-      SLUG_KEY: "digiy_jobs_slug",
-      PHONE_KEY: "digiy_jobs_phone",
-      LAST_SLUG_KEY: "digiy_jobs_last_slug"
+      SLUG_KEY: "digiy_pos_slug",
+      PHONE_KEY: "digiy_pos_phone",
+      LAST_SLUG_KEY: "digiy_pos_last_slug"
     },
 
     RPC: {
