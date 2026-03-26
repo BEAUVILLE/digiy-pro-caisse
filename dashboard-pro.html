@@ -10,13 +10,25 @@
     content="MON COMMERCE by DIGIY — dashboard pro POS : abonnement, activité, boost et porte centrale vers la caisse."
   />
 
-  <script>
-  window.DIGIY_SUPABASE_URL     = "https://wesqmwjjtsefyjnluosj.supabase.co";
+ <script>
+  window.DIGIY_SUPABASE_URL      = "https://wesqmwjjtsefyjnluosj.supabase.co";
   window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
-  window.DIGIY_SUPABASE_ANON    = window.DIGIY_SUPABASE_ANON_KEY;
-  window.DIGIY_MODULE           = "POS";
-  window.DIGIY_LOGIN_URL        = "./pin.html";
+  window.DIGIY_SUPABASE_ANON     = window.DIGIY_SUPABASE_ANON_KEY;
+  window.DIGIY_MODULE            = "POS";
+  window.DIGIY_LOGIN_URL         = "./pin.html";
   document.documentElement.style.visibility = "hidden";
+
+  function digiyBasePath() {
+    const parts = location.pathname.split("/").filter(Boolean);
+    const isGh  = /\.github\.io$/i.test(location.hostname);
+    if (isGh && parts.length > 0) return "/" + parts[0] + "/";
+    return "/";
+  }
+
+  function digiyLocal(path) {
+    path = String(path || "").replace(/^\/+/, "");
+    return digiyBasePath() + path;
+  }
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
