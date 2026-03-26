@@ -1,14 +1,12 @@
+===== caisse.html =====
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <meta name="theme-color" content="#07140f"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>MON COMMERCE — DIGIY CAISSE PRO</title>
-  <meta
-    name="description"
-    content="MON COMMERCE by DIGIY — caisse boutique moderne, lecture locale, accès contrôlé, encaissement rapide et contexte magasin."
-  />
+  <meta name="theme-color" content="#07140f" />
+  <meta name="description" content="MON COMMERCE by DIGIY — caisse boutique moderne, lecture locale, accès contrôlé, encaissement rapide et contexte magasin." />
 
   <script>
     window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
@@ -17,28 +15,22 @@
     window.DIGIY_MODULE = "POS";
     window.DIGIY_LOGIN_URL = "./pin.html";
     document.documentElement.style.visibility = "hidden";
-     </script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./guard.js"></script>
-  <script src="./claw-tools-pos.js"></script>  ← caisse = page pro
 
-  <style>
-
-    function digiyBasePath(){
+    function digiyBasePath() {
       const parts = location.pathname.split("/").filter(Boolean);
       const isGh = /\.github\.io$/i.test(location.hostname);
-      if(isGh && parts.length > 0) return "/" + parts[0] + "/";
+      if (isGh && parts.length > 0) return "/" + parts[0] + "/";
       return "/";
     }
 
-    function digiyLocal(path){
+    function digiyLocal(path) {
       path = String(path || "").replace(/^\/+/, "");
       return digiyBasePath() + path;
     }
   </script>
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./guard.js"></script>
+  <script src="./claw-tools-pos.js"></script>
 
   <style>
     :root{
@@ -1636,3 +1628,4 @@
   </script>
 </body>
 </html>
+
