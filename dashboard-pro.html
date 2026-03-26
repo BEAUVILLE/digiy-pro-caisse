@@ -1,3 +1,4 @@
+===== dashboard-pro.html =====
 <!doctype html>
 <html lang="fr">
 <head>
@@ -8,19 +9,16 @@
   <meta name="description" content="MON COMMERCE by DIGIY — dashboard pro POS : abonnement, activité, boost et porte centrale vers la caisse." />
 
   <script>
-  window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
-  window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
-  window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
-  window.DIGIY_MODULE = "POS";
-  window.DIGIY_LOGIN_URL = "./pin.html";
-  document.documentElement.style.visibility = "hidden";
-</script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./guard.js"></script>
-<script src="./claw-tools-pos.js"></script>
+    window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+    window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
+    window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
+    window.DIGIY_MODULE = "POS";
+    window.DIGIY_LOGIN_URL = "./pin.html";
+    document.documentElement.style.visibility = "hidden";
+
     function digiyBasePath() {
       const parts = location.pathname.split("/").filter(Boolean);
-      const isGh  = /\.github\.io$/i.test(location.hostname);
+      const isGh = /\.github\.io$/i.test(location.hostname);
       if (isGh && parts.length > 0) return "/" + parts[0] + "/";
       return "/";
     }
@@ -30,7 +28,6 @@
       return digiyBasePath() + path;
     }
   </script>
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./guard.js"></script>
   <script src="./claw-tools-pos.js"></script>
@@ -722,3 +719,4 @@
 </script>
 </body>
 </html>
+
