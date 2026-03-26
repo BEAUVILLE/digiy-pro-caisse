@@ -1,3 +1,4 @@
+===== claw-tools-pos.js =====
 // claw-tools-pos.js — DIGIY MON COMMERCE / POS bridge v1
 // Doctrine : on n'invente pas. Terrain extrait de dashboard-pro.html + guard.js POS.
 // API canonique : window.DIGIY_CLAW_POS
@@ -369,3 +370,4 @@
     "— tape CLAW_POS.snapshot() pour l'état complet"
   );
 })();
+;
