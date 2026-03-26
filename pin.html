@@ -161,7 +161,7 @@
           <a id="btnDashboard" class="btn secondary hidden" href="./dashboard-pro.html">🧭 Dashboard</a>
           <a id="btnCaisse" class="btn secondary hidden" href="./caisse.html">🧾 Caisse</a>
           <a id="btnAdmin" class="btn secondary hidden" href="./admin.html">🛠️ Admin</a>
-          <a class="btn secondary" href="https://wa.me/221771342889" target="_blank" rel="noopener">💬 Support</a>
+          <a id="btnSupport" class="btn secondary" href="https://wa.me/221771342889" target="_blank" rel="noopener">💬 Support</a>
         </div>
 
         <div id="status" class="status">Prêt.</div>
@@ -222,6 +222,7 @@
         btnDashboard: document.getElementById("btnDashboard"),
         btnCaisse: document.getElementById("btnCaisse"),
         btnAdmin: document.getElementById("btnAdmin"),
+        btnSupport: document.getElementById("btnSupport"),
         status: document.getElementById("status"),
         returnInfo: document.getElementById("returnInfo"),
         sessionInfo: document.getElementById("sessionInfo")
@@ -242,11 +243,7 @@
       }
 
       function normPhone(value) {
-        const raw = String(value || "").trim();
-        const cleaned = raw.replace(/[^\d+]/g, "");
-        const digits = cleaned.replace(/[^\d]/g, "");
-        if (!digits) return "";
-        return cleaned.startsWith("+") ? `+${digits}` : digits;
+        return String(value || "").replace(/[^\d]/g, "").slice(0, 15);
       }
 
       function normPin(value) {
@@ -266,10 +263,6 @@
         return Date.now();
       }
 
-      function nowIso() {
-        return new Date().toISOString();
-      }
-
       function isRecent(ts) {
         const n = Number(ts || 0);
         if (!n) return false;
@@ -283,16 +276,13 @@
           phone: normPhone(phone),
           owner_id: owner_id || null,
           module: CFG.MODULE,
-
           access: true,
           access_ok: true,
           ok: true,
           verified: true,
-
           verified_at: t,
           validated_at: new Date(t).toISOString(),
           ts: t,
-
           reason: "pin_ok"
         };
       }
@@ -361,20 +351,16 @@
         if (!s) return null;
 
         const tries = [
-          { select: "phone,slug,module", slug: `eq.${s}`, module: `eq.${CFG.MODULE}`, limit: "1" },
-          { select: "phone,slug,module", slug: `eq.${s}`, module: `eq.${CFG.MODULE_LOWER}`, limit: "1" },
-          { select: "phone,slug,module", slug: `eq.${s}`, limit: "1" }
+          { slug: s, module: CFG.MODULE },
+          { slug: s, module: CFG.MODULE_LOWER },
+          { slug: s }
         ];
 
         for (const q of tries) {
           const { data, error } = await supabase
             .from(CFG.TABLE_SUBS)
             .select("phone,slug,module")
-            .match(Object.fromEntries(
-              Object.entries(q)
-                .filter(([k]) => !["select", "limit"].includes(k))
-                .map(([k, v]) => [k, String(v).replace(/^eq\./, "")])
-            ))
+            .match(q)
             .limit(1);
 
           if (!error && Array.isArray(data) && data[0]) {
@@ -530,6 +516,7 @@
       function refreshLinks(slug, phone) {
         const s = normSlug(slug);
         const p = normPhone(phone);
+
         const add = (base) => {
           const u = new URL(base, location.href);
           if (s) u.searchParams.set("slug", s);
@@ -540,6 +527,8 @@
         el.btnDashboard.href = add("./dashboard-pro.html");
         el.btnCaisse.href = add("./caisse.html");
         el.btnAdmin.href = add("./admin.html");
+        el.btnPay.href = CFG.PAY_URL;
+        el.btnSupport.href = "https://wa.me/" + CFG.SUPPORT_WA;
 
         if (s) {
           el.btnDashboard.classList.remove("hidden");
@@ -653,11 +642,13 @@
       });
 
       el.btnOpen.addEventListener("click", login);
+
       [el.slug, el.phone, el.pin].forEach(node => {
         node.addEventListener("keydown", (e) => {
           if (e.key === "Enter") login();
         });
       });
+
       el.slug.addEventListener("input", () => refreshLinks(el.slug.value, el.phone.value));
       el.phone.addEventListener("input", () => refreshLinks(el.slug.value, el.phone.value));
 
