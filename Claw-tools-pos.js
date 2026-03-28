@@ -1,4 +1,3 @@
-===== claw-tools-pos.js =====
 // claw-tools-pos.js — DIGIY MON COMMERCE / POS bridge v1
 // Doctrine : on n'invente pas. Terrain extrait de dashboard-pro.html + guard.js POS.
 // API canonique : window.DIGIY_CLAW_POS
@@ -24,14 +23,13 @@
       SUBSCRIPTIONS_PUBLIC: "digiy_subscriptions_public"
     },
 
-    // RPCs réels déclarés dans dashboard-pro.html
     RPCS: {
-      HAS_ACCESS:             "digiy_has_access",
-      GET_SUBSCRIPTION:       "digiy_get_subscription_status",
-      GET_DASHBOARD_STATS:    "digiy_get_dashboard_stats",
-      GET_BOOST_STATUS:       "digiy_get_boost_status",
-      BUILD_PAY_URL:          "digiy_build_pay_url",
-      GET_STORE_CONTEXT:      "digiy_pos_get_store_context_by_slug"
+      HAS_ACCESS:          "digiy_has_access",
+      GET_SUBSCRIPTION:    "digiy_get_subscription_status",
+      GET_DASHBOARD_STATS: "digiy_get_dashboard_stats",
+      GET_BOOST_STATUS:    "digiy_get_boost_status",
+      BUILD_PAY_URL:       "digiy_build_pay_url",
+      GET_STORE_CONTEXT:   "digiy_pos_get_store_context_by_slug"
     },
 
     STORAGE: {
@@ -86,49 +84,65 @@
     return { ok: false, error: String(message || "Erreur."), ...extra };
   }
 
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     buildSafeUrl — VERSION BLINDÉE
+     new URL(pathname, location.href) fragile selon l'env.
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  function buildSafeUrl(base, params) {
+    const baseStr = (base == null ? "" : String(base)).trim();
+    if (!baseStr) return location.href;
+    let u;
+    try {
+      if (/^https?:\/\//i.test(baseStr)) { u = new URL(baseStr); }
+      else {
+        const o = location.protocol + "//" + location.host;
+        const f = baseStr.startsWith("/") ? o + baseStr : o + "/" + baseStr;
+        u = new URL(f);
+      }
+    } catch (e) { console.warn("[DIGIY claw-tools-pos] buildSafeUrl KO:", baseStr, e.message); return baseStr; }
+    try {
+      Object.entries(params || {}).forEach(([k, v]) => {
+        if (v !== null && v !== undefined && String(v) !== "") u.searchParams.set(k, String(v));
+      });
+    } catch (e) {}
+    return u.toString();
+  }
+
   function withIdentity(pathname, ctx = {}) {
-    const url   = new URL(pathname, location.href);
+    /* ━━━ AVANT : new URL(pathname, location.href) → buildSafeUrl ━━━ */
     const slug  = normSlug(ctx.slug  || "");
     const phone = normPhone(ctx.phone || "");
-    if (slug)  url.searchParams.set("slug",   slug);
-    if (phone) url.searchParams.set("phone",  phone);
-    return url.toString();
+    return buildSafeUrl(pathname, {
+      ...(slug  ? { slug }  : {}),
+      ...(phone ? { phone } : {})
+    });
   }
 
   // ── CLIENT SUPABASE ────────────────────────────────────────────────────────
-  // Priorité : window.sb existant → makeFallback (même config que dashboard-pro)
   function getSupabaseClient() {
     if (CACHE.sb) return CACHE.sb;
-
     if (window.sb && typeof window.sb.from === "function") {
-      CACHE.sb = window.sb;
-      return CACHE.sb;
+      CACHE.sb = window.sb; return CACHE.sb;
     }
-
     if (!window.supabase?.createClient) return null;
-
     CACHE.sb = window.supabase.createClient(
-      CFG.SUPABASE_URL,
-      CFG.SUPABASE_ANON_KEY,
+      CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY,
       { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } }
     );
     return CACHE.sb;
   }
 
-  // ── CONTEXTE GUARD ────────────────────────────────────────────────────────
+  // ── CONTEXTE GUARD ─────────────────────────────────────────────────────────
   async function getContext() {
     const g = window.DIGIY_GUARD;
 
     if (!g) {
-      // Fallback storage — miroir de getSlug() / getPhone() du dashboard
       let slug  = normSlug(new URLSearchParams(location.search).get("slug") || "");
       let phone = cleanDigits(new URLSearchParams(location.search).get("phone") || "");
-
       try {
         slug  = slug  || normSlug(localStorage.getItem(CFG.STORAGE.SLUG) || "");
         phone = phone || cleanDigits(localStorage.getItem(CFG.STORAGE.PHONE) || "");
       } catch (_) {}
-
       return {
         ok: true, module: CFG.MODULE,
         slug, phone, owner_id: null,
@@ -159,25 +173,25 @@
   async function requireContext() {
     const ctx = await getContext();
     if (!ctx.ok) return ctx;
-    if (!ctx.slug) return asError("Slug POS manquant.", { context: ctx });
+    /* ━━━ AVANT : "Slug POS manquant." → banni ━━━ */
+    if (!ctx.slug) return asError("Identifiant manquant.", { context: ctx });
     return ctx;
   }
 
   async function requireAccess() {
     const ctx = await requireContext();
     if (!ctx.ok) return ctx;
+    /* ━━━ AVANT : "Accès POS non actif." → banni ━━━ */
     if (!ctx.access_ok || ctx.preview) {
-      return asError("Accès POS non actif.", { context: ctx, code: "access_required" });
+      return asError("Accès non actif.", { context: ctx, code: "access_required" });
     }
     return ctx;
   }
 
   // ── RPC helper ─────────────────────────────────────────────────────────────
-  // Miroir de rpcFirstSuccess() dans dashboard-pro.html
   async function rpcFirstSuccess(name, payloads) {
     const sb = getSupabaseClient();
     if (!sb) throw new Error("supabase_not_ready");
-
     let lastErr = null;
     for (const payload of payloads) {
       const { data, error } = await sb.rpc(name, payload);
@@ -188,11 +202,9 @@
   }
 
   // ── TOOLS MÉTIER ───────────────────────────────────────────────────────────
-
   async function getStoreContext(payload = {}) {
     const ctx = await requireContext();
     if (!ctx.ok) return ctx;
-
     try {
       const data = await rpcFirstSuccess(CFG.RPCS.GET_STORE_CONTEXT, [
         { p_slug: ctx.slug },
@@ -207,7 +219,6 @@
   async function getSubscription(payload = {}) {
     const ctx = await requireAccess();
     if (!ctx.ok) return ctx;
-
     try {
       const data = await rpcFirstSuccess(CFG.RPCS.GET_SUBSCRIPTION, [
         { p_phone: ctx.phone, p_module: CFG.MODULE },
@@ -222,7 +233,6 @@
   async function getDashboardStats(payload = {}) {
     const ctx = await requireAccess();
     if (!ctx.ok) return ctx;
-
     try {
       const data = await rpcFirstSuccess(CFG.RPCS.GET_DASHBOARD_STATS, [
         { p_phone: ctx.phone, p_module: CFG.MODULE },
@@ -237,7 +247,6 @@
   async function getBoostStatus(payload = {}) {
     const ctx = await requireAccess();
     if (!ctx.ok) return ctx;
-
     try {
       const data = await rpcFirstSuccess(CFG.RPCS.GET_BOOST_STATUS, [
         { p_phone: ctx.phone },
@@ -252,10 +261,8 @@
   async function buildPayUrl(payload = {}) {
     const ctx = await requireAccess();
     if (!ctx.ok) return ctx;
-
     const module = String(payload.module || CFG.MODULE);
     const plan   = String(payload.plan   || "");
-
     try {
       const data = await rpcFirstSuccess(CFG.RPCS.BUILD_PAY_URL, [
         { p_module: module, p_phone: ctx.phone, p_plan: plan },
@@ -300,11 +307,11 @@
     return {
       guard_loaded:  !!window.DIGIY_GUARD,
       authenticated: ctx.ok && ctx.access_ok,
-      slug:          ctx.slug      || "(aucun)",
-      phone:         ctx.phone     || "(aucun)",
-      preview:       ctx.preview   ?? true,
-      source:        ctx.source    || "none",
-      error:         ctx.error     || null,
+      slug:          ctx.slug    || "(aucun)",
+      phone:         ctx.phone   || "(aucun)",
+      preview:       ctx.preview ?? true,
+      source:        ctx.source  || "none",
+      error:         ctx.error   || null,
       module:        CFG.MODULE,
       tools:         listTools().map(t => t.name)
     };
@@ -322,17 +329,17 @@
 
   // ── REGISTRE TOOLS ─────────────────────────────────────────────────────────
   const tools = {
-    get_context:         { description: "Retourne le contexte réel du module POS.",                       run: getContext },
-    get_store_context:   { description: "Charge le contexte du commerce via digiy_pos_get_store_context_by_slug.", run: getStoreContext },
-    get_subscription:    { description: "Charge le statut d'abonnement POS.",                             run: getSubscription },
-    get_dashboard_stats: { description: "Charge les stats du dashboard (CA mois, tx, today_hint).",       run: getDashboardStats },
-    get_boost_status:    { description: "Charge le statut boost actif.",                                  run: getBoostStatus },
-    build_pay_url:       { description: "Construit l'URL de paiement via digiy_build_pay_url (payload: {module?, plan?}).", run: buildPayUrl },
-    open_caisse:         { description: "Retourne l'URL de caisse.html avec le slug actif.",              run: openCaisse },
-    open_admin:          { description: "Retourne l'URL de admin.html avec le slug actif.",               run: openAdmin },
-    open_dashboard:      { description: "Retourne l'URL de dashboard-pro.html avec le slug actif.",       run: openDashboard },
-    open_pin:            { description: "Renvoie vers pin.html si la session est cassée.",                run: openPin },
-    refresh_context:     { description: "Redemande l'état réel au guard.",                                run: refreshContext }
+    get_context:         { description: "Retourne le contexte réel du module.",                                         run: getContext },
+    get_store_context:   { description: "Charge le contexte du commerce via digiy_pos_get_store_context_by_slug.",      run: getStoreContext },
+    get_subscription:    { description: "Charge le statut d'abonnement.",                                               run: getSubscription },
+    get_dashboard_stats: { description: "Charge les stats (CA mois, tx, today_hint).",                                  run: getDashboardStats },
+    get_boost_status:    { description: "Charge le statut boost actif.",                                                run: getBoostStatus },
+    build_pay_url:       { description: "Construit l'URL de paiement (payload: {module?, plan?}).",                     run: buildPayUrl },
+    open_caisse:         { description: "Retourne l'URL de caisse.html avec l'identifiant actif.",                      run: openCaisse },
+    open_admin:          { description: "Retourne l'URL de admin.html avec l'identifiant actif.",                       run: openAdmin },
+    open_dashboard:      { description: "Retourne l'URL de dashboard-pro.html avec l'identifiant actif.",               run: openDashboard },
+    open_pin:            { description: "Renvoie vers pin.html si la session est cassée.",                              run: openPin },
+    refresh_context:     { description: "Redemande l'état réel au guard.",                                              run: refreshContext }
   };
 
   function listTools() {
@@ -370,4 +377,3 @@
     "— tape CLAW_POS.snapshot() pour l'état complet"
   );
 })();
-;
