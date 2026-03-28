@@ -35,7 +35,8 @@
       ],
       SLUG_KEY: "digiy_pos_slug",
       PHONE_KEY: "digiy_pos_phone",
-      LAST_SLUG_KEY: "digiy_pos_last_slug"
+      LAST_SLUG_KEY: "digiy_pos_last_slug",
+      LAST_PHONE_KEY: "digiy_pos_last_phone"
     },
 
     RPC: {
@@ -168,7 +169,12 @@
   function savePhoneOnly(phone) {
     const clean = normPhone(phone);
     if (!clean) return;
-    try { localStorage.setItem(CFG.STORAGE.PHONE_KEY, clean); sessionStorage.setItem(CFG.STORAGE.PHONE_KEY, clean); } catch (_) {}
+    try {
+      localStorage.setItem(CFG.STORAGE.PHONE_KEY, clean);
+      localStorage.setItem(CFG.STORAGE.LAST_PHONE_KEY, clean);
+      sessionStorage.setItem(CFG.STORAGE.PHONE_KEY, clean);
+      sessionStorage.setItem(CFG.STORAGE.LAST_PHONE_KEY, clean);
+    } catch (_) {}
   }
 
   function readSavedSlug() {
@@ -177,7 +183,13 @@
   }
 
   function readSavedPhone() {
-    try { return normPhone(qs.get("phone") || sessionStorage.getItem(CFG.STORAGE.PHONE_KEY) || localStorage.getItem(CFG.STORAGE.PHONE_KEY) || ""); }
+    try { return normPhone(
+      qs.get("phone") ||
+      sessionStorage.getItem(CFG.STORAGE.LAST_PHONE_KEY) ||
+      sessionStorage.getItem(CFG.STORAGE.PHONE_KEY) ||
+      localStorage.getItem(CFG.STORAGE.LAST_PHONE_KEY) ||
+      localStorage.getItem(CFG.STORAGE.PHONE_KEY) || ""
+    ); }
     catch (_) { return normPhone(qs.get("phone") || ""); }
   }
 
@@ -196,6 +208,8 @@
     try { sessionStorage.removeItem(CFG.STORAGE.SLUG_KEY); } catch (_) {}
     try { sessionStorage.removeItem(CFG.STORAGE.PHONE_KEY); } catch (_) {}
     try { sessionStorage.removeItem(CFG.STORAGE.LAST_SLUG_KEY); } catch (_) {}
+    try { localStorage.removeItem(CFG.STORAGE.LAST_PHONE_KEY); } catch (_) {}
+    try { sessionStorage.removeItem(CFG.STORAGE.LAST_PHONE_KEY); } catch (_) {}
   }
 
   function readStoredSession() {
