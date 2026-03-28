@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>MON COMMERCE — Mon espace de travail</title>
+  <title>Mon espace de travail · MON COMMERCE by DIGIY</title>
   <meta name="theme-color" content="#07140f" />
-  <meta name="description" content="MON COMMERCE by DIGIY — mon espace de travail : boutique, TVA, produits." />
+  <meta name="description" content="MON COMMERCE by DIGIY — mon espace de travail : abonnement, activité, boost et accès à ma caisse." />
 
   <script>
     window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
@@ -37,33 +37,37 @@
 
   <style>
     :root{
-      --bg:#04110d;--bg2:#071a14;--bg3:#0b241b;
+      --bg:#04110d;--bg2:#071a14;
       --card:rgba(8,24,18,.78);--card2:rgba(9,28,21,.92);
-      --text:#f7fbf8;--muted:#bfd3c8;
-      --line:rgba(255,255,255,.09);--line2:rgba(255,255,255,.14);
-      --ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--info:#60a5fa;
+      --muted:#bfd3c8;--text:#f7fbf8;
+      --ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--accent:#60a5fa;
       --gold:#facc15;--gold2:#f59e0b;
+      --line:rgba(255,255,255,.09);--line2:rgba(255,255,255,.14);
       --shadow:0 22px 56px rgba(0,0,0,.28);--shadow-soft:0 14px 34px rgba(0,0,0,.22);
-      --radius:26px;--radius-sm:18px;--max:1180px;
+      --radius:26px;--max:1120px;
       --fontA:"Outfit",system-ui,-apple-system,sans-serif;
     }
 
     *{box-sizing:border-box}
     html,body{margin:0;padding:0}
     html{scroll-behavior:smooth}
-
     body{
-      min-height:100vh;color:var(--text);font-family:var(--fontA);
+      min-height:100vh;font-family:var(--fontA);
       background:
         radial-gradient(circle at top left, rgba(250,204,21,.10), transparent 28%),
         radial-gradient(circle at top right, rgba(96,165,250,.08), transparent 22%),
         linear-gradient(180deg, #07140f 0%, #04110d 42%, #020906 100%);
+      color:var(--text);
     }
 
     a{text-decoration:none;color:inherit}
-    button,input,select,textarea{font:inherit}
+    button{font:inherit}
 
-    .wrap{width:min(100%, var(--max));margin:0 auto;padding:16px 14px 92px;}
+    .wrap{width:min(100%, var(--max));margin:0 auto;padding:16px 14px 92px}
+
+    /* ━━━ ANTI-ÉCRAN NOIR ━━━ */
+    .app{display:none}
+    html.app-ready .app{display:block}
 
     /* ── FLOAT ── */
     .floating-site-btn{
@@ -71,823 +75,682 @@
       display:inline-flex;align-items:center;justify-content:center;gap:8px;
       min-height:48px;padding:14px 16px;border-radius:999px;
       border:1px solid rgba(255,255,255,.12);background:rgba(5,16,12,.88);
-      backdrop-filter:blur(10px);color:var(--text);font-size:13px;font-weight:900;letter-spacing:.2px;
-      box-shadow:0 16px 36px rgba(0,0,0,.28);transition:transform .14s ease, border-color .14s ease, background .14s ease;
+      backdrop-filter:blur(10px);color:var(--text);font-size:13px;font-weight:900;
+      box-shadow:0 16px 36px rgba(0,0,0,.28);
+      transition:transform .14s ease, border-color .14s ease, background .14s ease;
     }
-    .floating-site-btn:hover{transform:translateY(-1px);border-color:rgba(250,204,21,.28);background:rgba(8,20,15,.94);}
+    .floating-site-btn:hover{transform:translateY(-1px);border-color:rgba(250,204,21,.28);background:rgba(8,20,15,.94)}
 
     /* ── TOPBAR ── */
     .topbar{
-      position:sticky;top:0;z-index:70;margin-bottom:14px;
+      position:sticky;top:0;z-index:70;margin-bottom:12px;
       backdrop-filter:blur(12px);background:rgba(4,17,13,.76);
       border:1px solid rgba(255,255,255,.07);border-radius:24px;box-shadow:var(--shadow-soft);
     }
-    .topbar-inner{padding:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+    .topbar-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px}
 
-    .brand{display:flex;align-items:center;gap:12px;min-width:0;}
-    .brand-badge{
-      width:48px;height:48px;border-radius:18px;display:grid;place-items:center;
-      background:linear-gradient(135deg, rgba(250,204,21,.16), rgba(245,158,11,.08));
-      border:1px solid rgba(250,204,21,.16);box-shadow:0 16px 34px rgba(250,204,21,.10);
-      font-size:24px;flex:0 0 auto;
-    }
-    .brand-kicker{color:var(--gold);font-size:12px;font-weight:950;letter-spacing:.14em;text-transform:uppercase;margin-bottom:3px;}
-    .brand-title{font-size:20px;line-height:1.08;font-weight:1000;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .brand-sub{color:var(--muted);font-size:12px;font-weight:800;margin-top:3px;letter-spacing:.04em;}
+    .brand{display:flex;align-items:center;gap:12px;min-width:0}
+    .brand-badge{width:48px;height:48px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg, rgba(250,204,21,.16), rgba(245,158,11,.08));border:1px solid rgba(250,204,21,.16);box-shadow:0 16px 34px rgba(250,204,21,.10);font-size:24px;flex:0 0 auto;}
+    .brand-kicker{color:var(--gold);font-size:12px;font-weight:950;letter-spacing:.14em;text-transform:uppercase;margin-bottom:3px}
+    .brand-title{font-size:20px;font-weight:1000;line-height:1.08;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .brand-sub{color:var(--muted);font-size:12px;font-weight:800;margin-top:3px;letter-spacing:.04em}
 
-    .right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
+    .right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
 
     .pill{display:inline-flex;align-items:center;gap:8px;padding:10px 13px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--muted);font-weight:900;font-size:12px;backdrop-filter:blur(10px);}
-
-    .dot{width:10px;height:10px;border-radius:999px;background:var(--warn);box-shadow:0 0 0 4px rgba(255,255,255,.03);}
-    .dot.ok{background:var(--ok)}.dot.bad{background:var(--danger)}
+    .pill b{color:var(--text);font-weight:950}
 
     /* ── BOUTONS ── */
-    .btn,.btn-outline,.btn-ghost,.tab{
+    .btn,.btn-outline,.btn-ghost{
       appearance:none;border:none;cursor:pointer;
       display:inline-flex;align-items:center;justify-content:center;gap:10px;
       min-height:46px;padding:12px 16px;border-radius:999px;
-      font-weight:900;font-size:13px;letter-spacing:.02em;white-space:nowrap;
-      transition:transform .12s ease, opacity .12s ease, background .12s ease, border-color .12s ease;
+      font-weight:900;font-size:13px;white-space:nowrap;transition:.14s ease;
     }
-    .btn:hover,.btn-outline:hover,.btn-ghost:hover,.tab:hover{transform:translateY(-1px)}
-    .btn:disabled,.btn-outline:disabled,.btn-ghost:disabled{opacity:.55;cursor:not-allowed;transform:none;}
-    .btn{color:#07110d;background:linear-gradient(135deg, var(--gold), var(--gold2));box-shadow:0 14px 30px rgba(250,204,21,.18);}
-    .btn-outline{background:rgba(255,255,255,.04);color:var(--text);border:1px solid var(--line2);}
-    .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--line2);}
-    .btn.ok{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.28);color:#dffff1;box-shadow:none;}
-    .btn.warn{background:rgba(245,158,11,.10);border:1px solid rgba(245,158,11,.28);color:#ffe4b9;box-shadow:none;}
-    .btn.danger{background:rgba(239,68,68,.10);border:1px solid rgba(239,68,68,.28);color:#ffd3d3;box-shadow:none;}
+    .btn:hover,.btn-outline:hover,.btn-ghost:hover{transform:translateY(-1px)}
+    .btn:disabled,.btn-outline:disabled,.btn-ghost:disabled{opacity:.55;cursor:not-allowed;transform:none}
+    .btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#07110d;box-shadow:0 14px 30px rgba(250,204,21,.18)}
+    .btn-outline{background:rgba(255,255,255,.04);border:1px solid var(--line2);color:var(--text)}
+    .btn-ghost{background:transparent;border:1px solid var(--line2);color:var(--muted)}
 
-    /* ── GRID / CARD ── */
-    .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:12px;}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)),var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;overflow:hidden;}
+    /* ── LAYOUT ── */
+    .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:12px;margin-top:8px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)),var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;}
+    .card h3{margin:0 0 10px 0;font-size:16px;letter-spacing:.01em;line-height:1.2}
 
-    .hero-badge{
-      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
-      background:rgba(250,204,21,.10);border:1px solid rgba(250,204,21,.18);
-      color:var(--gold);font-size:12px;font-weight:950;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px;
-    }
+    .heroBadge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(250,204,21,.10);border:1px solid rgba(250,204,21,.18);color:var(--gold);font-size:12px;font-weight:950;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px;}
 
-    .statusLine{display:flex;align-items:flex-start;gap:10px;padding:14px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.03);margin-bottom:12px;}
-    .statusLine.ok{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.22);}
-    .statusLine.bad{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.22);}
-    .statusLine.warn{background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.22);}
+    .muted{color:var(--muted)}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 
-    .statusTitle{font-size:20px;font-weight:950;line-height:1.15;margin-bottom:4px;}
-    .small{font-size:12px}.muted{color:var(--muted)}
+    .statusDot{width:10px;height:10px;border-radius:999px;background:var(--warn);box-shadow:0 0 0 4px rgba(255,255,255,.03)}
+    .statusDot.ok{background:var(--ok)}.statusDot.bad{background:var(--danger)}
+
+    .bigMoney{font-size:38px;font-weight:1000;letter-spacing:-.04em;margin:8px 0 4px 0;line-height:1}
+    .mini{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--muted);font-weight:800;line-height:1.6}
+
+    .diag{margin-top:12px;padding:12px;border-radius:16px;background:#081119;border:1px solid var(--line);color:#d8e1ff;font:12px/1.58 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word;max-height:240px;overflow:auto;}
+
     .hr{height:1px;background:var(--line);margin:14px 0}
 
-    /* ── TABS ── */
-    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
-    .tab{background:rgba(255,255,255,.04);color:var(--muted);border:1px solid var(--line2);box-shadow:none;}
-    .tab.active{background:rgba(250,204,21,.10);border-color:rgba(250,204,21,.22);color:var(--text);}
-    .view{display:none}.view.active{display:block}
+    .boostBox{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:14px;border-radius:20px;background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.20);}
+    .boostBox b{display:block;margin-bottom:5px;font-size:15px}
 
-    /* ── FORM ── */
-    .formGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-    .fieldWrap{display:flex;flex-direction:column;gap:7px;}
-    .label{font-size:12px;color:var(--muted);font-weight:900;letter-spacing:.04em;text-transform:uppercase;}
-    .input,.select,.textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:16px;color:var(--text);padding:13px 14px;outline:none;font-size:15px;font-weight:700;}
-    .textarea{min-height:100px;resize:vertical;}
+    .notifList{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+    .notif{padding:12px 13px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.03);display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
 
-    .switchRow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px;border-radius:18px;background:rgba(255,255,255,.03);border:1px solid var(--line);}
-    .switch{position:relative;width:50px;height:28px;display:inline-block;flex:0 0 auto;}
-    .switch input{opacity:0;width:0;height:0;}
-    .slider{position:absolute;inset:0;border-radius:999px;background:#253253;border:1px solid rgba(255,255,255,.10);cursor:pointer;transition:.2s;}
-    .slider:before{content:"";position:absolute;left:4px;top:3px;width:20px;height:20px;border-radius:999px;background:#cfd6ff;transition:.2s;}
-    .switch input:checked + .slider{background:rgba(34,197,94,.35);}
-    .switch input:checked + .slider:before{transform:translateX(20px);background:#fff;}
+    .tag{font-size:11px;font-weight:950;padding:7px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+    .tag.warn{color:#ffe2b0;border-color:rgba(245,158,11,.35);background:rgba(245,158,11,.10)}
+    .tag.ok{color:#c9ffd9;border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.08)}
+    .tag.info{color:#cfd6ff;border-color:rgba(96,165,250,.35);background:rgba(96,165,250,.10)}
 
-    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
-    .metaBox{padding:13px;border-radius:18px;background:rgba(255,255,255,.03);border:1px solid var(--line);}
+    .footer{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .smallLink{color:var(--muted);text-decoration:none;font-weight:850}.smallLink:hover{color:var(--text)}
 
-    /* ── PRODUITS ── */
-    .list{display:grid;gap:10px;}
-    .prodCard{padding:14px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.03);display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start;}
-    .prodName{font-weight:950;font-size:15px;line-height:1.3;}
-    .prodMeta{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.75;font-weight:700;}
-    .prodRight{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
-    .tag{display:inline-flex;padding:7px 9px;border-radius:999px;border:1px solid var(--line);font-size:11px;font-weight:950;color:var(--muted);white-space:nowrap;}
-    .tag.ok{background:rgba(34,197,94,.10);border-color:rgba(34,197,94,.25);color:#cbffd9;}
-    .tag.warn{background:rgba(245,158,11,.10);border-color:rgba(245,158,11,.25);color:#ffe1b2;}
-    .tag.bad{background:rgba(239,68,68,.10);border-color:rgba(239,68,68,.25);color:#ffd0d0;}
+    .navRow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
 
-    .searchRow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
+    .subPills{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .subPill{padding:10px 12px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--muted);font-size:12px;font-weight:900}
 
-    .diag{background:#081119;border:1px solid var(--line);border-radius:16px;padding:12px;font:12px/1.58 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#d6e0ff;white-space:pre-wrap;word-break:break-word;max-height:280px;overflow:auto;}
+    .shell{min-height:280px;display:grid;place-items:center;text-align:center;padding:24px}
+    .shellCard{max-width:640px;padding:22px;border-radius:22px;border:1px solid var(--line);background:rgba(255,255,255,.03);box-shadow:var(--shadow-soft)}
+    .shellTitle{font-size:24px;font-weight:1000;margin-bottom:8px;line-height:1.1}
+    .shellText{color:var(--muted);font-size:14px;line-height:1.8;font-weight:700}
 
-    .empty{color:var(--muted);font-weight:800;padding:16px;border-radius:16px;border:1px dashed var(--line);text-align:center;line-height:1.6;}
-    .footerNote{margin-top:12px;font-size:12px;color:var(--muted);line-height:1.75;font-weight:700;}
-    .contextGrid{display:grid;gap:10px;}
-
-    @media(max-width:1020px){.grid{grid-template-columns:1fr}}
-    @media(max-width:760px){.formGrid{grid-template-columns:1fr}.prodCard{grid-template-columns:1fr}}
+    @media(max-width:920px){.grid{grid-template-columns:1fr}}
     @media(max-width:700px){
-      .floating-site-btn{left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom, 0px));min-height:46px;padding:14px 14px;font-size:12px;}
-      .wrap{padding:12px 12px 92px;}
-      .topbar-inner{padding:12px;}
-      .brand-title{white-space:normal;}
+      .wrap{padding:12px 12px 92px}.topbar-inner{padding:12px}.brand-title{white-space:normal}
+      .boostBox{flex-direction:column}
+      .floating-site-btn{left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom, 0px));min-height:46px;padding:14px;font-size:12px}
     }
   </style>
 </head>
+
 <body>
+  <!-- ━━━ FLOAT : retour vitrine ━━━ -->
+  <a class="floating-site-btn" id="btnPublicFloating" href="https://mon-commerce.digiylyfe.com/" aria-label="Retour à la vitrine MON COMMERCE">⬅️ Retour à la vitrine</a>
 
-  <a class="floating-site-btn" href="https://digiylyfe.com/" aria-label="Retour au site DIGIYLYFE">⬅️ Retour DIGIYLYFE</a>
-
-  <div class="wrap">
+  <div class="wrap app">
     <div class="topbar">
       <div class="topbar-inner">
         <div class="brand">
-          <div class="brand-badge">⚙️</div>
+          <div class="brand-badge">🏪</div>
           <div>
             <div class="brand-kicker">DIGIYLYFE</div>
-            <!-- ━━━ AVANT : "MON COMMERCE — Admin léger" → jargon "Admin" banni en façade ━━━ -->
-            <div class="brand-title">MON COMMERCE — Mon espace de travail</div>
-            <div class="brand-sub">Boutique · TVA · produits</div>
+            <!-- ━━━ AVANT : "MON COMMERCE — Dashboard Pro" → banni ━━━ -->
+            <div id="brandTitle" class="brand-title">MON COMMERCE — Mon espace de travail</div>
+            <div id="brandSub" class="brand-sub">Mon activité · boutique · abonnement</div>
           </div>
         </div>
-
         <div class="right">
-          <div class="pill">
-            <span id="dotStatus" class="dot"></span>
-            <span id="pillStatus">Chargement…</span>
-          </div>
-          <a class="btn-outline" id="btnBackCaisse" href="./caisse.html">🧾 Ma caisse</a>
-          <!-- ━━━ AVANT : "🏠 Hall" → "Hall" = jargon interne non humain ━━━ -->
-          <a class="btn" id="btnBackHall" href="./index.html">🏠 Accueil</a>
+          <div class="pill" id="pillStatus">Statut : <b>…</b></div>
+          <a class="btn-outline" id="btnPinTop" href="./pin.html">🔐 Mon PIN</a>
+          <!-- ━━━ AVANT : "⚙️ Admin" → banni ━━━ -->
+          <a class="btn-outline" id="btnSettings" href="./dashboard-pro.html">⚙️ Mes réglages</a>
         </div>
       </div>
     </div>
 
-    <div class="grid">
-      <section class="card">
-        <!-- ━━━ AVANT : "admin protégé • réglages boutique • produits" → "admin" banni ━━━ -->
-        <div class="hero-badge">accès sécurisé · boutique · produits</div>
-
-        <div id="statusBox" class="statusLine">
-          <div>🧭</div>
-          <div>
-            <div class="statusTitle" id="statusTitle">Initialisation…</div>
-            <!-- ━━━ AVANT : "Lecture du slug, du phone et du contexte boutique" → jargon technique visible ━━━ -->
-            <div class="muted small" id="statusSub">Reconnaissance de ta boutique en cours.</div>
-          </div>
-        </div>
-
-        <div class="actions" style="margin-top:0">
-          <!-- ━━━ "Hall" × 2 → "Accueil" ━━━ -->
-          <a class="btn-ghost" id="btnNavHall" href="./index.html">🏠 Accueil</a>
-          <a class="btn-ghost" id="btnNavCaisse" href="./caisse.html">🧾 Ma caisse</a>
-          <a class="btn-outline" id="btnAbos" href="https://commencer-a-payer.digiylyfe.com/">💳 Mon abonnement</a>
-          <a class="btn-outline" id="btnSupport" href="#" target="_blank" rel="noopener">💬 Support</a>
-        </div>
-
-        <div class="hr"></div>
-
-        <div class="tabs">
-          <button class="tab active" type="button" data-tab="shop">Ma boutique</button>
-          <button class="tab" type="button" data-tab="products">Mes produits</button>
-          <button class="tab" type="button" data-tab="diag">Diagnostic</button>
-        </div>
-
-        <!-- ━━━━━━ VUE BOUTIQUE ━━━━━━ -->
-        <div id="view-shop" class="view active">
-          <div class="formGrid">
-            <div class="fieldWrap">
-              <label class="label">Nom boutique</label>
-              <input id="shop_name" class="input" placeholder="Chez Astou" />
-            </div>
-            <div class="fieldWrap">
-              <label class="label">Ville</label>
-              <input id="shop_city" class="input" placeholder="Saly" />
-            </div>
-            <div class="fieldWrap">
-              <label class="label">Téléphone</label>
-              <input id="shop_phone" class="input" placeholder="221771234567" />
-            </div>
-            <div class="fieldWrap">
-              <label class="label">WhatsApp</label>
-              <input id="shop_whatsapp" class="input" placeholder="221771234567" />
-            </div>
-            <div class="fieldWrap">
-              <label class="label">Wave</label>
-              <input id="shop_wave" class="input" placeholder="221771234567" />
-            </div>
-            <div class="fieldWrap">
-              <label class="label">Adresse</label>
-              <input id="shop_address" class="input" placeholder="Rue, quartier, repère" />
-            </div>
-          </div>
-
-          <div class="fieldWrap" style="margin-top:12px">
-            <label class="label">Message boutique</label>
-            <textarea id="shop_tagline" class="textarea" placeholder="Petite phrase utile sur ta boutique"></textarea>
-          </div>
-
-          <div class="hr"></div>
-
-          <div class="switchRow">
-            <div>
-              <div style="font-weight:950">TVA active</div>
-              <div class="muted small">Active si ta boutique travaille avec TVA.</div>
-            </div>
-            <label class="switch">
-              <input id="tva_active" type="checkbox" />
-              <span class="slider"></span>
-            </label>
-          </div>
-
-          <div class="formGrid" style="margin-top:12px">
-            <div class="fieldWrap">
-              <label class="label">Taux TVA (%)</label>
-              <input id="tva_taux" class="input" type="number" min="0" max="100" step="1" placeholder="18" />
-            </div>
-            <div class="fieldWrap">
-              <label class="label">Mode TVA</label>
-              <select id="tva_mode" class="select">
-                <option value="excl">HT → TVA ajoutée</option>
-                <option value="incl">TTC → TVA incluse</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="actions">
-            <!-- ━━━ DOCTRINE : "💾 Enregistrer" = moment humain direct ━━━ -->
-            <button id="btnSaveShop" class="btn ok" type="button">💾 Enregistrer ma boutique</button>
-            <button id="btnReloadShop" class="btn-outline" type="button">🔄 Recharger</button>
-          </div>
-
-          <div class="footerNote">
-            Ici tu poses ta maison : nom, contacts, TVA, identité boutique.
-          </div>
-        </div>
-
-        <!-- ━━━━━━ VUE PRODUITS ━━━━━━ -->
-        <div id="view-products" class="view">
-          <div class="metaBox">
-            <div style="font-weight:950;margin-bottom:8px">Ajouter ou modifier un produit</div>
-
-            <div class="formGrid">
-              <div class="fieldWrap">
-                <label class="label">Nom produit</label>
-                <input id="prod_name" class="input" placeholder="Sucre 1kg" />
-              </div>
-              <div class="fieldWrap">
-                <label class="label">Catégorie</label>
-                <input id="prod_cat" class="input" placeholder="Épicerie" />
-              </div>
-              <div class="fieldWrap">
-                <label class="label">Prix (FCFA)</label>
-                <input id="prod_price" class="input" type="number" min="0" step="1" placeholder="2500" />
-              </div>
-              <div class="fieldWrap">
-                <label class="label">Stock</label>
-                <input id="prod_stock" class="input" type="number" min="0" step="1" placeholder="12" />
-              </div>
-            </div>
-
-            <div class="actions">
-              <button id="btnSaveProd" class="btn ok" type="button">➕ Enregistrer le produit</button>
-              <button id="btnResetProd" class="btn-ghost" type="button">Effacer</button>
-            </div>
-
-            <input type="hidden" id="prod_id" />
-          </div>
-
-          <div class="hr"></div>
-
-          <div class="searchRow">
-            <input id="searchProd" class="input" placeholder="Rechercher un produit…" />
-            <button id="btnReloadProducts" class="btn-outline" type="button">🔄 Recharger la liste</button>
-          </div>
-
-          <div id="productsList" class="list">
-            <div class="empty">Aucun produit pour le moment.</div>
-          </div>
-
-          <div class="footerNote">
-            Les suppressions sont douces : on désactive le produit au lieu de le supprimer définitivement.
-          </div>
-        </div>
-
-        <!-- ━━━━━━ VUE DIAGNOSTIC ━━━━━━ -->
-        <div id="view-diag" class="view">
-          <div class="diag" id="diagBox">Initialisation…</div>
-        </div>
-      </section>
-
-      <!-- ━━━━━━ PANNEAU CONTEXTE ━━━━━━ -->
-      <aside class="card">
-        <h2 style="margin:0 0 12px 0;font-size:22px;line-height:1.1">Ma boutique en cours</h2>
-
-        <div class="contextGrid">
-          <div class="metaBox">
-            <div class="small muted">Identifiant</div>
-            <div id="metaSlug" style="font-weight:950;margin-top:6px">—</div>
-          </div>
-          <div class="metaBox">
-            <div class="small muted">Téléphone</div>
-            <div id="metaPhone" style="font-weight:950;margin-top:6px">—</div>
-          </div>
-          <div class="metaBox">
-            <div class="small muted">Boutique</div>
-            <div id="metaStore" style="font-weight:950;margin-top:6px">—</div>
-          </div>
-          <div class="metaBox">
-            <div class="small muted">Abonnement</div>
-            <div id="metaPlan" style="font-weight:950;margin-top:6px">—</div>
-          </div>
-          <div class="metaBox">
-            <div class="small muted">Service</div>
-            <div style="font-weight:950;margin-top:6px">MON COMMERCE</div>
-          </div>
-        </div>
-
-        <div class="hr"></div>
-
-        <div class="actions">
-          <a id="btnGoHall2" class="btn-outline" href="./index.html">🏠 Accueil</a>
-          <a id="btnGoCaisse2" class="btn" href="./caisse.html">🧾 Ma caisse</a>
-        </div>
-
-        <!-- ━━━ AVANT : "Tu peux ouvrir cette page avec ?slug=pos-221771234567" → technique visible banni ━━━ -->
-        <div class="footerNote">
-          Espace sécurisé. Tu peux revenir ici à tout moment via ton lien pro ou ton QR DIGIY.
-        </div>
-      </aside>
+    <!-- ━━━ NAV — doctrine façade ━━━ -->
+    <div class="navRow">
+      <!-- ━━━ "Hall" × 2 → "Accueil" ━━━ -->
+      <a class="btn-ghost"   id="btnHall"       href="./index.html">🏠 Accueil</a>
+      <a class="btn-ghost"   id="btnCaisse"     href="./caisse.html">🧾 Ma caisse</a>
+      <!-- ━━━ "Admin" × 2 → "Mes réglages" ━━━ -->
+      <a class="btn-ghost"   id="btnAdmin"      href="./dashboard-pro.html">⚙️ Mes réglages</a>
+      <a class="btn-outline" id="btnAbosTop"    href="https://commencer-a-payer.digiylyfe.com/">💳 Mon abonnement</a>
+      <a class="btn-outline" id="btnSupportTop" href="#" target="_blank" rel="noopener">💬 Support</a>
     </div>
-  </div>
 
-  <script>
-    (() => {
-      "use strict";
+    <!-- ━━━ ÉCRAN BLOQUÉ ━━━ -->
+    <div id="blockedShell" class="card shell" style="display:none">
+      <div class="shellCard">
+        <div class="shellTitle" id="blockedTitle">Accès requis</div>
+        <!-- ━━━ AVANT : "slug POS", "pin.html?slug=…" visibles → jargon banni ━━━ -->
+        <div class="shellText" id="blockedText">Entre par ton PIN ou rejoins DIGIY pour accéder à ton espace.</div>
+        <div class="footer" style="justify-content:center;margin-top:18px">
+          <a class="btn-outline" id="btnBlockedPin"  href="./pin.html">🔐 Entrer avec mon PIN</a>
+          <a class="btn"         id="btnBlockedAbos" href="https://commencer-a-payer.digiylyfe.com/">💳 Mon abonnement</a>
+        </div>
+      </div>
+    </div>
 
-      const MODULE = "POS";
-      const SUPABASE_URL = String(window.DIGIY_SUPABASE_URL || "").trim();
-      const SUPABASE_ANON_KEY = String(window.DIGIY_SUPABASE_ANON_KEY || window.DIGIY_SUPABASE_ANON || "").trim();
-      const SUPPORT_PHONE = "221771342889";
-      const ABOS_URL = "https://commencer-a-payer.digiylyfe.com/";
+    <!-- ━━━ CONTENU PRINCIPAL ━━━ -->
+    <div id="dashboardContent" style="display:none">
+      <div class="grid">
 
-      const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-        auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
-      });
+        <!-- CARTE STATUT -->
+        <div class="card" id="cardStatus">
+          <!-- ━━━ AVANT : "dashboard pro • abonnement • argent • boost" → banni ━━━ -->
+          <div class="heroBadge">Mon activité · abonnement · argent · boost</div>
+          <h3>Mon abonnement</h3>
 
-      const state = {
-        slug: "", phone: "", access: false, storeName: "", plan: "",
-        storeContext: null, settingsRow: null, products: [], loading: false
-      };
+          <div class="row">
+            <div class="statusDot" id="dot"></div>
+            <div style="flex:1">
+              <div style="font-weight:1000;font-size:18px;line-height:1.15" id="statusLine">Chargement…</div>
+              <div class="muted" style="font-weight:800;font-size:13px;margin-top:3px" id="expiryLine">—</div>
+            </div>
+          </div>
 
-      const $ = (id) => document.getElementById(id);
-      const diagLines = [];
+          <div class="subPills">
+            <!-- ━━━ AVANT : "Slug :" → jargon technique, remplacé par "Identifiant :" ━━━ -->
+            <div class="subPill">Identifiant : <b id="slugBox">—</b></div>
+            <div class="subPill">Téléphone : <b id="phoneBox">—</b></div>
+            <div class="subPill">Service : <b>MON COMMERCE</b></div>
+          </div>
 
-      /* ━━━ ANTI-ÉCRAN NOIR ━━━
-         guard.js pose visibility:hidden pour éviter le flash.
-         Si guard.js plante, est lent ou absent → on force
-         la révélation après 2 secondes maximum. */
-      function revealPage(){
-        document.documentElement.style.visibility = "";
-      }
-      setTimeout(revealPage, 2000);
+          <div class="hr"></div>
+          <div class="mini" id="metaLine"><span>Plan : —</span><span>•</span><span>Paiement : —</span></div>
+          <div class="diag" id="diagBox">Initialisation…</div>
 
-      function log(msg, data){
-        const line = `[${new Date().toLocaleTimeString("fr-FR")}] ${msg}`;
-        diagLines.push(data === undefined ? line : `${line}\n${safeStringify(data)}`);
-        if($("diagBox")) $("diagBox").textContent = diagLines.join("\n\n");
-        console.log("[DIGIY POS ADMIN]", msg, data ?? "");
-      }
+          <div class="footer">
+            <button class="btn-outline" id="btnManageSub" type="button">Gérer mon abonnement</button>
+          </div>
+        </div>
 
-      function safeStringify(v){
-        try { return JSON.stringify(v, null, 2); } catch(_) { return String(v); }
-      }
+        <!-- CARTE ARGENT -->
+        <div class="card" id="cardMoney">
+          <h3>Ce qui est rentré</h3>
+          <div class="bigMoney" id="moneyMonth">— FCFA</div>
+          <div class="mini" id="moneyMeta">
+            <span id="txCount">— transactions</span>
+            <span>•</span>
+            <span id="todayHint">—</span>
+          </div>
 
-      function getParam(name){ return new URL(location.href).searchParams.get(name) || ""; }
-      function normPhone(v){ return String(v || "").replace(/[^\d]/g, ""); }
+          <div class="hr"></div>
 
-      function getResolvedSlug(){
-        return String(getParam("slug") || localStorage.getItem("digiy_pos_last_slug") || sessionStorage.getItem("digiy_pos_last_slug") || "").trim().toLowerCase();
-      }
-
-      function getResolvedPhone(){
-        return normPhone(getParam("phone") || localStorage.getItem("digiy_pos_last_phone") || sessionStorage.getItem("digiy_pos_last_phone") || "");
-      }
-
-      /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-         buildUrl — VERSION BLINDÉE
-         Corrige : TypeError: Failed to construct 'URL': Invalid URL
-         Raison : new URL(relatif, location.href) fragile selon
-         l'environnement. On reconstruit l'origine manuellement.
-      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-      function buildUrl(base, params){
-        const baseStr = (base == null ? "" : String(base)).trim();
-        if(!baseStr) return location.href;
-
-        let u;
-        try {
-          if(/^https?:\/\//i.test(baseStr)){
-            u = new URL(baseStr);
-          } else {
-            const origin = location.protocol + "//" + location.host;
-            const full = baseStr.startsWith("/") ? origin + baseStr : origin + "/" + baseStr;
-            u = new URL(full);
-          }
-        } catch(e){
-          log("buildUrl KO: " + baseStr + " — " + e.message);
-          return baseStr;
-        }
-
-        try {
-          Object.entries(params || {}).forEach(([k, v]) => {
-            if(v !== undefined && v !== null && String(v) !== "")
-              u.searchParams.set(k, String(v));
-          });
-        } catch(e){ /* silencieux */ }
-
-        return u.toString();
-      }
-
-      function buildSupportUrl(slug, phone){
-        const text = ["Bonjour JB,", "j'ai besoin d'aide pour MON COMMERCE by DIGIY.",
-          slug ? `Slug : ${slug}` : "", phone ? `Téléphone : +${phone}` : ""].filter(Boolean).join(" ");
-        return `https://wa.me/${SUPPORT_PHONE}?text=${encodeURIComponent(text)}`;
-      }
-
-      function setStatus(kind, title, sub){
-        const box = $("statusBox"), dot = $("dotStatus");
-        box.className = `statusLine ${kind || ""}`.trim();
-        dot.className = `dot ${kind === "ok" ? "ok" : kind === "bad" ? "bad" : ""}`.trim();
-        $("pillStatus").textContent = kind === "ok" ? "Accès OK" : kind === "bad" ? "Bloqué" : "Contrôle";
-        $("statusTitle").textContent = title;
-        $("statusSub").textContent = sub;
-      }
-
-      function wireNav(){
-        try {
-          const q = { slug: state.slug || "", phone: state.phone || "" };
-          $("btnBackCaisse").href = buildUrl(digiyLocal("caisse.html"), q);
-          $("btnBackHall").href   = buildUrl(digiyLocal("index.html"), q);
-          $("btnGoHall2").href    = buildUrl(digiyLocal("index.html"), q);
-          $("btnGoCaisse2").href  = buildUrl(digiyLocal("caisse.html"), q);
-          $("btnNavHall").href    = buildUrl(digiyLocal("index.html"), q);
-          $("btnNavCaisse").href  = buildUrl(digiyLocal("caisse.html"), q);
-          $("btnAbos").href = buildUrl(ABOS_URL, { module: MODULE, base_module: MODULE, slug: state.slug || "", phone: state.phone || "" });
-          $("btnSupport").href = buildSupportUrl(state.slug, state.phone);
-        } catch(e) {
-          log("wireNav erreur silencieuse", { message: e.message || String(e) });
-        }
-      }
-
-      function paintMeta(){
-        $("metaSlug").textContent = state.slug || "—";
-        $("metaPhone").textContent = state.phone || "—";
-        $("metaStore").textContent = state.storeName || "—";
-        $("metaPlan").textContent = state.plan || "—";
-        wireNav();
-      }
-
-      function activateTab(name){
-        document.querySelectorAll(".tab").forEach(el => el.classList.toggle("active", el.dataset.tab === name));
-        document.querySelectorAll(".view").forEach(el => el.classList.remove("active"));
-        $(`view-${name}`).classList.add("active");
-      }
-
-      async function rpcFirstSuccess(name, payloads){
-        let lastError = null;
-        for(const payload of payloads){
-          try{
-            log(`RPC ${name} tentative`, payload);
-            const { data, error } = await sb.rpc(name, payload);
-            if(error){ lastError = error; log(`RPC ${name} erreur`, { message: error.message, details: error.details, hint: error.hint }); continue; }
-            log(`RPC ${name} OK`, data);
-            return data;
-          }catch(err){ lastError = err; log(`RPC ${name} exception`, { message: err?.message || String(err) }); }
-        }
-        throw lastError || new Error(`RPC ${name} échouée`);
-      }
-
-      async function resolvePhoneFromSlug(slug){
-        const { data, error } = await sb.from("digiy_subscriptions_public").select("phone,slug").eq("slug", slug).limit(1).maybeSingle();
-        if(error) throw error;
-        return normPhone(data?.phone || "");
-      }
-
-      async function getAccess(phone){
-        const res = await rpcFirstSuccess("digiy_has_access", [{ p_phone: phone, p_module: MODULE }, { phone, module: MODULE }]);
-        if(typeof res === "boolean") return res;
-        if(res && typeof res.ok === "boolean") return res.ok;
-        if(res && typeof res.has_access === "boolean") return res.has_access;
-        if(res && typeof res.allowed === "boolean") return res.allowed;
-        return !!res;
-      }
-
-      async function getSubscription(phone){
-        try{ const data = await rpcFirstSuccess("digiy_get_subscription_status", [{ p_phone: phone, p_module: MODULE }, { phone, module: MODULE }]); return data || null; }
-        catch(err){ log("digiy_get_subscription_status indisponible", { message: err?.message || String(err) }); return null; }
-      }
-
-      async function getStoreContext(slug){
-        try{ const data = await rpcFirstSuccess("pos_get_store_context_by_slug", [{ p_slug: slug }, { slug }]); if(Array.isArray(data)) return data[0] || null; return data || null; }
-        catch(err){ log("pos_get_store_context_by_slug indisponible", { message: err?.message || String(err) }); return null; }
-      }
-
-      function normalizeContext(ctx){
-        const s = ctx && typeof ctx === "object" ? ctx : {};
-        return {
-          display_name: s.display_name || s.store_name || "MON COMMERCE",
-          city: s.city || s.ville || "",
-          phone: normPhone(s.phone || ""),
-          whatsapp: normPhone(s.whatsapp || s.whatsapp_phone || ""),
-          wave_phone: normPhone(s.wave_phone || s.wave || ""),
-          address: s.address || s.adresse || "",
-          bio: s.bio || s.tagline || "",
-          tva_active: !!(s.tva_assujeti || s.tva_active),
-          tva_taux: s.tva_taux ?? 18
-        };
-      }
-
-      async function loadShopSettings(){
-        const tries = [
-          () => sb.from("caisse_settings").select("*").eq("slug", state.slug).limit(1).maybeSingle(),
-          () => sb.from("caisse_settings").select("*").eq("owner_id", state.phone).limit(1).maybeSingle()
-        ];
-        for(const run of tries){
-          try{ const { data, error } = await run(); if(!error && data) return data; if(error) log("Lecture caisse_settings erreur", error); }
-          catch(err){ log("Lecture caisse_settings exception", { message: err?.message || String(err) }); }
-        }
-        return null;
-      }
-
-      function mergeShopData(row, ctx){
-        const r = row || {}, c = normalizeContext(ctx);
-        return {
-          nom_boutique: r.nom_boutique || c.display_name || "MON COMMERCE",
-          city: r.city || c.city || "",
-          telephone: normPhone(r.telephone || c.phone || state.phone || ""),
-          whatsapp_phone: normPhone(r.whatsapp_phone || c.whatsapp || state.phone || ""),
-          wave_phone: normPhone(r.wave_phone || c.wave_phone || ""),
-          adresse: r.adresse || c.address || "",
-          tagline: r.tagline || c.bio || "",
-          tva_active: typeof r.tva_active === "boolean" ? r.tva_active : !!c.tva_active,
-          tva_taux: Number(r.tva_taux ?? c.tva_taux ?? 18),
-          tva_mode: r.tva_mode || "excl"
-        };
-      }
-
-      async function saveShopSettings(){
-        const row = {
-          owner_id: state.phone, slug: state.slug || null,
-          nom_boutique: $("shop_name").value.trim() || "MON COMMERCE",
-          city: $("shop_city").value.trim() || null,
-          telephone: normPhone($("shop_phone").value),
-          whatsapp_phone: normPhone($("shop_whatsapp").value),
-          wave_phone: normPhone($("shop_wave").value),
-          adresse: $("shop_address").value.trim() || null,
-          tagline: $("shop_tagline").value.trim() || null,
-          tva_active: $("tva_active").checked,
-          tva_taux: Number($("tva_taux").value || 18),
-          tva_mode: $("tva_mode").value || "excl",
-          updated_at: new Date().toISOString()
-        };
-        log("Sauvegarde caisse_settings", row);
-        let saved = false;
-        for(const run of [
-          () => sb.from("caisse_settings").upsert(row, { onConflict: "slug" }),
-          () => sb.from("caisse_settings").upsert(row, { onConflict: "owner_id" })
-        ]){
-          try{ const { error } = await run(); if(!error){ saved = true; break; } log("Upsert caisse_settings erreur", error); }
-          catch(err){ log("Upsert caisse_settings exception", { message: err?.message || String(err) }); }
-        }
-        if(!saved) throw new Error("Impossible d'enregistrer la boutique");
-        state.settingsRow = await loadShopSettings();
-        fillShopForm(state.settingsRow, state.storeContext);
-        state.storeName = $("shop_name").value.trim() || state.storeName;
-        paintMeta();
-      }
-
-      function fillShopForm(row, ctx){
-        const v = mergeShopData(row, ctx);
-        $("shop_name").value = v.nom_boutique || "";
-        $("shop_city").value = v.city || "";
-        $("shop_phone").value = v.telephone || state.phone || "";
-        $("shop_whatsapp").value = v.whatsapp_phone || "";
-        $("shop_wave").value = v.wave_phone || "";
-        $("shop_address").value = v.adresse || "";
-        $("shop_tagline").value = v.tagline || "";
-        $("tva_active").checked = !!v.tva_active;
-        $("tva_taux").value = v.tva_taux ?? 18;
-        $("tva_mode").value = v.tva_mode || "excl";
-      }
-
-      async function loadProducts(){
-        const tries = [
-          () => sb.from("caisse_products").select("*").eq("slug", state.slug).order("created_at", { ascending: false }),
-          () => sb.from("caisse_products").select("*").eq("owner_id", state.phone).order("created_at", { ascending: false })
-        ];
-        for(const run of tries){
-          try{ const { data, error } = await run(); if(!error && Array.isArray(data)){ state.products = data; renderProducts(); return; } if(error) log("Lecture caisse_products erreur", error); }
-          catch(err){ log("Lecture caisse_products exception", { message: err?.message || String(err) }); }
-        }
-        state.products = []; renderProducts();
-      }
-
-      function productTag(stock, isActive){
-        if(!isActive) return `<span class="tag bad">désactivé</span>`;
-        const s = Number(stock || 0);
-        if(s <= 0) return `<span class="tag bad">rupture</span>`;
-        if(s <= 5) return `<span class="tag warn">stock bas</span>`;
-        return `<span class="tag ok">actif</span>`;
-      }
-
-      function renderProducts(){
-        const q = ($("searchProd").value || "").trim().toLowerCase();
-        const rows = state.products.filter(p => {
-          const hay = [p.nom || "", p.categorie || ""].join(" ").toLowerCase();
-          return !q || hay.includes(q);
-        });
-        const box = $("productsList");
-        if(!rows.length){ box.innerHTML = `<div class="empty">Aucun produit pour le moment.</div>`; return; }
-        box.innerHTML = rows.map(p => `
-          <div class="prodCard">
+          <div class="boostBox">
             <div>
-              <div class="prodName">${escapeHtml(p.nom || "Produit")}</div>
-              <div class="prodMeta">
-                Catégorie : ${escapeHtml(p.categorie || "—")}<br>
-                Prix : ${Number(p.prix || 0).toLocaleString("fr-FR")} FCFA<br>
-                Stock : ${Number(p.stock || 0)}<br>
-                ID : ${escapeHtml(p.id || "—")}
-              </div>
+              <b>🚀 BOOST visibilité</b>
+              <div class="muted" style="font-weight:800;font-size:13px" id="boostText">+50% d'apparition · 7 jours · 5 000 FCFA</div>
+              <div class="muted" style="font-weight:800;font-size:12px;margin-top:6px" id="boostStatus">Statut boost : —</div>
             </div>
-            <div class="prodRight">
-              ${productTag(p.stock, p.is_active !== false)}
-              <button class="btn-outline" type="button" onclick="window.POS_ADMIN.editProduct('${String(p.id)}')">✏️ Modifier</button>
-              <button class="btn ${p.is_active === false ? "ok" : "danger"}" type="button" onclick="window.POS_ADMIN.toggleProduct('${String(p.id)}', ${p.is_active === false ? "true" : "false"})">
-                ${p.is_active === false ? "♻️ Réactiver" : "🗑 Désactiver"}
-              </button>
+            <div style="display:flex;flex-direction:column;gap:8px;min-width:170px">
+              <button class="btn"         id="btnBoost"     type="button">Activer</button>
+              <button class="btn-outline" id="btnBoostInfo" type="button">Détails</button>
             </div>
-          </div>`).join("");
+          </div>
+        </div>
+
+        <!-- CARTE ACTION -->
+        <div class="card" id="cardAction" style="grid-column:1/-1">
+          <h3>Action principale</h3>
+          <div class="muted" style="font-weight:800;margin-bottom:10px" id="actionDesc">Une action. Simple. Efficace.</div>
+
+          <div class="row" style="justify-content:space-between">
+            <div class="muted" style="font-weight:900" id="actionHint">—</div>
+            <button class="btn" id="btnPrimaryAction" type="button">…</button>
+          </div>
+
+          <div class="hr"></div>
+
+          <h3>Notifications</h3>
+          <div class="notifList" id="notifList"></div>
+
+          <div class="footer">
+            <a class="smallLink" href="#" id="linkSupport">Support</a>
+            <a class="smallLink" href="#" id="linkPayments">Mes paiements</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /.wrap.app -->
+
+<script>
+(() => {
+  "use strict";
+
+  const MODULE_CODE          = "POS";
+  const MODULE_LABEL         = "MON COMMERCE";
+  const PRIMARY_ACTION_LABEL = "Ouvrir ma caisse";
+  const PRIMARY_ACTION_HINT  = "Encaisse, gère tes produits et suis ton stock.";
+  const SUPPORT_PHONE        = "221771342889";
+
+  const SUPABASE_URL  = String(window.DIGIY_SUPABASE_URL  || "").trim();
+  const SUPABASE_ANON = String(window.DIGIY_SUPABASE_ANON_KEY || window.DIGIY_SUPABASE_ANON || "").trim();
+
+  const ABOS_URL      = "https://commencer-a-payer.digiylyfe.com/";
+  const CAISSE_URL    = digiyLocal("caisse.html");
+  const HALL_URL      = digiyLocal("index.html");
+  const ADMIN_URL     = digiyLocal("dashboard-pro.html"); // réglages = même espace
+  const PIN_URL       = digiyLocal("pin.html");
+  const DASHBOARD_URL = digiyLocal("dashboard-pro.html");
+  const PUBLIC_URL    = "https://mon-commerce.digiylyfe.com/";
+
+  const BOOST = { module:"BOOST", plan:"boost_7d", price_xof:5000, label:"BOOST visibilité", duration_days:7 };
+
+  const $ = (id) => document.getElementById(id);
+  const diagLines = [];
+  let sb = null;
+  const state = { slug:"", phone:"", access:false, storeName:"", plan:"", statusPayload:null };
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     ANTI-ÉCRAN NOIR
+     1. setTimeout(reveal, 2000) — filet absolu
+     2. reveal() au début de init()
+     3. reveal() dans le catch fatal
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  function reveal() {
+    document.documentElement.classList.add("app-ready");
+    document.documentElement.style.visibility = "";
+  }
+  setTimeout(reveal, 2000); // filet absolu
+
+  function safeStringify(v) { try { return JSON.stringify(v, null, 2); } catch(_) { return String(v); } }
+
+  function log(msg, data) {
+    const line = `[${new Date().toLocaleTimeString("fr-FR")}] ${msg}`;
+    diagLines.push(data === undefined ? line : `${line}\n${safeStringify(data)}`);
+    if ($("diagBox")) $("diagBox").textContent = diagLines.join("\n\n");
+    console.log("[DIGIY POS DASHBOARD]", msg, data ?? "");
+  }
+
+  function fmtDateFR(iso) {
+    if (!iso) return "—";
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return "—";
+    return d.toLocaleDateString("fr-FR", { year:"numeric", month:"long", day:"numeric" });
+  }
+
+  function cleanDigits(v)  { return String(v || "").replace(/[^\d]/g, ""); }
+  function normSlug(v)     { return String(v || "").trim().toLowerCase(); }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     buildUrl — VERSION BLINDÉE
+     new URL(relatif, location.href) fragile selon l'env.
+     On reconstruit l'origine manuellement.
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  function buildUrl(base, params) {
+    const baseStr = (base == null ? "" : String(base)).trim();
+    if (!baseStr) return location.href;
+    let u;
+    try {
+      if (/^https?:\/\//i.test(baseStr)) {
+        u = new URL(baseStr);
+      } else {
+        const origin = location.protocol + "//" + location.host;
+        const full   = baseStr.startsWith("/") ? origin + baseStr : origin + "/" + baseStr;
+        u = new URL(full);
       }
-
-      function escapeHtml(v){
-        return String(v ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
-      }
-
-      function resetProductForm(){
-        $("prod_id").value = $("prod_name").value = $("prod_cat").value = $("prod_price").value = $("prod_stock").value = "";
-        $("btnSaveProd").textContent = "➕ Enregistrer le produit";
-      }
-
-      function fillProductForm(p){
-        $("prod_id").value = p.id || "";
-        $("prod_name").value = p.nom || "";
-        $("prod_cat").value = p.categorie || "";
-        $("prod_price").value = p.prix ?? "";
-        $("prod_stock").value = p.stock ?? "";
-        $("btnSaveProd").textContent = "💾 Mettre à jour le produit";
-        activateTab("products");
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-
-      async function saveProduct(){
-        const id = $("prod_id").value.trim();
-        const row = {
-          owner_id: state.phone, slug: state.slug || null,
-          nom: $("prod_name").value.trim(),
-          categorie: $("prod_cat").value.trim() || null,
-          prix: Number($("prod_price").value || 0),
-          stock: Number($("prod_stock").value || 0),
-          is_active: true
-        };
-        if(!row.nom) throw new Error("Nom produit requis");
-        if(!Number.isFinite(row.prix) || row.prix < 0) throw new Error("Prix produit invalide");
-        log("Sauvegarde produit", row);
-
-        if(id){
-          let ok = false;
-          for(const run of [
-            () => sb.from("caisse_products").update({ nom: row.nom, categorie: row.categorie, prix: row.prix, stock: row.stock, is_active: true, updated_at: new Date().toISOString() }).eq("id", id).eq("owner_id", state.phone),
-            () => sb.from("caisse_products").update({ nom: row.nom, categorie: row.categorie, prix: row.prix, stock: row.stock, is_active: true, updated_at: new Date().toISOString() }).eq("id", id).eq("slug", state.slug)
-          ]){
-            try{ const { error } = await run(); if(!error){ ok = true; break; } log("Update produit erreur", error); }
-            catch(err){ log("Update produit exception", { message: err?.message || String(err) }); }
-          }
-          if(!ok) throw new Error("Impossible de mettre à jour le produit");
-        } else {
-          const { error } = await sb.from("caisse_products").insert({ ...row, created_at: new Date().toISOString(), updated_at: new Date().toISOString() });
-          if(error) throw error;
-        }
-        resetProductForm();
-        await loadProducts();
-      }
-
-      async function setProductActive(id, active){
-        let ok = false;
-        for(const run of [
-          () => sb.from("caisse_products").update({ is_active: !!active, updated_at: new Date().toISOString() }).eq("id", id).eq("owner_id", state.phone),
-          () => sb.from("caisse_products").update({ is_active: !!active, updated_at: new Date().toISOString() }).eq("id", id).eq("slug", state.slug)
-        ]){
-          try{ const { error } = await run(); if(!error){ ok = true; break; } log("Update statut produit erreur", error); }
-          catch(err){ log("Update statut produit exception", { message: err?.message || String(err) }); }
-        }
-        if(!ok) throw new Error("Impossible de modifier le statut du produit");
-        await loadProducts();
-      }
-
-      async function boot(){
-        if(state.loading) return;
-        state.loading = true;
-        revealPage(); // on révèle immédiatement — guard a déjà fait son check
-        try{
-          state.slug = getResolvedSlug();
-          state.phone = getResolvedPhone();
-          paintMeta();
-
-          if(!state.slug){
-            /* ━━━ statuts : langage humain, pas jargon ━━━ */
-            setStatus("bad", "Identifiant manquant", "Repasse par ton lien pro ou ton QR DIGIY pour accéder à ton espace.");
-            log("Slug manquant"); return;
-          }
-
-          localStorage.setItem("digiy_pos_last_slug", state.slug);
-          sessionStorage.setItem("digiy_pos_last_slug", state.slug);
-
-          if(!state.phone){ state.phone = await resolvePhoneFromSlug(state.slug); paintMeta(); }
-          if(state.phone){ localStorage.setItem("digiy_pos_last_phone", state.phone); sessionStorage.setItem("digiy_pos_last_phone", state.phone); }
-
-          if(!state.phone){
-            setStatus("bad", "Boutique introuvable", "Le lien n'a pas permis d'identifier ta boutique. Contacte le support.");
-            log("Téléphone introuvable"); return;
-          }
-
-          state.access = await getAccess(state.phone);
-          const sub = await getSubscription(state.phone);
-          state.plan = sub?.plan || sub?.plan_code || (state.access ? "actif" : "standard");
-
-          if(!state.access){
-            setStatus("bad", "Accès non actif", "Ton abonnement MON COMMERCE n'est pas encore actif pour cette boutique.");
-            log("Accès refusé"); return;
-          }
-
-          state.storeContext = await getStoreContext(state.slug);
-          state.settingsRow = await loadShopSettings();
-          fillShopForm(state.settingsRow, state.storeContext);
-
-          state.storeName = $("shop_name").value.trim() || state.storeContext?.display_name || state.storeContext?.store_name || "MON COMMERCE";
-          paintMeta();
-          await loadProducts();
-
-          setStatus("ok", "Ton espace est prêt", "Tu peux poser ta boutique, gérer la TVA et tes produits.");
-          log("Admin prêt", { slug: state.slug, phone: state.phone, plan: state.plan });
-        }catch(err){
-          setStatus("bad", "Problème technique", err?.message || "Une erreur s'est produite. Réessaie ou contacte le support.");
-          log("BOOT ERROR", { message: err?.message || String(err) });
-        }finally{
-          state.loading = false;
-          revealPage(); // filet final — quoi qu'il arrive
-        }
-      }
-
-      document.querySelectorAll(".tab").forEach(btn => btn.addEventListener("click", () => activateTab(btn.dataset.tab)));
-
-      $("btnReloadShop").addEventListener("click", async () => {
-        try{ $("btnReloadShop").disabled = true; state.storeContext = await getStoreContext(state.slug); state.settingsRow = await loadShopSettings(); fillShopForm(state.settingsRow, state.storeContext); log("Boutique rechargée"); }
-        catch(err){ log("Erreur reload boutique", { message: err?.message || String(err) }); alert(err?.message || "Erreur rechargement boutique"); }
-        finally{ $("btnReloadShop").disabled = false; }
+    } catch(e) {
+      log("buildUrl KO: " + baseStr + " — " + e.message);
+      return baseStr;
+    }
+    try {
+      Object.entries(params || {}).forEach(([k, v]) => {
+        if (v !== null && v !== undefined && v !== "") u.searchParams.set(k, String(v));
       });
+    } catch(e) { /* silencieux */ }
+    return u.toString();
+  }
 
-      $("btnSaveShop").addEventListener("click", async () => {
-        try{ $("btnSaveShop").disabled = true; await saveShopSettings(); log("Boutique enregistrée"); }
-        catch(err){ log("Erreur save boutique", { message: err?.message || String(err) }); alert(err?.message || "Erreur sauvegarde boutique"); }
-        finally{ $("btnSaveShop").disabled = false; }
-      });
+  function buildSupportUrl(phone, slug) {
+    const text = ["Bonjour JB,", "j'ai besoin d'aide pour MON COMMERCE by DIGIY.",
+      slug  ? `Slug : ${slug}`        : "",
+      phone ? `Téléphone : +${phone}` : ""
+    ].filter(Boolean).join(" ");
+    return `https://wa.me/${SUPPORT_PHONE}?text=${encodeURIComponent(text)}`;
+  }
 
-      $("btnSaveProd").addEventListener("click", async () => {
-        try{ $("btnSaveProd").disabled = true; await saveProduct(); log("Produit enregistré"); }
-        catch(err){ log("Erreur save produit", { message: err?.message || String(err) }); alert(err?.message || "Erreur sauvegarde produit"); }
-        finally{ $("btnSaveProd").disabled = false; }
-      });
+  function buildAbosParams(phone, slug, moduleCode = MODULE_CODE) {
+    return { base_module: MODULE_CODE, module: moduleCode, phone, slug };
+  }
 
-      $("btnResetProd").addEventListener("click", resetProductForm);
+  function saveLocalAccess(slug, phone) {
+    if (slug)  { localStorage.setItem("digiy_pos_last_slug",  slug);  sessionStorage.setItem("digiy_pos_last_slug",  slug); }
+    if (phone) { localStorage.setItem("digiy_pos_last_phone", phone); sessionStorage.setItem("digiy_pos_last_phone", phone); }
+    const payload = { slug: slug||"", phone: phone||"", module: MODULE_CODE, verified:true, ts: Date.now() };
+    localStorage.setItem("DIGIY_POS_SESSION", JSON.stringify(payload));
+    localStorage.setItem("DIGIY_ACCESS",      JSON.stringify(payload));
+  }
 
-      $("btnReloadProducts").addEventListener("click", async () => {
-        try{ $("btnReloadProducts").disabled = true; await loadProducts(); log("Produits rechargés"); }
-        catch(err){ log("Erreur reload produits", { message: err?.message || String(err) }); alert(err?.message || "Erreur rechargement produits"); }
-        finally{ $("btnReloadProducts").disabled = false; }
-      });
+  function getParam(name) { return new URL(location.href).searchParams.get(name) || ""; }
 
-      $("searchProd").addEventListener("input", renderProducts);
+  function getGuardSession() {
+    if (typeof window.DIGIY_GUARD?.getSession === "function") {
+      try { return window.DIGIY_GUARD.getSession() || {}; } catch(_) {}
+    }
+    return window.DIGIY_GUARD?.state || {};
+  }
 
-      window.POS_ADMIN = {
-        editProduct(id){ const p = state.products.find(x => String(x.id) === String(id)); if(p) fillProductForm(p); },
-        async toggleProduct(id, activate){
-          const label = activate ? "réactiver" : "désactiver";
-          if(!confirm(`Confirmer : ${label} ce produit ?`)) return;
-          try{ await setProductActive(id, activate); log(activate ? "Produit réactivé" : "Produit désactivé", { id }); }
-          catch(err){ log("Erreur changement statut produit", { message: err?.message || String(err) }); alert(err?.message || "Erreur changement statut produit"); }
-        }
-      };
+  function getSlug() {
+    const gs = getGuardSession();
+    return normSlug(
+      getParam("slug") || gs.slug ||
+      sessionStorage.getItem("digiy_pos_last_slug") || localStorage.getItem("digiy_pos_last_slug") ||
+      sessionStorage.getItem("digiy_pos_slug")      || localStorage.getItem("digiy_pos_slug") || ""
+    );
+  }
 
-      wireNav();
-      boot();
-    })();
-  </script>
+  function getPhone() {
+    const gs = getGuardSession();
+    return cleanDigits(
+      getParam("phone") || getParam("tel") || gs.phone ||
+      sessionStorage.getItem("digiy_pos_last_phone") || localStorage.getItem("digiy_pos_last_phone") ||
+      sessionStorage.getItem("digiy_pos_phone")       || localStorage.getItem("digiy_pos_phone") || ""
+    );
+  }
+
+  function setNotifs(items) {
+    const box = $("notifList");
+    box.innerHTML = "";
+    if (!items.length) {
+      box.innerHTML = `<div class="notif"><div><b>Rien à signaler</b><div class="muted" style="font-weight:800;margin-top:2px">Tout roule.</div></div><div class="tag ok">OK</div></div>`;
+      return;
+    }
+    for (const it of items) {
+      const tagClass = it.level === "warn" ? "warn" : it.level === "ok" ? "ok" : "info";
+      const div = document.createElement("div");
+      div.className = "notif";
+      div.innerHTML = `<div><b>${it.title}</b><div class="muted" style="font-weight:800;margin-top:2px">${it.text}</div></div><div class="tag ${tagClass}">${it.tag}</div>`;
+      box.appendChild(div);
+    }
+  }
+
+  function daysBetween(aIso, bIso) {
+    const a = new Date(aIso).getTime(), b = new Date(bIso).getTime();
+    if (Number.isNaN(a) || Number.isNaN(b)) return null;
+    return Math.ceil((b - a) / (1000 * 60 * 60 * 24));
+  }
+
+  async function awaitGuardReady() {
+    try {
+      if (typeof window.DIGIY_GUARD?.ready === "function") await window.DIGIY_GUARD.ready();
+      else if (window.DIGIY_GUARD?.ready?.then) await window.DIGIY_GUARD.ready;
+    } catch(err) { log("guard ready KO", { message: err?.message || String(err) }); }
+  }
+
+  async function bootGuard() {
+    if (typeof window.DIGIY_GUARD?.boot !== "function") return true;
+    try {
+      const res = await window.DIGIY_GUARD.boot({ module: MODULE_CODE, dashboard: DASHBOARD_URL, login: PIN_URL, pay: ABOS_URL, requireSlug:true, checkSubscription:false });
+      log("guard boot", res);
+      if (res && res.ok === false) return false;
+      return true;
+    } catch(err) { log("guard boot erreur", { message: err?.message || String(err) }); return true; }
+  }
+
+  function makeFallbackSb() {
+    if (window.supabase?.createClient && SUPABASE_URL && SUPABASE_ANON) {
+      return window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON, { auth:{ persistSession:false, autoRefreshToken:false, detectSessionInUrl:false } });
+    }
+    return null;
+  }
+
+  async function getSb() {
+    if (sb) return sb;
+    if (typeof window.DIGIY_GUARD?.getSb === "function") {
+      try { sb = window.DIGIY_GUARD.getSb(); if (sb) return sb; } catch(err) { log("guard getSb erreur", { message: err?.message || String(err) }); }
+    }
+    sb = makeFallbackSb();
+    return sb;
+  }
+
+  async function rpcFirstSuccess(name, payloads) {
+    const client = await getSb();
+    if (!client) throw new Error("supabase_not_ready");
+    let lastError = null;
+    for (const payload of payloads) {
+      try {
+        log(`RPC ${name} tentative`, payload);
+        const { data, error } = await client.rpc(name, payload);
+        if (error) { lastError = error; log(`RPC ${name} erreur`, { message: error.message, details: error.details, hint: error.hint }); continue; }
+        log(`RPC ${name} OK`, data);
+        return data;
+      } catch(err) { lastError = err; log(`RPC ${name} exception`, { message: err?.message || String(err) }); }
+    }
+    throw lastError || new Error(`RPC ${name} échouée`);
+  }
+
+  async function resolvePhoneFromSlug(slug) {
+    const client = await getSb();
+    if (!client || !slug) return "";
+    const { data, error } = await client.from("digiy_subscriptions_public").select("phone,module,slug").eq("slug", slug).limit(1).maybeSingle();
+    if (error) throw error;
+    return cleanDigits(data?.phone || "");
+  }
+
+  async function digiyHasAccess(phone, module) {
+    const res = await rpcFirstSuccess("digiy_has_access", [{ p_phone: phone, p_module: module }, { phone, module }]);
+    if (typeof res === "boolean") return res;
+    if (res && typeof res.ok         === "boolean") return res.ok;
+    if (res && typeof res.has_access === "boolean") return res.has_access;
+    if (res && typeof res.allowed    === "boolean") return res.allowed;
+    if (res && typeof res.access     === "boolean") return res.access;
+    return !!res;
+  }
+
+  async function digiyGetSubscriptionFull(phone, module) {
+    try { return await rpcFirstSuccess("digiy_get_subscription_status", [{ p_phone: phone, p_module: module }, { phone, module }]); }
+    catch(err) { log("digiy_get_subscription_status indisponible", { message: err?.message || String(err) }); return null; }
+  }
+
+  async function digiyGetDashboardStats(phone, module) {
+    try { return await rpcFirstSuccess("digiy_get_dashboard_stats", [{ p_phone: phone, p_module: module }, { phone, module }]); }
+    catch(err) { log("digiy_get_dashboard_stats indisponible", { message: err?.message || String(err) }); return { month_xof:null, tx_count:null, today_hint:"Aujourd'hui" }; }
+  }
+
+  async function digiyGetBoostStatus(phone) {
+    try { return await rpcFirstSuccess("digiy_get_boost_status", [{ p_phone: phone }, { phone }]); }
+    catch(err) { log("digiy_get_boost_status indisponible", { message: err?.message || String(err) }); return null; }
+  }
+
+  async function digiyBuildPayUrl(module, phone, plan) {
+    return await rpcFirstSuccess("digiy_build_pay_url", [{ p_module: module, p_phone: phone, p_plan: plan }, { module, phone, plan }]);
+  }
+
+  async function getStoreContext(slug) {
+    try { return await rpcFirstSuccess("digiy_pos_get_store_context_by_slug", [{ p_slug: slug }, { slug }]); }
+    catch(err1) {
+      try { return await rpcFirstSuccess("pos_get_store_context_by_slug", [{ p_slug: slug }, { slug }]); }
+      catch(err2) { log("store context indisponible", { first: err1?.message || String(err1), second: err2?.message || String(err2) }); return null; }
+    }
+  }
+
+  /* ━━━ wireNav : try/catch pour ne jamais faire tomber init() ━━━ */
+  function wireNav(phone, slug) {
+    try {
+      const q = { slug, phone, module: MODULE_CODE };
+      $("btnHall").href          = buildUrl(HALL_URL,  q);
+      $("btnCaisse").href        = buildUrl(CAISSE_URL, q);
+      $("btnAdmin").href         = buildUrl(ADMIN_URL,  q);
+      $("btnSettings").href      = buildUrl(ADMIN_URL,  q);
+      $("btnAbosTop").href       = buildUrl(ABOS_URL,   buildAbosParams(phone, slug));
+      $("btnSupportTop").href    = buildSupportUrl(phone, slug);
+      $("linkSupport").href      = buildSupportUrl(phone, slug);
+      $("linkPayments").href     = buildUrl(ABOS_URL, buildAbosParams(phone, slug));
+      $("btnPinTop").href        = buildUrl(PIN_URL, { slug, phone, module: MODULE_CODE, "return": DASHBOARD_URL });
+      $("btnPublicFloating").href = buildUrl(PUBLIC_URL, { slug });
+      $("btnBlockedPin").href    = buildUrl(PIN_URL, { slug, phone, module: MODULE_CODE, "return": DASHBOARD_URL });
+      $("btnBlockedAbos").href   = buildUrl(ABOS_URL, buildAbosParams(phone, slug));
+    } catch(e) {
+      log("wireNav erreur silencieuse", { message: e.message || String(e) });
+    }
+  }
+
+  /* ━━━ showBlocked : langage humain, pills sans jargon ━━━ */
+  function showBlocked(title, text, pill) {
+    $("dashboardContent").style.display = "none";
+    $("blockedShell").style.display     = "grid";
+    $("blockedTitle").textContent        = title;
+    $("blockedText").innerHTML           = text;
+    /* ━━━ AVANT : "Bloqué", "Contrôle", "Inactif" → jargon banni ━━━ */
+    const pillLabel = pill || "Accès requis";
+    $("pillStatus").innerHTML = `Statut : <b>${pillLabel}</b>`;
+  }
+
+  function showDashboard() {
+    $("blockedShell").style.display     = "none";
+    $("dashboardContent").style.display = "block";
+  }
+
+  async function init() {
+    reveal(); // filet 1 : on révèle dès le départ
+
+    /* ━━━ Textes JS — doctrine façade ━━━ */
+    $("brandTitle").textContent       = `${MODULE_LABEL} — Mon espace de travail`;
+    $("brandSub").textContent         = "Mon activité · boutique · abonnement";
+    $("btnPrimaryAction").textContent = PRIMARY_ACTION_LABEL;
+    $("actionHint").textContent       = PRIMARY_ACTION_HINT;
+    $("actionDesc").textContent       = "Entre dans ta caisse, pilote tes produits et ton stock depuis un seul endroit.";
+    $("pillStatus").innerHTML         = `Statut : <b>…</b>`;
+
+    await awaitGuardReady();
+    await bootGuard();
+
+    let slug  = getSlug();
+    let phone = getPhone();
+
+    state.slug  = slug;
+    state.phone = phone;
+
+    $("slugBox").textContent  = slug  || "—";
+    $("phoneBox").textContent = phone ? `+${phone}` : "—";
+    wireNav(phone, slug);
+
+    if (!slug) {
+      log("slug manquant");
+      /* ━━━ AVANT : "slug POS", "pin.html?slug=…" → jargon banni ━━━ */
+      showBlocked(
+        "Identifiant manquant",
+        "Entre par ton PIN ou passe par ton lien pro pour ouvrir ton espace.",
+        "Accès requis"
+      );
+      return;
+    }
+
+    try {
+      if (!phone) { phone = await resolvePhoneFromSlug(slug); log("phone résolu depuis slug", { slug, phone }); }
+    } catch(err) { log("resolvePhoneFromSlug KO", { message: err?.message || String(err) }); }
+
+    state.slug  = slug;
+    state.phone = phone || "";
+    saveLocalAccess(slug, state.phone);
+
+    $("slugBox").textContent  = slug  || "—";
+    $("phoneBox").textContent = state.phone ? `+${state.phone}` : "—";
+    wireNav(state.phone, slug);
+
+    let access = false;
+    if (state.phone) {
+      try { access = await digiyHasAccess(state.phone, MODULE_CODE); }
+      catch(err) { log("digiyHasAccess KO", { message: err?.message || String(err) }); }
+    }
+    state.access = !!access;
+
+    if (!state.phone) {
+      showBlocked(
+        "Boutique introuvable",
+        "Le lien n'a pas permis d'identifier ta boutique. Entre par ton PIN pour reconstruire ta session.",
+        "En attente"
+      );
+      return;
+    }
+
+    if (!state.access) {
+      showBlocked(
+        "Abonnement requis",
+        "Ta boutique est reconnue, mais ton accès MON COMMERCE n'est pas encore actif. Active ton abonnement ou entre par ton PIN.",
+        "À activer"
+      );
+      return;
+    }
+
+    showDashboard();
+
+    const storeCtx = await getStoreContext(slug);
+    state.storeName = String(storeCtx?.shop_name || storeCtx?.display_name || storeCtx?.store?.name || storeCtx?.profile?.display_name || MODULE_LABEL).trim();
+
+    const status = await digiyGetSubscriptionFull(state.phone, MODULE_CODE);
+    state.statusPayload = status || null;
+
+    const expiresAt = status?.expires_at || status?.current_period_end || null;
+    const plan      = status?.plan || status?.plan_code || "standard";
+    const pay       = status?.payment_ref ? "validé" : "ok";
+    state.plan      = plan;
+
+    $("dot").classList.remove("bad");
+    $("dot").classList.add("ok");
+    $("statusLine").textContent = "Abonnement actif";
+    $("expiryLine").textContent = expiresAt ? `Expire le ${fmtDateFR(expiresAt)}` : "Expiration : —";
+    $("pillStatus").innerHTML   = `Statut : <b>Actif</b>`;
+    $("metaLine").innerHTML     = `<span>Plan : ${plan}</span><span>•</span><span>Paiement : ${pay}</span>`;
+    /* ━━━ brandSub dynamique : nom boutique, pas jargon ━━━ */
+    $("brandSub").textContent   = state.storeName ? `${state.storeName} · mon espace de travail` : "Mon espace de travail · boutique active";
+
+    const stats = await digiyGetDashboardStats(state.phone, MODULE_CODE);
+    const month = stats?.month_xof ?? null;
+    const tx    = stats?.tx_count  ?? null;
+
+    $("moneyMonth").textContent = month !== null ? `${Number(month).toLocaleString("fr-FR")} FCFA` : "— FCFA";
+    $("txCount").textContent    = tx    !== null ? `${tx} transactions` : "— transactions";
+    $("todayHint").textContent  = stats?.today_hint || "Aujourd'hui";
+
+    const notifs = [];
+
+    if (expiresAt) {
+      const d = daysBetween(new Date().toISOString(), expiresAt);
+      notifs.push(d !== null && d <= 3
+        ? { level:"warn", tag:"J-3",   title:"Abonnement bientôt expiré",  text:`Expire dans ${d} jour(s). Renouvelle pour éviter la coupure.` }
+        : { level:"ok",   tag:"OK",    title:"Abonnement",                  text:"Actif — prochain contrôle : J-3." }
+      );
+    }
+
+    const boost = await digiyGetBoostStatus(state.phone);
+    if (boost?.active) {
+      $("boostStatus").textContent = `Statut boost : actif jusqu'au ${fmtDateFR(boost.expires_at)} · +${boost.views_today || 0} vues aujourd'hui`;
+      $("btnBoost").textContent    = "Actif";
+      $("btnBoost").disabled       = true;
+      notifs.push({ level:"info", tag:"BOOST",  title:"Boost actif",      text:"Visibilité augmentée. Continue ton activité." });
+    } else {
+      $("boostStatus").textContent = "Statut boost : inactif";
+      notifs.push({ level:"info", tag:"OPTION", title:"Boost disponible", text:"Active le BOOST si tu veux plus de visibilité." });
+    }
+
+    if (month === null || tx === null) {
+      notifs.push({ level:"info", tag:"DATA", title:"Stats à brancher", text:"Le chiffre exact arrive dès que la connexion données est posée." });
+    }
+
+    setNotifs(notifs);
+
+    $("btnManageSub").onclick     = () => { location.href = buildUrl(ABOS_URL, buildAbosParams(state.phone, slug)); };
+    $("btnPrimaryAction").onclick = () => { location.href = buildUrl(CAISSE_URL, { slug, phone: state.phone, module: MODULE_CODE }); };
+    $("btnBoostInfo").onclick     = () => { alert("BOOST : +50% d'apparition pendant 7 jours. Paiement direct. Aucun spam."); };
+
+    $("btnBoost").onclick = async () => {
+      try {
+        $("btnBoost").disabled    = true;
+        $("btnBoost").textContent = "…";
+        const payUrlPayload = await digiyBuildPayUrl(BOOST.module, state.phone, BOOST.plan);
+        const url = typeof payUrlPayload === "string" ? payUrlPayload : (payUrlPayload?.url || payUrlPayload?.pay_url || null);
+        if (!url) throw new Error("URL paiement BOOST manquante");
+        location.href = url;
+      } catch(e) {
+        console.error(e);
+        alert("Impossible d'activer le BOOST pour le moment. Réessaie ou contacte le support.");
+        $("btnBoost").disabled    = false;
+        $("btnBoost").textContent = "Activer";
+      }
+    };
+
+    log("dashboard ready", { slug, phone: state.phone, access: state.access, plan: state.plan, store: state.storeName });
+  }
+
+  init().catch((err) => {
+    console.error(err);
+    log("init fatale", { message: err?.message || String(err) });
+    reveal(); // filet 2 : catch fatal
+    showBlocked(
+      "Problème technique",
+      "Ton espace n'a pas pu finir de charger. Entre par ton PIN ou contacte le support.",
+      "Erreur"
+    );
+  });
+})();
+</script>
 </body>
 </html>
