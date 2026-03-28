@@ -419,12 +419,20 @@
 
   function getSlug() {
     const gs = getGuardSession();
-    return normSlug(getParam("slug") || gs.slug || localStorage.getItem("digiy_pos_last_slug") || sessionStorage.getItem("digiy_pos_last_slug") || "");
+    return normSlug(
+      getParam("slug") || gs.slug ||
+      sessionStorage.getItem("digiy_pos_last_slug") || localStorage.getItem("digiy_pos_last_slug") ||
+      sessionStorage.getItem("digiy_pos_slug")      || localStorage.getItem("digiy_pos_slug") || ""
+    );
   }
 
   function getPhone() {
     const gs = getGuardSession();
-    return cleanDigits(getParam("phone") || gs.phone || localStorage.getItem("digiy_pos_last_phone") || sessionStorage.getItem("digiy_pos_last_phone") || "");
+    return cleanDigits(
+      getParam("phone") || getParam("tel") || gs.phone ||
+      sessionStorage.getItem("digiy_pos_last_phone") || localStorage.getItem("digiy_pos_last_phone") ||
+      sessionStorage.getItem("digiy_pos_phone")       || localStorage.getItem("digiy_pos_phone") || ""
+    );
   }
 
   function setNotifs(items) {
