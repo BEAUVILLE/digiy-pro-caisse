@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>MON COMMERCE PRO — DIGIY CAISSE PRO</title>
+  <title>MON COMMERCE — Ma caisse by DIGIY</title>
   <meta name="theme-color" content="#07140f" />
   <meta
     name="description"
-    content="MON COMMERCE by DIGIY — hall d'entrée POS. Aperçu propre, accès réel protégé, activation simple."
+    content="MON COMMERCE by DIGIY — ta caisse élégante pour boutiques de mode, sacs, accessoires et commerce raffiné. Accès sécurisé, 0% commission."
   />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;600;700;800;900&display=swap"
     rel="stylesheet"
   >
 
@@ -37,7 +37,6 @@
     }
   </script>
 
-  <!-- ordre propre : Supabase d'abord, guard ensuite -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./guard.js"></script>
 
@@ -64,13 +63,15 @@
       --radius:26px;
       --radius-sm:18px;
       --max:1180px;
+      --fontA:"Outfit", system-ui, sans-serif;
+      --fontB:"Cormorant Garamond", Georgia, serif;
     }
 
     html{scroll-behavior:smooth}
     body{
       min-height:100vh;
       color:var(--text);
-      font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      font-family:var(--fontA);
       background:
         radial-gradient(circle at top left, rgba(250,204,21,.11), transparent 28%),
         radial-gradient(circle at top right, rgba(124,58,237,.08), transparent 22%),
@@ -81,759 +82,310 @@
     button{font:inherit}
     .wrap{width:min(100%,var(--max));margin:0 auto;padding:0 16px}
 
+    /* ── FLOAT BUTTON ── */
     .floating-site-btn{
       position:fixed;
       left:16px;
       bottom:calc(16px + env(safe-area-inset-bottom, 0px));
       z-index:80;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      min-height:48px;
-      padding:14px 16px;
-      border-radius:999px;
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      min-height:48px;padding:14px 16px;border-radius:999px;
       border:1px solid rgba(255,255,255,.12);
-      background:rgba(5,16,12,.88);
-      backdrop-filter:blur(10px);
-      color:var(--text);
-      font-size:13px;
-      font-weight:900;
-      letter-spacing:.2px;
+      background:rgba(5,16,12,.88);backdrop-filter:blur(10px);
+      color:var(--text);font-size:13px;font-weight:900;letter-spacing:.2px;
       box-shadow:0 16px 36px rgba(0,0,0,.28);
       transition:transform .14s ease, border-color .14s ease, background .14s ease;
     }
     .floating-site-btn:hover{
-      transform:translateY(-1px);
-      border-color:rgba(250,204,21,.26);
-      background:rgba(8,20,15,.94);
+      transform:translateY(-1px);border-color:rgba(250,204,21,.26);background:rgba(8,20,15,.94);
     }
 
+    /* ── TOPBAR ── */
     .topbar{
-      position:sticky;
-      top:0;
-      z-index:50;
-      backdrop-filter:blur(12px);
-      background:rgba(4,17,13,.76);
+      position:sticky;top:0;z-index:50;
+      backdrop-filter:blur(12px);background:rgba(4,17,13,.76);
       border-bottom:1px solid rgba(255,255,255,.07);
     }
     .topbar-inner{
-      width:min(100%,var(--max));
-      margin:0 auto;
-      padding:14px 16px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      flex-wrap:wrap;
+      width:min(100%,var(--max));margin:0 auto;padding:14px 16px;
+      display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
     }
 
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width:0;
-    }
+    .brand{display:flex;align-items:center;gap:12px;min-width:0;}
     .brand-badge{
-      width:48px;
-      height:48px;
-      border-radius:18px;
-      display:grid;
-      place-items:center;
-      font-size:22px;
+      width:48px;height:48px;border-radius:18px;display:grid;place-items:center;font-size:22px;
       border:1px solid rgba(250,204,21,.16);
       background:linear-gradient(135deg, rgba(250,204,21,.16), rgba(245,158,11,.08));
       box-shadow:0 16px 34px rgba(250,204,21,.10);
     }
+    /* ━━━ DOCTRINE : kicker = positionnement humain, pas code interne ━━━ */
     .brand-kicker{
-      color:var(--gold);
-      font-size:12px;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      font-weight:900;
-      margin-bottom:3px;
+      color:var(--gold);font-size:12px;letter-spacing:.14em;
+      text-transform:uppercase;font-weight:900;margin-bottom:3px;
     }
     .brand-title{
-      font-family:'Cormorant Garamond',serif;
-      font-size:28px;
-      line-height:1;
-      font-weight:700;
-      letter-spacing:.02em;
+      font-family:var(--fontB);font-size:28px;line-height:1;font-weight:700;letter-spacing:.02em;
     }
     .brand-sub{
-      margin-top:3px;
-      color:var(--muted);
-      font-size:12px;
-      font-weight:800;
-      letter-spacing:.08em;
-      text-transform:uppercase;
+      margin-top:3px;color:var(--muted);font-size:12px;font-weight:800;
+      letter-spacing:.08em;text-transform:uppercase;
     }
 
     .top-actions{
-      display:flex;
-      align-items:center;
-      justify-content:flex-end;
-      gap:10px;
-      flex-wrap:wrap;
+      display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap;
     }
 
     .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 13px;
-      border-radius:999px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.11);
-      color:var(--muted);
-      font-size:12px;
-      font-weight:900;
-      backdrop-filter:blur(10px);
+      display:inline-flex;align-items:center;gap:8px;padding:10px 13px;border-radius:999px;
+      background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.11);
+      color:var(--muted);font-size:12px;font-weight:900;backdrop-filter:blur(10px);
     }
     .dot{
-      width:9px;
-      height:9px;
-      border-radius:999px;
-      background:var(--warn);
-      flex:0 0 auto;
-      box-shadow:0 0 0 4px rgba(255,255,255,.04);
+      width:9px;height:9px;border-radius:999px;background:var(--warn);
+      flex:0 0 auto;box-shadow:0 0 0 4px rgba(255,255,255,.04);
     }
-    .dot.ok{background:var(--green)}
-    .dot.bad{background:var(--red)}
+    .dot.ok{background:var(--green)}.dot.bad{background:var(--red)}
 
-    .btn,
-    .btn-outline,
-    .btn-ghost{
-      appearance:none;
-      border:none;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      min-height:46px;
-      padding:12px 16px;
-      border-radius:999px;
-      font-weight:900;
-      font-size:13px;
-      letter-spacing:.02em;
+    /* ── BUTTONS ── */
+    .btn,.btn-outline,.btn-ghost{
+      appearance:none;border:none;cursor:pointer;
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      min-height:46px;padding:12px 16px;border-radius:999px;
+      font-weight:900;font-size:13px;letter-spacing:.02em;font-family:var(--fontA);
       transition:transform .14s ease,opacity .14s ease,border-color .14s ease,background .14s ease;
       white-space:nowrap;
     }
     .btn:hover,.btn-outline:hover,.btn-ghost:hover{transform:translateY(-1px)}
     .btn:disabled,.btn-outline:disabled,.btn-ghost:disabled{opacity:.55;cursor:not-allowed;transform:none}
+    .btn{color:#07110d;background:linear-gradient(135deg,var(--gold),var(--gold2));box-shadow:0 14px 30px rgba(250,204,21,.18);}
+    .btn-outline{color:var(--text);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);}
+    .btn-ghost{color:var(--muted);background:transparent;border:1px solid rgba(255,255,255,.12);}
 
-    .btn{
-      color:#07110d;
-      background:linear-gradient(135deg,var(--gold),var(--gold2));
-      box-shadow:0 14px 30px rgba(250,204,21,.18);
-    }
-    .btn-outline{
-      color:var(--text);
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.12);
-    }
-    .btn-ghost{
-      color:var(--muted);
-      background:transparent;
-      border:1px solid rgba(255,255,255,.12);
-    }
-
-    .hero{
-      padding:34px 0 20px;
-    }
+    /* ── HERO ── */
+    .hero{padding:34px 0 20px;}
     .hero-grid{
-      display:grid;
-      grid-template-columns:minmax(0,1.18fr) minmax(330px,.82fr);
-      gap:18px;
-      align-items:stretch;
+      display:grid;grid-template-columns:minmax(0,1.18fr) minmax(330px,.82fr);
+      gap:18px;align-items:stretch;
     }
 
     .panel{
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)),
-        var(--card);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:30px;
-      box-shadow:var(--shadow);
-      overflow:hidden;
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)),var(--card);
+      border:1px solid rgba(255,255,255,.08);border-radius:30px;
+      box-shadow:var(--shadow);overflow:hidden;
     }
 
-    .hero-main{
-      padding:28px 24px 24px;
-      position:relative;
-    }
+    .hero-main{padding:28px 24px 24px;position:relative;}
     .hero-main::after{
-      content:"";
-      position:absolute;
-      right:-80px;
-      bottom:-90px;
-      width:240px;
-      height:240px;
-      border-radius:999px;
+      content:"";position:absolute;right:-80px;bottom:-90px;
+      width:240px;height:240px;border-radius:999px;
       background:radial-gradient(circle, rgba(34,197,94,.14), transparent 70%);
       pointer-events:none;
     }
 
     .hero-badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 12px;
-      border-radius:999px;
-      background:rgba(250,204,21,.10);
-      border:1px solid rgba(250,204,21,.18);
-      color:var(--gold);
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      margin-bottom:16px;
+      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
+      background:rgba(250,204,21,.10);border:1px solid rgba(250,204,21,.18);
+      color:var(--gold);font-size:12px;font-weight:900;letter-spacing:.08em;
+      text-transform:uppercase;margin-bottom:16px;
     }
 
     .hero-title{
-      font-family:'Cormorant Garamond',serif;
-      font-size:clamp(42px, 6vw, 78px);
-      line-height:.94;
-      letter-spacing:-.03em;
-      font-weight:700;
-      margin-bottom:14px;
-      max-width:10.6ch;
+      font-family:var(--fontB);
+      font-size:clamp(42px, 6vw, 78px);line-height:.94;
+      letter-spacing:-.03em;font-weight:700;margin-bottom:14px;max-width:10.6ch;
     }
-    .hero-title em{
-      color:var(--gold);
-      font-style:normal;
-    }
+    .hero-title em{color:var(--gold);font-style:italic;}
 
     .hero-sub{
-      color:var(--muted);
-      font-size:17px;
-      line-height:1.75;
-      max-width:64ch;
-      font-weight:600;
+      color:var(--muted);font-size:17px;line-height:1.75;max-width:64ch;font-weight:600;
     }
 
-    .hero-points{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:18px;
-    }
+    .hero-points{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;}
     .hero-point{
-      padding:10px 13px;
-      border-radius:999px;
-      font-size:13px;
-      font-weight:900;
-      color:var(--muted);
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.10);
+      padding:10px 13px;border-radius:999px;font-size:13px;font-weight:900;
+      color:var(--muted);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.10);
     }
 
-    .hero-actions{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:22px;
-    }
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;}
 
-    .helper{
-      margin-top:14px;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.7;
-      font-weight:800;
-    }
+    .helper{margin-top:14px;color:var(--muted);font-size:13px;line-height:1.7;font-weight:800;}
 
-    .hero-mini-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:12px;
-      margin-top:22px;
-    }
-    .mini-box{
-      padding:14px 12px;
-      border-radius:18px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.08);
-    }
-    .mini-label{
-      color:var(--muted);
-      font-size:11px;
-      font-weight:800;
-      text-transform:uppercase;
-      letter-spacing:.09em;
-    }
-    .mini-value{
-      margin-top:6px;
-      font-size:19px;
-      font-weight:950;
-      letter-spacing:-.02em;
-      word-break:break-word;
-    }
+    .hero-mini-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:22px;}
+    .mini-box{padding:14px 12px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);}
+    .mini-label{color:var(--muted);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.09em;}
+    .mini-value{margin-top:6px;font-size:19px;font-weight:950;letter-spacing:-.02em;word-break:break-word;}
 
     .hero-side{
-      padding:18px;
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-      background:
-        radial-gradient(circle at top right, rgba(124,58,237,.08), transparent 28%),
-        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)),
-        var(--card2);
+      padding:18px;display:flex;flex-direction:column;gap:14px;
+      background:radial-gradient(circle at top right, rgba(124,58,237,.08), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)),var(--card2);
     }
 
-    .status-box{
-      padding:16px;
-      border-radius:22px;
-      background:rgba(255,255,255,.03);
-      border:1px solid rgba(255,255,255,.08);
-    }
-    .status-top{
-      display:flex;
-      align-items:flex-start;
-      gap:10px;
-    }
-    .status-title{
-      font-size:20px;
-      font-weight:950;
-      line-height:1.15;
-    }
-    .status-sub{
-      margin-top:5px;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.7;
-      font-weight:700;
-    }
+    .status-box{padding:16px;border-radius:22px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);}
+    .status-top{display:flex;align-items:flex-start;gap:10px;}
+    .status-title{font-size:20px;font-weight:950;line-height:1.15;}
+    .status-sub{margin-top:5px;color:var(--muted);font-size:13px;line-height:1.7;font-weight:700;}
 
-    .status-meta{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-      margin-top:14px;
-    }
-    .mini{
-      padding:12px;
-      border-radius:16px;
-      background:rgba(255,255,255,.03);
-      border:1px solid rgba(255,255,255,.08);
-      min-width:0;
-    }
-    .mini .mini-label{
-      font-size:10px;
-    }
-    .mini .mini-value{
-      font-size:14px;
-      margin-top:5px;
-    }
+    .status-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+    .mini{padding:12px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);min-width:0;}
+    .mini .mini-label{font-size:10px;}
+    .mini .mini-value{font-size:14px;margin-top:5px;}
 
     .diag{
-      margin-top:14px;
-      padding:12px;
-      border-radius:16px;
-      background:#081119;
-      border:1px solid rgba(255,255,255,.08);
-      color:#d8e1ff;
+      margin-top:14px;padding:12px;border-radius:16px;background:#081119;
+      border:1px solid rgba(255,255,255,.08);color:#d8e1ff;
       font:12px/1.58 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      white-space:pre-wrap;
-      word-break:break-word;
-      max-height:230px;
-      overflow:auto;
+      white-space:pre-wrap;word-break:break-word;max-height:230px;overflow:auto;
     }
 
-    .section{
-      padding:24px 0;
-    }
-    .section-head{
-      text-align:center;
-      margin-bottom:18px;
-    }
+    /* ── SECTIONS ── */
+    .section{padding:24px 0;}
+    .section-head{text-align:center;margin-bottom:18px;}
     .section-kicker{
-      color:var(--gold);
-      font-size:12px;
-      font-weight:900;
-      text-transform:uppercase;
-      letter-spacing:.15em;
-      margin-bottom:8px;
+      color:var(--gold);font-size:12px;font-weight:900;
+      text-transform:uppercase;letter-spacing:.15em;margin-bottom:8px;
     }
     .section-title{
-      font-family:'Cormorant Garamond',serif;
-      font-size:clamp(30px,4vw,48px);
-      line-height:1;
-      margin-bottom:8px;
+      font-family:var(--fontB);font-size:clamp(30px,4vw,48px);line-height:1;margin-bottom:8px;
     }
     .section-sub{
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.8;
-      max-width:760px;
-      margin:0 auto;
-      font-weight:600;
+      color:var(--muted);font-size:14px;line-height:1.8;max-width:760px;
+      margin:0 auto;font-weight:600;
     }
 
-    .preview-shell,
-    .section-card,
-    .price-card{
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)),
-        var(--card);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:26px;
-      box-shadow:var(--shadow-soft);
+    .preview-shell,.section-card,.price-card{
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)),var(--card);
+      border:1px solid rgba(255,255,255,.08);border-radius:26px;box-shadow:var(--shadow-soft);
     }
 
-    .preview-shell{
-      padding:18px;
-      overflow:hidden;
-    }
+    .preview-shell{padding:18px;overflow:hidden;}
     .preview-top{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-bottom:14px;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      flex-wrap:wrap;margin-bottom:14px;
     }
     .preview-badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 12px;
-      border-radius:999px;
-      background:rgba(124,58,237,.10);
-      border:1px solid rgba(124,58,237,.22);
-      color:#d7ceff;
-      font-size:11px;
-      font-weight:900;
-      letter-spacing:.09em;
-      text-transform:uppercase;
+      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
+      background:rgba(124,58,237,.10);border:1px solid rgba(124,58,237,.22);
+      color:#d7ceff;font-size:11px;font-weight:900;letter-spacing:.09em;text-transform:uppercase;
     }
 
+    /* ━━━ ZONE DEMO — "cockpit" interne, "Ma caisse" en façade ━━━ */
     .cockpit{
-      background:var(--card2);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:22px;
-      padding:16px;
+      background:var(--card2);border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:16px;
     }
     .cockpit-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-bottom:14px;
+      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;
     }
-    .cockpit-title{
-      font-size:20px;
-      font-weight:950;
-      line-height:1.15;
-    }
-    .cockpit-sub{
-      margin-top:4px;
-      color:var(--muted);
-      font-size:12px;
-      font-weight:700;
-    }
+    .cockpit-title{font-size:20px;font-weight:950;line-height:1.15;font-family:var(--fontA);}
+    .cockpit-sub{margin-top:4px;color:var(--muted);font-size:12px;font-weight:700;}
 
-    .cockpit-grid{
-      display:grid;
-      grid-template-columns:1.12fr .88fr;
-      gap:14px;
-    }
+    .cockpit-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:14px;}
 
-    .pane{
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:18px;
-      background:rgba(255,255,255,.03);
-      padding:14px;
-    }
+    .pane{border:1px solid rgba(255,255,255,.08);border-radius:18px;background:rgba(255,255,255,.03);padding:14px;}
     .pane-title{
-      font-size:13px;
-      font-weight:950;
-      margin-bottom:10px;
-      letter-spacing:.03em;
-      text-transform:uppercase;
-      color:var(--muted);
+      font-size:13px;font-weight:950;margin-bottom:10px;letter-spacing:.03em;
+      text-transform:uppercase;color:var(--muted);
     }
 
-    .demo-stats{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:10px;
-      margin-bottom:12px;
-    }
-    .demo-stat{
-      padding:12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.03);
-    }
-    .demo-stat small{
-      display:block;
-      color:var(--muted);
-      font-size:10px;
-      text-transform:uppercase;
-      letter-spacing:.10em;
-      font-weight:900;
-    }
-    .demo-stat strong{
-      display:block;
-      margin-top:6px;
-      font-size:22px;
-      font-weight:950;
-      letter-spacing:-.02em;
-    }
+    .demo-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;}
+    .demo-stat{padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);}
+    .demo-stat small{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.10em;font-weight:900;}
+    .demo-stat strong{display:block;margin-top:6px;font-size:22px;font-weight:950;letter-spacing:-.02em;}
 
-    .sale-form{
-      display:grid;
-      grid-template-columns:1.1fr .6fr .7fr;
-      gap:10px;
-      margin-top:10px;
-    }
+    .sale-form{display:grid;grid-template-columns:1.1fr .6fr .7fr;gap:10px;margin-top:10px;}
     .mock-field{
-      min-height:48px;
-      padding:12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.02);
-      color:#c4d3ca;
-      font-size:12px;
-      display:flex;
-      align-items:center;
-      font-weight:700;
+      min-height:48px;padding:12px;border-radius:14px;
+      border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02);
+      color:#c4d3ca;font-size:12px;display:flex;align-items:center;font-weight:700;
     }
 
-    .mock-list{
-      display:grid;
-      gap:8px;
-    }
+    .mock-list{display:grid;gap:8px;}
     .mock-item{
-      padding:11px 12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.03);
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:flex-start;
+      padding:11px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);display:flex;justify-content:space-between;
+      gap:10px;align-items:flex-start;
     }
-    .mock-item strong{
-      font-size:14px;
-      line-height:1.4;
-    }
-    .mock-item small{
-      display:block;
-      color:var(--muted);
-      font-size:11px;
-      margin-top:4px;
-      line-height:1.55;
-      font-weight:700;
-    }
+    .mock-item strong{font-size:14px;line-height:1.4;}
+    .mock-item small{display:block;color:var(--muted);font-size:11px;margin-top:4px;line-height:1.55;font-weight:700;}
     .mock-tag{
-      padding:6px 9px;
-      border-radius:999px;
-      border:1px solid rgba(250,204,21,.20);
-      background:rgba(250,204,21,.08);
-      color:var(--gold);
-      font-size:10px;
-      font-weight:950;
-      white-space:nowrap;
+      padding:6px 9px;border-radius:999px;border:1px solid rgba(250,204,21,.20);
+      background:rgba(250,204,21,.08);color:var(--gold);font-size:10px;font-weight:950;white-space:nowrap;
     }
 
     .lock-strip{
-      margin-top:14px;
-      padding:12px 14px;
-      border-radius:14px;
-      background:rgba(239,68,68,.08);
-      border:1px solid rgba(239,68,68,.18);
-      color:#ffc9c9;
-      font-size:12px;
-      font-weight:800;
-      line-height:1.7;
+      margin-top:14px;padding:12px 14px;border-radius:14px;
+      background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.18);
+      color:#ffc9c9;font-size:12px;font-weight:800;line-height:1.7;
     }
 
-    .features,
-    .how-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-      gap:14px;
-    }
+    .features,.how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;}
 
-    .section-card{
-      padding:20px;
-      transition:transform .16s ease, border-color .16s ease;
-    }
-    .section-card:hover{
-      transform:translateY(-2px);
-      border-color:rgba(250,204,21,.20);
-    }
+    .section-card{padding:20px;transition:transform .16s ease, border-color .16s ease;}
+    .section-card:hover{transform:translateY(-2px);border-color:rgba(250,204,21,.20);}
 
     .feat-icon{
-      width:46px;
-      height:46px;
-      border-radius:14px;
-      display:grid;
-      place-items:center;
-      font-size:24px;
-      margin-bottom:12px;
-      background:rgba(250,204,21,.10);
-      border:1px solid rgba(250,204,21,.16);
+      width:46px;height:46px;border-radius:14px;display:grid;place-items:center;
+      font-size:24px;margin-bottom:12px;
+      background:rgba(250,204,21,.10);border:1px solid rgba(250,204,21,.16);
     }
-    .feat-title{
-      font-family:'Cormorant Garamond',serif;
-      font-size:24px;
-      color:var(--gold);
-      margin-bottom:7px;
-      line-height:1;
-    }
-    .feat-text{
-      font-size:13px;
-      line-height:1.9;
-      color:var(--muted);
-      font-weight:700;
-    }
+    .feat-title{font-family:var(--fontB);font-size:24px;color:var(--gold);margin-bottom:7px;line-height:1;}
+    .feat-text{font-size:13px;line-height:1.9;color:var(--muted);font-weight:700;}
 
     .step-num{
-      width:34px;
-      height:34px;
-      border-radius:999px;
-      background:linear-gradient(135deg,var(--gold),var(--gold2));
-      color:#07110d;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:950;
-      font-size:13px;
-      margin-bottom:12px;
+      width:34px;height:34px;border-radius:999px;
+      background:linear-gradient(135deg,var(--gold),var(--gold2));color:#07110d;
+      display:flex;align-items:center;justify-content:center;
+      font-weight:950;font-size:13px;margin-bottom:12px;
       box-shadow:0 10px 20px rgba(250,204,21,.16);
     }
 
-    .pricing{
-      padding:30px 0 56px;
-    }
-    .price-wrap{
-      max-width:780px;
-      margin:0 auto;
-    }
+    /* ── PRICING ── */
+    .pricing{padding:30px 0 56px;}
+    .price-wrap{max-width:780px;margin:0 auto;}
     .price-card{
-      padding:30px 24px;
-      border:2px solid rgba(250,204,21,.22);
-      text-align:center;
-      position:relative;
-      overflow:hidden;
+      padding:30px 24px;border:2px solid rgba(250,204,21,.22);
+      text-align:center;position:relative;overflow:hidden;
     }
     .price-card::before{
-      content:"";
-      position:absolute;
-      inset:-120px auto auto -120px;
-      width:260px;
-      height:260px;
-      border-radius:999px;
-      background:radial-gradient(circle, rgba(250,204,21,.10), transparent 70%);
-      pointer-events:none;
+      content:"";position:absolute;inset:-120px auto auto -120px;
+      width:260px;height:260px;border-radius:999px;
+      background:radial-gradient(circle, rgba(250,204,21,.10), transparent 70%);pointer-events:none;
     }
     .price-badge{
-      display:inline-flex;
-      padding:8px 12px;
-      border-radius:999px;
-      background:linear-gradient(135deg,var(--gold),var(--gold2));
-      color:#07110d;
-      font-weight:950;
-      font-size:10px;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      margin-bottom:18px;
+      display:inline-flex;padding:8px 12px;border-radius:999px;
+      background:linear-gradient(135deg,var(--gold),var(--gold2));color:#07110d;
+      font-weight:950;font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:18px;
     }
-    .price-name{
-      font-family:'Cormorant Garamond',serif;
-      font-size:34px;
-      line-height:1;
-      margin-bottom:8px;
-    }
-    .price-amount{
-      font-family:'Cormorant Garamond',serif;
-      font-size:64px;
-      font-weight:700;
-      color:var(--gold);
-      line-height:1;
-      letter-spacing:-.02em;
-    }
-    .price-period{
-      margin-top:8px;
-      color:var(--muted);
-      font-size:11px;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      font-weight:900;
-    }
+    .price-name{font-family:var(--fontB);font-size:34px;line-height:1;margin-bottom:8px;}
+    .price-amount{font-family:var(--fontB);font-size:64px;font-weight:700;color:var(--gold);line-height:1;letter-spacing:-.02em;}
+    .price-period{margin-top:8px;color:var(--muted);font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:900;}
     .price-list{
-      list-style:none;
-      max-width:460px;
-      margin:22px auto 0;
-      text-align:left;
-      display:grid;
-      gap:8px;
+      list-style:none;max-width:460px;margin:22px auto 0;
+      text-align:left;display:grid;gap:8px;
     }
     .price-list li{
-      padding:11px 12px;
-      border-radius:14px;
-      background:rgba(255,255,255,.03);
-      border:1px solid rgba(255,255,255,.08);
-      font-size:13px;
-      color:#d8e2db;
-      line-height:1.65;
-      font-weight:700;
+      padding:11px 12px;border-radius:14px;background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);font-size:13px;color:#d8e2db;
+      line-height:1.65;font-weight:700;
     }
 
-    .cta-box{
-      margin-top:18px;
-      display:flex;
-      gap:10px;
-      justify-content:center;
-      flex-wrap:wrap;
-    }
+    .cta-box{margin-top:18px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
 
-    .footer{
-      border-top:1px solid rgba(255,255,255,.07);
-      padding:20px 0 40px;
-      color:var(--muted);
-      font-size:12px;
-    }
-    .footer-inner{
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-      align-items:center;
-      line-height:1.7;
-      font-weight:800;
-    }
+    /* ── FOOTER ── */
+    .footer{border-top:1px solid rgba(255,255,255,.07);padding:20px 0 40px;color:var(--muted);font-size:12px;}
+    .footer-inner{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;line-height:1.7;font-weight:800;}
 
-    @media (max-width:980px){
+    /* ── RESPONSIVE ── */
+    @media(max-width:980px){
       .hero-grid{grid-template-columns:1fr}
       .hero-title{max-width:none}
       .cockpit-grid{grid-template-columns:1fr}
     }
-
-    @media (max-width:760px){
-      .hero-mini-grid,
-      .status-meta,
-      .demo-stats,
-      .sale-form{
-        grid-template-columns:1fr;
-      }
+    @media(max-width:760px){
+      .hero-mini-grid,.status-meta,.demo-stats,.sale-form{grid-template-columns:1fr;}
     }
-
-    @media (max-width:700px){
-      .floating-site-btn{
-        left:12px;
-        right:12px;
-        bottom:calc(12px + env(safe-area-inset-bottom, 0px));
-        min-height:46px;
-        padding:14px 14px;
-        font-size:12px;
-        justify-content:center;
-      }
+    @media(max-width:700px){
+      .floating-site-btn{left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom, 0px));min-height:46px;padding:14px 14px;font-size:12px;justify-content:center;}
       .wrap{padding:0 12px}
       .topbar-inner{padding:12px}
       .brand-title{font-size:24px}
@@ -844,14 +396,20 @@
   </style>
 </head>
 <body>
+
+  <!-- ━━━ FLOAT : retour vitrine ━━━ -->
   <a
     class="floating-site-btn"
     id="btnBackPublic"
     href="https://mon-commerce.digiylyfe.com/"
     aria-label="Retour à la vitrine MON COMMERCE"
-    title="Retour à la vitrine MON COMMERCE"
-  >⬅️ Retour vitrine MON COMMERCE</a>
+  >⬅️ Retour à la vitrine</a>
 
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       TOPBAR — doctrine façade appliquée
+       brand-sub = ce que c'est pour l'humain
+       pas le nom interne du rail technique
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
   <header class="topbar">
     <div class="topbar-inner">
       <div class="brand">
@@ -859,7 +417,8 @@
         <div>
           <div class="brand-kicker">DIGIYLYFE</div>
           <div class="brand-title">MON COMMERCE</div>
-          <div class="brand-sub">DIGIY CAISSE PRO • hall d’entrée POS</div>
+          <!-- ━━━ AVANT : "DIGIY CAISSE PRO • hall d'entrée POS" → jargon banni ━━━ -->
+          <div class="brand-sub">Ma caisse élégante • accès sécurisé</div>
         </div>
       </div>
 
@@ -868,9 +427,12 @@
           <span id="statusDot" class="dot"></span>
           <span id="statusPillText">Chargement…</span>
         </div>
-        <a class="btn-ghost" id="btnPinTop" href="./pin.html">🔐 PIN PRO</a>
+        <!-- ━━━ "PIN PRO" → "Mon accès PIN" ━━━ -->
+        <a class="btn-ghost" id="btnPinTop" href="./pin.html">🔐 Mon accès PIN</a>
+        <!-- ━━━ "Vérifier mon accès" → intention humaine, on garde ━━━ -->
         <button class="btn-outline" id="btnCheck" type="button">🔄 Vérifier mon accès</button>
-        <a class="btn" id="btnTopAction" href="https://commencer-a-payer.digiylyfe.com/">💳 Activer mon module</a>
+        <!-- ━━━ AVANT : "Activer mon module" × 4 → "Je commence" ━━━ -->
+        <a class="btn" id="btnTopAction" href="https://commencer-a-payer.digiylyfe.com/">💳 Je commence</a>
       </div>
     </div>
   </header>
@@ -879,37 +441,57 @@
     <section class="hero">
       <div class="hero-grid">
         <div class="panel hero-main">
-          <div class="hero-badge">0% commission • aperçu libre • usage protégé</div>
 
+          <!-- ━━━ badge hero : on parle valeur, pas jargon ━━━ -->
+          <div class="hero-badge">0% commission · accès libre · usage sécurisé</div>
+
+          <!-- ━━━ TITRE : Cormorant Garamond, ton boutique ━━━ -->
           <h1 class="hero-title">
-            La caisse du terrain,
-            <em>sans usine à gaz.</em>
+            La caisse qui élève
+            <em>ta boutique.</em>
           </h1>
 
+          <!-- ━━━ AVANT : "PIN puis dashboard pro" → banni
+               MAINTENANT : on décrit le moment, pas le système ━━━ -->
           <p class="hero-sub">
-            MON COMMERCE by DIGIY te donne une porte claire pour encaisser, suivre le stock, lire l’activité et travailler proprement.
-            Ici, on montre la valeur. L’usage réel s’ouvre par le bon rail :
-            <strong>PIN puis dashboard pro</strong>, pas par des portes qui partent de travers.
+            MON COMMERCE te donne une caisse propre pour encaisser, suivre ton stock et lire ton activité
+            sans te battre avec l'outil.
+            Tu entres avec ton accès, tu travailles — c'est tout.
           </p>
 
           <div class="hero-points">
-            <div class="hero-point">🛒 caisse rapide</div>
-            <div class="hero-point">📦 stock lisible</div>
-            <div class="hero-point">📊 activité claire</div>
-            <div class="hero-point">🔐 accès protégé</div>
+            <div class="hero-point">🛒 Caisse rapide</div>
+            <div class="hero-point">📦 Stock lisible</div>
+            <div class="hero-point">📊 Activité claire</div>
+            <div class="hero-point">🔐 Accès sécurisé</div>
           </div>
 
+          <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+               CTA HERO — doctrine "moment humain"
+               AVANT :
+                 "💳 Activer mon module"     → banni
+                 "🧭 Dashboard Pro"           → banni
+                 "🧾 Ouvrir la caisse"        → OK (moment humain)
+                 "🔐 Ouvrir avec mon PIN"     → OK
+               APRÈS :
+                 "💰 Ouvrir ma caisse"        → moment
+                 "🧭 Mon espace de travail"   → identité métier
+                 "🧾 Ouvrir ma caisse"        → moment
+                 "🔐 Entrer avec mon PIN"     → action directe
+          ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
           <div class="hero-actions">
-            <a class="btn" id="btnHeroPrimary" href="https://commencer-a-payer.digiylyfe.com/">💳 Activer mon module</a>
-            <a class="btn-outline" id="btnOpenDashboard" href="./dashboard-pro.html">🧭 Dashboard Pro</a>
-            <a class="btn-outline" id="btnOpenCaisse" href="./caisse.html">🧾 Ouvrir la caisse</a>
-            <a class="btn-ghost" id="btnOpenPin" href="./pin.html">🔐 Ouvrir avec mon PIN</a>
+            <a class="btn" id="btnHeroPrimary" href="https://commencer-a-payer.digiylyfe.com/">💳 Je commence</a>
+            <a class="btn-outline" id="btnOpenDashboard" href="./dashboard-pro.html">🧭 Mon espace de travail</a>
+            <a class="btn-outline" id="btnOpenCaisse" href="./caisse.html">🧾 Ouvrir ma caisse</a>
+            <a class="btn-ghost" id="btnOpenPin" href="./pin.html">🔐 Entrer avec mon PIN</a>
           </div>
 
+          <!-- ━━━ helper : on parle chemin humain, pas nom de fichier ━━━ -->
           <div class="helper">
-            Le hall reste simple. La vraie cabine de pilotage s’ouvre dans <b>dashboard-pro.html</b>, puis la caisse est disponible dedans sans mélange.
+            Tu vois d'abord. Tu entres ensuite par ton accès sécurisé — proprement, sans détour.
           </div>
 
+          <!-- ━━━ mini-grid : même logique, même valeur ━━━ -->
           <div class="hero-mini-grid">
             <div class="mini-box">
               <div class="mini-label">Positionnement</div>
@@ -920,12 +502,13 @@
               <div class="mini-value">0 F</div>
             </div>
             <div class="mini-box">
-              <div class="mini-label">Usage</div>
-              <div class="mini-value">Mobile + desktop</div>
+              <div class="mini-label">Compatible</div>
+              <div class="mini-value">Mobile + bureau</div>
             </div>
           </div>
         </div>
 
+        <!-- ━━━ PANNEAU STATUT — langage de confiance, pas de diagnostic ━━━ -->
         <aside class="panel hero-side">
           <div class="status-box">
             <div class="status-top">
@@ -933,14 +516,14 @@
               <div>
                 <div class="status-title" id="statusTitle">Vérification en cours…</div>
                 <div class="status-sub" id="statusSub">
-                  Lecture du slug, du téléphone et de l’accès module.
+                  Lecture de ton identifiant et de ton accès boutique.
                 </div>
               </div>
             </div>
 
             <div class="status-meta">
               <div class="mini">
-                <div class="mini-label">Slug</div>
+                <div class="mini-label">Identifiant</div>
                 <div class="mini-value" id="metaSlug">—</div>
               </div>
               <div class="mini">
@@ -948,17 +531,18 @@
                 <div class="mini-value" id="metaPhone">—</div>
               </div>
               <div class="mini">
-                <div class="mini-label">Magasin</div>
-                <div class="mini-value" id="metaStore">Aperçu public</div>
+                <div class="mini-label">Boutique</div>
+                <div class="mini-value" id="metaStore">Aperçu libre</div>
               </div>
               <div class="mini">
-                <div class="mini-label">Plan</div>
+                <div class="mini-label">Abonnement</div>
                 <div class="mini-value" id="metaPlan">—</div>
               </div>
             </div>
 
+            <!-- ━━━ helper : on parle au pro, pas au développeur ━━━ -->
             <div class="helper" id="statusHelper">
-              Ouvre idéalement cette page avec un lien du style <b>?slug=pos-2217...</b> pour que le hall reconnaisse le module.
+              Passe par ton lien pro pour que ta boutique soit reconnue automatiquement.
             </div>
 
             <div class="diag" id="diagBox">Initialisation…</div>
@@ -967,42 +551,48 @@
       </div>
     </section>
 
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         APERÇU CAISSE — "Aperçu cockpit" → banni
+         MAINTENANT : "Aperçu de ta caisse"
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
     <section class="section" id="apercu-cockpit">
       <div class="section-head">
-        <div class="section-kicker">Aperçu cockpit</div>
-        <h2 class="section-title">On montre la cabine, pas tout le moteur.</h2>
+        <div class="section-kicker">Aperçu de ta caisse</div>
+        <h2 class="section-title">On montre la valeur, pas toute la mécanique.</h2>
         <p class="section-sub">
-          Le visiteur voit la logique, la posture et la valeur. La vraie exploitation reste protégée pour les abonnés actifs.
+          Tu vois comment ça fonctionne. La vraie exploitation reste sécurisée pour les abonnés actifs.
         </p>
       </div>
 
       <div class="preview-shell">
         <div class="preview-top">
-          <div class="preview-badge">Lecture seule</div>
+          <div class="preview-badge">Exemple visuel</div>
           <div class="helper" style="margin-top:0">
-            Démonstration visuelle. Les vraies actions métier s’ouvrent seulement avec accès actif.
+            Les vraies actions s'ouvrent seulement avec ton accès actif.
           </div>
         </div>
 
         <div class="cockpit">
           <div class="cockpit-head">
             <div>
-              <div class="cockpit-title">DIGIY CAISSE PRO — Cockpit boutique</div>
-              <div class="cockpit-sub">Vue exemple pour exposer la valeur du module</div>
+              <!-- ━━━ AVANT : "DIGIY CAISSE PRO — Cockpit boutique" → double jargon banni ━━━ -->
+              <div class="cockpit-title">Ma caisse — exemple boutique</div>
+              <div class="cockpit-sub">Aperçu visuel pour montrer comment tu travailles</div>
             </div>
             <div class="pill">
               <span class="dot ok"></span>
-              <span>Mode démo</span>
+              <span>Exemple</span>
             </div>
           </div>
 
           <div class="cockpit-grid">
             <div class="pane">
-              <div class="pane-title">Aujourd’hui</div>
+              <!-- ━━━ "Aujourd'hui" : moment humain, on garde ━━━ -->
+              <div class="pane-title">Aujourd'hui</div>
 
               <div class="demo-stats">
                 <div class="demo-stat">
-                  <small>Ventes jour</small>
+                  <small>Ventes du jour</small>
                   <strong>87 500 F</strong>
                 </div>
                 <div class="demo-stat">
@@ -1015,22 +605,21 @@
                 </div>
               </div>
 
+              <!-- ━━━ "Nouvelle vente — Appuyer ici" : doctrine bouton ━━━ -->
               <div class="pane-title">Nouvelle vente</div>
               <div class="sale-form">
                 <div class="mock-field">Produit / service</div>
                 <div class="mock-field">Qté</div>
                 <div class="mock-field">Prix</div>
               </div>
-
               <div class="sale-form">
-                <div class="mock-field">Mode de paiement</div>
+                <div class="mock-field">Paiement</div>
                 <div class="mock-field">Référence</div>
                 <div class="mock-field">Client</div>
               </div>
 
               <div class="lock-strip">
-                Ici, le commerçant comprend la logique de travail.
-                Mais l’enregistrement réel des ventes, du stock et du mouvement boutique reste réservé au module actif.
+                Tu vois la logique de travail. L'enregistrement réel des ventes, du stock et des mouvements reste réservé aux abonnés actifs.
               </div>
             </div>
 
@@ -1040,51 +629,38 @@
                 <div class="mock-item">
                   <div>
                     <strong>Riz parfumé 5kg</strong>
-                    <small>Qté 1 • Wave • 10:42</small>
+                    <small>Qté 1 · Wave · 10:42</small>
                   </div>
                   <div class="mock-tag">12 500 F</div>
                 </div>
-
                 <div class="mock-item">
                   <div>
                     <strong>Pack boissons</strong>
-                    <small>Qté 3 • Espèces • 10:26</small>
+                    <small>Qté 3 · Espèces · 10:26</small>
                   </div>
                   <div class="mock-tag">6 000 F</div>
                 </div>
-
                 <div class="mock-item">
                   <div>
                     <strong>Recharge divers</strong>
-                    <small>Qté 2 • OM • 09:58</small>
+                    <small>Qté 2 · Orange Money · 09:58</small>
                   </div>
                   <div class="mock-tag">3 500 F</div>
                 </div>
               </div>
 
-              <div class="pane-title" style="margin-top:14px">Stock visible</div>
+              <div class="pane-title" style="margin-top:14px">Mon stock</div>
               <div class="mock-list">
                 <div class="mock-item">
-                  <div>
-                    <strong>Sucre</strong>
-                    <small>Stock exemple : 18 unités</small>
-                  </div>
+                  <div><strong>Sucre</strong><small>18 unités</small></div>
                   <div class="mock-tag">OK</div>
                 </div>
-
                 <div class="mock-item">
-                  <div>
-                    <strong>Huile 1L</strong>
-                    <small>Stock exemple : 6 unités</small>
-                  </div>
+                  <div><strong>Huile 1L</strong><small>6 unités</small></div>
                   <div class="mock-tag">Bas</div>
                 </div>
-
                 <div class="mock-item">
-                  <div>
-                    <strong>Eau 1.5L</strong>
-                    <small>Stock exemple : 42 unités</small>
-                  </div>
+                  <div><strong>Eau 1.5L</strong><small>42 unités</small></div>
                   <div class="mock-tag">OK</div>
                 </div>
               </div>
@@ -1094,12 +670,18 @@
       </div>
     </section>
 
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         CE QUE TU GAGNES
+         AVANT : "Ce que le module apporte au commerçant" → "module" banni
+         MAINTENANT : "Ce que tu gagnes"
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
     <section class="section">
       <div class="section-head">
-        <div class="section-kicker">Valeur métier</div>
-        <h2 class="section-title">Ce que le module apporte au commerçant.</h2>
+        <div class="section-kicker">Ce que tu gagnes</div>
+        <h2 class="section-title">Une caisse pensée pour le terrain, pas pour les ingénieurs.</h2>
         <p class="section-sub">
-          Une structure nette, pensée pour la boutique réelle, pas pour impressionner des ingénieurs perdus dans leur tableau.
+          Structure nette, boutique réelle, travail fluide.
+          La technologie sert ta tenue — elle ne t'alourdit pas.
         </p>
       </div>
 
@@ -1108,7 +690,7 @@
           <div class="feat-icon">🛒</div>
           <div class="feat-title">Caisse rapide</div>
           <div class="feat-text">
-            Produits, panier, vente et encaissement sans détour. Téléphone, tablette ou ordinateur.
+            Produits, panier, vente et encaissement sans détour. Sur téléphone, tablette ou ordinateur.
           </div>
         </article>
 
@@ -1116,7 +698,7 @@
           <div class="feat-icon">📦</div>
           <div class="feat-title">Stock simple</div>
           <div class="feat-text">
-            Ruptures visibles, quantités claires, catalogue vivant. Pas besoin d’un cockpit de fusée pour vendre au quartier.
+            Ruptures visibles, quantités claires, catalogue vivant. Pas besoin d'un système complexe pour vendre au quartier.
           </div>
         </article>
 
@@ -1124,43 +706,47 @@
           <div class="feat-icon">💰</div>
           <div class="feat-title">TVA maîtrisée</div>
           <div class="feat-text">
-            Mode TVA souple selon la réalité du commerçant. Le module s’adapte au terrain, pas l’inverse.
+            Mode TVA souple selon ta réalité. La caisse s'adapte au terrain, pas l'inverse.
           </div>
         </article>
 
         <article class="section-card">
           <div class="feat-icon">📊</div>
-          <div class="feat-title">Vue claire</div>
+          <div class="feat-title">Lecture claire</div>
           <div class="feat-text">
-            Recettes, rythme, historique et lecture rapide de l’activité sans noyer le pro sous les menus.
+            Recettes, rythme, historique — lisibles d'un coup d'œil, sans te noyer sous les menus.
           </div>
         </article>
       </div>
     </section>
 
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         PARCOURS — "Tu vois. Tu actives. Tu entres proprement."
+         Étape 3 : supprimer les noms de fichiers visibles
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
     <section class="section">
       <div class="section-head">
-        <div class="section-kicker">Parcours</div>
-        <h2 class="section-title">Tu vois. Tu actives. Tu entres proprement.</h2>
+        <div class="section-kicker">Comment ça marche</div>
+        <h2 class="section-title">Tu vois. Tu entres. Tu travailles.</h2>
         <p class="section-sub">
-          La ligne DIGIY reste claire : voir librement, puis entrer par le bon rail protégé.
+          La ligne DIGIY reste claire : regarder librement, puis entrer par l'accès sécurisé.
         </p>
       </div>
 
       <div class="how-grid">
         <article class="section-card">
           <div class="step-num">1</div>
-          <div class="feat-title">Tu découvres</div>
+          <div class="feat-title">Tu regardes</div>
           <div class="feat-text">
-            Cette page montre la valeur du module, le ton, la structure et un aperçu du cockpit.
+            Cette page te montre la valeur, le ton, la structure et un aperçu de ta future caisse.
           </div>
         </article>
 
         <article class="section-card">
           <div class="step-num">2</div>
-          <div class="feat-title">Tu valides</div>
+          <div class="feat-title">Tu entres</div>
           <div class="feat-text">
-            Le QR ou le lien pro t’amène au PIN. Le PIN te renvoie ensuite vers le dashboard, pas dans un couloir bancal.
+            Ton PIN t'ouvre l'accès sécurisé — directement dans ton espace de travail, sans couloir bancal.
           </div>
         </article>
 
@@ -1168,33 +754,41 @@
           <div class="step-num">3</div>
           <div class="feat-title">Tu travailles</div>
           <div class="feat-text">
-            Une fois l’accès validé, le <b>dashboard-pro.html</b> devient la porte centrale, et la <b>caisse.html</b> reste l’outil métier.
+            Une fois dedans, ton espace de travail devient la porte centrale — et ta caisse, ton outil métier quotidien.
           </div>
         </article>
       </div>
     </section>
 
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         TARIF
+         AVANT : "DIGIY CAISSE PRO" + "Activer mon module" × 2 → bannis
+         MAINTENANT : "Mon commerce" + "Je commence"
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
     <section class="pricing">
       <div class="price-wrap">
         <div class="price-card">
-          <div class="price-badge">Activation directe</div>
-          <div class="price-name">DIGIY CAISSE PRO</div>
+          <div class="price-badge">Abonnement direct</div>
+          <!-- ━━━ AVANT : "DIGIY CAISSE PRO" → nom interne banni en façade ━━━ -->
+          <div class="price-name">Mon commerce</div>
           <div class="price-amount">12 900 F</div>
-          <div class="price-period">CFA / mois • 0% commission</div>
+          <div class="price-period">CFA / mois · 0% commission</div>
 
           <ul class="price-list">
-            <li>Accès réel au dashboard pro</li>
-            <li>Accès réel à la caisse</li>
-            <li>Catalogue et stock</li>
-            <li>Suivi d’activité</li>
-            <li>Porte propre vers l’écosystème DIGIY</li>
+            <!-- ━━━ "Accès réel au dashboard pro" → "Accès à mon espace de travail" ━━━ -->
+            <li>✓ Accès à mon espace de travail</li>
+            <li>✓ Ma caisse, prête à encaisser</li>
+            <li>✓ Catalogue et suivi du stock</li>
+            <li>✓ Lecture de mon activité boutique</li>
+            <li>✓ Porte propre vers l'écosystème DIGIY</li>
           </ul>
 
           <div class="cta-box">
-            <a class="btn" id="btnPriceAction" href="https://commencer-a-payer.digiylyfe.com/">💳 Activer mon module</a>
+            <!-- ━━━ AVANT : "💳 Activer mon module" → banni ━━━ -->
+            <a class="btn" id="btnPriceAction" href="https://commencer-a-payer.digiylyfe.com/">💳 Je commence maintenant</a>
             <a
               class="btn-outline"
-              href="https://wa.me/221771342889?text=Bonjour%20JB%2C%20je%20veux%20activer%20DIGIY%20CAISSE%20PRO"
+              href="https://wa.me/221771342889?text=Bonjour%20JB%2C%20je%20veux%20ouvrir%20MON%20COMMERCE%20by%20DIGIY"
               target="_blank"
               rel="noopener"
             >💬 WhatsApp</a>
@@ -1205,12 +799,20 @@
 
     <footer class="footer">
       <div class="footer-inner">
-        <div>MON COMMERCE by DIGIY • ancré terrain, branché futur.</div>
+        <div>MON COMMERCE by DIGIY · ancré terrain, branché futur.</div>
         <div>Support : +221 77 134 28 89</div>
       </div>
     </footer>
   </main>
 
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       JS INTERNE — LOGIQUE GUARD + SUPABASE INTACTE
+       Seuls les textes dynamiques des boutons sont mis à jour
+       selon la doctrine façade :
+         "Activer mon module"   → "Je commence" (sans accès)
+         "Dashboard Pro"        → "Mon espace de travail" (avec accès)
+         "Caisse via PIN"       → "Ma caisse via PIN"
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
   <script>
     (() => {
       "use strict";
@@ -1235,33 +837,18 @@
 
       const sb = canUseSupabase
         ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-            auth: {
-              persistSession: false,
-              autoRefreshToken: false,
-              detectSessionInUrl: false
-            }
+            auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
           })
         : null;
 
-      const state = {
-        slug: "",
-        phone: "",
-        access: false,
-        storeName: "",
-        plan: "",
-        loading: false
-      };
-
+      const state = { slug: "", phone: "", access: false, storeName: "", plan: "", loading: false };
       const $ = (id) => document.getElementById(id);
       const diagLines = [];
 
-      function revealPage() {
-        document.documentElement.style.visibility = "";
-      }
+      function revealPage() { document.documentElement.style.visibility = ""; }
 
       function safeStringify(v){
-        try { return JSON.stringify(v, null, 2); }
-        catch(_) { return String(v); }
+        try { return JSON.stringify(v, null, 2); } catch(_) { return String(v); }
       }
 
       function log(msg, data){
@@ -1271,122 +858,75 @@
         console.log("[DIGIY POS INDEX]", msg, data ?? "");
       }
 
-      function getParam(name){
-        return new URL(location.href).searchParams.get(name) || "";
-      }
-
-      function normPhone(v){
-        return String(v || "").replace(/[^\d]/g, "");
-      }
-
-      function normSlug(v){
-        return String(v || "").trim().toLowerCase();
-      }
-
-      function getGuardState(){
-        return window.DIGIY_GUARD?.state || {};
-      }
+      function getParam(name){ return new URL(location.href).searchParams.get(name) || ""; }
+      function normPhone(v){ return String(v || "").replace(/[^\d]/g, ""); }
+      function normSlug(v){ return String(v || "").trim().toLowerCase(); }
+      function getGuardState(){ return window.DIGIY_GUARD?.state || {}; }
 
       function getStoredSlug(){
         const gs = getGuardState();
-        return normSlug(
-          getParam("slug") ||
-          gs.slug ||
-          localStorage.getItem("digiy_pos_last_slug") ||
-          sessionStorage.getItem("digiy_pos_last_slug") ||
-          ""
-        );
+        return normSlug(getParam("slug") || gs.slug || localStorage.getItem("digiy_pos_last_slug") || sessionStorage.getItem("digiy_pos_last_slug") || "");
       }
 
       function getStoredPhone(){
         const gs = getGuardState();
-        return normPhone(
-          getParam("phone") ||
-          getParam("tel") ||
-          gs.phone ||
-          localStorage.getItem("digiy_pos_last_phone") ||
-          sessionStorage.getItem("digiy_pos_last_phone") ||
-          ""
-        );
+        return normPhone(getParam("phone") || getParam("tel") || gs.phone || localStorage.getItem("digiy_pos_last_phone") || sessionStorage.getItem("digiy_pos_last_phone") || "");
       }
 
       function remember(slug, phone){
-        if (slug) {
-          localStorage.setItem("digiy_pos_last_slug", slug);
-          sessionStorage.setItem("digiy_pos_last_slug", slug);
-        }
-        if (phone) {
-          localStorage.setItem("digiy_pos_last_phone", phone);
-          sessionStorage.setItem("digiy_pos_last_phone", phone);
-        }
+        if (slug) { localStorage.setItem("digiy_pos_last_slug", slug); sessionStorage.setItem("digiy_pos_last_slug", slug); }
+        if (phone) { localStorage.setItem("digiy_pos_last_phone", phone); sessionStorage.setItem("digiy_pos_last_phone", phone); }
       }
 
       function buildUrl(base, params){
-        const u = new URL(base, location.href);
-        Object.entries(params || {}).forEach(([k, v]) => {
-          if(v !== undefined && v !== null && String(v) !== ""){
-            u.searchParams.set(k, String(v));
+        // ━━━ DÉFENSE TOTALE ━━━
+        // Étape 1 : normaliser base en string propre
+        const baseStr = (base == null ? "" : String(base)).trim();
+        if(!baseStr) return location.href;
+
+        let u;
+        try {
+          // Cas 1 : URL absolue (http/https) → on la parse directement
+          if(/^https?:\/\//i.test(baseStr)){
+            u = new URL(baseStr);
           }
-        });
+          // Cas 2 : chemin relatif ou absolu → on reconstruit depuis l'origine
+          else {
+            const origin = location.protocol + "//" + location.host;
+            const full = baseStr.startsWith("/")
+              ? origin + baseStr
+              : origin + "/" + baseStr;
+            u = new URL(full);
+          }
+        } catch(e){
+          log("buildUrl KO: " + baseStr + " — " + e.message);
+          return baseStr; // retourner tel quel plutôt que planter
+        }
+
+        // Étape 2 : ajouter les paramètres
+        try {
+          Object.entries(params || {}).forEach(([k, v]) => {
+            if(v !== undefined && v !== null && String(v) !== "")
+              u.searchParams.set(k, String(v));
+          });
+        } catch(e){ /* silencieux */ }
+
         return u.toString();
       }
 
-      function buildPublicUrl(){
-        return buildUrl(PUBLIC_URL, {
-          slug: state.slug || ""
-        });
-      }
-
-      function buildAbosUrl(){
-        return buildUrl(ABOS_URL, {
-          module: MODULE,
-          base_module: MODULE,
-          phone: state.phone || "",
-          slug: state.slug || ""
-        });
-      }
-
-      function buildDashboardUrl(){
-        return buildUrl(DASHBOARD_URL, {
-          slug: state.slug || "",
-          phone: state.phone || "",
-          module: MODULE
-        });
-      }
-
-      function buildCaisseUrl(){
-        return buildUrl(CAISSE_URL, {
-          slug: state.slug || "",
-          phone: state.phone || "",
-          module: MODULE
-        });
-      }
-
-      function buildPinUrl(extra = {}){
-        return buildUrl(PIN_URL, {
-          slug: state.slug || "",
-          phone: state.phone || "",
-          module: MODULE,
-          ...extra
-        });
-      }
+      function buildPublicUrl(){ return buildUrl(PUBLIC_URL, { slug: state.slug || "" }); }
+      function buildAbosUrl(){ return buildUrl(ABOS_URL, { module: MODULE, base_module: MODULE, phone: state.phone || "", slug: state.slug || "" }); }
+      function buildDashboardUrl(){ return buildUrl(DASHBOARD_URL, { slug: state.slug || "", phone: state.phone || "", module: MODULE }); }
+      function buildCaisseUrl(){ return buildUrl(CAISSE_URL, { slug: state.slug || "", phone: state.phone || "", module: MODULE }); }
+      function buildPinUrl(extra = {}){ return buildUrl(PIN_URL, { slug: state.slug || "", phone: state.phone || "", module: MODULE, ...extra }); }
 
       function buildSupportUrl(){
-        const text = [
-          "Bonjour JB,",
-          "j’ai besoin d’aide pour MON COMMERCE by DIGIY.",
-          state.slug ? `Slug : ${state.slug}` : "",
-          state.phone ? `Téléphone : +${state.phone}` : ""
-        ].filter(Boolean).join(" ");
+        const text = ["Bonjour JB,", "j'ai besoin d'aide pour MON COMMERCE by DIGIY.", state.slug ? `Slug : ${state.slug}` : "", state.phone ? `Téléphone : +${state.phone}` : ""].filter(Boolean).join(" ");
         return `https://wa.me/${SUPPORT_PHONE}?text=${encodeURIComponent(text)}`;
       }
 
       function setDots(kind){
-        const map = {
-          ok: "dot ok",
-          bad: "dot bad",
-          warn: "dot"
-        };
+        const map = { ok: "dot ok", bad: "dot bad", warn: "dot" };
         $("statusDot").className = map[kind] || "dot";
         $("statusDotSide").className = map[kind] || "dot";
       }
@@ -1402,15 +942,17 @@
       function paintMeta(){
         $("metaSlug").textContent = state.slug || "—";
         $("metaPhone").textContent = state.phone || "—";
-        $("metaStore").textContent = state.storeName || "Aperçu public";
+        $("metaStore").textContent = state.storeName || "Aperçu libre";
         $("metaPlan").textContent = state.plan || "—";
       }
 
       function wireButtons(){
+        // ━━━ DÉFENSE : wireButtons ne doit jamais faire tomber hydrate ━━━
+        try {
         const abos = buildAbosUrl();
         const dashboard = buildDashboardUrl();
         const caisse = buildCaisseUrl();
-        const pinDefault = buildPinUrl({ return: DASHBOARD_URL });
+        const pinDefault = buildPinUrl({ "return": DASHBOARD_URL });
         const pinForCaisse = buildPinUrl({ target: "caisse" });
         const publicUrl = buildPublicUrl();
 
@@ -1424,24 +966,25 @@
           $("btnHeroPrimary").href = dashboard;
           $("btnOpenDashboard").href = dashboard;
           $("btnOpenCaisse").href = caisse;
-
-          $("btnTopAction").textContent = "🧭 Ouvrir le dashboard";
-          $("btnHeroPrimary").textContent = "🧭 Entrer dans le dashboard";
-          $("btnOpenDashboard").textContent = "🧭 Dashboard Pro";
-          $("btnOpenCaisse").textContent = "🧾 Ouvrir la caisse";
+          $("btnTopAction").textContent = "🧭 Mon espace de travail";
+          $("btnHeroPrimary").textContent = "🧭 Entrer dans mon espace";
+          $("btnOpenDashboard").textContent = "🧭 Mon espace de travail";
+          $("btnOpenCaisse").textContent = "🧾 Ouvrir ma caisse";
         } else {
           $("btnTopAction").href = abos;
           $("btnHeroPrimary").href = abos;
           $("btnOpenDashboard").href = pinDefault;
           $("btnOpenCaisse").href = pinForCaisse;
-
-          $("btnTopAction").textContent = "💳 Activer mon module";
-          $("btnHeroPrimary").textContent = "💳 Activer mon module";
-          $("btnOpenDashboard").textContent = "🔐 Dashboard via PIN";
-          $("btnOpenCaisse").textContent = "🔐 Caisse via PIN";
+          $("btnTopAction").textContent = "💳 Je commence";
+          $("btnHeroPrimary").textContent = "💳 Je commence maintenant";
+          $("btnOpenDashboard").textContent = "🔐 Mon espace via PIN";
+          $("btnOpenCaisse").textContent = "🔐 Ma caisse via PIN";
         }
 
-        $("btnCheck").setAttribute("data-support", buildSupportUrl());
+        try { $("btnCheck").setAttribute("data-support", buildSupportUrl()); } catch(e){}
+        } catch(e) {
+          log("wireButtons: erreur silencieuse", { message: e.message || String(e) });
+        }
       }
 
       async function resolvePhoneFromSlug(slug){
@@ -1452,48 +995,28 @@
           .eq("slug", slug)
           .limit(1)
           .maybeSingle();
-
         if(error) throw error;
         return normPhone(data?.phone || "");
       }
 
       async function rpcFirstSuccess(name, payloads){
         if (!sb) throw new Error("supabase_not_ready");
-
         let lastError = null;
-
         for(const payload of payloads){
           try{
             log(`RPC ${name} tentative`, payload);
             const { data, error } = await sb.rpc(name, payload);
-            if(error){
-              lastError = error;
-              log(`RPC ${name} erreur`, {
-                message: error.message,
-                details: error.details,
-                hint: error.hint
-              });
-              continue;
-            }
+            if(error){ lastError = error; log(`RPC ${name} erreur`, { message: error.message, details: error.details, hint: error.hint }); continue; }
             log(`RPC ${name} OK`, data);
             return data;
-          }catch(err){
-            lastError = err;
-            log(`RPC ${name} exception`, { message: err?.message || String(err) });
-          }
+          }catch(err){ lastError = err; log(`RPC ${name} exception`, { message: err?.message || String(err) }); }
         }
-
         throw lastError || new Error(`RPC ${name} échouée`);
       }
 
       async function getAccess(phone){
         if (!phone || !sb) return false;
-
-        const res = await rpcFirstSuccess("digiy_has_access", [
-          { p_phone: phone, p_module: MODULE },
-          { phone, module: MODULE }
-        ]);
-
+        const res = await rpcFirstSuccess("digiy_has_access", [{ p_phone: phone, p_module: MODULE }, { phone, module: MODULE }]);
         if(typeof res === "boolean") return res;
         if(res && typeof res.ok === "boolean") return res.ok;
         if(res && typeof res.has_access === "boolean") return res.has_access;
@@ -1504,36 +1027,22 @@
 
       async function getSubscription(phone){
         if (!phone || !sb) return null;
-
         try{
-          const data = await rpcFirstSuccess("digiy_get_subscription_status", [
-            { p_phone: phone, p_module: MODULE },
-            { phone, module: MODULE }
-          ]);
+          const data = await rpcFirstSuccess("digiy_get_subscription_status", [{ p_phone: phone, p_module: MODULE }, { phone, module: MODULE }]);
           return data || null;
-        }catch(err){
-          log("digiy_get_subscription_status indisponible", { message: err?.message || String(err) });
-          return null;
-        }
+        }catch(err){ log("digiy_get_subscription_status indisponible", { message: err?.message || String(err) }); return null; }
       }
 
       async function getStoreContext(slug){
         if (!slug || !sb) return null;
-
         const attempts = [
           ["pos_get_store_context_by_slug", [{ p_slug: slug }, { slug }]],
           ["digiy_pos_get_store_context_by_slug", [{ p_slug: slug }, { slug }]]
         ];
-
         for (const [name, payloads] of attempts) {
-          try {
-            const data = await rpcFirstSuccess(name, payloads);
-            if (data) return data;
-          } catch (err) {
-            log(`${name} indisponible`, { message: err?.message || String(err) });
-          }
+          try { const data = await rpcFirstSuccess(name, payloads); if (data) return data; }
+          catch (err) { log(`${name} indisponible`, { message: err?.message || String(err) }); }
         }
-
         return null;
       }
 
@@ -1544,124 +1053,70 @@
         try{
           let slug = getStoredSlug();
           let phone = getStoredPhone();
-
-          state.slug = slug;
-          state.phone = phone;
-          paintMeta();
-          wireButtons();
-
+          state.slug = slug; state.phone = phone;
+          paintMeta(); wireButtons();
           log("Hydratation démarrée", { slug, phone });
 
           if(!slug){
             setStatus(
-              "warn",
-              "APERÇU LIBRE",
-              "Hall public prêt",
-              "Le hall montre la valeur du module. Le vrai travail s’ouvre avec un slug et un accès valide.",
-              "Passe par ton lien pro avec <b>?slug=...</b> ou active ton module. Quand le slug est là, le rail normal devient <b>QR → PIN → dashboard-pro</b>."
+              "warn", "APERÇU LIBRE", "Ta caisse t'attend",
+              "La page montre la valeur. Le vrai travail s'ouvre avec ton identifiant et ton accès actif.",
+              "Passe par ton lien pro ou rejoins DIGIY pour commencer. L'entrée normale se fait par <b>QR → PIN → espace de travail</b>."
             );
-            state.storeName = "Aperçu public";
-            state.plan = "—";
-            paintMeta();
-            wireButtons();
-            return;
+            state.storeName = "Aperçu libre"; state.plan = "—";
+            paintMeta(); wireButtons(); return;
           }
 
           if(!phone){
-            try{
-              phone = await resolvePhoneFromSlug(slug);
-              log("Téléphone résolu depuis slug", { slug, phone });
-            }catch(err){
-              log("resolvePhoneFromSlug KO", { message: err?.message || String(err) });
-            }
+            try{ phone = await resolvePhoneFromSlug(slug); log("Téléphone résolu depuis slug", { slug, phone }); }
+            catch(err){ log("resolvePhoneFromSlug KO", { message: err?.message || String(err) }); }
           }
 
-          state.slug = slug;
-          state.phone = phone || "";
+          state.slug = slug; state.phone = phone || "";
           remember(state.slug, state.phone);
 
           let storeCtx = null;
-          try{
-            storeCtx = await getStoreContext(slug);
-          }catch(err){
-            log("getStoreContext KO", { message: err?.message || String(err) });
-          }
+          try{ storeCtx = await getStoreContext(slug); }
+          catch(err){ log("getStoreContext KO", { message: err?.message || String(err) }); }
 
           if(storeCtx){
-            state.storeName =
-              String(
-                storeCtx?.shop_name ||
-                storeCtx?.display_name ||
-                storeCtx?.store?.name ||
-                storeCtx?.profile?.display_name ||
-                "Commerce actif"
-              ).trim();
-          } else {
-            state.storeName = "Commerce détecté";
-          }
+            state.storeName = String(storeCtx?.shop_name || storeCtx?.display_name || storeCtx?.store?.name || storeCtx?.profile?.display_name || "Boutique active").trim();
+          } else { state.storeName = "Boutique détectée"; }
 
           let sub = null;
           if(phone){
-            try{
-              state.access = await getAccess(phone);
-            }catch(err){
-              log("digiy_has_access KO", { message: err?.message || String(err) });
-              state.access = false;
-            }
+            try{ state.access = await getAccess(phone); }
+            catch(err){ log("digiy_has_access KO", { message: err?.message || String(err) }); state.access = false; }
+            try{ sub = await getSubscription(phone); }
+            catch(err){ log("getSubscription KO", { message: err?.message || String(err) }); }
+          } else { state.access = false; }
 
-            try{
-              sub = await getSubscription(phone);
-            }catch(err){
-              log("getSubscription KO", { message: err?.message || String(err) });
-            }
-          } else {
-            state.access = false;
-          }
-
-          state.plan = String(
-            sub?.plan ||
-            sub?.plan_code ||
-            sub?.subscription_plan ||
-            sub?.status ||
-            (state.access ? "actif" : "—")
-          ).trim() || "—";
-
-          paintMeta();
-          wireButtons();
+          state.plan = String(sub?.plan || sub?.plan_code || sub?.subscription_plan || sub?.status || (state.access ? "actif" : "—")).trim() || "—";
+          paintMeta(); wireButtons();
 
           if(state.access){
             setStatus(
-              "ok",
-              "ACCÈS OUVERT",
-              "Module reconnu",
-              "Ton commerce est reconnu. Le rail principal ouvre maintenant le dashboard pro.",
-              `Magasin détecté : <b>${state.storeName}</b><br>Le bouton principal mène à <b>dashboard-pro.html</b>. La <b>caisse.html</b> reste disponible comme outil métier.`
+              "ok", "ACCÈS OUVERT", "Ta boutique est reconnue",
+              "Ton accès est actif. Le bouton principal ouvre ton espace de travail.",
+              `Boutique : <b>${state.storeName}</b><br>Ton espace de travail et ta caisse sont prêts.`
             );
           } else {
             setStatus(
-              "warn",
-              "APERÇU + CONTRÔLE",
-              "Commerce repéré, accès fermé",
-              "Le hall a reconnu le contexte, mais l’usage réel reste protégé tant que l’accès POS n’est pas actif.",
-              `Slug reconnu : <b>${state.slug}</b>${state.phone ? `<br>Téléphone : <b>+${state.phone}</b>` : ""}<br>Tu peux activer le module ou passer par le <b>PIN</b> pour vérifier ton accès.`
+              "warn", "APERÇU + CONTRÔLE", "Boutique repérée, accès fermé",
+              "La page a reconnu ton identifiant, mais l'accès reste fermé tant que tu n'es pas abonné actif.",
+              `Identifiant reconnu : <b>${state.slug}</b>${state.phone ? `<br>Téléphone : <b>+${state.phone}</b>` : ""}<br>Tu peux rejoindre DIGIY ou entrer par ton PIN pour vérifier ton accès.`
             );
           }
         }catch(err){
           console.error(err);
           log("Hydratation fatale", { message: err?.message || String(err) });
-
           setStatus(
-            "bad",
-            "CONTRÔLE INCOMPLET",
-            "Le hall reste visible",
-            "Le décor public tient debout, mais la lecture technique du contexte a échoué.",
-            "Vérifie le slug, puis relance le contrôle. Le hall ne doit pas tomber juste parce qu’une couture SQL tousse."
+            "bad", "CONTRÔLE INCOMPLET", "La page reste visible",
+            "L'affichage tient debout, mais la lecture de ton contexte boutique a rencontré un problème.",
+            "Vérifie ton identifiant, puis relance le contrôle."
           );
         }finally{
-          state.loading = false;
-          paintMeta();
-          wireButtons();
-          revealPage();
+          state.loading = false; paintMeta(); wireButtons(); revealPage();
         }
       }
 
@@ -1669,37 +1124,20 @@
         try{
           const ready = window.DIGIY_GUARD?.ready;
           if(!ready) return;
-          if(typeof ready === "function") {
-            await ready();
-            return;
-          }
+          if(typeof ready === "function") { await ready(); return; }
           await ready;
-        }catch(err){
-          log("guard ready KO", { message: err?.message || String(err) });
-        }
+        }catch(err){ log("guard ready KO", { message: err?.message || String(err) }); }
       }
 
       function bind(){
         $("btnCheck").addEventListener("click", async () => {
           const btn = $("btnCheck");
-          btn.disabled = true;
-          btn.textContent = "Contrôle…";
-          try{
-            await hydrate();
-          } finally {
-            btn.disabled = false;
-            btn.textContent = "🔄 Vérifier mon accès";
-          }
+          btn.disabled = true; btn.textContent = "Contrôle…";
+          try{ await hydrate(); } finally { btn.disabled = false; btn.textContent = "🔄 Vérifier mon accès"; }
         });
       }
 
-      async function init(){
-        revealPage();
-        bind();
-        await bootGuardSoft();
-        await hydrate();
-      }
-
+      async function init(){ revealPage(); bind(); await bootGuardSoft(); await hydrate(); }
       init();
     })();
   </script>
