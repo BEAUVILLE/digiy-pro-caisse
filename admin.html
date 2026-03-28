@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>MON COMMERCE — Admin POS</title>
+  <title>MON COMMERCE — Mon espace de travail</title>
   <meta name="theme-color" content="#07140f" />
-  <meta name="description" content="MON COMMERCE by DIGIY — bureau admin léger POS : boutique, TVA, produits." />
+  <meta name="description" content="MON COMMERCE by DIGIY — mon espace de travail : boutique, TVA, produits." />
 
   <script>
     window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
@@ -31,28 +31,21 @@
   <script src="./guard.js"></script>
   <script src="./claw-tools-pos.js"></script>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+
   <style>
     :root{
-      --bg:#04110d;
-      --bg2:#071a14;
-      --bg3:#0b241b;
-      --card:rgba(8,24,18,.78);
-      --card2:rgba(9,28,21,.92);
-      --text:#f7fbf8;
-      --muted:#bfd3c8;
-      --line:rgba(255,255,255,.09);
-      --line2:rgba(255,255,255,.14);
-      --ok:#22c55e;
-      --warn:#f59e0b;
-      --danger:#ef4444;
-      --info:#60a5fa;
-      --gold:#facc15;
-      --gold2:#f59e0b;
-      --shadow:0 22px 56px rgba(0,0,0,.28);
-      --shadow-soft:0 14px 34px rgba(0,0,0,.22);
-      --radius:26px;
-      --radius-sm:18px;
-      --max:1180px;
+      --bg:#04110d;--bg2:#071a14;--bg3:#0b241b;
+      --card:rgba(8,24,18,.78);--card2:rgba(9,28,21,.92);
+      --text:#f7fbf8;--muted:#bfd3c8;
+      --line:rgba(255,255,255,.09);--line2:rgba(255,255,255,.14);
+      --ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--info:#60a5fa;
+      --gold:#facc15;--gold2:#f59e0b;
+      --shadow:0 22px 56px rgba(0,0,0,.28);--shadow-soft:0 14px 34px rgba(0,0,0,.22);
+      --radius:26px;--radius-sm:18px;--max:1180px;
+      --fontA:"Outfit",system-ui,-apple-system,sans-serif;
     }
 
     *{box-sizing:border-box}
@@ -60,9 +53,7 @@
     html{scroll-behavior:smooth}
 
     body{
-      min-height:100vh;
-      color:var(--text);
-      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      min-height:100vh;color:var(--text);font-family:var(--fontA);
       background:
         radial-gradient(circle at top left, rgba(250,204,21,.10), transparent 28%),
         radial-gradient(circle at top right, rgba(96,165,250,.08), transparent 22%),
@@ -72,570 +63,148 @@
     a{text-decoration:none;color:inherit}
     button,input,select,textarea{font:inherit}
 
-    .wrap{
-      width:min(100%, var(--max));
-      margin:0 auto;
-      padding:16px 14px 92px;
-    }
+    .wrap{width:min(100%, var(--max));margin:0 auto;padding:16px 14px 92px;}
 
+    /* ── FLOAT ── */
     .floating-site-btn{
-      position:fixed;
-      left:16px;
-      bottom:calc(16px + env(safe-area-inset-bottom, 0px));
-      z-index:90;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      min-height:48px;
-      padding:14px 16px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(5,16,12,.88);
-      backdrop-filter:blur(10px);
-      color:var(--text);
-      font-size:13px;
-      font-weight:900;
-      letter-spacing:.2px;
-      box-shadow:0 16px 36px rgba(0,0,0,.28);
-      transition:transform .14s ease, border-color .14s ease, background .14s ease;
+      position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom, 0px));z-index:90;
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      min-height:48px;padding:14px 16px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);background:rgba(5,16,12,.88);
+      backdrop-filter:blur(10px);color:var(--text);font-size:13px;font-weight:900;letter-spacing:.2px;
+      box-shadow:0 16px 36px rgba(0,0,0,.28);transition:transform .14s ease, border-color .14s ease, background .14s ease;
     }
-    .floating-site-btn:hover{
-      transform:translateY(-1px);
-      border-color:rgba(250,204,21,.28);
-      background:rgba(8,20,15,.94);
-    }
+    .floating-site-btn:hover{transform:translateY(-1px);border-color:rgba(250,204,21,.28);background:rgba(8,20,15,.94);}
 
+    /* ── TOPBAR ── */
     .topbar{
-      position:sticky;
-      top:0;
-      z-index:70;
-      margin-bottom:14px;
-      backdrop-filter:blur(12px);
-      background:rgba(4,17,13,.76);
-      border:1px solid rgba(255,255,255,.07);
-      border-radius:24px;
-      box-shadow:var(--shadow-soft);
+      position:sticky;top:0;z-index:70;margin-bottom:14px;
+      backdrop-filter:blur(12px);background:rgba(4,17,13,.76);
+      border:1px solid rgba(255,255,255,.07);border-radius:24px;box-shadow:var(--shadow-soft);
     }
+    .topbar-inner{padding:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
 
-    .topbar-inner{
-      padding:14px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width:0;
-    }
-
+    .brand{display:flex;align-items:center;gap:12px;min-width:0;}
     .brand-badge{
-      width:48px;
-      height:48px;
-      border-radius:18px;
-      display:grid;
-      place-items:center;
+      width:48px;height:48px;border-radius:18px;display:grid;place-items:center;
       background:linear-gradient(135deg, rgba(250,204,21,.16), rgba(245,158,11,.08));
-      border:1px solid rgba(250,204,21,.16);
-      box-shadow:0 16px 34px rgba(250,204,21,.10);
-      font-size:24px;
-      flex:0 0 auto;
+      border:1px solid rgba(250,204,21,.16);box-shadow:0 16px 34px rgba(250,204,21,.10);
+      font-size:24px;flex:0 0 auto;
     }
+    .brand-kicker{color:var(--gold);font-size:12px;font-weight:950;letter-spacing:.14em;text-transform:uppercase;margin-bottom:3px;}
+    .brand-title{font-size:20px;line-height:1.08;font-weight:1000;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .brand-sub{color:var(--muted);font-size:12px;font-weight:800;margin-top:3px;letter-spacing:.04em;}
 
-    .brand-kicker{
-      color:var(--gold);
-      font-size:12px;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      margin-bottom:3px;
-    }
+    .right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
 
-    .brand-title{
-      font-size:20px;
-      line-height:1.08;
-      font-weight:1000;
-      letter-spacing:-.02em;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:10px 13px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--muted);font-weight:900;font-size:12px;backdrop-filter:blur(10px);}
 
-    .brand-sub{
-      color:var(--muted);
-      font-size:12px;
-      font-weight:800;
-      margin-top:3px;
-      letter-spacing:.04em;
-    }
+    .dot{width:10px;height:10px;border-radius:999px;background:var(--warn);box-shadow:0 0 0 4px rgba(255,255,255,.03);}
+    .dot.ok{background:var(--ok)}.dot.bad{background:var(--danger)}
 
-    .right{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 13px;
-      border-radius:999px;
-      background:rgba(255,255,255,.04);
-      border:1px solid var(--line);
-      color:var(--muted);
-      font-weight:900;
-      font-size:12px;
-      backdrop-filter:blur(10px);
-    }
-
-    .dot{
-      width:10px;
-      height:10px;
-      border-radius:999px;
-      background:var(--warn);
-      box-shadow:0 0 0 4px rgba(255,255,255,.03);
-    }
-    .dot.ok{background:var(--ok)}
-    .dot.bad{background:var(--danger)}
-
-    .btn,
-    .btn-outline,
-    .btn-ghost,
-    .tab{
-      appearance:none;
-      border:none;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      min-height:46px;
-      padding:12px 16px;
-      border-radius:999px;
-      font-weight:900;
-      font-size:13px;
-      letter-spacing:.02em;
-      white-space:nowrap;
+    /* ── BOUTONS ── */
+    .btn,.btn-outline,.btn-ghost,.tab{
+      appearance:none;border:none;cursor:pointer;
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      min-height:46px;padding:12px 16px;border-radius:999px;
+      font-weight:900;font-size:13px;letter-spacing:.02em;white-space:nowrap;
       transition:transform .12s ease, opacity .12s ease, background .12s ease, border-color .12s ease;
     }
+    .btn:hover,.btn-outline:hover,.btn-ghost:hover,.tab:hover{transform:translateY(-1px)}
+    .btn:disabled,.btn-outline:disabled,.btn-ghost:disabled{opacity:.55;cursor:not-allowed;transform:none;}
+    .btn{color:#07110d;background:linear-gradient(135deg, var(--gold), var(--gold2));box-shadow:0 14px 30px rgba(250,204,21,.18);}
+    .btn-outline{background:rgba(255,255,255,.04);color:var(--text);border:1px solid var(--line2);}
+    .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--line2);}
+    .btn.ok{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.28);color:#dffff1;box-shadow:none;}
+    .btn.warn{background:rgba(245,158,11,.10);border:1px solid rgba(245,158,11,.28);color:#ffe4b9;box-shadow:none;}
+    .btn.danger{background:rgba(239,68,68,.10);border:1px solid rgba(239,68,68,.28);color:#ffd3d3;box-shadow:none;}
 
-    .btn:hover,
-    .btn-outline:hover,
-    .btn-ghost:hover,
-    .tab:hover{transform:translateY(-1px)}
-
-    .btn:disabled,
-    .btn-outline:disabled,
-    .btn-ghost:disabled{
-      opacity:.55;
-      cursor:not-allowed;
-      transform:none;
-    }
-
-    .btn{
-      color:#07110d;
-      background:linear-gradient(135deg, var(--gold), var(--gold2));
-      box-shadow:0 14px 30px rgba(250,204,21,.18);
-    }
-
-    .btn-outline{
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      border:1px solid var(--line2);
-    }
-
-    .btn-ghost{
-      background:transparent;
-      color:var(--muted);
-      border:1px solid var(--line2);
-    }
-
-    .btn.ok{
-      background:rgba(34,197,94,.12);
-      border:1px solid rgba(34,197,94,.28);
-      color:#dffff1;
-      box-shadow:none;
-    }
-
-    .btn.warn{
-      background:rgba(245,158,11,.10);
-      border:1px solid rgba(245,158,11,.28);
-      color:#ffe4b9;
-      box-shadow:none;
-    }
-
-    .btn.danger{
-      background:rgba(239,68,68,.10);
-      border:1px solid rgba(239,68,68,.28);
-      color:#ffd3d3;
-      box-shadow:none;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:1.05fr .95fr;
-      gap:12px;
-    }
-
-    .card{
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)),
-        var(--card);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:18px;
-      overflow:hidden;
-    }
+    /* ── GRID / CARD ── */
+    .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:12px;}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)),var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;overflow:hidden;}
 
     .hero-badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 12px;
-      border-radius:999px;
-      background:rgba(250,204,21,.10);
-      border:1px solid rgba(250,204,21,.18);
-      color:var(--gold);
-      font-size:12px;
-      font-weight:950;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      margin-bottom:14px;
+      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
+      background:rgba(250,204,21,.10);border:1px solid rgba(250,204,21,.18);
+      color:var(--gold);font-size:12px;font-weight:950;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px;
     }
 
-    .statusLine{
-      display:flex;
-      align-items:flex-start;
-      gap:10px;
-      padding:14px;
-      border-radius:18px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      margin-bottom:12px;
-    }
-    .statusLine.ok{
-      background:rgba(34,197,94,.08);
-      border-color:rgba(34,197,94,.22);
-    }
-    .statusLine.bad{
-      background:rgba(239,68,68,.08);
-      border-color:rgba(239,68,68,.22);
-    }
-    .statusLine.warn{
-      background:rgba(245,158,11,.08);
-      border-color:rgba(245,158,11,.22);
-    }
+    .statusLine{display:flex;align-items:flex-start;gap:10px;padding:14px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.03);margin-bottom:12px;}
+    .statusLine.ok{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.22);}
+    .statusLine.bad{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.22);}
+    .statusLine.warn{background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.22);}
 
-    .statusTitle{
-      font-size:20px;
-      font-weight:950;
-      line-height:1.15;
-      margin-bottom:4px;
-    }
-
-    .small{font-size:12px}
-    .muted{color:var(--muted)}
+    .statusTitle{font-size:20px;font-weight:950;line-height:1.15;margin-bottom:4px;}
+    .small{font-size:12px}.muted{color:var(--muted)}
     .hr{height:1px;background:var(--line);margin:14px 0}
 
-    .tabs{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      margin-bottom:12px;
-    }
+    /* ── TABS ── */
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+    .tab{background:rgba(255,255,255,.04);color:var(--muted);border:1px solid var(--line2);box-shadow:none;}
+    .tab.active{background:rgba(250,204,21,.10);border-color:rgba(250,204,21,.22);color:var(--text);}
+    .view{display:none}.view.active{display:block}
 
-    .tab{
-      background:rgba(255,255,255,.04);
-      color:var(--muted);
-      border:1px solid var(--line2);
-      box-shadow:none;
-    }
+    /* ── FORM ── */
+    .formGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .fieldWrap{display:flex;flex-direction:column;gap:7px;}
+    .label{font-size:12px;color:var(--muted);font-weight:900;letter-spacing:.04em;text-transform:uppercase;}
+    .input,.select,.textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:16px;color:var(--text);padding:13px 14px;outline:none;font-size:15px;font-weight:700;}
+    .textarea{min-height:100px;resize:vertical;}
 
-    .tab.active{
-      background:rgba(250,204,21,.10);
-      border-color:rgba(250,204,21,.22);
-      color:var(--text);
-    }
+    .switchRow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px;border-radius:18px;background:rgba(255,255,255,.03);border:1px solid var(--line);}
+    .switch{position:relative;width:50px;height:28px;display:inline-block;flex:0 0 auto;}
+    .switch input{opacity:0;width:0;height:0;}
+    .slider{position:absolute;inset:0;border-radius:999px;background:#253253;border:1px solid rgba(255,255,255,.10);cursor:pointer;transition:.2s;}
+    .slider:before{content:"";position:absolute;left:4px;top:3px;width:20px;height:20px;border-radius:999px;background:#cfd6ff;transition:.2s;}
+    .switch input:checked + .slider{background:rgba(34,197,94,.35);}
+    .switch input:checked + .slider:before{transform:translateX(20px);background:#fff;}
 
-    .view{display:none}
-    .view.active{display:block}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+    .metaBox{padding:13px;border-radius:18px;background:rgba(255,255,255,.03);border:1px solid var(--line);}
 
-    .formGrid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-    }
+    /* ── PRODUITS ── */
+    .list{display:grid;gap:10px;}
+    .prodCard{padding:14px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.03);display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start;}
+    .prodName{font-weight:950;font-size:15px;line-height:1.3;}
+    .prodMeta{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.75;font-weight:700;}
+    .prodRight{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
+    .tag{display:inline-flex;padding:7px 9px;border-radius:999px;border:1px solid var(--line);font-size:11px;font-weight:950;color:var(--muted);white-space:nowrap;}
+    .tag.ok{background:rgba(34,197,94,.10);border-color:rgba(34,197,94,.25);color:#cbffd9;}
+    .tag.warn{background:rgba(245,158,11,.10);border-color:rgba(245,158,11,.25);color:#ffe1b2;}
+    .tag.bad{background:rgba(239,68,68,.10);border-color:rgba(239,68,68,.25);color:#ffd0d0;}
 
-    .fieldWrap{
-      display:flex;
-      flex-direction:column;
-      gap:7px;
-    }
+    .searchRow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
 
-    .label{
-      font-size:12px;
-      color:var(--muted);
-      font-weight:900;
-      letter-spacing:.04em;
-      text-transform:uppercase;
-    }
+    .diag{background:#081119;border:1px solid var(--line);border-radius:16px;padding:12px;font:12px/1.58 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#d6e0ff;white-space:pre-wrap;word-break:break-word;max-height:280px;overflow:auto;}
 
-    .input,.select,.textarea{
-      width:100%;
-      background:rgba(255,255,255,.04);
-      border:1px solid var(--line);
-      border-radius:16px;
-      color:var(--text);
-      padding:13px 14px;
-      outline:none;
-      font-size:15px;
-      font-weight:700;
-    }
+    .empty{color:var(--muted);font-weight:800;padding:16px;border-radius:16px;border:1px dashed var(--line);text-align:center;line-height:1.6;}
+    .footerNote{margin-top:12px;font-size:12px;color:var(--muted);line-height:1.75;font-weight:700;}
+    .contextGrid{display:grid;gap:10px;}
 
-    .textarea{
-      min-height:100px;
-      resize:vertical;
-    }
-
-    .switchRow{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding:14px;
-      border-radius:18px;
-      background:rgba(255,255,255,.03);
-      border:1px solid var(--line);
-    }
-
-    .switch{
-      position:relative;
-      width:50px;
-      height:28px;
-      display:inline-block;
-      flex:0 0 auto;
-    }
-
-    .switch input{
-      opacity:0;
-      width:0;
-      height:0;
-    }
-
-    .slider{
-      position:absolute;
-      inset:0;
-      border-radius:999px;
-      background:#253253;
-      border:1px solid rgba(255,255,255,.10);
-      cursor:pointer;
-      transition:.2s;
-    }
-
-    .slider:before{
-      content:"";
-      position:absolute;
-      left:4px;
-      top:3px;
-      width:20px;
-      height:20px;
-      border-radius:999px;
-      background:#cfd6ff;
-      transition:.2s;
-    }
-
-    .switch input:checked + .slider{
-      background:rgba(34,197,94,.35);
-    }
-
-    .switch input:checked + .slider:before{
-      transform:translateX(20px);
-      background:#fff;
-    }
-
-    .actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:14px;
-    }
-
-    .metaBox{
-      padding:13px;
-      border-radius:18px;
-      background:rgba(255,255,255,.03);
-      border:1px solid var(--line);
-    }
-
-    .list{
-      display:grid;
-      gap:10px;
-    }
-
-    .prodCard{
-      padding:14px;
-      border-radius:18px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      display:grid;
-      grid-template-columns:1fr auto;
-      gap:12px;
-      align-items:start;
-    }
-
-    .prodName{
-      font-weight:950;
-      font-size:15px;
-      line-height:1.3;
-    }
-
-    .prodMeta{
-      font-size:12px;
-      color:var(--muted);
-      margin-top:4px;
-      line-height:1.75;
-      font-weight:700;
-    }
-
-    .prodRight{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-
-    .tag{
-      display:inline-flex;
-      padding:7px 9px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      font-size:11px;
-      font-weight:950;
-      color:var(--muted);
-      white-space:nowrap;
-    }
-
-    .tag.ok{
-      background:rgba(34,197,94,.10);
-      border-color:rgba(34,197,94,.25);
-      color:#cbffd9;
-    }
-
-    .tag.warn{
-      background:rgba(245,158,11,.10);
-      border-color:rgba(245,158,11,.25);
-      color:#ffe1b2;
-    }
-
-    .tag.bad{
-      background:rgba(239,68,68,.10);
-      border-color:rgba(239,68,68,.25);
-      color:#ffd0d0;
-    }
-
-    .searchRow{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom:12px;
-    }
-
-    .diag{
-      background:#081119;
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:12px;
-      font:12px/1.58 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      color:#d6e0ff;
-      white-space:pre-wrap;
-      word-break:break-word;
-      max-height:280px;
-      overflow:auto;
-    }
-
-    .empty{
-      color:var(--muted);
-      font-weight:800;
-      padding:16px;
-      border-radius:16px;
-      border:1px dashed var(--line);
-      text-align:center;
-      line-height:1.6;
-    }
-
-    .footerNote{
-      margin-top:12px;
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.75;
-      font-weight:700;
-    }
-
-    .contextGrid{
-      display:grid;
-      gap:10px;
-    }
-
-    @media(max-width:1020px){
-      .grid{grid-template-columns:1fr}
-    }
-
-    @media(max-width:760px){
-      .formGrid{grid-template-columns:1fr}
-      .prodCard{grid-template-columns:1fr}
-    }
-
+    @media(max-width:1020px){.grid{grid-template-columns:1fr}}
+    @media(max-width:760px){.formGrid{grid-template-columns:1fr}.prodCard{grid-template-columns:1fr}}
     @media(max-width:700px){
-      .floating-site-btn{
-        left:12px;
-        right:12px;
-        bottom:calc(12px + env(safe-area-inset-bottom, 0px));
-        min-height:46px;
-        padding:14px 14px;
-        font-size:12px;
-      }
-
-      .wrap{
-        padding:12px 12px 92px;
-      }
-
-      .topbar-inner{
-        padding:12px;
-      }
-
-      .brand-title{
-        white-space:normal;
-      }
+      .floating-site-btn{left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom, 0px));min-height:46px;padding:14px 14px;font-size:12px;}
+      .wrap{padding:12px 12px 92px;}
+      .topbar-inner{padding:12px;}
+      .brand-title{white-space:normal;}
     }
   </style>
 </head>
 <body>
-  <a
-    class="floating-site-btn"
-    href="https://digiylyfe.com/"
-    aria-label="Retour au site DIGIYLYFE"
-    title="Retour au site DIGIYLYFE"
-  >⬅️ Retour site DIGIYLYFE</a>
+
+  <a class="floating-site-btn" href="https://digiylyfe.com/" aria-label="Retour au site DIGIYLYFE">⬅️ Retour DIGIYLYFE</a>
 
   <div class="wrap">
-
     <div class="topbar">
       <div class="topbar-inner">
         <div class="brand">
           <div class="brand-badge">⚙️</div>
           <div>
             <div class="brand-kicker">DIGIYLYFE</div>
-            <div class="brand-title">MON COMMERCE — Admin léger</div>
-            <div class="brand-sub">Boutique • TVA • produits</div>
+            <!-- ━━━ AVANT : "MON COMMERCE — Admin léger" → jargon "Admin" banni en façade ━━━ -->
+            <div class="brand-title">MON COMMERCE — Mon espace de travail</div>
+            <div class="brand-sub">Boutique · TVA · produits</div>
           </div>
         </div>
 
@@ -644,39 +213,44 @@
             <span id="dotStatus" class="dot"></span>
             <span id="pillStatus">Chargement…</span>
           </div>
-          <a class="btn-outline" id="btnBackCaisse" href="./caisse.html">🧾 Caisse</a>
-          <a class="btn" id="btnBackHall" href="./index.html">🏠 Hall</a>
+          <a class="btn-outline" id="btnBackCaisse" href="./caisse.html">🧾 Ma caisse</a>
+          <!-- ━━━ AVANT : "🏠 Hall" → "Hall" = jargon interne non humain ━━━ -->
+          <a class="btn" id="btnBackHall" href="./index.html">🏠 Accueil</a>
         </div>
       </div>
     </div>
 
     <div class="grid">
       <section class="card">
-        <div class="hero-badge">admin protégé • réglages boutique • produits</div>
+        <!-- ━━━ AVANT : "admin protégé • réglages boutique • produits" → "admin" banni ━━━ -->
+        <div class="hero-badge">accès sécurisé · boutique · produits</div>
 
         <div id="statusBox" class="statusLine">
           <div>🧭</div>
           <div>
             <div class="statusTitle" id="statusTitle">Initialisation…</div>
-            <div class="muted small" id="statusSub">Lecture du slug, du phone et du contexte boutique.</div>
+            <!-- ━━━ AVANT : "Lecture du slug, du phone et du contexte boutique" → jargon technique visible ━━━ -->
+            <div class="muted small" id="statusSub">Reconnaissance de ta boutique en cours.</div>
           </div>
         </div>
 
         <div class="actions" style="margin-top:0">
-          <a class="btn-ghost" id="btnNavHall" href="./index.html">🏠 Hall</a>
-          <a class="btn-ghost" id="btnNavCaisse" href="./caisse.html">🧾 Caisse</a>
-          <a class="btn-outline" id="btnAbos" href="https://commencer-a-payer.digiylyfe.com/">💳 Abonnement</a>
+          <!-- ━━━ "Hall" × 2 → "Accueil" ━━━ -->
+          <a class="btn-ghost" id="btnNavHall" href="./index.html">🏠 Accueil</a>
+          <a class="btn-ghost" id="btnNavCaisse" href="./caisse.html">🧾 Ma caisse</a>
+          <a class="btn-outline" id="btnAbos" href="https://commencer-a-payer.digiylyfe.com/">💳 Mon abonnement</a>
           <a class="btn-outline" id="btnSupport" href="#" target="_blank" rel="noopener">💬 Support</a>
         </div>
 
         <div class="hr"></div>
 
         <div class="tabs">
-          <button class="tab active" type="button" data-tab="shop">Boutique</button>
-          <button class="tab" type="button" data-tab="products">Produits</button>
+          <button class="tab active" type="button" data-tab="shop">Ma boutique</button>
+          <button class="tab" type="button" data-tab="products">Mes produits</button>
           <button class="tab" type="button" data-tab="diag">Diagnostic</button>
         </div>
 
+        <!-- ━━━━━━ VUE BOUTIQUE ━━━━━━ -->
         <div id="view-shop" class="view active">
           <div class="formGrid">
             <div class="fieldWrap">
@@ -687,7 +261,6 @@
               <label class="label">Ville</label>
               <input id="shop_city" class="input" placeholder="Saly" />
             </div>
-
             <div class="fieldWrap">
               <label class="label">Téléphone</label>
               <input id="shop_phone" class="input" placeholder="221771234567" />
@@ -696,7 +269,6 @@
               <label class="label">WhatsApp</label>
               <input id="shop_whatsapp" class="input" placeholder="221771234567" />
             </div>
-
             <div class="fieldWrap">
               <label class="label">Wave</label>
               <input id="shop_wave" class="input" placeholder="221771234567" />
@@ -708,8 +280,8 @@
           </div>
 
           <div class="fieldWrap" style="margin-top:12px">
-            <label class="label">Message commerçant</label>
-            <textarea id="shop_tagline" class="textarea" placeholder="Petite phrase utile sur la boutique"></textarea>
+            <label class="label">Message boutique</label>
+            <textarea id="shop_tagline" class="textarea" placeholder="Petite phrase utile sur ta boutique"></textarea>
           </div>
 
           <div class="hr"></div>
@@ -717,7 +289,7 @@
           <div class="switchRow">
             <div>
               <div style="font-weight:950">TVA active</div>
-              <div class="muted small">Active si la boutique doit travailler avec TVA.</div>
+              <div class="muted small">Active si ta boutique travaille avec TVA.</div>
             </div>
             <label class="switch">
               <input id="tva_active" type="checkbox" />
@@ -740,15 +312,17 @@
           </div>
 
           <div class="actions">
-            <button id="btnSaveShop" class="btn ok" type="button">💾 Enregistrer la boutique</button>
+            <!-- ━━━ DOCTRINE : "💾 Enregistrer" = moment humain direct ━━━ -->
+            <button id="btnSaveShop" class="btn ok" type="button">💾 Enregistrer ma boutique</button>
             <button id="btnReloadShop" class="btn-outline" type="button">🔄 Recharger</button>
           </div>
 
           <div class="footerNote">
-            Ici le commerçant pose sa maison : nom, contacts, TVA, identité boutique.
+            Ici tu poses ta maison : nom, contacts, TVA, identité boutique.
           </div>
         </div>
 
+        <!-- ━━━━━━ VUE PRODUITS ━━━━━━ -->
         <div id="view-products" class="view">
           <div class="metaBox">
             <div style="font-weight:950;margin-bottom:8px">Ajouter ou modifier un produit</div>
@@ -762,7 +336,6 @@
                 <label class="label">Catégorie</label>
                 <input id="prod_cat" class="input" placeholder="Épicerie" />
               </div>
-
               <div class="fieldWrap">
                 <label class="label">Prix (FCFA)</label>
                 <input id="prod_price" class="input" type="number" min="0" step="1" placeholder="2500" />
@@ -784,7 +357,7 @@
           <div class="hr"></div>
 
           <div class="searchRow">
-            <input id="searchProd" class="input" placeholder="Rechercher un produit..." />
+            <input id="searchProd" class="input" placeholder="Rechercher un produit…" />
             <button id="btnReloadProducts" class="btn-outline" type="button">🔄 Recharger la liste</button>
           </div>
 
@@ -793,54 +366,53 @@
           </div>
 
           <div class="footerNote">
-            Les suppressions sont douces : on désactive le produit au lieu de le casser dans la base.
+            Les suppressions sont douces : on désactive le produit au lieu de le supprimer définitivement.
           </div>
         </div>
 
+        <!-- ━━━━━━ VUE DIAGNOSTIC ━━━━━━ -->
         <div id="view-diag" class="view">
           <div class="diag" id="diagBox">Initialisation…</div>
         </div>
       </section>
 
+      <!-- ━━━━━━ PANNEAU CONTEXTE ━━━━━━ -->
       <aside class="card">
-        <h2 style="margin:0 0 12px 0;font-size:22px;line-height:1.1">Contexte courant</h2>
+        <h2 style="margin:0 0 12px 0;font-size:22px;line-height:1.1">Ma boutique en cours</h2>
 
         <div class="contextGrid">
           <div class="metaBox">
-            <div class="small muted">Slug</div>
+            <div class="small muted">Identifiant</div>
             <div id="metaSlug" style="font-weight:950;margin-top:6px">—</div>
           </div>
-
           <div class="metaBox">
             <div class="small muted">Téléphone</div>
             <div id="metaPhone" style="font-weight:950;margin-top:6px">—</div>
           </div>
-
           <div class="metaBox">
-            <div class="small muted">Magasin</div>
+            <div class="small muted">Boutique</div>
             <div id="metaStore" style="font-weight:950;margin-top:6px">—</div>
           </div>
-
           <div class="metaBox">
-            <div class="small muted">Plan</div>
+            <div class="small muted">Abonnement</div>
             <div id="metaPlan" style="font-weight:950;margin-top:6px">—</div>
           </div>
-
           <div class="metaBox">
-            <div class="small muted">Module</div>
-            <div style="font-weight:950;margin-top:6px">POS</div>
+            <div class="small muted">Service</div>
+            <div style="font-weight:950;margin-top:6px">MON COMMERCE</div>
           </div>
         </div>
 
         <div class="hr"></div>
 
         <div class="actions">
-          <a id="btnGoHall2" class="btn-outline" href="./index.html">🏠 Hall</a>
-          <a id="btnGoCaisse2" class="btn" href="./caisse.html">🧾 Caisse</a>
+          <a id="btnGoHall2" class="btn-outline" href="./index.html">🏠 Accueil</a>
+          <a id="btnGoCaisse2" class="btn" href="./caisse.html">🧾 Ma caisse</a>
         </div>
 
+        <!-- ━━━ AVANT : "Tu peux ouvrir cette page avec ?slug=pos-221771234567" → technique visible banni ━━━ -->
         <div class="footerNote">
-          Admin protégé. Tu peux ouvrir cette page avec <b>?slug=pos-221771234567</b> ou revenir dessus via le slug mémorisé localement.
+          Espace sécurisé. Tu peux revenir ici à tout moment via ton lien pro ou ton QR DIGIY.
         </div>
       </aside>
     </div>
@@ -857,89 +429,90 @@
       const ABOS_URL = "https://commencer-a-payer.digiylyfe.com/";
 
       const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-        auth: {
-          persistSession: false,
-          autoRefreshToken: false,
-          detectSessionInUrl: false
-        }
+        auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
       });
 
       const state = {
-        slug: "",
-        phone: "",
-        access: false,
-        storeName: "",
-        plan: "",
-        storeContext: null,
-        settingsRow: null,
-        products: [],
-        loading: false
+        slug: "", phone: "", access: false, storeName: "", plan: "",
+        storeContext: null, settingsRow: null, products: [], loading: false
       };
 
       const $ = (id) => document.getElementById(id);
       const diagLines = [];
 
+      /* ━━━ ANTI-ÉCRAN NOIR ━━━
+         guard.js pose visibility:hidden pour éviter le flash.
+         Si guard.js plante, est lent ou absent → on force
+         la révélation après 2 secondes maximum. */
+      function revealPage(){
+        document.documentElement.style.visibility = "";
+      }
+      setTimeout(revealPage, 2000);
+
       function log(msg, data){
         const line = `[${new Date().toLocaleTimeString("fr-FR")}] ${msg}`;
         diagLines.push(data === undefined ? line : `${line}\n${safeStringify(data)}`);
-        $("diagBox").textContent = diagLines.join("\n\n");
+        if($("diagBox")) $("diagBox").textContent = diagLines.join("\n\n");
         console.log("[DIGIY POS ADMIN]", msg, data ?? "");
       }
 
       function safeStringify(v){
-        try { return JSON.stringify(v, null, 2); }
-        catch(_) { return String(v); }
+        try { return JSON.stringify(v, null, 2); } catch(_) { return String(v); }
       }
 
-      function getParam(name){
-        return new URL(location.href).searchParams.get(name) || "";
-      }
-
-      function normPhone(v){
-        return String(v || "").replace(/[^\d]/g, "");
-      }
+      function getParam(name){ return new URL(location.href).searchParams.get(name) || ""; }
+      function normPhone(v){ return String(v || "").replace(/[^\d]/g, ""); }
 
       function getResolvedSlug(){
-        return String(
-          getParam("slug") ||
-          localStorage.getItem("digiy_pos_last_slug") ||
-          sessionStorage.getItem("digiy_pos_last_slug") ||
-          ""
-        ).trim().toLowerCase();
+        return String(getParam("slug") || localStorage.getItem("digiy_pos_last_slug") || sessionStorage.getItem("digiy_pos_last_slug") || "").trim().toLowerCase();
       }
 
       function getResolvedPhone(){
-        return normPhone(
-          getParam("phone") ||
-          localStorage.getItem("digiy_pos_last_phone") ||
-          sessionStorage.getItem("digiy_pos_last_phone") ||
-          ""
-        );
+        return normPhone(getParam("phone") || localStorage.getItem("digiy_pos_last_phone") || sessionStorage.getItem("digiy_pos_last_phone") || "");
       }
 
+      /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         buildUrl — VERSION BLINDÉE
+         Corrige : TypeError: Failed to construct 'URL': Invalid URL
+         Raison : new URL(relatif, location.href) fragile selon
+         l'environnement. On reconstruit l'origine manuellement.
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
       function buildUrl(base, params){
-        const u = new URL(base, location.href);
-        Object.entries(params || {}).forEach(([k, v]) => {
-          if(v !== undefined && v !== null && String(v) !== ""){
-            u.searchParams.set(k, String(v));
+        const baseStr = (base == null ? "" : String(base)).trim();
+        if(!baseStr) return location.href;
+
+        let u;
+        try {
+          if(/^https?:\/\//i.test(baseStr)){
+            u = new URL(baseStr);
+          } else {
+            const origin = location.protocol + "//" + location.host;
+            const full = baseStr.startsWith("/") ? origin + baseStr : origin + "/" + baseStr;
+            u = new URL(full);
           }
-        });
+        } catch(e){
+          log("buildUrl KO: " + baseStr + " — " + e.message);
+          return baseStr;
+        }
+
+        try {
+          Object.entries(params || {}).forEach(([k, v]) => {
+            if(v !== undefined && v !== null && String(v) !== "")
+              u.searchParams.set(k, String(v));
+          });
+        } catch(e){ /* silencieux */ }
+
         return u.toString();
       }
 
       function buildSupportUrl(slug, phone){
-        const text = [
-          "Bonjour JB,",
-          "j’ai besoin d’aide pour MON COMMERCE by DIGIY.",
-          slug ? `Slug : ${slug}` : "",
-          phone ? `Téléphone : +${phone}` : ""
-        ].filter(Boolean).join(" ");
+        const text = ["Bonjour JB,", "j'ai besoin d'aide pour MON COMMERCE by DIGIY.",
+          slug ? `Slug : ${slug}` : "", phone ? `Téléphone : +${phone}` : ""].filter(Boolean).join(" ");
         return `https://wa.me/${SUPPORT_PHONE}?text=${encodeURIComponent(text)}`;
       }
 
       function setStatus(kind, title, sub){
-        const box = $("statusBox");
-        const dot = $("dotStatus");
+        const box = $("statusBox"), dot = $("dotStatus");
         box.className = `statusLine ${kind || ""}`.trim();
         dot.className = `dot ${kind === "ok" ? "ok" : kind === "bad" ? "bad" : ""}`.trim();
         $("pillStatus").textContent = kind === "ok" ? "Accès OK" : kind === "bad" ? "Bloqué" : "Contrôle";
@@ -948,20 +521,19 @@
       }
 
       function wireNav(){
-        const q = { slug: state.slug || "", phone: state.phone || "" };
-        $("btnBackCaisse").href = buildUrl(digiyLocal("caisse.html"), q);
-        $("btnBackHall").href = buildUrl(digiyLocal("index.html"), q);
-        $("btnGoHall2").href = buildUrl(digiyLocal("index.html"), q);
-        $("btnGoCaisse2").href = buildUrl(digiyLocal("caisse.html"), q);
-        $("btnNavHall").href = buildUrl(digiyLocal("index.html"), q);
-        $("btnNavCaisse").href = buildUrl(digiyLocal("caisse.html"), q);
-        $("btnAbos").href = buildUrl(ABOS_URL, {
-          module: MODULE,
-          base_module: MODULE,
-          slug: state.slug || "",
-          phone: state.phone || ""
-        });
-        $("btnSupport").href = buildSupportUrl(state.slug, state.phone);
+        try {
+          const q = { slug: state.slug || "", phone: state.phone || "" };
+          $("btnBackCaisse").href = buildUrl(digiyLocal("caisse.html"), q);
+          $("btnBackHall").href   = buildUrl(digiyLocal("index.html"), q);
+          $("btnGoHall2").href    = buildUrl(digiyLocal("index.html"), q);
+          $("btnGoCaisse2").href  = buildUrl(digiyLocal("caisse.html"), q);
+          $("btnNavHall").href    = buildUrl(digiyLocal("index.html"), q);
+          $("btnNavCaisse").href  = buildUrl(digiyLocal("caisse.html"), q);
+          $("btnAbos").href = buildUrl(ABOS_URL, { module: MODULE, base_module: MODULE, slug: state.slug || "", phone: state.phone || "" });
+          $("btnSupport").href = buildSupportUrl(state.slug, state.phone);
+        } catch(e) {
+          log("wireNav erreur silencieuse", { message: e.message || String(e) });
+        }
       }
 
       function paintMeta(){
@@ -973,58 +545,33 @@
       }
 
       function activateTab(name){
-        document.querySelectorAll(".tab").forEach(el => {
-          el.classList.toggle("active", el.dataset.tab === name);
-        });
+        document.querySelectorAll(".tab").forEach(el => el.classList.toggle("active", el.dataset.tab === name));
         document.querySelectorAll(".view").forEach(el => el.classList.remove("active"));
         $(`view-${name}`).classList.add("active");
       }
 
       async function rpcFirstSuccess(name, payloads){
         let lastError = null;
-
         for(const payload of payloads){
           try{
             log(`RPC ${name} tentative`, payload);
             const { data, error } = await sb.rpc(name, payload);
-            if(error){
-              lastError = error;
-              log(`RPC ${name} erreur`, {
-                message: error.message,
-                details: error.details,
-                hint: error.hint
-              });
-              continue;
-            }
+            if(error){ lastError = error; log(`RPC ${name} erreur`, { message: error.message, details: error.details, hint: error.hint }); continue; }
             log(`RPC ${name} OK`, data);
             return data;
-          }catch(err){
-            lastError = err;
-            log(`RPC ${name} exception`, { message: err?.message || String(err) });
-          }
+          }catch(err){ lastError = err; log(`RPC ${name} exception`, { message: err?.message || String(err) }); }
         }
-
         throw lastError || new Error(`RPC ${name} échouée`);
       }
 
       async function resolvePhoneFromSlug(slug){
-        const { data, error } = await sb
-          .from("digiy_subscriptions_public")
-          .select("phone,slug")
-          .eq("slug", slug)
-          .limit(1)
-          .maybeSingle();
-
+        const { data, error } = await sb.from("digiy_subscriptions_public").select("phone,slug").eq("slug", slug).limit(1).maybeSingle();
         if(error) throw error;
         return normPhone(data?.phone || "");
       }
 
       async function getAccess(phone){
-        const res = await rpcFirstSuccess("digiy_has_access", [
-          { p_phone: phone, p_module: MODULE },
-          { phone, module: MODULE }
-        ]);
-
+        const res = await rpcFirstSuccess("digiy_has_access", [{ p_phone: phone, p_module: MODULE }, { phone, module: MODULE }]);
         if(typeof res === "boolean") return res;
         if(res && typeof res.ok === "boolean") return res.ok;
         if(res && typeof res.has_access === "boolean") return res.has_access;
@@ -1033,30 +580,13 @@
       }
 
       async function getSubscription(phone){
-        try{
-          const data = await rpcFirstSuccess("digiy_get_subscription_status", [
-            { p_phone: phone, p_module: MODULE },
-            { phone, module: MODULE }
-          ]);
-          return data || null;
-        }catch(err){
-          log("digiy_get_subscription_status indisponible", { message: err?.message || String(err) });
-          return null;
-        }
+        try{ const data = await rpcFirstSuccess("digiy_get_subscription_status", [{ p_phone: phone, p_module: MODULE }, { phone, module: MODULE }]); return data || null; }
+        catch(err){ log("digiy_get_subscription_status indisponible", { message: err?.message || String(err) }); return null; }
       }
 
       async function getStoreContext(slug){
-        try{
-          const data = await rpcFirstSuccess("pos_get_store_context_by_slug", [
-            { p_slug: slug },
-            { slug }
-          ]);
-          if(Array.isArray(data)) return data[0] || null;
-          return data || null;
-        }catch(err){
-          log("pos_get_store_context_by_slug indisponible", { message: err?.message || String(err) });
-          return null;
-        }
+        try{ const data = await rpcFirstSuccess("pos_get_store_context_by_slug", [{ p_slug: slug }, { slug }]); if(Array.isArray(data)) return data[0] || null; return data || null; }
+        catch(err){ log("pos_get_store_context_by_slug indisponible", { message: err?.message || String(err) }); return null; }
       }
 
       function normalizeContext(ctx){
@@ -1079,23 +609,15 @@
           () => sb.from("caisse_settings").select("*").eq("slug", state.slug).limit(1).maybeSingle(),
           () => sb.from("caisse_settings").select("*").eq("owner_id", state.phone).limit(1).maybeSingle()
         ];
-
         for(const run of tries){
-          try{
-            const { data, error } = await run();
-            if(!error && data) return data;
-            if(error) log("Lecture caisse_settings erreur", error);
-          }catch(err){
-            log("Lecture caisse_settings exception", { message: err?.message || String(err) });
-          }
+          try{ const { data, error } = await run(); if(!error && data) return data; if(error) log("Lecture caisse_settings erreur", error); }
+          catch(err){ log("Lecture caisse_settings exception", { message: err?.message || String(err) }); }
         }
         return null;
       }
 
       function mergeShopData(row, ctx){
-        const r = row || {};
-        const c = normalizeContext(ctx);
-
+        const r = row || {}, c = normalizeContext(ctx);
         return {
           nom_boutique: r.nom_boutique || c.display_name || "MON COMMERCE",
           city: r.city || c.city || "",
@@ -1112,8 +634,7 @@
 
       async function saveShopSettings(){
         const row = {
-          owner_id: state.phone,
-          slug: state.slug || null,
+          owner_id: state.phone, slug: state.slug || null,
           nom_boutique: $("shop_name").value.trim() || "MON COMMERCE",
           city: $("shop_city").value.trim() || null,
           telephone: normPhone($("shop_phone").value),
@@ -1126,32 +647,16 @@
           tva_mode: $("tva_mode").value || "excl",
           updated_at: new Date().toISOString()
         };
-
         log("Sauvegarde caisse_settings", row);
-
         let saved = false;
-        const tries = [
+        for(const run of [
           () => sb.from("caisse_settings").upsert(row, { onConflict: "slug" }),
           () => sb.from("caisse_settings").upsert(row, { onConflict: "owner_id" })
-        ];
-
-        for(const run of tries){
-          try{
-            const { error } = await run();
-            if(!error){
-              saved = true;
-              break;
-            }
-            log("Upsert caisse_settings erreur", error);
-          }catch(err){
-            log("Upsert caisse_settings exception", { message: err?.message || String(err) });
-          }
+        ]){
+          try{ const { error } = await run(); if(!error){ saved = true; break; } log("Upsert caisse_settings erreur", error); }
+          catch(err){ log("Upsert caisse_settings exception", { message: err?.message || String(err) }); }
         }
-
-        if(!saved){
-          throw new Error("Impossible d’enregistrer la boutique");
-        }
-
+        if(!saved) throw new Error("Impossible d'enregistrer la boutique");
         state.settingsRow = await loadShopSettings();
         fillShopForm(state.settingsRow, state.storeContext);
         state.storeName = $("shop_name").value.trim() || state.storeName;
@@ -1177,23 +682,11 @@
           () => sb.from("caisse_products").select("*").eq("slug", state.slug).order("created_at", { ascending: false }),
           () => sb.from("caisse_products").select("*").eq("owner_id", state.phone).order("created_at", { ascending: false })
         ];
-
         for(const run of tries){
-          try{
-            const { data, error } = await run();
-            if(!error && Array.isArray(data)){
-              state.products = data;
-              renderProducts();
-              return;
-            }
-            if(error) log("Lecture caisse_products erreur", error);
-          }catch(err){
-            log("Lecture caisse_products exception", { message: err?.message || String(err) });
-          }
+          try{ const { data, error } = await run(); if(!error && Array.isArray(data)){ state.products = data; renderProducts(); return; } if(error) log("Lecture caisse_products erreur", error); }
+          catch(err){ log("Lecture caisse_products exception", { message: err?.message || String(err) }); }
         }
-
-        state.products = [];
-        renderProducts();
+        state.products = []; renderProducts();
       }
 
       function productTag(stock, isActive){
@@ -1207,19 +700,11 @@
       function renderProducts(){
         const q = ($("searchProd").value || "").trim().toLowerCase();
         const rows = state.products.filter(p => {
-          const hay = [
-            p.nom || "",
-            p.categorie || ""
-          ].join(" ").toLowerCase();
+          const hay = [p.nom || "", p.categorie || ""].join(" ").toLowerCase();
           return !q || hay.includes(q);
         });
-
         const box = $("productsList");
-        if(!rows.length){
-          box.innerHTML = `<div class="empty">Aucun produit pour le moment.</div>`;
-          return;
-        }
-
+        if(!rows.length){ box.innerHTML = `<div class="empty">Aucun produit pour le moment.</div>`; return; }
         box.innerHTML = rows.map(p => `
           <div class="prodCard">
             <div>
@@ -1238,25 +723,15 @@
                 ${p.is_active === false ? "♻️ Réactiver" : "🗑 Désactiver"}
               </button>
             </div>
-          </div>
-        `).join("");
+          </div>`).join("");
       }
 
       function escapeHtml(v){
-        return String(v ?? "")
-          .replaceAll("&","&amp;")
-          .replaceAll("<","&lt;")
-          .replaceAll(">","&gt;")
-          .replaceAll('"',"&quot;")
-          .replaceAll("'","&#039;");
+        return String(v ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
       }
 
       function resetProductForm(){
-        $("prod_id").value = "";
-        $("prod_name").value = "";
-        $("prod_cat").value = "";
-        $("prod_price").value = "";
-        $("prod_stock").value = "";
+        $("prod_id").value = $("prod_name").value = $("prod_cat").value = $("prod_price").value = $("prod_stock").value = "";
         $("btnSaveProd").textContent = "➕ Enregistrer le produit";
       }
 
@@ -1274,90 +749,44 @@
       async function saveProduct(){
         const id = $("prod_id").value.trim();
         const row = {
-          owner_id: state.phone,
-          slug: state.slug || null,
+          owner_id: state.phone, slug: state.slug || null,
           nom: $("prod_name").value.trim(),
           categorie: $("prod_cat").value.trim() || null,
           prix: Number($("prod_price").value || 0),
           stock: Number($("prod_stock").value || 0),
           is_active: true
         };
-
         if(!row.nom) throw new Error("Nom produit requis");
         if(!Number.isFinite(row.prix) || row.prix < 0) throw new Error("Prix produit invalide");
-
         log("Sauvegarde produit", row);
 
         if(id){
-          const tries = [
-            () => sb.from("caisse_products").update({
-              nom: row.nom,
-              categorie: row.categorie,
-              prix: row.prix,
-              stock: row.stock,
-              is_active: true,
-              updated_at: new Date().toISOString()
-            }).eq("id", id).eq("owner_id", state.phone),
-            () => sb.from("caisse_products").update({
-              nom: row.nom,
-              categorie: row.categorie,
-              prix: row.prix,
-              stock: row.stock,
-              is_active: true,
-              updated_at: new Date().toISOString()
-            }).eq("id", id).eq("slug", state.slug)
-          ];
-
           let ok = false;
-          for(const run of tries){
-            try{
-              const { error } = await run();
-              if(!error){ ok = true; break; }
-              log("Update produit erreur", error);
-            }catch(err){
-              log("Update produit exception", { message: err?.message || String(err) });
-            }
+          for(const run of [
+            () => sb.from("caisse_products").update({ nom: row.nom, categorie: row.categorie, prix: row.prix, stock: row.stock, is_active: true, updated_at: new Date().toISOString() }).eq("id", id).eq("owner_id", state.phone),
+            () => sb.from("caisse_products").update({ nom: row.nom, categorie: row.categorie, prix: row.prix, stock: row.stock, is_active: true, updated_at: new Date().toISOString() }).eq("id", id).eq("slug", state.slug)
+          ]){
+            try{ const { error } = await run(); if(!error){ ok = true; break; } log("Update produit erreur", error); }
+            catch(err){ log("Update produit exception", { message: err?.message || String(err) }); }
           }
           if(!ok) throw new Error("Impossible de mettre à jour le produit");
         } else {
-          const { error } = await sb
-            .from("caisse_products")
-            .insert({
-              ...row,
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString()
-            });
-
+          const { error } = await sb.from("caisse_products").insert({ ...row, created_at: new Date().toISOString(), updated_at: new Date().toISOString() });
           if(error) throw error;
         }
-
         resetProductForm();
         await loadProducts();
       }
 
       async function setProductActive(id, active){
-        const tries = [
-          () => sb.from("caisse_products").update({
-            is_active: !!active,
-            updated_at: new Date().toISOString()
-          }).eq("id", id).eq("owner_id", state.phone),
-          () => sb.from("caisse_products").update({
-            is_active: !!active,
-            updated_at: new Date().toISOString()
-          }).eq("id", id).eq("slug", state.slug)
-        ];
-
         let ok = false;
-        for(const run of tries){
-          try{
-            const { error } = await run();
-            if(!error){ ok = true; break; }
-            log("Update statut produit erreur", error);
-          }catch(err){
-            log("Update statut produit exception", { message: err?.message || String(err) });
-          }
+        for(const run of [
+          () => sb.from("caisse_products").update({ is_active: !!active, updated_at: new Date().toISOString() }).eq("id", id).eq("owner_id", state.phone),
+          () => sb.from("caisse_products").update({ is_active: !!active, updated_at: new Date().toISOString() }).eq("id", id).eq("slug", state.slug)
+        ]){
+          try{ const { error } = await run(); if(!error){ ok = true; break; } log("Update statut produit erreur", error); }
+          catch(err){ log("Update statut produit exception", { message: err?.message || String(err) }); }
         }
-
         if(!ok) throw new Error("Impossible de modifier le statut du produit");
         await loadProducts();
       }
@@ -1365,35 +794,27 @@
       async function boot(){
         if(state.loading) return;
         state.loading = true;
-
+        revealPage(); // on révèle immédiatement — guard a déjà fait son check
         try{
           state.slug = getResolvedSlug();
           state.phone = getResolvedPhone();
           paintMeta();
 
           if(!state.slug){
-            setStatus("bad", "Slug manquant", "Ouvre cette page avec ?slug=pos-2217... ou repasse par le hall.");
-            log("Slug manquant");
-            return;
+            /* ━━━ statuts : langage humain, pas jargon ━━━ */
+            setStatus("bad", "Identifiant manquant", "Repasse par ton lien pro ou ton QR DIGIY pour accéder à ton espace.");
+            log("Slug manquant"); return;
           }
 
           localStorage.setItem("digiy_pos_last_slug", state.slug);
           sessionStorage.setItem("digiy_pos_last_slug", state.slug);
 
-          if(!state.phone){
-            state.phone = await resolvePhoneFromSlug(state.slug);
-            paintMeta();
-          }
-
-          if(state.phone){
-            localStorage.setItem("digiy_pos_last_phone", state.phone);
-            sessionStorage.setItem("digiy_pos_last_phone", state.phone);
-          }
+          if(!state.phone){ state.phone = await resolvePhoneFromSlug(state.slug); paintMeta(); }
+          if(state.phone){ localStorage.setItem("digiy_pos_last_phone", state.phone); sessionStorage.setItem("digiy_pos_last_phone", state.phone); }
 
           if(!state.phone){
-            setStatus("bad", "Téléphone introuvable", "Le slug n’a pas remonté le téléphone boutique.");
-            log("Téléphone introuvable");
-            return;
+            setStatus("bad", "Boutique introuvable", "Le lien n'a pas permis d'identifier ta boutique. Contacte le support.");
+            log("Téléphone introuvable"); return;
           }
 
           state.access = await getAccess(state.phone);
@@ -1401,115 +822,66 @@
           state.plan = sub?.plan || sub?.plan_code || (state.access ? "actif" : "standard");
 
           if(!state.access){
-            setStatus("bad", "Accès refusé", "Le module POS n’est pas actif pour cette boutique.");
-            log("Accès refusé");
-            return;
+            setStatus("bad", "Accès non actif", "Ton abonnement MON COMMERCE n'est pas encore actif pour cette boutique.");
+            log("Accès refusé"); return;
           }
 
           state.storeContext = await getStoreContext(state.slug);
           state.settingsRow = await loadShopSettings();
           fillShopForm(state.settingsRow, state.storeContext);
 
-          state.storeName =
-            $("shop_name").value.trim() ||
-            state.storeContext?.display_name ||
-            state.storeContext?.store_name ||
-            "MON COMMERCE";
-
+          state.storeName = $("shop_name").value.trim() || state.storeContext?.display_name || state.storeContext?.store_name || "MON COMMERCE";
           paintMeta();
           await loadProducts();
 
-          setStatus("ok", "Admin prêt", "Tu peux maintenant poser la boutique, la TVA et les produits.");
-          log("Admin prêt", {
-            slug: state.slug,
-            phone: state.phone,
-            plan: state.plan
-          });
-        } catch(err){
-          setStatus("bad", "Blocage technique", err?.message || "Erreur admin POS");
+          setStatus("ok", "Ton espace est prêt", "Tu peux poser ta boutique, gérer la TVA et tes produits.");
+          log("Admin prêt", { slug: state.slug, phone: state.phone, plan: state.plan });
+        }catch(err){
+          setStatus("bad", "Problème technique", err?.message || "Une erreur s'est produite. Réessaie ou contacte le support.");
           log("BOOT ERROR", { message: err?.message || String(err) });
-        } finally {
+        }finally{
           state.loading = false;
+          revealPage(); // filet final — quoi qu'il arrive
         }
       }
 
-      document.querySelectorAll(".tab").forEach(btn => {
-        btn.addEventListener("click", () => activateTab(btn.dataset.tab));
-      });
+      document.querySelectorAll(".tab").forEach(btn => btn.addEventListener("click", () => activateTab(btn.dataset.tab)));
 
       $("btnReloadShop").addEventListener("click", async () => {
-        try{
-          $("btnReloadShop").disabled = true;
-          state.storeContext = await getStoreContext(state.slug);
-          state.settingsRow = await loadShopSettings();
-          fillShopForm(state.settingsRow, state.storeContext);
-          log("Boutique rechargée");
-        }catch(err){
-          log("Erreur reload boutique", { message: err?.message || String(err) });
-          alert(err?.message || "Erreur rechargement boutique");
-        }finally{
-          $("btnReloadShop").disabled = false;
-        }
+        try{ $("btnReloadShop").disabled = true; state.storeContext = await getStoreContext(state.slug); state.settingsRow = await loadShopSettings(); fillShopForm(state.settingsRow, state.storeContext); log("Boutique rechargée"); }
+        catch(err){ log("Erreur reload boutique", { message: err?.message || String(err) }); alert(err?.message || "Erreur rechargement boutique"); }
+        finally{ $("btnReloadShop").disabled = false; }
       });
 
       $("btnSaveShop").addEventListener("click", async () => {
-        try{
-          $("btnSaveShop").disabled = true;
-          await saveShopSettings();
-          log("Boutique enregistrée");
-        } catch(err){
-          log("Erreur save boutique", { message: err?.message || String(err) });
-          alert(err?.message || "Erreur sauvegarde boutique");
-        } finally {
-          $("btnSaveShop").disabled = false;
-        }
+        try{ $("btnSaveShop").disabled = true; await saveShopSettings(); log("Boutique enregistrée"); }
+        catch(err){ log("Erreur save boutique", { message: err?.message || String(err) }); alert(err?.message || "Erreur sauvegarde boutique"); }
+        finally{ $("btnSaveShop").disabled = false; }
       });
 
       $("btnSaveProd").addEventListener("click", async () => {
-        try{
-          $("btnSaveProd").disabled = true;
-          await saveProduct();
-          log("Produit enregistré");
-        } catch(err){
-          log("Erreur save produit", { message: err?.message || String(err) });
-          alert(err?.message || "Erreur sauvegarde produit");
-        } finally {
-          $("btnSaveProd").disabled = false;
-        }
+        try{ $("btnSaveProd").disabled = true; await saveProduct(); log("Produit enregistré"); }
+        catch(err){ log("Erreur save produit", { message: err?.message || String(err) }); alert(err?.message || "Erreur sauvegarde produit"); }
+        finally{ $("btnSaveProd").disabled = false; }
       });
 
       $("btnResetProd").addEventListener("click", resetProductForm);
 
       $("btnReloadProducts").addEventListener("click", async () => {
-        try{
-          $("btnReloadProducts").disabled = true;
-          await loadProducts();
-          log("Produits rechargés");
-        } catch(err){
-          log("Erreur reload produits", { message: err?.message || String(err) });
-          alert(err?.message || "Erreur rechargement produits");
-        } finally {
-          $("btnReloadProducts").disabled = false;
-        }
+        try{ $("btnReloadProducts").disabled = true; await loadProducts(); log("Produits rechargés"); }
+        catch(err){ log("Erreur reload produits", { message: err?.message || String(err) }); alert(err?.message || "Erreur rechargement produits"); }
+        finally{ $("btnReloadProducts").disabled = false; }
       });
 
       $("searchProd").addEventListener("input", renderProducts);
 
       window.POS_ADMIN = {
-        editProduct(id){
-          const p = state.products.find(x => String(x.id) === String(id));
-          if(p) fillProductForm(p);
-        },
+        editProduct(id){ const p = state.products.find(x => String(x.id) === String(id)); if(p) fillProductForm(p); },
         async toggleProduct(id, activate){
           const label = activate ? "réactiver" : "désactiver";
           if(!confirm(`Confirmer : ${label} ce produit ?`)) return;
-          try{
-            await setProductActive(id, activate);
-            log(activate ? "Produit réactivé" : "Produit désactivé", { id });
-          } catch(err){
-            log("Erreur changement statut produit", { message: err?.message || String(err) });
-            alert(err?.message || "Erreur changement statut produit");
-          }
+          try{ await setProductActive(id, activate); log(activate ? "Produit réactivé" : "Produit désactivé", { id }); }
+          catch(err){ log("Erreur changement statut produit", { message: err?.message || String(err) }); alert(err?.message || "Erreur changement statut produit"); }
         }
       };
 
