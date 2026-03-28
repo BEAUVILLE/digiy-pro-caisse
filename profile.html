@@ -4,32 +4,37 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <meta name="theme-color" content="#020617"/>
-  <title>DIGIY CAISSE PRO — Profil public</title>
+  <title>Ma vitrine publique · MON COMMERCE by DIGIY</title>
+  <meta name="description" content="MON COMMERCE by DIGIY — ma vitrine publique boutique." />
 
-<script>
-  window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
-  window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
-  window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
-  window.DIGIY_MODULE = "POS";
-  window.DIGIY_LOGIN_URL = "./pin.html";
-  document.documentElement.style.visibility = "hidden";
-</script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./guard.js"></script>
-<script src="./claw-tools-pos.js"></script>
+  <script>
+    window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+    window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
+    window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
+    window.DIGIY_MODULE = "POS";
+    window.DIGIY_LOGIN_URL = "./pin.html";
+    document.documentElement.style.visibility = "hidden";
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./guard.js"></script>
+  <script src="./claw-tools-pos.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
 
   <style>
     :root{
-      --bg:#020617; --card:#0B1120; --line:rgba(148,163,184,.22);
-      --ink:#F9FAFB; --muted:#CBD5E1;
-      --gold:#facc15; --green:#22c55e; --orange:#f97316; --bad:#fb7185;
-      --shadow:0 18px 55px rgba(0,0,0,.45);
-      --r:18px;
+      --bg:#020617;--card:#0B1120;--line:rgba(148,163,184,.22);
+      --ink:#F9FAFB;--muted:#CBD5E1;
+      --gold:#facc15;--green:#22c55e;--orange:#f97316;--bad:#fb7185;
+      --shadow:0 18px 55px rgba(0,0,0,.45);--r:18px;
+      --fontA:"Outfit",system-ui,-apple-system,sans-serif;
     }
     *{box-sizing:border-box}
     body{
-      margin:0; min-height:100vh; color:var(--ink);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      margin:0;min-height:100vh;color:var(--ink);
+      font-family:var(--fontA);
       background:
         radial-gradient(circle at top, rgba(250,204,21,.10), transparent 55%),
         radial-gradient(circle at 18% 10%, rgba(34,197,94,.10), transparent 55%),
@@ -37,107 +42,41 @@
       padding:16px;
     }
     #guard_status{
-      position:fixed; top:14px; right:14px; z-index:9999;
-      padding:10px 12px; border-radius:14px;
+      position:fixed;top:14px;right:14px;z-index:9999;
+      padding:10px 12px;border-radius:14px;
       border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.78); color:#fff;
-      font-weight:950; font-size:13px;
-      backdrop-filter: blur(10px);
+      background:rgba(0,0,0,.78);color:#fff;
+      font-weight:950;font-size:13px;backdrop-filter:blur(10px);
     }
+    /* ━━━ ANTI-ÉCRAN NOIR
+       Le guard + la classe access-ok masquent la page.
+       setTimeout 2s = filet absolu.
+       showPage() appelé au début et dans le catch de init(). ━━━ */
     .app{display:none;}
     html.access-ok .app{display:block;}
 
     .wrap{max-width:980px;margin:0 auto;padding:10px 0 44px;}
-    .card{
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(11,17,32,.55);
-      border-radius:22px;
-      box-shadow:var(--shadow);
-      padding:16px;
-    }
-    h1{
-      margin:0 0 6px;
-      font-size:26px;
-      font-weight:1000;
-      background:linear-gradient(135deg,var(--gold),var(--green));
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-    }
-    .sub{
-      margin:0 0 12px;
-      color:var(--muted);
-      font-weight:850;
-      line-height:1.5;
-    }
+    .card{border:1px solid rgba(255,255,255,.10);background:rgba(11,17,32,.55);border-radius:22px;box-shadow:var(--shadow);padding:16px;}
+
+    h1{margin:0 0 6px;font-size:26px;font-weight:1000;background:linear-gradient(135deg,var(--gold),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .sub{margin:0 0 12px;color:var(--muted);font-weight:850;line-height:1.5;}
     .hr{height:1px;background:rgba(255,255,255,.10);margin:14px 0;}
-    label{
-      display:block;
-      font-size:12px;
-      color:rgba(203,213,225,.95);
-      font-weight:950;
-      margin:10px 0 6px;
-    }
-    input, textarea, select{
-      width:100%;
-      border-radius:14px;
-      border:1px solid rgba(203,213,225,0.20);
-      background:rgba(2,6,23,.55);
-      color:var(--ink);
-      padding:12px 12px;
-      outline:none;
-      font-weight:900;
-      font-size:14px;
-    }
-    input:focus, textarea:focus, select:focus{
-      border-color:rgba(250,204,21,.55);
-      box-shadow:0 0 0 3px rgba(250,204,21,.12);
-    }
-    textarea{
-      min-height:92px;
-      resize:vertical;
-      font-weight:800;
-      line-height:1.45;
-    }
+
+    label{display:block;font-size:12px;color:rgba(203,213,225,.95);font-weight:950;margin:10px 0 6px;}
+    input,textarea,select{width:100%;border-radius:14px;border:1px solid rgba(203,213,225,0.20);background:rgba(2,6,23,.55);color:var(--ink);padding:12px 12px;outline:none;font-weight:900;font-size:14px;font-family:var(--fontA);}
+    input:focus,textarea:focus,select:focus{border-color:rgba(250,204,21,.55);box-shadow:0 0 0 3px rgba(250,204,21,.12);}
+    textarea{min-height:92px;resize:vertical;font-weight:800;line-height:1.45;}
+
     .row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
     @media(max-width:760px){.row{grid-template-columns:1fr}}
 
     .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
-    .btn{
-      flex:1; min-width:220px;
-      border-radius:999px;
-      padding:13px 14px;
-      font-weight:1000;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.06);
-      color:var(--ink);
-      cursor:pointer;
-      text-decoration:none;
-      display:inline-flex;align-items:center;justify-content:center;gap:8px;
-      transition:transform .15s ease, border-color .15s ease;
-    }
-    .btn.primary{
-      border:none;
-      background:linear-gradient(135deg,var(--gold),var(--orange));
-      color:#020617;
-      box-shadow:0 10px 24px rgba(250,204,21,0.25);
-    }
-    .btn.green{
-      border:none;
-      background:linear-gradient(135deg, rgba(34,197,94,.95), rgba(34,197,94,.70));
-      color:#02150b;
-    }
-    .btn:hover{transform:translateY(-1px); border-color:rgba(250,204,21,.35)}
-    .note{
-      margin-top:12px;
-      border-radius:16px;
-      border:1px solid rgba(203,213,225,0.14);
-      background:rgba(2,6,23,.45);
-      padding:12px;
-      font-size:13px;
-      font-weight:900;
-      color:var(--muted);
-      line-height:1.5;
-    }
+    .btn{flex:1;min-width:220px;border-radius:999px;padding:13px 14px;font-weight:1000;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:var(--ink);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .15s ease, border-color .15s ease;font-family:var(--fontA);}
+    .btn.primary{border:none;background:linear-gradient(135deg,var(--gold),var(--orange));color:#020617;box-shadow:0 10px 24px rgba(250,204,21,0.25);}
+    .btn.green{border:none;background:linear-gradient(135deg, rgba(34,197,94,.95), rgba(34,197,94,.70));color:#02150b;}
+    .btn:hover{transform:translateY(-1px);border-color:rgba(250,204,21,.35)}
+
+    .note{margin-top:12px;border-radius:16px;border:1px solid rgba(203,213,225,0.14);background:rgba(2,6,23,.45);padding:12px;font-size:13px;font-weight:900;color:var(--muted);line-height:1.5;}
     .ok{color:#bbf7d0;font-weight:1000}
     .bad{color:#fecaca;font-weight:1000}
     .hint{margin-top:6px;font-size:12px;color:rgba(203,213,225,.70);font-weight:850}
@@ -150,9 +89,10 @@
   <div class="app">
     <div class="wrap">
       <div class="card">
-        <h1>🧾 Profil public — DIGIY CAISSE PRO</h1>
+        <!-- ━━━ AVANT : "🧾 Profil public — DIGIY CAISSE PRO" → banni ━━━ -->
+        <h1>🏪 Ma vitrine publique</h1>
         <p class="sub">
-          Ici tu règles ta vitrine publique proprement.
+          Ici tu règles ta vitrine telle qu'elle est vue par tes clients.
           <span class="ok">Publié = visible</span> côté public.
         </p>
 
@@ -160,22 +100,22 @@
 
         <div class="row">
           <div>
-            <label>Nom affiché (display_name)</label>
+            <label>Nom affiché</label>
             <input id="display_name" placeholder="Ex: Boutique Ndiaye" />
           </div>
           <div>
-            <label>Catégorie (category)</label>
+            <label>Catégorie</label>
             <input id="category" placeholder="Ex: Alimentation, Boutique, Salon, Pharmacie…" />
           </div>
         </div>
 
         <div class="row">
           <div>
-            <label>Ville (city)</label>
+            <label>Ville</label>
             <input id="city" placeholder="Ex: Dakar / Saly / Thiès…" />
           </div>
           <div>
-            <label>Adresse (address)</label>
+            <label>Adresse</label>
             <input id="address" placeholder="Ex: Rue X, quartier Y…" />
           </div>
         </div>
@@ -186,18 +126,18 @@
             <input id="whatsapp" placeholder="Ex: 22177..." />
           </div>
           <div>
-            <label>Photo vitrine (photo_url)</label>
-            <input id="photo_url" placeholder="URL image (https://...jpg/png)" />
+            <label>Photo vitrine (URL)</label>
+            <input id="photo_url" placeholder="https://...jpg/png" />
           </div>
         </div>
 
-        <label>Bio (courte)</label>
+        <label>Description courte</label>
         <textarea id="bio" placeholder="Ex: Dépôt Wave, alimentation, transfert, produits maison…"></textarea>
 
         <div class="row">
           <div>
-            <label>Tags (JSON ou liste simple)</label>
-            <input id="tags" placeholder='Ex: wave,orange-money,alimentation ou ["wave","alimentation"]' />
+            <label>Tags (séparés par des virgules)</label>
+            <input id="tags" placeholder='Ex: wave,orange-money,alimentation' />
           </div>
           <div>
             <label>Priorité (0–100)</label>
@@ -207,18 +147,20 @@
 
         <div class="row">
           <div>
-            <label>Badge (badge)</label>
+            <label>Badge</label>
             <input id="badge" placeholder="Ex: ✅ Commerce équipé" />
           </div>
           <div>
-            <label>Hub badge (hub_badge)</label>
-            <input id="hub_badge" placeholder="Ex: 💳 CAISSE PRO" />
+            <!-- ━━━ AVANT : "Hub badge" → jargon interne banni ━━━ -->
+            <label>Étiquette commerce</label>
+            <!-- ━━━ AVANT : placeholder "💳 CAISSE PRO" → banni ━━━ -->
+            <input id="hub_badge" placeholder="Ex: 💳 MON COMMERCE" />
           </div>
         </div>
 
         <div class="row">
           <div>
-            <label>Price label (price_label)</label>
+            <label>Message tarif</label>
             <input id="price_label" placeholder="Ex: 0% commission • paiement direct" />
           </div>
           <div>
@@ -232,14 +174,16 @@
 
         <div class="row">
           <div>
-            <label>Slug (interne)</label>
+            <!-- ━━━ AVANT : "Slug (interne)" → banni ━━━ -->
+            <label>Identifiant boutique</label>
             <input id="slug" placeholder="auto"/>
-            <div class="hint">Rail maître = slug. Si une fiche existe déjà, on garde le slug stable.</div>
+            <!-- ━━━ AVANT : "Rail maître = slug. Si une fiche..." → jargon banni ━━━ -->
+            <div class="hint">Ton identifiant unique. S'il existe déjà, il est conservé automatiquement.</div>
           </div>
           <div>
-            <label>URL fiche (profile_url)</label>
-            <input id="profile_url" placeholder="Optionnel : lien public direct si tu en as un" />
-            <div class="hint">Si vide, le bouton ouvrira la vitrine publique du module.</div>
+            <label>Lien vitrine (optionnel)</label>
+            <input id="profile_url" placeholder="Lien public direct si tu en as un" />
+            <div class="hint">Si vide, le bouton ouvrira ta vitrine publique.</div>
           </div>
         </div>
 
@@ -247,9 +191,10 @@
 
         <div class="actions">
           <button class="btn primary" id="btnSave" type="button">💾 Enregistrer</button>
-          <button class="btn green" id="btnReSlug" type="button">🧾 Régénérer le slug</button>
-          <button class="btn" id="btnOpenListing" type="button">👁️ Ouvrir la vitrine</button>
-          <button class="btn" id="btnBack" type="button">↩️ Retour dashboard pro</button>
+          <button class="btn green"   id="btnReSlug" type="button">🔄 Régénérer l'identifiant</button>
+          <button class="btn"         id="btnOpenListing" type="button">👁️ Voir ma vitrine</button>
+          <!-- ━━━ AVANT : "↩️ Retour dashboard pro" → banni ━━━ -->
+          <button class="btn"         id="btnBack" type="button">↩️ Mon espace de travail</button>
         </div>
 
         <div class="note" id="msg">Statut : —</div>
@@ -261,61 +206,92 @@
 (() => {
   "use strict";
 
-  const MODULE = "POS";
+  const MODULE       = "POS";
   const DASHBOARD_URL = "./dashboard-pro.html";
   const PUBLIC_INDEX_URL = "./index.html";
-  const PIN_URL = "./pin.html";
-  const PAY_URL = "https://commencer-a-payer.digiylyfe.com/";
+  const PIN_URL      = "./pin.html";
+  const PAY_URL      = "https://commencer-a-payer.digiylyfe.com/";
 
-  const gs = document.getElementById("guard_status");
+  const gs  = document.getElementById("guard_status");
   const msg = document.getElementById("msg");
-  const $ = (id) => document.getElementById(id);
+  const $   = (id) => document.getElementById(id);
 
-  let SESSION = null;
-  let EXISTING = null;
+  let SESSION     = null;
+  let EXISTING    = null;
   let ACTIVE_SLUG = "";
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     ANTI-ÉCRAN NOIR
+     1. setTimeout 2s → filet absolu
+     2. showPage() au début de init()
+     3. showPage() dans le catch de init()
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  function showPage() {
+    document.documentElement.style.visibility = "";
+  }
+  setTimeout(showPage, 2000); // filet absolu
 
   function setMsg(text, ok = true){
     msg.innerHTML = `Statut : <span class="${ok ? "ok" : "bad"}">${text}</span>`;
   }
 
   function slugify(str){
-    return String(str || "")
-      .toLowerCase()
+    return String(str || "").toLowerCase()
       .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "")
-      .trim() || ("commerce-" + Math.random().toString(16).slice(2, 8));
+      .replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").trim()
+      || ("commerce-" + Math.random().toString(16).slice(2, 8));
+  }
+
+  function normSlug(v){
+    return String(v || "").trim().toLowerCase()
+      .replace(/\s+/g,"-").replace(/[^a-z0-9-]/g,"")
+      .replace(/-+/g,"-").replace(/^-|-$/g,"");
   }
 
   function parseTags(raw){
     const s = String(raw || "").trim();
     if(!s) return null;
-
     if(s.startsWith("[") && s.endsWith("]")){
-      try{
-        const arr = JSON.parse(s);
-        if(Array.isArray(arr)){
-          return arr.map(x => String(x).trim()).filter(Boolean);
-        }
-      }catch(_){}
+      try{ const arr = JSON.parse(s); if(Array.isArray(arr)) return arr.map(x => String(x).trim()).filter(Boolean); }catch(_){}
     }
-
-    return s
-      .split(",")
-      .map(x => x.trim())
-      .filter(Boolean);
+    return s.split(",").map(x => x.trim()).filter(Boolean);
   }
 
   function getUrlSlug(){
-    const qs = new URLSearchParams(location.search);
-    return String(qs.get("slug") || "").trim();
+    return String(new URLSearchParams(location.search).get("slug") || "").trim();
   }
 
-  function withSlug(url, slug){
-    const u = new URL(url, location.href);
-    if(slug) u.searchParams.set("slug", slug);
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     buildSafeUrl — VERSION BLINDÉE
+     Remplace new URL(url, location.href) fragile.
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  function buildSafeUrl(base, params) {
+    const baseStr = (base == null ? "" : String(base)).trim();
+    if (!baseStr) return location.href;
+    let u;
+    try {
+      if (/^https?:\/\//i.test(baseStr)) {
+        u = new URL(baseStr);
+      } else {
+        const origin = location.protocol + "//" + location.host;
+        const full = baseStr.startsWith("/") ? origin + baseStr : origin + "/" + baseStr;
+        u = new URL(full);
+      }
+    } catch(e) {
+      console.warn("[DIGIY] buildSafeUrl KO:", baseStr, e.message);
+      return baseStr;
+    }
+    try {
+      Object.entries(params || {}).forEach(([k, v]) => {
+        if (v !== null && v !== undefined && String(v) !== "") u.searchParams.set(k, String(v));
+      });
+    } catch(e) { /* silencieux */ }
     return u.toString();
+  }
+
+  /* ━━━ withSlug : utilise buildSafeUrl ━━━ */
+  function withSlug(url, slug){
+    return buildSafeUrl(url, slug ? { slug } : {});
   }
 
   function getSb(){
@@ -324,97 +300,78 @@
 
   async function ensureGuardLoaded(){
     if(window.DIGIY_GUARD) return true;
-
     await new Promise((resolve, reject) => {
       const s = document.createElement("script");
       s.src = "./guard.js?v=commerce-profile-fallback";
-      s.onload = resolve;
-      s.onerror = reject;
+      s.onload = resolve; s.onerror = reject;
       document.head.appendChild(s);
     }).catch(() => null);
-
     return !!window.DIGIY_GUARD;
   }
 
   async function loadExisting(){
     const sb = getSb();
-    if(!sb) return setMsg("Supabase indisponible côté guard.", false);
+    if(!sb) return setMsg("Connexion indisponible.", false);
 
-    let data = null;
-    let error = null;
+    let data = null, error = null;
 
     if(ACTIVE_SLUG){
-      const res = await sb
-        .from("digiy_pos_public_profiles")
-        .select("*")
-        .eq("slug", ACTIVE_SLUG)
-        .maybeSingle();
-
-      data = res.data || null;
-      error = res.error || null;
+      const res = await sb.from("digiy_pos_public_profiles").select("*").eq("slug", ACTIVE_SLUG).maybeSingle();
+      data = res.data || null; error = res.error || null;
     } else if(SESSION?.owner_id){
-      const res = await sb
-        .from("digiy_pos_public_profiles")
-        .select("*")
-        .eq("owner_id", SESSION.owner_id)
-        .maybeSingle();
-
-      data = res.data || null;
-      error = res.error || null;
+      const res = await sb.from("digiy_pos_public_profiles").select("*").eq("owner_id", SESSION.owner_id).maybeSingle();
+      data = res.data || null; error = res.error || null;
     }
 
-    if(error){
-      console.warn(error);
-      setMsg("Erreur chargement fiche (voir console).", false);
-      return;
-    }
+    if(error){ console.warn(error); setMsg("Erreur chargement fiche (voir console).", false); return; }
 
     EXISTING = data || null;
 
     if(!data){
       $("slug").value = ACTIVE_SLUG || slugify($("display_name").value || "commerce");
-      setMsg("Aucune fiche trouvée — tu peux créer proprement.", true);
+      setMsg("Aucune fiche trouvée — tu peux créer ta vitrine.", true);
       return;
     }
 
     $("display_name").value = data.display_name || "";
-    $("category").value = data.category || "";
-    $("city").value = data.city || "";
-    $("address").value = data.address || "";
-    $("whatsapp").value = data.whatsapp || "";
-    $("photo_url").value = data.photo_url || "";
-    $("bio").value = data.bio || "";
-    $("tags").value = Array.isArray(data.tags) ? JSON.stringify(data.tags) : "";
-    $("profile_url").value = data.profile_url || "";
-    $("badge").value = data.badge || "";
-    $("hub_badge").value = data.hub_badge || "💳 CAISSE PRO";
-    $("price_label").value = data.price_label || "0% commission • paiement direct";
-    $("priority").value = Number(data.priority ?? 1);
+    $("category").value     = data.category     || "";
+    $("city").value         = data.city         || "";
+    $("address").value      = data.address      || "";
+    $("whatsapp").value     = data.whatsapp     || "";
+    $("photo_url").value    = data.photo_url    || "";
+    $("bio").value          = data.bio          || "";
+    $("tags").value         = Array.isArray(data.tags) ? JSON.stringify(data.tags) : "";
+    $("profile_url").value  = data.profile_url  || "";
+    $("badge").value        = data.badge        || "";
+    /* ━━━ AVANT : fallback "💳 CAISSE PRO" → banni ━━━ */
+    $("hub_badge").value    = data.hub_badge    || "💳 MON COMMERCE";
+    $("price_label").value  = data.price_label  || "0% commission • paiement direct";
+    $("priority").value     = Number(data.priority ?? 1);
     $("is_published").value = String(!!data.is_published);
-    $("slug").value = data.slug || ACTIVE_SLUG || slugify(data.display_name || "commerce");
+    $("slug").value         = data.slug || ACTIVE_SLUG || slugify(data.display_name || "commerce");
 
     ACTIVE_SLUG = data.slug || ACTIVE_SLUG || "";
-    setMsg("Fiche existante chargée ✅", true);
+    setMsg("Vitrine chargée ✅", true);
   }
 
   function buildPayload(){
     const display_name = $("display_name").value.trim();
-    const category = $("category").value.trim();
-    const city = $("city").value.trim();
-    const address = $("address").value.trim();
-    const whatsapp = $("whatsapp").value.trim().replace(/\s+/g, "");
-    const photo_url = $("photo_url").value.trim();
-    const bio = $("bio").value.trim();
-    const tags = parseTags($("tags").value);
-    const profile_url = $("profile_url").value.trim();
-    const badge = $("badge").value.trim();
-    const hub_badge = $("hub_badge").value.trim();
-    const price_label = $("price_label").value.trim();
-    const priority = Math.max(0, Math.min(100, parseInt($("priority").value, 10) || 1));
+    const category     = $("category").value.trim();
+    const city         = $("city").value.trim();
+    const address      = $("address").value.trim();
+    const whatsapp     = $("whatsapp").value.trim().replace(/\s+/g, "");
+    const photo_url    = $("photo_url").value.trim();
+    const bio          = $("bio").value.trim();
+    const tags         = parseTags($("tags").value);
+    const profile_url  = $("profile_url").value.trim();
+    const badge        = $("badge").value.trim();
+    const hub_badge    = $("hub_badge").value.trim();
+    const price_label  = $("price_label").value.trim();
+    const priority     = Math.max(0, Math.min(100, parseInt($("priority").value, 10) || 1));
     const is_published = ($("is_published").value === "true");
 
-    if(!display_name) throw new Error("Nom du commerce requis");
-    if(!whatsapp) throw new Error("WhatsApp requis (22177...)");
+    if(!display_name) throw new Error("Nom de la boutique requis");
+    if(!whatsapp)     throw new Error("WhatsApp requis (22177...)");
 
     let slug = String($("slug").value || "").trim();
     if(EXISTING?.slug) slug = EXISTING.slug;
@@ -424,58 +381,42 @@
     $("slug").value = slug;
 
     const payload = {
-      slug,
-      display_name,
-      category: category || null,
-      city: city || null,
-      address: address || null,
+      slug, display_name,
+      category:    category    || null,
+      city:        city        || null,
+      address:     address     || null,
       whatsapp,
-      photo_url: photo_url || null,
-      bio: bio || null,
-      tags: tags || null,
+      photo_url:   photo_url   || null,
+      bio:         bio         || null,
+      tags:        tags        || null,
       profile_url: profile_url || null,
-      is_published,
-      is_active: true,
-      is_verified: true,
+      is_published, is_active: true, is_verified: true,
       priority,
-      badge: badge || "✅ Commerce équipé",
-      hub_badge: hub_badge || "💳 CAISSE PRO",
+      badge:       badge       || "✅ Commerce équipé",
+      /* ━━━ AVANT : "💳 CAISSE PRO" → banni ━━━ */
+      hub_badge:   hub_badge   || "💳 MON COMMERCE",
       price_label: price_label || "0% commission • paiement direct"
     };
 
-    if(SESSION?.owner_id){
-      payload.owner_id = SESSION.owner_id;
-    }
-
+    if(SESSION?.owner_id) payload.owner_id = SESSION.owner_id;
     return payload;
   }
 
   async function saveProfile(){
     const sb = getSb();
-    if(!sb) return setMsg("Supabase non dispo via guard.", false);
+    if(!sb) return setMsg("Connexion non disponible.", false);
 
     try{
       const payload = buildPayload();
       setMsg("Enregistrement…", true);
 
-      let res = await sb
-        .from("digiy_pos_public_profiles")
-        .upsert(payload, { onConflict: "slug" })
-        .select("*")
-        .maybeSingle();
+      let res = await sb.from("digiy_pos_public_profiles").upsert(payload, { onConflict: "slug" }).select("*").maybeSingle();
 
       if(res?.error && SESSION?.owner_id){
-        res = await sb
-          .from("digiy_pos_public_profiles")
-          .upsert(payload, { onConflict: "owner_id" })
-          .select("*")
-          .maybeSingle();
+        res = await sb.from("digiy_pos_public_profiles").upsert(payload, { onConflict: "owner_id" }).select("*").maybeSingle();
       }
 
-      if(res?.error){
-        console.error(res.error);
-        return setMsg("Erreur : " + (res.error.message || res.error), false);
-      }
+      if(res?.error){ console.error(res.error); return setMsg("Erreur : " + (res.error.message || res.error), false); }
 
       EXISTING = res.data || payload;
       ACTIVE_SLUG = EXISTING.slug || ACTIVE_SLUG;
@@ -484,7 +425,7 @@
       if(ACTIVE_SLUG) nextUrl.searchParams.set("slug", ACTIVE_SLUG);
       history.replaceState({}, "", nextUrl.toString());
 
-      setMsg(`OK ✅ enregistré • publié=${payload.is_published ? "oui" : "non"}`, true);
+      setMsg(`Enregistré ✅ • publié=${payload.is_published ? "oui" : "non"}`, true);
     }catch(e){
       setMsg(e?.message || "Erreur", false);
     }
@@ -494,27 +435,20 @@
     if(EXISTING?.slug){
       $("slug").value = EXISTING.slug;
       ACTIVE_SLUG = EXISTING.slug;
-      setMsg("Slug existant conservé ✅", true);
+      setMsg("Identifiant existant conservé ✅", true);
       return;
     }
-
     const dn = $("display_name").value.trim();
     const newSlug = slugify(dn || "commerce");
     $("slug").value = newSlug;
     ACTIVE_SLUG = newSlug;
-    setMsg("Slug régénéré ✅ pense à enregistrer", true);
+    setMsg("Identifiant régénéré ✅ — pense à enregistrer", true);
   }
 
   function openPublic(){
     const slug = String($("slug").value || ACTIVE_SLUG || "").trim();
     const explicit = $("profile_url").value.trim();
-
-    if(explicit){
-      window.location.href = explicit;
-      return;
-    }
-
-    window.location.href = withSlug(PUBLIC_INDEX_URL, slug);
+    window.location.href = explicit || withSlug(PUBLIC_INDEX_URL, slug);
   }
 
   function goBack(){
@@ -523,54 +457,86 @@
   }
 
   async function init(){
-    const guardOk = await ensureGuardLoaded();
-    if(!guardOk){
-      if(gs) gs.textContent = "❌ guard introuvable";
-      setMsg("guard-pro.js / guard.js introuvable.", false);
+    showPage(); // toujours révéler — guard gère déjà la visibilité
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       guard.js est chargé en <script src> synchrone dans <head>.
+       window.DIGIY_GUARD est donc TOUJOURS posé avant init().
+       ready() = check session → redirige pin.html si besoin → retourne state.
+       Si la redirection se fait, cette page ne continue pas.
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    if(!window.DIGIY_GUARD){
+      if(gs) gs.textContent = "⚠️ Chargement…";
+      setMsg("Chargement en cours — recharge la page si ça persiste.", false);
       return;
     }
 
-    if(typeof window.DIGIY_GUARD.boot !== "function"){
-      if(gs) gs.textContent = "❌ guard invalide";
-      setMsg("Objet DIGIY_GUARD incomplet.", false);
+    /* Attendre le check guard (redirect auto si session absente/expirée) */
+    let guardState = window.DIGIY_GUARD.state || null;
+    try{
+      if(typeof window.DIGIY_GUARD.ready === "function"){
+        guardState = await window.DIGIY_GUARD.ready();
+      }
+    }catch(err){
+      console.warn("[DIGIY profil] guard ready KO", err?.message || err);
+      guardState = window.DIGIY_GUARD.state || null;
+    }
+
+    /* Lire l'accès directement depuis state — source de vérité du guard */
+    const st = window.DIGIY_GUARD.state || guardState || {};
+    const hasAccess = !!st.access_ok || !!st.access;
+
+    if(!hasAccess){
+      /* Guard a déjà redirigé ou va le faire — ne rien faire */
+      if(gs) gs.textContent = "🔐 Vérification…";
       return;
     }
 
-    ACTIVE_SLUG =
-      getUrlSlug() ||
-      String(window.DIGIY_GUARD.getSession?.()?.slug || "").trim();
+    /* ━━━ RÉSOLUTION SLUG + PHONE — toutes les sources ━━━
+       Ordre de priorité : URL param → guard state → localStorage
+       Même logique que caisse.html et dashboard-pro.html         */
+    /* Clés canoniques — même ordre que guard.js et caisse.html */
+    const lsSlug  = normSlug(
+      sessionStorage.getItem("digiy_pos_last_slug") ||
+      localStorage.getItem("digiy_pos_last_slug")   ||
+      sessionStorage.getItem("digiy_pos_slug")       ||
+      localStorage.getItem("digiy_pos_slug")         || ""
+    );
+    const lsPhone = String(
+      sessionStorage.getItem("digiy_pos_last_phone") ||
+      localStorage.getItem("digiy_pos_last_phone")   ||
+      sessionStorage.getItem("digiy_pos_phone")      ||
+      localStorage.getItem("digiy_pos_phone")        || ""
+    ).replace(/[^\d]/g, "");
 
-    const guardRes = await window.DIGIY_GUARD.boot({
-      module: MODULE,
-      dashboard: DASHBOARD_URL,
-      login: PIN_URL,
-      pay: PAY_URL,
-      requireSlug: true,
-      checkSubscription: true
-    });
+    ACTIVE_SLUG = getUrlSlug() || normSlug(st.slug || "") || lsSlug;
 
-    if(!guardRes?.ok){
-      if(gs) gs.textContent = "❌ Accès refusé";
-      return;
+    SESSION = window.DIGIY_GUARD.getSession?.() || st;
+
+    /* Injecter phone dans SESSION si manquant */
+    if(!SESSION) SESSION = {};
+    if(!SESSION.phone && lsPhone) SESSION.phone = lsPhone;
+    if(!SESSION.slug  && ACTIVE_SLUG) SESSION.slug = ACTIVE_SLUG;
+
+    /* Mettre à jour owner_id depuis phone si disponible */
+    if(!SESSION.owner_id && (SESSION.phone || lsPhone)){
+      SESSION.owner_id = SESSION.phone || lsPhone;
     }
-
-    SESSION = window.DIGIY_GUARD.getSession?.() || null;
-    ACTIVE_SLUG = ACTIVE_SLUG || String(SESSION?.slug || "").trim();
 
     if(!ACTIVE_SLUG){
-      if(gs) gs.textContent = "❌ slug manquant";
-      setMsg("Slug manquant pour ouvrir la fiche pro.", false);
+      if(gs) gs.textContent = "⚠️ Identifiant manquant";
+      setMsg("Identifiant boutique manquant. Repasse par ton lien pro ou ton QR DIGIY.", false);
       return;
     }
 
     document.documentElement.classList.add("access-ok");
 
     if(gs){
-      gs.textContent = "✅ PRO OK";
+      gs.textContent = "✅ Accès OK";
       setTimeout(() => { gs.style.display = "none"; }, 700);
     }
 
-    setMsg("Prêt ✅ chargement de ta fiche…", true);
+    setMsg("Prêt ✅ chargement de ta vitrine…", true);
     await loadExisting();
 
     $("btnSave").addEventListener("click", saveProfile);
@@ -578,8 +544,12 @@
     $("btnOpenListing").addEventListener("click", openPublic);
     $("btnBack").addEventListener("click", goBack);
   }
-
-  init();
+  init().catch((err) => {
+    console.error(err);
+    showPage(); // filet 2 : catch fatal
+    setMsg(err?.message || "Erreur au démarrage.", false);
+    if(gs) gs.textContent = "❌ Erreur";
+  });
 })();
 </script>
 </body>
