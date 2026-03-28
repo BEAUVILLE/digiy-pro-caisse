@@ -1,12 +1,11 @@
-===== caisse.html =====
 <!doctype html>
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>MON COMMERCE — DIGIY CAISSE PRO</title>
+  <title>Ma caisse · MON COMMERCE by DIGIY</title>
   <meta name="theme-color" content="#07140f" />
-  <meta name="description" content="MON COMMERCE by DIGIY — caisse boutique moderne, lecture locale, accès contrôlé, encaissement rapide et contexte magasin." />
+  <meta name="description" content="MON COMMERCE by DIGIY — ma caisse boutique, encaissement rapide, accès sécurisé." />
 
   <script>
     window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
@@ -32,39 +31,29 @@
   <script src="./guard.js"></script>
   <script src="./claw-tools-pos.js"></script>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+
   <style>
     :root{
-      --bg:#04110d;
-      --bg2:#071a14;
-      --bg3:#0b241b;
-      --card:rgba(8,24,18,.78);
-      --card2:rgba(9,28,21,.92);
-      --card3:rgba(255,255,255,.03);
-      --text:#f7fbf8;
-      --muted:#bfd3c8;
-      --line:rgba(255,255,255,.09);
-      --line2:rgba(255,255,255,.14);
-      --gold:#facc15;
-      --gold2:#f59e0b;
-      --green:#22c55e;
-      --green2:#16a34a;
-      --warn:#f59e0b;
-      --danger:#ef4444;
-      --info:#60a5fa;
-      --shadow:0 22px 56px rgba(0,0,0,.28);
-      --shadow-soft:0 14px 34px rgba(0,0,0,.22);
-      --radius:26px;
-      --radius-sm:18px;
-      --max:1180px;
+      --bg:#04110d;--bg2:#071a14;--bg3:#0b241b;
+      --card:rgba(8,24,18,.78);--card2:rgba(9,28,21,.92);--card3:rgba(255,255,255,.03);
+      --text:#f7fbf8;--muted:#bfd3c8;
+      --line:rgba(255,255,255,.09);--line2:rgba(255,255,255,.14);
+      --gold:#facc15;--gold2:#f59e0b;
+      --green:#22c55e;--green2:#16a34a;
+      --warn:#f59e0b;--danger:#ef4444;--info:#60a5fa;
+      --shadow:0 22px 56px rgba(0,0,0,.28);--shadow-soft:0 14px 34px rgba(0,0,0,.22);
+      --radius:26px;--radius-sm:18px;--max:1180px;
+      --fontA:"Outfit",system-ui,-apple-system,sans-serif;
     }
 
     *{box-sizing:border-box}
     html,body{margin:0;padding:0}
     html{scroll-behavior:smooth}
     body{
-      min-height:100vh;
-      color:var(--text);
-      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      min-height:100vh;color:var(--text);font-family:var(--fontA);
       background:
         radial-gradient(circle at top left, rgba(250,204,21,.10), transparent 28%),
         radial-gradient(circle at top right, rgba(96,165,250,.08), transparent 22%),
@@ -74,595 +63,141 @@
     a{text-decoration:none;color:inherit}
     button,input,select{font:inherit}
 
+    /* ━━━ ANTI-ÉCRAN NOIR
+       .app était display:none révélé par classe.
+       On garde la classe pour compatibilité guard,
+       mais on ajoute le filet setTimeout côté JS. ━━━ */
     .app{display:none}
     html.app-ready .app{display:block}
 
-    .wrap{
-      width:min(100%, var(--max));
-      margin:0 auto;
-      padding:16px 14px 92px;
-    }
+    .wrap{width:min(100%, var(--max));margin:0 auto;padding:16px 14px 92px;}
 
+    /* ── FLOAT ── */
     .floating-site-btn{
-      position:fixed;
-      left:16px;
-      bottom:calc(16px + env(safe-area-inset-bottom, 0px));
-      z-index:90;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      min-height:48px;
-      padding:14px 16px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(5,16,12,.88);
-      backdrop-filter:blur(10px);
-      color:var(--text);
-      font-size:13px;
-      font-weight:900;
-      letter-spacing:.2px;
+      position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom, 0px));z-index:90;
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      min-height:48px;padding:14px 16px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);background:rgba(5,16,12,.88);
+      backdrop-filter:blur(10px);color:var(--text);font-size:13px;font-weight:900;letter-spacing:.2px;
       box-shadow:0 16px 36px rgba(0,0,0,.28);
       transition:transform .14s ease, border-color .14s ease, background .14s ease;
     }
-    .floating-site-btn:hover{
-      transform:translateY(-1px);
-      border-color:rgba(250,204,21,.28);
-      background:rgba(8,20,15,.94);
-    }
+    .floating-site-btn:hover{transform:translateY(-1px);border-color:rgba(250,204,21,.28);background:rgba(8,20,15,.94);}
 
+    /* ── TOPBAR ── */
     .topbar{
-      position:sticky;
-      top:0;
-      z-index:70;
-      margin-bottom:14px;
-      backdrop-filter:blur(12px);
-      background:rgba(4,17,13,.76);
-      border:1px solid rgba(255,255,255,.07);
-      border-radius:24px;
-      box-shadow:var(--shadow-soft);
+      position:sticky;top:0;z-index:70;margin-bottom:14px;
+      backdrop-filter:blur(12px);background:rgba(4,17,13,.76);
+      border:1px solid rgba(255,255,255,.07);border-radius:24px;box-shadow:var(--shadow-soft);
     }
+    .topbar-inner{padding:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
 
-    .topbar-inner{
-      padding:14px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-    }
+    .brand{display:flex;align-items:center;gap:12px;min-width:0;}
+    .brandBadge{width:48px;height:48px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg, rgba(250,204,21,.16), rgba(245,158,11,.08));border:1px solid rgba(250,204,21,.16);box-shadow:0 16px 34px rgba(250,204,21,.10);font-size:24px;flex:0 0 auto;}
+    .brandKicker{color:var(--gold);font-size:12px;font-weight:950;letter-spacing:.14em;text-transform:uppercase;margin-bottom:3px;}
+    .brandTitle{font-size:20px;line-height:1.08;font-weight:1000;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .brandSub{color:var(--muted);font-size:12px;font-weight:800;margin-top:3px;letter-spacing:.04em;}
 
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width:0;
-    }
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
 
-    .brandBadge{
-      width:48px;
-      height:48px;
-      border-radius:18px;
-      display:grid;
-      place-items:center;
-      background:linear-gradient(135deg, rgba(250,204,21,.16), rgba(245,158,11,.08));
-      border:1px solid rgba(250,204,21,.16);
-      box-shadow:0 16px 34px rgba(250,204,21,.10);
-      font-size:24px;
-      flex:0 0 auto;
-    }
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:10px 13px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--muted);font-weight:900;font-size:12px;backdrop-filter:blur(10px);}
+    .pill strong{color:var(--text);font-weight:950;}
 
-    .brandKicker{
-      color:var(--gold);
-      font-size:12px;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      margin-bottom:3px;
-    }
+    .dot{width:10px;height:10px;border-radius:999px;background:var(--warn);flex:0 0 auto;box-shadow:0 0 0 4px rgba(255,255,255,.03);}
+    .dot.ok{background:var(--green)}.dot.bad{background:var(--danger)}
 
-    .brandTitle{
-      font-size:20px;
-      line-height:1.08;
-      font-weight:1000;
-      letter-spacing:-.02em;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .brandSub{
-      color:var(--muted);
-      font-size:12px;
-      font-weight:800;
-      margin-top:3px;
-      letter-spacing:.04em;
-    }
-
-    .row{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 13px;
-      border-radius:999px;
-      background:rgba(255,255,255,.04);
-      border:1px solid var(--line);
-      color:var(--muted);
-      font-weight:900;
-      font-size:12px;
-      backdrop-filter:blur(10px);
-    }
-
-    .pill strong{
-      color:var(--text);
-      font-weight:950;
-    }
-
-    .dot{
-      width:10px;
-      height:10px;
-      border-radius:999px;
-      background:var(--warn);
-      flex:0 0 auto;
-      box-shadow:0 0 0 4px rgba(255,255,255,.03);
-    }
-    .dot.ok{background:var(--green)}
-    .dot.bad{background:var(--danger)}
-
-    .btn,
-    .btn-outline,
-    .btn-ghost{
-      appearance:none;
-      border:none;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      min-height:46px;
-      padding:12px 16px;
-      border-radius:999px;
-      font-weight:900;
-      font-size:13px;
-      letter-spacing:.02em;
-      white-space:nowrap;
+    /* ── BOUTONS ── */
+    .btn,.btn-outline,.btn-ghost{
+      appearance:none;border:none;cursor:pointer;
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      min-height:46px;padding:12px 16px;border-radius:999px;
+      font-weight:900;font-size:13px;letter-spacing:.02em;white-space:nowrap;
       transition:transform .12s ease, opacity .12s ease, background .12s ease, border-color .12s ease;
     }
+    .btn:hover,.btn-outline:hover,.btn-ghost:hover{transform:translateY(-1px)}
+    .btn:disabled,.btn-outline:disabled,.btn-ghost:disabled{opacity:.56;cursor:not-allowed;transform:none;}
+    .btn{color:#07110d;background:linear-gradient(135deg, var(--gold), var(--gold2));box-shadow:0 14px 30px rgba(250,204,21,.18);}
+    .btn-outline{background:rgba(255,255,255,.04);color:var(--text);border:1px solid var(--line2);}
+    .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--line2);}
 
-    .btn:hover,
-    .btn-outline:hover,
-    .btn-ghost:hover{transform:translateY(-1px)}
+    /* ── HERO GRID ── */
+    .hero{display:grid;grid-template-columns:1.08fr .92fr;gap:12px;margin-bottom:12px;}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)),var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;overflow:hidden;}
+    .heroMain{position:relative;}
+    .heroMain::after{content:"";position:absolute;right:-90px;bottom:-100px;width:240px;height:240px;border-radius:999px;background:radial-gradient(circle, rgba(34,197,94,.14), transparent 70%);pointer-events:none;}
 
-    .btn:disabled,
-    .btn-outline:disabled,
-    .btn-ghost:disabled{
-      opacity:.56;
-      cursor:not-allowed;
-      transform:none;
-    }
+    .heroBadge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(250,204,21,.10);border:1px solid rgba(250,204,21,.18);color:var(--gold);font-size:12px;font-weight:950;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px;}
 
-    .btn{
-      color:#07110d;
-      background:linear-gradient(135deg, var(--gold), var(--gold2));
-      box-shadow:0 14px 30px rgba(250,204,21,.18);
-    }
+    .statusLine{display:flex;align-items:flex-start;gap:10px;}
 
-    .btn-outline{
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      border:1px solid var(--line2);
-    }
+    .bigTitle{margin:0;font-size:clamp(30px, 5vw, 56px);line-height:.96;letter-spacing:-.04em;font-weight:1000;max-width:11ch;}
+    .bigTitle .accent{color:var(--gold);}
 
-    .btn-ghost{
-      background:transparent;
-      color:var(--muted);
-      border:1px solid var(--line2);
-    }
+    .mainSub{margin-top:10px;color:var(--muted);font-size:16px;line-height:1.7;font-weight:700;max-width:64ch;}
 
-    .hero{
-      display:grid;
-      grid-template-columns:1.08fr .92fr;
-      gap:12px;
-      margin-bottom:12px;
-    }
+    .subInfo{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:18px;}
+    .miniCard{min-width:0;padding:13px 12px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);}
+    .tiny{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:900;}
+    .value{font-size:20px;font-weight:950;margin-top:6px;line-height:1.1;word-break:break-word;letter-spacing:-.02em;}
 
-    .card{
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)),
-        var(--card);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:18px;
-      overflow:hidden;
-    }
+    .notice{padding:14px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.03);margin-top:14px;line-height:1.65;font-size:14px;font-weight:700;}
+    .notice.ok{border-color:rgba(34,197,94,.22);background:rgba(34,197,94,.08);}
+    .notice.warn{border-color:rgba(245,158,11,.22);background:rgba(245,158,11,.08);}
+    .notice.bad{border-color:rgba(239,68,68,.22);background:rgba(239,68,68,.08);}
+    .notice.info{border-color:rgba(96,165,250,.22);background:rgba(96,165,250,.08);}
 
-    .heroMain{
-      position:relative;
-    }
+    .actionRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+    .helper{color:var(--muted);font-size:13px;font-weight:800;margin-top:10px;line-height:1.65;}
 
-    .heroMain::after{
-      content:"";
-      position:absolute;
-      right:-90px;
-      bottom:-100px;
-      width:240px;
-      height:240px;
-      border-radius:999px;
-      background:radial-gradient(circle, rgba(34,197,94,.14), transparent 70%);
-      pointer-events:none;
-    }
+    details{margin-top:12px;}
+    summary{cursor:pointer;font-weight:950;color:var(--text);outline:none;}
 
-    .heroBadge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 12px;
-      border-radius:999px;
-      background:rgba(250,204,21,.10);
-      border:1px solid rgba(250,204,21,.18);
-      color:var(--gold);
-      font-size:12px;
-      font-weight:950;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      margin-bottom:14px;
-    }
+    .logBox{margin-top:10px;background:#081119;color:#d8e1ff;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:12px;font:12px/1.58 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;white-space:pre-wrap;word-break:break-word;max-height:260px;overflow:auto;}
 
-    .statusLine{
-      display:flex;
-      align-items:flex-start;
-      gap:10px;
-    }
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:8px 11px;border-radius:999px;font-size:12px;font-weight:950;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--muted);}
+    .badge.ok{background:rgba(34,197,94,.10);border-color:rgba(34,197,94,.28);color:#d7ffe1;}
+    .badge.warn{background:rgba(245,158,11,.10);border-color:rgba(245,158,11,.28);color:#ffe3b8;}
+    .badge.bad{background:rgba(239,68,68,.10);border-color:rgba(239,68,68,.28);color:#ffd2d2;}
+    .badge.info{background:rgba(96,165,250,.10);border-color:rgba(96,165,250,.28);color:#d8ecff;}
 
-    .bigTitle{
-      margin:0;
-      font-size:clamp(30px, 5vw, 56px);
-      line-height:.96;
-      letter-spacing:-.04em;
-      font-weight:1000;
-      max-width:11ch;
-    }
+    .sectionGrid{display:grid;gap:12px;grid-template-columns:1fr 1fr;margin-top:12px;}
 
-    .bigTitle .accent{
-      color:var(--gold);
-    }
-
-    .mainSub{
-      margin-top:10px;
-      color:var(--muted);
-      font-size:16px;
-      line-height:1.7;
-      font-weight:700;
-      max-width:64ch;
-    }
-
-    .subInfo{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:12px;
-      margin-top:18px;
-    }
-
-    .miniCard{
-      min-width:0;
-      padding:13px 12px;
-      border-radius:18px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.08);
-    }
-
-    .tiny{
-      font-size:11px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      color:var(--muted);
-      font-weight:900;
-    }
-
-    .value{
-      font-size:20px;
-      font-weight:950;
-      margin-top:6px;
-      line-height:1.1;
-      word-break:break-word;
-      letter-spacing:-.02em;
-    }
-
-    .notice{
-      padding:14px;
-      border-radius:18px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      margin-top:14px;
-      line-height:1.65;
-      font-size:14px;
-      font-weight:700;
-    }
-
-    .notice.ok{
-      border-color:rgba(34,197,94,.22);
-      background:rgba(34,197,94,.08);
-    }
-
-    .notice.warn{
-      border-color:rgba(245,158,11,.22);
-      background:rgba(245,158,11,.08);
-    }
-
-    .notice.bad{
-      border-color:rgba(239,68,68,.22);
-      background:rgba(239,68,68,.08);
-    }
-
-    .notice.info{
-      border-color:rgba(96,165,250,.22);
-      background:rgba(96,165,250,.08);
-    }
-
-    .actionRow{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:14px;
-    }
-
-    .helper{
-      color:var(--muted);
-      font-size:13px;
-      font-weight:800;
-      margin-top:10px;
-      line-height:1.65;
-    }
-
-    details{
-      margin-top:12px;
-    }
-
-    summary{
-      cursor:pointer;
-      font-weight:950;
-      color:var(--text);
-      outline:none;
-    }
-
-    .logBox{
-      margin-top:10px;
-      background:#081119;
-      color:#d8e1ff;
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:16px;
-      padding:12px;
-      font:12px/1.58 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-      white-space:pre-wrap;
-      word-break:break-word;
-      max-height:260px;
-      overflow:auto;
-    }
-
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 11px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:950;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.04);
-      color:var(--muted);
-    }
-
-    .badge.ok{
-      background:rgba(34,197,94,.10);
-      border-color:rgba(34,197,94,.28);
-      color:#d7ffe1;
-    }
-
-    .badge.warn{
-      background:rgba(245,158,11,.10);
-      border-color:rgba(245,158,11,.28);
-      color:#ffe3b8;
-    }
-
-    .badge.bad{
-      background:rgba(239,68,68,.10);
-      border-color:rgba(239,68,68,.28);
-      color:#ffd2d2;
-    }
-
-    .badge.info{
-      background:rgba(96,165,250,.10);
-      border-color:rgba(96,165,250,.28);
-      color:#d8ecff;
-    }
-
-    .sectionGrid{
-      display:grid;
-      gap:12px;
-      grid-template-columns:1fr 1fr;
-      margin-top:12px;
-    }
-
-    .field{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      margin-top:12px;
-    }
-
-    .field label{
-      font-size:13px;
-      font-weight:900;
-      color:var(--muted);
-      letter-spacing:.03em;
-    }
-
-    .input,
-    .select{
-      width:100%;
-      padding:14px 14px;
-      border-radius:16px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      outline:none;
-      font-size:16px;
-      font-weight:800;
-    }
-
+    .field{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
+    .field label{font-size:13px;font-weight:900;color:var(--muted);letter-spacing:.03em;}
+    .input,.select{width:100%;padding:14px 14px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);outline:none;font-size:16px;font-weight:800;}
     .input::placeholder{color:#92a0c7}
 
-    .hr{
-      height:1px;
-      background:var(--line);
-      margin:14px 0;
-    }
+    .hr{height:1px;background:var(--line);margin:14px 0;}
+    .empty{color:var(--muted);font-weight:800;font-size:13px;line-height:1.6;}
 
-    .empty{
-      color:var(--muted);
-      font-weight:800;
-      font-size:13px;
-      line-height:1.6;
-    }
+    .kpiGrid{display:grid;gap:12px;grid-template-columns:repeat(3,1fr);margin-top:14px;}
+    .kpi{padding:13px 12px;border-radius:18px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);}
+    .kpi .k{color:var(--muted);font-size:11px;font-weight:900;margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em;}
+    .kpi .v{font-size:24px;font-weight:1000;line-height:1;letter-spacing:-.03em;word-break:break-word;}
 
-    .kpiGrid{
-      display:grid;
-      gap:12px;
-      grid-template-columns:repeat(3,1fr);
-      margin-top:14px;
-    }
+    .moduleNav{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+    .sideTitle{font-size:18px;font-weight:950;margin:0 0 10px 0;line-height:1.15;}
+    .cashHeader{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:4px;}
+    .cashHeaderText{color:var(--muted);font-size:14px;line-height:1.65;font-weight:700;max-width:64ch;}
 
-    .kpi{
-      padding:13px 12px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.03);
-    }
+    .blockedShell{display:none;min-height:320px;place-items:center;text-align:center;padding:24px;}
+    .blockedInner{max-width:680px;padding:22px;border-radius:22px;border:1px solid var(--line);background:rgba(255,255,255,.03);box-shadow:var(--shadow-soft);}
+    .blockedTitle{font-size:26px;font-weight:1000;margin-bottom:8px;line-height:1.1;}
+    .blockedText{color:var(--muted);font-size:14px;line-height:1.8;font-weight:700;}
 
-    .kpi .k{
-      color:var(--muted);
-      font-size:11px;
-      font-weight:900;
-      margin-bottom:6px;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-    }
-
-    .kpi .v{
-      font-size:24px;
-      font-weight:1000;
-      line-height:1;
-      letter-spacing:-.03em;
-      word-break:break-word;
-    }
-
-    .moduleNav{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:12px;
-    }
-
-    .sideTitle{
-      font-size:18px;
-      font-weight:950;
-      margin:0 0 10px 0;
-      line-height:1.15;
-    }
-
-    .cashHeader{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-bottom:4px;
-    }
-
-    .cashHeaderText{
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.65;
-      font-weight:700;
-      max-width:64ch;
-    }
-
-    .blockedShell{
-      display:none;
-      min-height:320px;
-      place-items:center;
-      text-align:center;
-      padding:24px;
-    }
-
-    .blockedInner{
-      max-width:680px;
-      padding:22px;
-      border-radius:22px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      box-shadow:var(--shadow-soft);
-    }
-
-    .blockedTitle{
-      font-size:26px;
-      font-weight:1000;
-      margin-bottom:8px;
-      line-height:1.1;
-    }
-
-    .blockedText{
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.8;
-      font-weight:700;
-    }
-
-    @media (max-width: 1020px){
-      .hero{grid-template-columns:1fr}
-      .bigTitle{max-width:none}
-      .subInfo{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .sectionGrid{grid-template-columns:1fr}
-    }
-
-    @media (max-width: 760px){
-      .kpiGrid{grid-template-columns:repeat(2,1fr)}
-    }
-
-    @media (max-width: 700px){
-      .wrap{padding:12px 12px 96px}
-      .topbar-inner{padding:12px}
-      .heroMain,.card{padding:16px}
-      .brandTitle{white-space:normal}
-      .subInfo{grid-template-columns:1fr}
-      .kpiGrid{grid-template-columns:1fr}
-      .floating-site-btn{
-        left:12px;
-        right:12px;
-        bottom:calc(12px + env(safe-area-inset-bottom, 0px));
-        min-height:46px;
-        padding:14px 14px;
-        font-size:12px;
-      }
+    @media(max-width:1020px){.hero{grid-template-columns:1fr}.bigTitle{max-width:none}.subInfo{grid-template-columns:repeat(2,minmax(0,1fr))}.sectionGrid{grid-template-columns:1fr}}
+    @media(max-width:760px){.kpiGrid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:700px){
+      .wrap{padding:12px 12px 96px}.topbar-inner{padding:12px}.heroMain,.card{padding:16px}
+      .brandTitle{white-space:normal}.subInfo{grid-template-columns:1fr}.kpiGrid{grid-template-columns:1fr}
+      .floating-site-btn{left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom, 0px));min-height:46px;padding:14px 14px;font-size:12px;}
     }
   </style>
 </head>
 
 <body>
-  <a
-    class="floating-site-btn"
-    href="./index.html"
-    aria-label="Retour à la vitrine MON COMMERCE"
-    title="Retour à la vitrine MON COMMERCE"
-  >⬅️ Retour vitrine MON COMMERCE</a>
+  <!-- ━━━ FLOAT : retour vitrine ━━━ -->
+  <a class="floating-site-btn" href="./index.html" aria-label="Retour à la vitrine MON COMMERCE">⬅️ Retour à la vitrine</a>
 
   <div class="app" id="appRoot">
     <div class="wrap">
@@ -673,7 +208,8 @@
             <div>
               <div class="brandKicker">DIGIYLYFE</div>
               <div class="brandTitle">MON COMMERCE</div>
-              <div class="brandSub">DIGIY CAISSE PRO • travail réel • lecture locale</div>
+              <!-- ━━━ AVANT : "DIGIY CAISSE PRO • travail réel • lecture locale" → jargon banni ━━━ -->
+              <div class="brandSub">Ma caisse · encaissement rapide</div>
             </div>
           </div>
 
@@ -690,82 +226,88 @@
         </div>
       </header>
 
+      <!-- ━━━ ÉCRAN BLOQUÉ — langage humain, zéro jargon technique visible ━━━ -->
       <section id="blockedShell" class="blockedShell">
         <div class="blockedInner">
           <div class="blockedTitle">Caisse protégée</div>
           <div class="blockedText" id="blockedText">
-            Cette caisse attend un accès actif.
+            Ta caisse attend ton accès. Entre par ton PIN ou rejoins DIGIY pour commencer.
           </div>
 
           <div class="actionRow" style="justify-content:center">
-            <a class="btn" id="btnBlockedPin" href="./pin.html">🔐 Ouvrir avec mon PIN</a>
-            <a class="btn-outline" id="btnBlockedAbos" href="https://commencer-a-payer.digiylyfe.com/">💳 Gérer mon abonnement</a>
-            <a class="btn-ghost" id="btnBlockedDash" href="./dashboard-pro.html">🧭 Dashboard Pro</a>
+            <a class="btn" id="btnBlockedPin" href="./pin.html">🔐 Entrer avec mon PIN</a>
+            <a class="btn-outline" id="btnBlockedAbos" href="https://commencer-a-payer.digiylyfe.com/">💳 Mon abonnement</a>
+            <!-- ━━━ AVANT : "🧭 Dashboard Pro" → banni ━━━ -->
+            <a class="btn-ghost" id="btnBlockedDash" href="./dashboard-pro.html">🧭 Mon espace de travail</a>
           </div>
         </div>
       </section>
 
+      <!-- ━━━ ÉCRAN LIVE ━━━ -->
       <section id="liveShell">
         <div class="hero">
           <div class="card heroMain">
-            <div class="heroBadge">DIGIY CAISSE PRO</div>
+            <!-- ━━━ AVANT : "DIGIY CAISSE PRO" → banni en façade ━━━ -->
+            <div class="heroBadge">Ma caisse active</div>
 
             <div class="statusLine">
               <div>
                 <h1 class="bigTitle"><span class="accent">Caisse</span> prête</h1>
+                <!-- ━━━ mainSub : langage humain, pas description technique ━━━ -->
                 <div class="mainSub">
-                  Lecture claire du terrain commerce. La page affiche le vrai rail actif quand il existe,
-                  et reprend un fallback POS propre si la RPC principale ne renvoie pas encore tout le profil.
+                  Ta boutique est reconnue. Encaisse, suis tes ventes et travaille proprement.
                 </div>
               </div>
             </div>
 
             <div class="subInfo">
+              <!-- ━━━ AVANT : "Slug" → "Identifiant" · "Source" reste pour l'info cache ━━━ -->
               <div class="miniCard">
-                <div class="tiny">Slug</div>
-                <div class="value" id="metaSlug">—</div>
+                <div class="tiny">Boutique</div>
+                <div class="value" id="metaStoreName">—</div>
               </div>
               <div class="miniCard">
                 <div class="tiny">Téléphone</div>
                 <div class="value" id="metaPhone">—</div>
               </div>
               <div class="miniCard">
-                <div class="tiny">Boutique</div>
-                <div class="value" id="metaStoreName">—</div>
+                <div class="tiny">Identifiant</div>
+                <div class="value" id="metaSlug">—</div>
               </div>
               <div class="miniCard">
-                <div class="tiny">Source</div>
+                <div class="tiny">Lecture</div>
                 <div class="value" id="metaSource">—</div>
               </div>
             </div>
 
-            <div class="notice info" id="noticeBox">
-              Initialisation…
-            </div>
+            <div class="notice info" id="noticeBox">Initialisation…</div>
 
             <div class="moduleNav">
               <span class="badge" id="badgeAccess">Accès…</span>
               <span class="badge" id="badgeStore">Boutique…</span>
-              <span class="badge" id="badgeCache">Cache…</span>
+              <span class="badge" id="badgeCache">Lecture…</span>
               <span class="badge" id="badgePlan">Plan…</span>
             </div>
 
             <div class="actionRow">
-              <a class="btn-outline" id="btnGoPin" href="./pin.html">🔐 PIN</a>
-              <a class="btn-outline" id="btnGoDashboard" href="./dashboard-pro.html">🧭 Dashboard Pro</a>
-              <a class="btn-outline" id="btnGoAdmin" href="./admin.html">⚙️ Admin</a>
-              <a class="btn-ghost" id="btnGoHall" href="./index.html">🏠 Hall</a>
+              <a class="btn-outline" id="btnGoPin" href="./pin.html">🔐 Mon PIN</a>
+              <!-- ━━━ AVANT : "Dashboard Pro" → banni ━━━ -->
+              <a class="btn-outline" id="btnGoDashboard" href="./dashboard-pro.html">🧭 Mon espace de travail</a>
+              <!-- ━━━ AVANT : "⚙️ Admin" → "⚙️ Mes réglages" ━━━ -->
+              <a class="btn-outline" id="btnGoAdmin" href="./dashboard-pro.html">⚙️ Mes réglages</a>
+              <!-- ━━━ AVANT : "🏠 Hall" → "🏠 Accueil" ━━━ -->
+              <a class="btn-ghost" id="btnGoHall" href="./index.html">🏠 Accueil</a>
             </div>
 
             <details>
-              <summary>Diagnostic</summary>
+              <summary>Diagnostic technique</summary>
               <div class="logBox" id="diagBox">Initialisation…</div>
             </details>
           </div>
 
           <div class="card">
-            <h2 class="sideTitle">Contexte magasin</h2>
-            <div id="storeContextBox" class="notice">Chargement du contexte…</div>
+            <h2 class="sideTitle">Ma boutique en direct</h2>
+            <div id="storeContextBox" class="notice">Chargement…</div>
 
             <div class="kpiGrid">
               <div class="kpi">
@@ -777,40 +319,42 @@
                 <div class="v" id="kpiSales">0</div>
               </div>
               <div class="kpi">
-                <div class="k">Revenu du jour</div>
+                <div class="k">Recette du jour</div>
                 <div class="v" id="kpiRevenue">0 F</div>
               </div>
             </div>
 
             <div class="helper">
-              Ici on garde une lecture simple : accès, boutique, plan, cache local, contexte boutique.
+              Lecture simple : accès, boutique, abonnement, cache local.
             </div>
           </div>
         </div>
 
+        <!-- ━━━ VENTE ━━━ -->
         <div class="sectionGrid">
           <div class="card">
             <div class="cashHeader">
               <div>
+                <!-- ━━━ DOCTRINE : titre = moment humain ━━━ -->
                 <h2 class="sideTitle">Préparer une vente</h2>
                 <div class="cashHeaderText">
-                  On prépare une vente proprement. Le prochain cran métier pourra brancher l’encaissement réel.
+                  Remplis le montant et le libellé. La vente est prête à être enregistrée.
                 </div>
               </div>
             </div>
 
             <div class="field">
-              <label for="saleAmount">Montant</label>
-              <input class="input" id="saleAmount" type="number" inputmode="numeric" min="0" step="1" placeholder="Ex : 3500"/>
+              <label for="saleAmount">Montant (FCFA)</label>
+              <input class="input" id="saleAmount" type="number" inputmode="numeric" min="0" step="1" placeholder="Ex : 3 500"/>
             </div>
 
             <div class="field">
-              <label for="saleLabel">Libellé</label>
-              <input class="input" id="saleLabel" type="text" placeholder="Ex : Article / Service / Plat du jour"/>
+              <label for="saleLabel">Ce que tu vends</label>
+              <input class="input" id="saleLabel" type="text" placeholder="Ex : Robe bleue / Plat du jour / Recharge"/>
             </div>
 
             <div class="field">
-              <label for="saleMethod">Mode de paiement</label>
+              <label for="saleMethod">Comment le client paie</label>
               <select class="select" id="saleMethod">
                 <option value="cash">Espèces</option>
                 <option value="wave">Wave</option>
@@ -820,25 +364,26 @@
             </div>
 
             <div class="actionRow">
+              <!-- ━━━ DOCTRINE BOUTON : moment humain ━━━ -->
               <button class="btn" type="button" id="btnSaleReady">🧾 Préparer la vente</button>
               <button class="btn-ghost" type="button" id="btnClearSale">Effacer</button>
             </div>
 
             <div class="helper" id="saleHelper">
-              Ici on prépare proprement. La prochaine couture sera la RPC métier d’encaissement réel.
+              Complète le montant et ce que tu vends pour préparer proprement.
             </div>
           </div>
 
           <div class="card">
-            <h2 class="sideTitle">Résumé de préparation</h2>
+            <h2 class="sideTitle">Résumé de la vente</h2>
             <div id="salePreview" class="empty">Rien de préparé pour le moment.</div>
 
             <div class="hr"></div>
 
-            <h2 class="sideTitle">Lecture métier</h2>
+            <h2 class="sideTitle">Comment ça marche</h2>
             <div class="helper">
-              La page distingue clairement deux états :
-              <b>lecture locale / cache</b> et <b>travail réel avec accès actif</b>.
+              Tu prépares la vente ici. Elle est enregistrée localement et prête à être validée.
+              L'encaissement réel suit dans la prochaine étape.
             </div>
           </div>
         </div>
@@ -855,32 +400,31 @@
       const ABOS_URL = "https://commencer-a-payer.digiylyfe.com/";
       const DASHBOARD_URL = digiyLocal("dashboard-pro.html");
       const HALL_URL = digiyLocal("index.html");
-      const ADMIN_URL = digiyLocal("admin.html");
+      const ADMIN_URL = digiyLocal("dashboard-pro.html"); // réglages = même espace de travail
       const PIN_URL = digiyLocal("pin.html");
-      const PUBLIC_URL = "https://mon-commerce.digiylyfe.com/";
       const CACHE_TTL_MS = 5 * 60 * 1000;
 
       const SUPABASE_URL = String(window.DIGIY_SUPABASE_URL || "").trim();
       const SUPABASE_ANON_KEY = String(window.DIGIY_SUPABASE_ANON_KEY || window.DIGIY_SUPABASE_ANON || "").trim();
 
       const qs = (id) => document.getElementById(id);
-
       const DIAG = [];
-      let STATE = {
-        slug: "",
-        phone: "",
-        access: false,
-        caisse: null,
-        source: "none",
-        cachedAt: null
-      };
-
+      let STATE = { slug: "", phone: "", access: false, caisse: null, source: "none", cachedAt: null };
       let SB_CLIENT = null;
 
+      /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         ANTI-ÉCRAN NOIR
+         guard.js + la classe .app masquent la page.
+         Trois filets de sécurité :
+         1. setTimeout 2s → révèle quoi qu'il arrive
+         2. reveal() appelé au début de boot()
+         3. reveal() dans le finally de boot()
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
       function reveal(){
         document.documentElement.classList.add("app-ready");
         document.documentElement.style.visibility = "";
       }
+      setTimeout(reveal, 2000); // filet absolu
 
       function log(msg, data){
         const line = `[${new Date().toLocaleTimeString("fr-FR")}] ${msg}`;
@@ -890,33 +434,42 @@
         console.log("[DIGIY POS CAISSE]", msg, data ?? "");
       }
 
-      function safeStringify(v){
-        try{ return JSON.stringify(v, null, 2); }
-        catch(_){ return String(v); }
-      }
+      function safeStringify(v){ try{ return JSON.stringify(v, null, 2); } catch(_){ return String(v); } }
 
       function esc(v){
-        return String(v ?? "")
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#39;");
+        return String(v ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
       }
 
+      /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         buildUrl — VERSION BLINDÉE
+         new URL(relatif, location.href) fragile selon
+         l'environnement. On reconstruit l'origine manuellement.
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
       function buildUrl(base, params){
-        const u = new URL(base, location.href);
-        Object.entries(params || {}).forEach(([k, v]) => {
-          if(v !== undefined && v !== null && String(v) !== ""){
-            u.searchParams.set(k, String(v));
+        const baseStr = (base == null ? "" : String(base)).trim();
+        if(!baseStr) return location.href;
+        let u;
+        try{
+          if(/^https?:\/\//i.test(baseStr)){
+            u = new URL(baseStr);
+          } else {
+            const origin = location.protocol + "//" + location.host;
+            const full = baseStr.startsWith("/") ? origin + baseStr : origin + "/" + baseStr;
+            u = new URL(full);
           }
-        });
+        }catch(e){
+          log("buildUrl KO: " + baseStr + " — " + e.message);
+          return baseStr;
+        }
+        try{
+          Object.entries(params || {}).forEach(([k,v]) => {
+            if(v !== undefined && v !== null && String(v) !== "") u.searchParams.set(k, String(v));
+          });
+        }catch(e){}
         return u.toString();
       }
 
-      function normPhone(v){
-        return String(v || "").replace(/[^\d]/g, "").slice(0, 15);
-      }
+      function normPhone(v){ return String(v || "").replace(/[^\d]/g,"").slice(0,15); }
 
       function money(n){
         const value = Number(n || 0);
@@ -938,21 +491,12 @@
         el.textContent = text;
       }
 
-      function cacheKey(slug){
-        return `digiy_pos_caisse_cache:${slug}`;
-      }
-
-      function draftKey(slug){
-        return `digiy_pos_caisse_draft:${slug}`;
-      }
+      /* ━━━ CACHE ━━━ */
+      function cacheKey(slug){ return `digiy_pos_caisse_cache:${slug}`; }
+      function draftKey(slug){ return `digiy_pos_caisse_draft:${slug}`; }
 
       function writeCache(slug, payload){
-        try{
-          localStorage.setItem(cacheKey(slug), JSON.stringify({
-            ts: Date.now(),
-            payload
-          }));
-        }catch(_){}
+        try{ localStorage.setItem(cacheKey(slug), JSON.stringify({ ts: Date.now(), payload })); }catch(_){}
       }
 
       function useCachedPayload(slug){
@@ -962,99 +506,41 @@
           const parsed = JSON.parse(raw);
           if(!parsed || !parsed.payload) return null;
           const ts = Number(parsed.ts || 0);
-          return {
-            ts,
-            payload: parsed.payload,
-            fresh: !!ts && (Date.now() - ts) < CACHE_TTL_MS
-          };
-        }catch(_){
-          return null;
-        }
+          return { ts, payload: parsed.payload, fresh: !!ts && (Date.now() - ts) < CACHE_TTL_MS };
+        }catch(_){ return null; }
       }
 
-      function writeDraft(slug, payload){
-        try{
-          localStorage.setItem(draftKey(slug), JSON.stringify(payload || {}));
-        }catch(_){}
-      }
+      function writeDraft(slug, payload){ try{ localStorage.setItem(draftKey(slug), JSON.stringify(payload || {})); }catch(_){} }
+      function readDraft(slug){ try{ const raw = localStorage.getItem(draftKey(slug)); return raw ? JSON.parse(raw) : null; }catch(_){ return null; } }
+      function clearDraft(slug){ try{ localStorage.removeItem(draftKey(slug)); }catch(_){} }
 
-      function readDraft(slug){
-        try{
-          const raw = localStorage.getItem(draftKey(slug));
-          return raw ? JSON.parse(raw) : null;
-        }catch(_){
-          return null;
-        }
-      }
-
-      function clearDraft(slug){
-        try{
-          localStorage.removeItem(draftKey(slug));
-        }catch(_){}
-      }
-
+      /* ━━━ GUARD ━━━ */
       async function awaitGuardReady(){
         try{
-          if(typeof window.DIGIY_GUARD?.ready === "function"){
-            await window.DIGIY_GUARD.ready();
-          } else if(window.DIGIY_GUARD?.ready && typeof window.DIGIY_GUARD.ready.then === "function"){
-            await window.DIGIY_GUARD.ready;
-          }
-        } catch(err){
-          log("guard ready KO", { message: err?.message || String(err) });
-        }
+          if(typeof window.DIGIY_GUARD?.ready === "function") await window.DIGIY_GUARD.ready();
+          else if(window.DIGIY_GUARD?.ready?.then) await window.DIGIY_GUARD.ready;
+        }catch(err){ log("guard ready KO", { message: err?.message || String(err) }); }
       }
 
       async function bootGuard(){
         if(typeof window.DIGIY_GUARD?.boot !== "function") return true;
-
         try{
-          const res = await window.DIGIY_GUARD.boot({
-            module: MODULE_CODE,
-            dashboard: DASHBOARD_URL,
-            login: PIN_URL,
-            pay: ABOS_URL,
-            requireSlug: true,
-            checkSubscription: false
-          });
+          const res = await window.DIGIY_GUARD.boot({ module: MODULE_CODE, dashboard: DASHBOARD_URL, login: PIN_URL, pay: ABOS_URL, requireSlug: true, checkSubscription: false });
           log("guard boot", res);
           if(res && res.ok === false) return false;
           return true;
-        } catch(err){
-          log("guard boot erreur", { message: err?.message || String(err) });
-          return true;
-        }
+        }catch(err){ log("guard boot erreur", { message: err?.message || String(err) }); return true; }
       }
 
       function ensureSupabase(){
         if(SB_CLIENT) return SB_CLIENT;
-
         if(typeof window.DIGIY_GUARD?.getSb === "function"){
-          try{
-            const gsb = window.DIGIY_GUARD.getSb();
-            if(gsb){
-              SB_CLIENT = gsb;
-              return SB_CLIENT;
-            }
-          } catch(err){
-            log("guard getSb erreur", { message: err?.message || String(err) });
-          }
+          try{ const gsb = window.DIGIY_GUARD.getSb(); if(gsb){ SB_CLIENT = gsb; return SB_CLIENT; } }catch(err){ log("guard getSb erreur", { message: err?.message || String(err) }); }
         }
-
-        if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
-          throw new Error("Configuration Supabase manquante");
-        }
-        if(!window.supabase || typeof window.supabase.createClient !== "function"){
-          throw new Error("Librairie Supabase non chargée");
-        }
-
+        if(!SUPABASE_URL || !SUPABASE_ANON_KEY) throw new Error("Configuration Supabase manquante");
+        if(!window.supabase || typeof window.supabase.createClient !== "function") throw new Error("Librairie Supabase non chargée");
         SB_CLIENT = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-          auth: {
-            persistSession: false,
-            autoRefreshToken: false,
-            detectSessionInUrl: false,
-            storageKey: "digiy-pos-caisse-boutique-v4"
-          }
+          auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false, storageKey: "digiy-pos-caisse-boutique-v4" }
         });
         return SB_CLIENT;
       }
@@ -1062,117 +548,51 @@
       async function rpcFirstSuccess(name, payloads){
         const client = ensureSupabase();
         let lastError = null;
-
         for(const args of payloads){
           try{
             log(`RPC ${name} tentative`, args);
             const { data, error } = await client.rpc(name, args);
-            if(error){
-              lastError = error;
-              log(`RPC ${name} erreur`, {
-                message: error.message,
-                details: error.details,
-                hint: error.hint
-              });
-              continue;
-            }
+            if(error){ lastError = error; log(`RPC ${name} erreur`, { message: error.message, details: error.details, hint: error.hint }); continue; }
             log(`RPC ${name} OK`, data);
             return data;
-          }catch(err){
-            lastError = err;
-            log(`RPC ${name} exception`, { message: err?.message || String(err) });
-          }
+          }catch(err){ lastError = err; log(`RPC ${name} exception`, { message: err?.message || String(err) }); }
         }
-
         throw lastError || new Error(`RPC ${name} échouée`);
       }
 
       function normalizeContext(ctx){
         const s = ctx && typeof ctx === "object" ? ctx : {};
-        return {
-          display_name: s.display_name || s.store_name || "MON COMMERCE",
-          city: s.city || s.ville || "",
-          phone: normPhone(s.phone || ""),
-          whatsapp: normPhone(s.whatsapp || s.whatsapp_phone || ""),
-          wave_phone: normPhone(s.wave_phone || s.wave || ""),
-          address: s.address || s.adresse || "",
-          bio: s.bio || s.tagline || "",
-          tva_active: !!(s.tva_assujeti || s.tva_active),
-          tva_taux: s.tva_taux ?? 18
-        };
+        return { display_name: s.display_name || s.store_name || "MON COMMERCE", city: s.city || s.ville || "", phone: normPhone(s.phone || ""), whatsapp: normPhone(s.whatsapp || s.whatsapp_phone || ""), wave_phone: normPhone(s.wave_phone || s.wave || ""), address: s.address || s.adresse || "", bio: s.bio || s.tagline || "", tva_active: !!(s.tva_assujeti || s.tva_active), tva_taux: s.tva_taux ?? 18 };
       }
 
       function mergeShopData(row, ctx){
-        const r = row || {};
-        const c = normalizeContext(ctx);
-
-        return {
-          nom_boutique: r.nom_boutique || c.display_name || "MON COMMERCE",
-          city: r.city || c.city || "",
-          telephone: normPhone(r.telephone || c.phone || STATE.phone || ""),
-          whatsapp_phone: normPhone(r.whatsapp_phone || c.whatsapp || STATE.phone || ""),
-          wave_phone: normPhone(r.wave_phone || c.wave_phone || ""),
-          adresse: r.adresse || c.address || "",
-          tagline: r.tagline || c.bio || "",
-          tva_active: typeof r.tva_active === "boolean" ? r.tva_active : !!c.tva_active,
-          tva_taux: Number(r.tva_taux ?? c.tva_taux ?? 18),
-          tva_mode: r.tva_mode || "excl"
-        };
+        const r = row || {}, c = normalizeContext(ctx);
+        return { nom_boutique: r.nom_boutique || c.display_name || "MON COMMERCE", city: r.city || c.city || "", telephone: normPhone(r.telephone || c.phone || STATE.phone || ""), whatsapp_phone: normPhone(r.whatsapp_phone || c.whatsapp || STATE.phone || ""), wave_phone: normPhone(r.wave_phone || c.wave_phone || ""), adresse: r.adresse || c.address || "", tagline: r.tagline || c.bio || "", tva_active: typeof r.tva_active === "boolean" ? r.tva_active : !!c.tva_active, tva_taux: Number(r.tva_taux ?? c.tva_taux ?? 18), tva_mode: r.tva_mode || "excl" };
       }
 
-      function getUrlParam(name){
-        return new URL(location.href).searchParams.get(name);
-      }
+      function getUrlParam(name){ return new URL(location.href).searchParams.get(name); }
 
       function getResolvedSlug(){
-        const guardState = window.DIGIY_GUARD?.state || {};
-        return String(
-          getUrlParam("slug") ||
-          guardState.slug ||
-          guardState.session?.slug ||
-          guardState.identity?.slug ||
-          localStorage.getItem("digiy_pos_last_slug") ||
-          sessionStorage.getItem("digiy_pos_last_slug") ||
-          ""
-        ).trim().toLowerCase();
+        const gs = window.DIGIY_GUARD?.state || {};
+        return String(getUrlParam("slug") || gs.slug || gs.session?.slug || gs.identity?.slug || localStorage.getItem("digiy_pos_last_slug") || sessionStorage.getItem("digiy_pos_last_slug") || "").trim().toLowerCase();
       }
 
       function getResolvedPhone(){
-        const guardState = window.DIGIY_GUARD?.state || {};
-        return normPhone(
-          getUrlParam("phone") ||
-          guardState.phone ||
-          guardState.session?.phone ||
-          guardState.identity?.phone ||
-          localStorage.getItem("digiy_pos_last_phone") ||
-          sessionStorage.getItem("digiy_pos_last_phone") ||
-          ""
-        );
+        const gs = window.DIGIY_GUARD?.state || {};
+        return normPhone(getUrlParam("phone") || gs.phone || gs.session?.phone || gs.identity?.phone || localStorage.getItem("digiy_pos_last_phone") || sessionStorage.getItem("digiy_pos_last_phone") || "");
       }
 
       async function resolvePhoneFromSlug(slug){
         const client = ensureSupabase();
         if(!slug) return "";
-
-        const { data, error } = await client
-          .from("digiy_subscriptions_public")
-          .select("phone,slug,module")
-          .eq("slug", slug)
-          .limit(1)
-          .maybeSingle();
-
+        const { data, error } = await client.from("digiy_subscriptions_public").select("phone,slug,module").eq("slug", slug).limit(1).maybeSingle();
         if(error) throw error;
         return normPhone(data?.phone || "");
       }
 
       async function getAccess(phone){
         if(!phone) return false;
-
-        const res = await rpcFirstSuccess("digiy_has_access", [
-          { p_phone: phone, p_module: MODULE_CODE },
-          { phone, module: MODULE_CODE }
-        ]);
-
+        const res = await rpcFirstSuccess("digiy_has_access", [{ p_phone: phone, p_module: MODULE_CODE }, { phone, module: MODULE_CODE }]);
         if(typeof res === "boolean") return res;
         if(res && typeof res.ok === "boolean") return res.ok;
         if(res && typeof res.has_access === "boolean") return res.has_access;
@@ -1182,30 +602,13 @@
       }
 
       async function getSubscription(phone){
-        try{
-          const data = await rpcFirstSuccess("digiy_get_subscription_status", [
-            { p_phone: phone, p_module: MODULE_CODE },
-            { phone, module: MODULE_CODE }
-          ]);
-          return data || null;
-        }catch(err){
-          log("digiy_get_subscription_status indisponible", { message: err?.message || String(err) });
-          return null;
-        }
+        try{ const data = await rpcFirstSuccess("digiy_get_subscription_status", [{ p_phone: phone, p_module: MODULE_CODE }, { phone, module: MODULE_CODE }]); return data || null; }
+        catch(err){ log("digiy_get_subscription_status indisponible", { message: err?.message || String(err) }); return null; }
       }
 
       async function getStoreContextFallback(slug){
-        try{
-          const data = await rpcFirstSuccess("pos_get_store_context_by_slug", [
-            { p_slug: slug },
-            { slug }
-          ]);
-          if(Array.isArray(data)) return data[0] || null;
-          return data || null;
-        }catch(err){
-          log("pos_get_store_context_by_slug indisponible", { message: err?.message || String(err) });
-          return null;
-        }
+        try{ const data = await rpcFirstSuccess("pos_get_store_context_by_slug", [{ p_slug: slug }, { slug }]); if(Array.isArray(data)) return data[0] || null; return data || null; }
+        catch(err){ log("pos_get_store_context_by_slug indisponible", { message: err?.message || String(err) }); return null; }
       }
 
       async function loadCaisseSettingsFallback(slug, phone){
@@ -1214,171 +617,34 @@
           () => client.from("caisse_settings").select("*").eq("slug", slug).limit(1).maybeSingle(),
           () => client.from("caisse_settings").select("*").eq("owner_id", phone).limit(1).maybeSingle()
         ];
-
         for(const run of tries){
-          try{
-            const { data, error } = await run();
-            if(!error && data) return data;
-            if(error){
-              log("Lecture caisse_settings erreur", {
-                message: error.message,
-                details: error.details,
-                hint: error.hint
-              });
-            }
-          }catch(err){
-            log("Lecture caisse_settings exception", { message: err?.message || String(err) });
-          }
+          try{ const { data, error } = await run(); if(!error && data) return data; if(error) log("Lecture caisse_settings erreur", { message: error.message }); }
+          catch(err){ log("Lecture caisse_settings exception", { message: err?.message || String(err) }); }
         }
-
         return null;
       }
 
-      async function fetchLivePayload(slug){
-        let phone = STATE.phone || "";
-        if(!phone){
-          phone = await resolvePhoneFromSlug(slug);
-        }
-
-        const access = await getAccess(phone);
-        if(!access){
-          throw new Error("forbidden");
-        }
-
-        let subscription = null;
-        try{
-          subscription = await getSubscription(phone);
-        }catch(_){}
-
-        try{
-          const caisse = await rpcFirstSuccess("digiy_pos_get_caisse_by_slug", [
-            { p_slug: slug },
-            { slug }
-          ]);
-
-          if(caisse && caisse.ok === true){
-            const resolvedPhone = normPhone(
-              caisse?.store?.owner_phone ||
-              caisse?.profile?.owner_phone ||
-              caisse?.profile?.whatsapp ||
-              phone ||
-              ""
-            ) || phone;
-
-            const payload = {
-              ...caisse,
-              slug: caisse.slug || slug,
-              workspace_slug: caisse.workspace_slug || slug,
-              __phone: resolvedPhone,
-              __has_access: true,
-              __subscription: subscription,
-              __fetched_at: new Date().toISOString()
-            };
-
-            writeCache(slug, payload);
-            localStorage.setItem("digiy_pos_last_slug", slug);
-            sessionStorage.setItem("digiy_pos_last_slug", slug);
-            if(resolvedPhone){
-              localStorage.setItem("digiy_pos_last_phone", resolvedPhone);
-              sessionStorage.setItem("digiy_pos_last_phone", resolvedPhone);
-            }
-
-            return payload;
-          }
-
-          log("digiy_pos_get_caisse_by_slug fallback", caisse);
-        }catch(err){
-          log("digiy_pos_get_caisse_by_slug KO, fallback contexte", {
-            message: err?.message || String(err)
-          });
-        }
-
-        const ctx = await getStoreContextFallback(slug);
-        const row = await loadCaisseSettingsFallback(slug, phone);
-
-        if(!ctx && !row){
-          throw new Error("profile_not_found");
-        }
-
-        const merged = mergeShopData(row, ctx);
-        const displayName = merged.nom_boutique || "MON COMMERCE";
-        const city = merged.city || "";
-        const whatsapp = normPhone(merged.whatsapp_phone || phone);
-        const wavePhone = normPhone(merged.wave_phone || "");
-
-        const payload = {
-          ok: true,
-          slug,
-          workspace_slug: slug,
-          shop_name: displayName,
-          profile: {
-            display_name: displayName,
-            city,
-            whatsapp,
-            address: merged.adresse || "",
-            bio: merged.tagline || ""
-          },
-          store: {
-            name: displayName,
-            city,
-            owner_phone: phone,
-            whatsapp_phone: whatsapp,
-            wave_phone: wavePhone,
-            address: merged.adresse || "",
-            tagline: merged.tagline || "",
-            store_id: row?.id || row?.store_id || "LOCAL",
-            subscription_status: subscription?.status || subscription?.plan_status || "active"
-          },
-          stats: {
-            active_products: 0,
-            total_products: 0,
-            total_sales: 0,
-            total_revenue: 0,
-            today_sales: 0,
-            today_revenue: 0
-          },
-          __phone: phone,
-          __has_access: true,
-          __subscription: subscription,
-          __fetched_at: new Date().toISOString()
-        };
-
-        writeCache(slug, payload);
-        localStorage.setItem("digiy_pos_last_slug", slug);
-        sessionStorage.setItem("digiy_pos_last_slug", slug);
-        if(phone){
-          localStorage.setItem("digiy_pos_last_phone", phone);
-          sessionStorage.setItem("digiy_pos_last_phone", phone);
-        }
-
-        return payload;
-      }
-
       function paintPills(access, storeName){
-        const dot = qs("dotAccess");
-        const pill = qs("pillAccess");
-        const pillStore = qs("pillStore");
-
+        const dot = qs("dotAccess"), pill = qs("pillAccess"), pillStore = qs("pillStore");
         dot.className = `dot ${access ? "ok" : "bad"}`;
         pill.textContent = access ? "ACCÈS OK" : "ACCÈS BLOQUÉ";
         pillStore.textContent = storeName || "MON COMMERCE";
       }
 
+      /* ━━━ renderBlocked : langage humain, zéro jargon technique ━━━ */
       function renderBlocked(slug, phone, reason){
         qs("liveShell").style.display = "none";
         qs("blockedShell").style.display = "grid";
 
+        /* ━━━ AVANT : affichait Slug, Source, "Bloqué" → jargon visible ━━━ */
         qs("blockedText").innerHTML = `
-          <div><b>Slug :</b> ${esc(slug || "—")}</div>
-          <div style="margin-top:8px"><b>Téléphone :</b> ${esc(phone ? `+${phone}` : "—")}</div>
-          <div style="margin-top:8px"><b>Source :</b> —</div>
-          <div style="margin-top:8px"><b>Statut :</b> Bloqué</div>
-          <div style="margin-top:12px"><b>${esc(reason || "Accès refusé")}</b></div>
-          <div style="margin-top:12px">Passe par le PIN ou retourne au dashboard pro pour reconstruire la session proprement.</div>
+          <div style="margin-bottom:12px">${esc(reason || "Ta caisse attend ton accès.")}</div>
+          ${phone ? `<div><b>Téléphone :</b> +${esc(phone)}</div>` : ""}
+          <div style="margin-top:12px">Entre par ton PIN ou rejoint DIGIY pour commencer.</div>
         `;
 
         const q = { slug: slug || "", phone: phone || "", module: MODULE_CODE };
-        qs("btnBlockedPin").href = buildUrl(PIN_URL, { ...q, target: "caisse" });
+        qs("btnBlockedPin").href  = buildUrl(PIN_URL, { ...q, target: "caisse" });
         qs("btnBlockedAbos").href = buildUrl(ABOS_URL, q);
         qs("btnBlockedDash").href = buildUrl(DASHBOARD_URL, q);
 
@@ -1386,6 +652,7 @@
         reveal();
       }
 
+      /* ━━━ renderReady : storeContextBox nettoyé de Store ID / Statut store ━━━ */
       function renderReady(payload, source, fetchedAt){
         qs("blockedShell").style.display = "none";
         qs("liveShell").style.display = "block";
@@ -1402,38 +669,28 @@
         const stats = payload.stats || {};
         const subscription = payload.__subscription || {};
 
-        const shopName =
-          payload.shop_name ||
-          store.name ||
-          profile.display_name ||
-          "MON COMMERCE";
-
-        const city =
-          store.city ||
-          profile.city ||
-          "—";
+        const shopName = payload.shop_name || store.name || profile.display_name || "MON COMMERCE";
+        const city = store.city || profile.city || "—";
 
         qs("metaSlug").textContent = STATE.slug || "—";
         qs("metaPhone").textContent = STATE.phone ? `+${STATE.phone}` : "—";
         qs("metaStoreName").textContent = shopName;
-        qs("metaSource").textContent = source === "cache" ? "cache" : "live";
+        qs("metaSource").textContent = source === "cache" ? "cache local" : "en direct";
 
         paintPills(STATE.access, shopName);
 
         setBadge("badgeAccess", STATE.access ? "ACCÈS OK" : "ACCÈS BLOQUÉ", STATE.access ? "ok" : "bad");
-        setBadge("badgeStore", (store.store_id || shopName) ? "BOUTIQUE OK" : "BOUTIQUE MINIMALE", (store.store_id || shopName) ? "ok" : "warn");
-        setBadge("badgeCache", source === "cache" ? "CACHE LOCAL" : "LIVE", source === "cache" ? "info" : "ok");
+        setBadge("badgeStore", shopName ? "BOUTIQUE OK" : "BOUTIQUE MINIMALE", shopName ? "ok" : "warn");
+        setBadge("badgeCache", source === "cache" ? "CACHE LOCAL" : "EN DIRECT", source === "cache" ? "info" : "ok");
         setBadge("badgePlan", subscription?.plan || subscription?.plan_code || subscription?.status || "PLAN ACTIF", "info");
 
+        /* ━━━ AVANT : affichait "Store ID", "Statut store" → jargon technique banni ━━━ */
         qs("storeContextBox").innerHTML = `
           <div class="notice ok">
-            <div><b>Nom</b> : ${esc(shopName)}</div>
-            <div style="margin-top:6px"><b>Slug</b> : ${esc(STATE.slug || "—")}</div>
-            <div style="margin-top:6px"><b>Store ID</b> : ${esc(store.store_id || "—")}</div>
-            <div style="margin-top:6px"><b>Ville</b> : ${esc(city || "—")}</div>
+            <div><b>Boutique</b> : ${esc(shopName)}</div>
+            <div style="margin-top:6px"><b>Ville</b> : ${esc(city)}</div>
             <div style="margin-top:6px"><b>Adresse</b> : ${esc(store.address || profile.address || "—")}</div>
             <div style="margin-top:6px"><b>WhatsApp</b> : ${esc(STATE.phone ? `+${STATE.phone}` : "—")}</div>
-            <div style="margin-top:6px"><b>Statut store</b> : ${esc(store.subscription_status || subscription?.status || "—")}</div>
           </div>
         `;
 
@@ -1444,11 +701,9 @@
         const freshness = fetchedAt ? new Date(fetchedAt).toLocaleString("fr-FR") : "maintenant";
         setNotice(
           source === "cache" ? "warn" : "ok",
-          `
-            <div><b>${source === "cache" ? "Lecture cache locale" : "Lecture live active"}</b></div>
-            <div style="margin-top:6px">Boutique : <b>${esc(shopName)}</b></div>
-            <div style="margin-top:6px">Mise à jour : <b>${esc(freshness)}</b></div>
-          `
+          `<div><b>${source === "cache" ? "Lecture locale" : "Lecture en direct"}</b></div>
+           <div style="margin-top:6px">Boutique : <b>${esc(shopName)}</b></div>
+           <div style="margin-top:6px">Mise à jour : <b>${esc(freshness)}</b></div>`
         );
 
         wireNav();
@@ -1458,12 +713,52 @@
       }
 
       function wireNav(){
-        const q = { slug: STATE.slug || "", phone: STATE.phone || "", module: MODULE_CODE };
+        try{
+          const q = { slug: STATE.slug || "", phone: STATE.phone || "", module: MODULE_CODE };
+          qs("btnGoPin").href       = buildUrl(PIN_URL, { ...q, target: "caisse" });
+          qs("btnGoDashboard").href = buildUrl(DASHBOARD_URL, q);
+          qs("btnGoAdmin").href     = buildUrl(ADMIN_URL, q);
+          qs("btnGoHall").href      = buildUrl(HALL_URL, q);
+        }catch(e){ log("wireNav erreur silencieuse", { message: e.message || String(e) }); }
+      }
 
-        qs("btnGoPin").href = buildUrl(PIN_URL, { ...q, target: "caisse" });
-        qs("btnGoDashboard").href = buildUrl(DASHBOARD_URL, q);
-        qs("btnGoAdmin").href = buildUrl(ADMIN_URL, q);
-        qs("btnGoHall").href = buildUrl(HALL_URL, q);
+      async function fetchLivePayload(slug){
+        let phone = STATE.phone || "";
+        if(!phone) phone = await resolvePhoneFromSlug(slug);
+
+        const access = await getAccess(phone);
+        if(!access) throw new Error("forbidden");
+
+        let subscription = null;
+        try{ subscription = await getSubscription(phone); }catch(_){}
+
+        try{
+          const caisse = await rpcFirstSuccess("digiy_pos_get_caisse_by_slug", [{ p_slug: slug }, { slug }]);
+          if(caisse && caisse.ok === true){
+            const resolvedPhone = normPhone(caisse?.store?.owner_phone || caisse?.profile?.owner_phone || caisse?.profile?.whatsapp || phone || "") || phone;
+            const payload = { ...caisse, slug: caisse.slug || slug, workspace_slug: caisse.workspace_slug || slug, __phone: resolvedPhone, __has_access: true, __subscription: subscription, __fetched_at: new Date().toISOString() };
+            writeCache(slug, payload);
+            localStorage.setItem("digiy_pos_last_slug", slug);
+            sessionStorage.setItem("digiy_pos_last_slug", slug);
+            if(resolvedPhone){ localStorage.setItem("digiy_pos_last_phone", resolvedPhone); sessionStorage.setItem("digiy_pos_last_phone", resolvedPhone); }
+            return payload;
+          }
+          log("digiy_pos_get_caisse_by_slug fallback", caisse);
+        }catch(err){ log("digiy_pos_get_caisse_by_slug KO, fallback contexte", { message: err?.message || String(err) }); }
+
+        const ctx = await getStoreContextFallback(slug);
+        const row = await loadCaisseSettingsFallback(slug, phone);
+        if(!ctx && !row) throw new Error("profile_not_found");
+
+        const merged = mergeShopData(row, ctx);
+        const displayName = merged.nom_boutique || "MON COMMERCE";
+        const payload = { ok: true, slug, workspace_slug: slug, shop_name: displayName, profile: { display_name: displayName, city: merged.city, whatsapp: normPhone(merged.whatsapp_phone || phone), address: merged.adresse || "", bio: merged.tagline || "" }, store: { name: displayName, city: merged.city, owner_phone: phone, whatsapp_phone: normPhone(merged.whatsapp_phone || phone), wave_phone: normPhone(merged.wave_phone || ""), address: merged.adresse || "", tagline: merged.tagline || "", store_id: row?.id || row?.store_id || "LOCAL", subscription_status: subscription?.status || subscription?.plan_status || "active" }, stats: { active_products: 0, total_products: 0, total_sales: 0, total_revenue: 0, today_sales: 0, today_revenue: 0 }, __phone: phone, __has_access: true, __subscription: subscription, __fetched_at: new Date().toISOString() };
+
+        writeCache(slug, payload);
+        localStorage.setItem("digiy_pos_last_slug", slug);
+        sessionStorage.setItem("digiy_pos_last_slug", slug);
+        if(phone){ localStorage.setItem("digiy_pos_last_phone", phone); sessionStorage.setItem("digiy_pos_last_phone", phone); }
+        return payload;
       }
 
       async function hydrate(forceLive = false){
@@ -1471,37 +766,26 @@
         let phone = getResolvedPhone();
 
         if(!slug){
-          renderBlocked("", phone, "Slug manquant. Ouvre la page avec ?slug=pos-... ou passe par le PIN.");
+          renderBlocked("", phone, "Ta caisse n'a pas pu identifier ta boutique. Passe par ton lien pro ou ton QR DIGIY.");
           return;
         }
 
-        STATE.slug = slug;
-        STATE.phone = phone;
-
+        STATE.slug = slug; STATE.phone = phone;
         localStorage.setItem("digiy_pos_last_slug", slug);
         sessionStorage.setItem("digiy_pos_last_slug", slug);
-        if(phone){
-          localStorage.setItem("digiy_pos_last_phone", phone);
-          sessionStorage.setItem("digiy_pos_last_phone", phone);
-        }
+        if(phone){ localStorage.setItem("digiy_pos_last_phone", phone); sessionStorage.setItem("digiy_pos_last_phone", phone); }
 
         const cached = useCachedPayload(slug);
 
         if(!forceLive && cached && cached.fresh){
           renderReady(cached.payload, "cache", cached.ts);
-          log("Boot sans appel Supabase grâce au cache local", {
-            slug,
-            cached_at: new Date(cached.ts).toISOString()
-          });
+          log("Boot sans appel Supabase grâce au cache local", { slug, cached_at: new Date(cached.ts).toISOString() });
           return;
         }
 
         if(!forceLive && cached && !cached.fresh){
           renderReady(cached.payload, "cache", cached.ts);
-          log("Cache local affiché, mais vieilli", {
-            slug,
-            cached_at: new Date(cached.ts).toISOString()
-          });
+          log("Cache local affiché, mais vieilli", { slug, cached_at: new Date(cached.ts).toISOString() });
         }
 
         try{
@@ -1509,34 +793,22 @@
           renderReady(payload, "live", payload.__fetched_at);
         }catch(err){
           log("Hydratation live KO", { message: err?.message || String(err) });
-
           if(cached){
             renderReady(cached.payload, "cache", cached.ts);
-            setNotice(
-              "warn",
-              `<div><b>Cache local repris.</b></div><div style="margin-top:6px">Le direct a échoué, donc la page s’appuie sur la dernière synchro locale.</div>`
-            );
+            setNotice("warn", `<div><b>Lecture locale reprise.</b></div><div style="margin-top:6px">La connexion en direct a échoué. Les données affichées viennent de la dernière synchro.</div>`);
             return;
           }
-
-          renderBlocked(slug, phone, err?.message || "Impossible de charger la caisse");
+          renderBlocked(slug, phone, err?.message || "Impossible de charger ta caisse");
         }
       }
 
-      function currentDraft(){
-        return {
-          amount: qs("saleAmount").value || "",
-          label: qs("saleLabel").value || "",
-          method: qs("saleMethod").value || "cash"
-        };
-      }
+      function currentDraft(){ return { amount: qs("saleAmount").value || "", label: qs("saleLabel").value || "", method: qs("saleMethod").value || "cash" }; }
 
       function restoreDraft(){
         const slug = STATE.slug || getResolvedSlug();
         if(!slug) return;
         const draft = readDraft(slug);
         if(!draft) return;
-
         qs("saleAmount").value = draft.amount || "";
         qs("saleLabel").value = draft.label || "";
         qs("saleMethod").value = draft.method || "cash";
@@ -1552,20 +824,13 @@
         const amount = String(qs("saleAmount").value || "").trim();
         const label = String(qs("saleLabel").value || "").trim();
         const method = String(qs("saleMethod").value || "").trim();
-
-        if(!amount && !label){
-          qs("salePreview").innerHTML = `<span class="empty">Rien de préparé pour le moment.</span>`;
-          return;
-        }
-
+        if(!amount && !label){ qs("salePreview").innerHTML = `<span class="empty">Rien de préparé pour le moment.</span>`; return; }
         qs("salePreview").innerHTML = `
           <div class="notice info" style="margin-top:0">
             <div><b>Montant</b> : ${esc(amount ? money(amount) : "—")}</div>
-            <div style="margin-top:6px"><b>Libellé</b> : ${esc(label || "—")}</div>
+            <div style="margin-top:6px"><b>Ce que tu vends</b> : ${esc(label || "—")}</div>
             <div style="margin-top:6px"><b>Paiement</b> : ${esc(method || "cash")}</div>
-            <div style="margin-top:6px"><b>Slug</b> : ${esc(STATE.slug || "—")}</div>
-          </div>
-        `;
+          </div>`;
       }
 
       function clearSaleForm(){
@@ -1579,27 +844,16 @@
       function prepareSale(){
         persistDraft();
         renderSalePreview();
-
         const amount = String(qs("saleAmount").value || "").trim();
         const label = String(qs("saleLabel").value || "").trim();
-        if(!amount || !label){
-          qs("saleHelper").innerHTML = `Complète le montant et le libellé pour préparer une vente propre.`;
-          return;
-        }
-
-        qs("saleHelper").innerHTML = `
-          Préparation enregistrée localement pour <b>${esc(STATE.slug || "—")}</b>.
-          Prochain cran : brancher la RPC métier d’encaissement réel.
-        `;
+        if(!amount || !label){ qs("saleHelper").innerHTML = `Complète le montant et ce que tu vends pour préparer une vente propre.`; return; }
+        qs("saleHelper").innerHTML = `Préparation enregistrée pour <b>${esc(STATE.slug || "—")}</b>. La vente est prête.`;
       }
 
       async function boot(){
+        reveal(); // filet 1 : on révèle dès le début
         try{
-          log("Boot caisse POS", {
-            href: location.href,
-            module: MODULE_CODE
-          });
-
+          log("Boot caisse POS", { href: location.href, module: MODULE_CODE });
           await awaitGuardReady();
           await bootGuard();
           ensureSupabase();
@@ -1608,18 +862,15 @@
           qs("btnSaleReady").addEventListener("click", prepareSale);
           qs("btnClearSale").addEventListener("click", clearSaleForm);
           ["saleAmount", "saleLabel", "saleMethod"].forEach(id => {
-            qs(id).addEventListener("input", () => {
-              persistDraft();
-              renderSalePreview();
-            });
+            qs(id).addEventListener("input", () => { persistDraft(); renderSalePreview(); });
           });
 
           await hydrate(false);
         }catch(err){
           log("Boot général KO", { message: err?.message || String(err) });
-          renderBlocked(getResolvedSlug(), getResolvedPhone(), err?.message || "Erreur de boot");
-        } finally {
-          reveal();
+          renderBlocked(getResolvedSlug(), getResolvedPhone(), err?.message || "Erreur au démarrage de ta caisse");
+        }finally{
+          reveal(); // filet 2 : quoi qu'il arrive
         }
       }
 
@@ -1628,4 +879,3 @@
   </script>
 </body>
 </html>
-
