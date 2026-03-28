@@ -4,33 +4,27 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <meta name="theme-color" content="#020617"/>
-  <title>DIGIY QR POS PRO ♾️ — MON COMMERCE</title>
-  <meta name="description" content="QR pro DIGIY MON COMMERCE / POS. Slug-first, ouverture PIN, dashboard et vitrine." />
+  <title>QR d'accès · MON COMMERCE by DIGIY</title>
+  <meta name="description" content="MON COMMERCE by DIGIY — génère le QR d'accès de ta boutique." />
 
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+
   <style>
     :root{
-      --bg:#020617;
-      --bg2:#0b1120;
-      --card:rgba(11,17,32,.86);
-      --line:rgba(148,163,184,.22);
-      --ink:#f8fafc;
-      --muted:#cbd5e1;
-      --gold:#facc15;
-      --green:#22c55e;
-      --orange:#f97316;
-      --cyan:#22d3ee;
-      --shadow:0 18px 50px rgba(0,0,0,.42);
-      --radius:22px;
+      --bg:#020617;--bg2:#0b1120;--card:rgba(11,17,32,.86);--line:rgba(148,163,184,.22);
+      --ink:#f8fafc;--muted:#cbd5e1;
+      --gold:#facc15;--green:#22c55e;--orange:#f97316;--cyan:#22d3ee;
+      --shadow:0 18px 50px rgba(0,0,0,.42);--radius:22px;
+      --fontA:"Outfit",system-ui,-apple-system,sans-serif;
     }
-
     *{box-sizing:border-box}
     html,body{margin:0;padding:0}
     body{
-      min-height:100vh;
-      color:var(--ink);
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      min-height:100vh;color:var(--ink);font-family:var(--fontA);
       background:
         radial-gradient(circle at top, rgba(250,204,21,.10), transparent 40%),
         radial-gradient(circle at 20% 0%, rgba(34,197,94,.10), transparent 35%),
@@ -38,321 +32,67 @@
         linear-gradient(180deg,#0b1120 0%,#020617 52%,#000 100%);
       padding:18px;
     }
-
-    .wrap{
-      max-width:1100px;
-      margin:0 auto;
-      display:grid;
-      grid-template-columns: 1fr 420px;
-      gap:18px;
-    }
-
-    @media (max-width:980px){
-      .wrap{grid-template-columns:1fr}
-    }
-
-    .card{
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(10px);
-    }
-
+    .wrap{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 420px;gap:18px;}
+    @media(max-width:980px){.wrap{grid-template-columns:1fr}}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);backdrop-filter:blur(10px);}
     .panel{padding:18px}
-    .hero{
-      padding:20px 20px 10px;
-    }
-
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid rgba(250,204,21,.18);
-      background:rgba(250,204,21,.08);
-      color:#fde68a;
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.02em;
-      text-transform:uppercase;
-    }
-
-    h1{
-      margin:12px 0 8px;
-      font-size:clamp(28px,4vw,44px);
-      line-height:1.02;
-      font-weight:1000;
-      letter-spacing:-.02em;
-      background:linear-gradient(135deg,#fff,var(--gold),var(--green));
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-    }
-
-    .sub{
-      margin:0;
-      color:var(--muted);
-      font-size:15px;
-      line-height:1.6;
-      font-weight:700;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-      margin-top:14px;
-    }
-
-    @media (max-width:720px){
-      .grid{grid-template-columns:1fr}
-    }
-
-    label{
-      display:block;
-      margin:0 0 7px;
-      font-size:12px;
-      font-weight:950;
-      color:#cbd5e1;
-      letter-spacing:.02em;
-    }
-
-    .field{
-      width:100%;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(2,6,23,.62);
-      color:var(--ink);
-      padding:14px 14px;
-      outline:none;
-      font-size:14px;
-      font-weight:900;
-    }
-
-    .field:focus{
-      border-color:rgba(250,204,21,.45);
-      box-shadow:0 0 0 3px rgba(250,204,21,.10);
-    }
-
-    .mini{
-      margin-top:6px;
-      color:#94a3b8;
-      font-size:12px;
-      font-weight:700;
-      line-height:1.45;
-    }
-
-    .line{
-      height:1px;
-      background:rgba(255,255,255,.08);
-      margin:16px 0;
-    }
-
-    .actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:16px;
-    }
-
-    .btn{
-      appearance:none;
-      border:none;
-      cursor:pointer;
-      border-radius:999px;
-      padding:13px 16px;
-      font-size:14px;
-      font-weight:1000;
-      color:#fff;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);
-      text-decoration:none;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      min-width:170px;
-      transition:transform .15s ease, opacity .15s ease, border-color .15s ease;
-    }
-
-    .btn:hover{
-      transform:translateY(-1px);
-      border-color:rgba(250,204,21,.32);
-    }
-
-    .btn.primary{
-      color:#081018;
-      background:linear-gradient(135deg,var(--gold),var(--orange));
-      border:none;
-      box-shadow:0 14px 28px rgba(249,115,22,.18);
-    }
-
-    .btn.green{
-      color:#04110d;
-      background:linear-gradient(135deg,#4ade80,#22c55e);
-      border:none;
-      box-shadow:0 14px 28px rgba(34,197,94,.18);
-    }
-
-    .btn.cyan{
-      color:#041118;
-      background:linear-gradient(135deg,#67e8f9,#22d3ee);
-      border:none;
-      box-shadow:0 14px 28px rgba(34,211,238,.18);
-    }
-
-    .stat{
-      border:1px solid rgba(255,255,255,.09);
-      background:rgba(2,6,23,.48);
-      border-radius:18px;
-      padding:13px;
-    }
-
-    .stat .k{
-      font-size:12px;
-      color:#94a3b8;
-      font-weight:900;
-      text-transform:uppercase;
-      letter-spacing:.04em;
-    }
-
-    .stat .v{
-      margin-top:6px;
-      font-size:15px;
-      font-weight:1000;
-      color:#fff;
-      word-break:break-word;
-    }
-
-    .qr-side{
-      padding:18px;
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-    }
-
-    .qr-box{
-      border-radius:24px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,255,255,.92));
-      color:#0f172a;
-      padding:18px;
-      border:1px solid rgba(255,255,255,.65);
-      box-shadow:0 18px 44px rgba(0,0,0,.26);
-    }
-
-    .qr-head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom:12px;
-    }
-
-    .qr-brand{
-      font-size:13px;
-      font-weight:1000;
-      color:#0f172a;
-      letter-spacing:.03em;
-      text-transform:uppercase;
-    }
-
-    .qr-pub{
-      font-size:11px;
-      font-weight:900;
-      color:#334155;
-    }
-
-    .qr-canvas-wrap{
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      padding:14px;
-      background:#fff;
-      border-radius:20px;
-      border:1px solid rgba(15,23,42,.08);
-    }
-
-    #qrCanvas{
-      width:min(100%,300px);
-      height:auto;
-      display:block;
-    }
-
-    .qr-title{
-      margin:14px 0 6px;
-      text-align:center;
-      font-size:26px;
-      line-height:1.05;
-      font-weight:1000;
-      color:#0f172a;
-      letter-spacing:-.02em;
-    }
-
-    .qr-slug{
-      text-align:center;
-      font-size:13px;
-      font-weight:900;
-      color:#334155;
-      word-break:break-word;
-    }
-
-    .qr-note{
-      margin-top:12px;
-      text-align:center;
-      font-size:12px;
-      color:#475569;
-      line-height:1.5;
-      font-weight:800;
-    }
-
-    .status{
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(2,6,23,.45);
-      padding:13px 14px;
-      color:#cbd5e1;
-      font-size:13px;
-      font-weight:900;
-      line-height:1.5;
-    }
-
-    .ok{color:#bbf7d0}
-    .bad{color:#fecaca}
-
-    .urlbox{
-      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-      font-size:12px;
-      line-height:1.5;
-      word-break:break-all;
-      color:#e2e8f0;
-      background:rgba(2,6,23,.62);
-      border:1px solid rgba(255,255,255,.08);
-      padding:12px;
-      border-radius:14px;
-    }
+    .hero{padding:20px 20px 10px;}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid rgba(250,204,21,.18);background:rgba(250,204,21,.08);color:#fde68a;font-size:12px;font-weight:900;letter-spacing:.02em;text-transform:uppercase;}
+    h1{margin:12px 0 8px;font-size:clamp(28px,4vw,44px);line-height:1.02;font-weight:1000;letter-spacing:-.02em;background:linear-gradient(135deg,#fff,var(--gold),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .sub{margin:0;color:var(--muted);font-size:15px;line-height:1.6;font-weight:700;}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
+    @media(max-width:720px){.grid{grid-template-columns:1fr}}
+    label{display:block;margin:0 0 7px;font-size:12px;font-weight:950;color:#cbd5e1;letter-spacing:.02em;}
+    .field{width:100%;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(2,6,23,.62);color:var(--ink);padding:14px 14px;outline:none;font-size:14px;font-weight:900;font-family:var(--fontA);}
+    .field:focus{border-color:rgba(250,204,21,.45);box-shadow:0 0 0 3px rgba(250,204,21,.10);}
+    .mini{margin-top:6px;color:#94a3b8;font-size:12px;font-weight:700;line-height:1.45;}
+    .line{height:1px;background:rgba(255,255,255,.08);margin:16px 0;}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
+    .btn{appearance:none;border:none;cursor:pointer;border-radius:999px;padding:13px 16px;font-size:14px;font-weight:1000;color:#fff;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:170px;transition:transform .15s ease, opacity .15s ease, border-color .15s ease;font-family:var(--fontA);}
+    .btn:hover{transform:translateY(-1px);border-color:rgba(250,204,21,.32);}
+    .btn.primary{color:#081018;background:linear-gradient(135deg,var(--gold),var(--orange));border:none;box-shadow:0 14px 28px rgba(249,115,22,.18);}
+    .btn.green{color:#04110d;background:linear-gradient(135deg,#4ade80,#22c55e);border:none;box-shadow:0 14px 28px rgba(34,197,94,.18);}
+    .btn.cyan{color:#041118;background:linear-gradient(135deg,#67e8f9,#22d3ee);border:none;box-shadow:0 14px 28px rgba(34,211,238,.18);}
+    .stat{border:1px solid rgba(255,255,255,.09);background:rgba(2,6,23,.48);border-radius:18px;padding:13px;}
+    .stat .k{font-size:12px;color:#94a3b8;font-weight:900;text-transform:uppercase;letter-spacing:.04em;}
+    .stat .v{margin-top:6px;font-size:15px;font-weight:1000;color:#fff;word-break:break-word;}
+    .qr-side{padding:18px;display:flex;flex-direction:column;gap:14px;}
+    .qr-box{border-radius:24px;background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,255,255,.92));color:#0f172a;padding:18px;border:1px solid rgba(255,255,255,.65);box-shadow:0 18px 44px rgba(0,0,0,.26);}
+    .qr-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;}
+    .qr-brand{font-size:13px;font-weight:1000;color:#0f172a;letter-spacing:.03em;text-transform:uppercase;}
+    .qr-pub{font-size:11px;font-weight:900;color:#334155;}
+    .qr-canvas-wrap{display:flex;justify-content:center;align-items:center;padding:14px;background:#fff;border-radius:20px;border:1px solid rgba(15,23,42,.08);}
+    #qrCanvas{width:min(100%,300px);height:auto;display:block;}
+    .qr-title{margin:14px 0 6px;text-align:center;font-size:26px;line-height:1.05;font-weight:1000;color:#0f172a;letter-spacing:-.02em;}
+    .qr-slug{text-align:center;font-size:13px;font-weight:900;color:#334155;word-break:break-word;}
+    .qr-note{margin-top:12px;text-align:center;font-size:12px;color:#475569;line-height:1.5;font-weight:800;}
+    .status{border-radius:16px;border:1px solid rgba(255,255,255,.10);background:rgba(2,6,23,.45);padding:13px 14px;color:#cbd5e1;font-size:13px;font-weight:900;line-height:1.5;}
+    .ok{color:#bbf7d0}.bad{color:#fecaca}
+    .urlbox{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:12px;line-height:1.5;word-break:break-all;color:#e2e8f0;background:rgba(2,6,23,.62);border:1px solid rgba(255,255,255,.08);padding:12px;border-radius:14px;}
   </style>
 </head>
 <body>
   <div class="wrap">
     <section class="card">
       <div class="hero">
-        <div class="badge">🧾 DIGIY CAISSE PRO • MON COMMERCE</div>
-        <h1>QR PRO COMMERCE / POS</h1>
+        <!-- ━━━ AVANT : "🧾 DIGIY CAISSE PRO • MON COMMERCE" → banni ━━━ -->
+        <div class="badge">🏪 MON COMMERCE · QR d'accès boutique</div>
+        <!-- ━━━ AVANT : "QR PRO COMMERCE / POS" → banni ━━━ -->
+        <h1>Mon QR d'accès boutique</h1>
+        <!-- ━━━ AVANT : "COMMERCE / POS", "slug-first" → jargon banni ━━━ -->
         <p class="sub">
-          Ici on ne garde pas les réflexes LOC. On passe proprement en rail
-          <strong>COMMERCE / POS</strong>, avec QR principal vers le PIN pro,
-          slug-first, et liens rapides vers le dashboard et la vitrine.
+          Génère le QR de ta boutique pour ouvrir l'accès pro directement.
+          Le QR principal mène à l'entrée sécurisée — ton client ne voit que ce qu'il faut voir.
         </p>
       </div>
 
       <div class="panel">
         <div class="grid">
           <div>
-            <label for="slug">Slug pro</label>
-            <input id="slug" class="field" placeholder="Ex: pos-221771342889" />
-            <div class="mini">Le QR principal ouvre le PIN pro avec ce slug.</div>
+            <!-- ━━━ AVANT : "Slug pro" + placeholder "pos-221771342889" → bannis ━━━ -->
+            <label for="slug">Identifiant boutique</label>
+            <input id="slug" class="field" placeholder="Ton identifiant boutique" />
+            <div class="mini">Le QR principal ouvre l'accès sécurisé avec cet identifiant.</div>
           </div>
 
           <div>
@@ -362,50 +102,53 @@
           </div>
 
           <div>
-            <label for="shopName">Nom boutique / commerce</label>
+            <label for="shopName">Nom de ta boutique</label>
             <input id="shopName" class="field" placeholder="Ex: Boutique Beauville" />
             <div class="mini">Sous-titre de la carte.</div>
           </div>
 
           <div>
-            <label for="targetMode">Cible du QR</label>
+            <!-- ━━━ AVANT : options "PIN PRO", "Dashboard Pro" → bannis ━━━ -->
+            <label for="targetMode">Destination du QR</label>
             <select id="targetMode" class="field">
-              <option value="pin">PIN PRO (recommandé)</option>
-              <option value="dashboard">Dashboard Pro</option>
-              <option value="public">Vitrine publique</option>
+              <option value="pin">Mon accès PIN (recommandé)</option>
+              <option value="dashboard">Mon espace de travail</option>
+              <option value="public">Ma vitrine publique</option>
             </select>
-            <div class="mini">Par défaut, un QR d’entrée propre pour le propriétaire.</div>
+            <div class="mini">Par défaut, le QR ouvre l'entrée sécurisée de ta boutique.</div>
           </div>
         </div>
 
         <div class="line"></div>
 
         <div class="grid">
+          <!-- ━━━ AVANT : "URL PIN PRO", "URL Dashboard Pro" → bannis ━━━ -->
           <div class="stat">
-            <div class="k">URL PIN PRO</div>
+            <div class="k">Lien accès PIN</div>
             <div id="pinUrl" class="v">—</div>
           </div>
           <div class="stat">
-            <div class="k">URL Dashboard Pro</div>
+            <div class="k">Lien espace de travail</div>
             <div id="dashUrl" class="v">—</div>
           </div>
           <div class="stat">
-            <div class="k">URL Vitrine</div>
+            <div class="k">Lien vitrine publique</div>
             <div id="publicUrl" class="v">—</div>
           </div>
           <div class="stat">
-            <div class="k">URL encodée dans le QR</div>
+            <div class="k">Lien encodé dans le QR</div>
             <div id="qrTargetText" class="v">—</div>
           </div>
         </div>
 
         <div class="actions">
-          <button id="btnGenerate" class="btn primary" type="button">⚙️ Générer le QR</button>
-          <button id="btnCopy" class="btn cyan" type="button">📋 Copier le lien QR</button>
-          <button id="btnOpenTarget" class="btn green" type="button">🚪 Ouvrir la cible QR</button>
-          <button id="btnOpenDash" class="btn" type="button">🧭 Dashboard Pro</button>
-          <button id="btnOpenPublic" class="btn" type="button">🏪 Vitrine publique</button>
-          <button id="btnDownload" class="btn" type="button">🖼️ Télécharger PNG</button>
+          <button id="btnGenerate"    class="btn primary" type="button">⚙️ Générer le QR</button>
+          <button id="btnCopy"        class="btn cyan"    type="button">📋 Copier le lien</button>
+          <button id="btnOpenTarget"  class="btn green"   type="button">🚪 Ouvrir la destination</button>
+          <!-- ━━━ AVANT : "Dashboard Pro" → banni ━━━ -->
+          <button id="btnOpenDash"    class="btn"         type="button">🧭 Mon espace de travail</button>
+          <button id="btnOpenPublic"  class="btn"         type="button">🏪 Ma vitrine publique</button>
+          <button id="btnDownload"    class="btn"         type="button">🖼️ Télécharger PNG</button>
         </div>
 
         <div class="line"></div>
@@ -422,10 +165,12 @@
       <div class="qr-box" id="qrCard">
         <div class="qr-head">
           <div>
-            <div class="qr-brand">DIGIY CAISSE PRO</div>
-            <div class="qr-pub">MON COMMERCE • QR d’accès</div>
+            <!-- ━━━ AVANT : "DIGIY CAISSE PRO" → banni ━━━ -->
+            <div class="qr-brand">MON COMMERCE</div>
+            <div class="qr-pub">DIGIYLYFE · QR d'accès boutique</div>
           </div>
-          <div style="font-size:12px;font-weight:1000;color:#334155">POS</div>
+          <!-- ━━━ AVANT : "POS" affiché → jargon banni ━━━ -->
+          <div style="font-size:12px;font-weight:1000;color:#334155">∞</div>
         </div>
 
         <div class="qr-canvas-wrap">
@@ -433,16 +178,15 @@
         </div>
 
         <div class="qr-title" id="cardTitle">MON COMMERCE</div>
-        <div class="qr-slug" id="cardSlug">slug: —</div>
+        <div class="qr-slug" id="cardSlug">—</div>
         <div class="qr-note" id="cardNote">
-          Scanner pour ouvrir l’accès pro DIGIY.
+          Scanner pour ouvrir l'accès boutique DIGIY.
         </div>
       </div>
 
       <div class="status">
-        Conseil terrain : garde le QR principal sur <strong>PIN PRO</strong>.
-        Comme ça le commerçant ouvre son rail propre sans laisser le cockpit
-        grand ouvert devant la boutique.
+        Conseil terrain : garde le QR principal sur <strong>Mon accès PIN</strong>.
+        Ton commerçant ouvre son espace proprement sans laisser tout ouvert devant la boutique.
       </div>
     </aside>
   </div>
@@ -451,220 +195,194 @@
     (() => {
       "use strict";
 
-      const PRO_BASE = "https://commerce-pro.digiylyfe.com";
+      const PRO_BASE    = "https://commerce-pro.digiylyfe.com";
       const PUBLIC_BASE = "https://mon-commerce.digiylyfe.com";
-      const MODULE = "POS";
+      const MODULE      = "POS"; // code interne, jamais affiché
 
       const $ = (id) => document.getElementById(id);
 
-      const slugEl = $("slug");
+      const slugEl       = $("slug");
       const publicNameEl = $("publicName");
-      const shopNameEl = $("shopName");
+      const shopNameEl   = $("shopName");
       const targetModeEl = $("targetMode");
-
-      const statusEl = $("status");
-      const copyBoxEl = $("copyBox");
-
-      const pinUrlEl = $("pinUrl");
-      const dashUrlEl = $("dashUrl");
-      const publicUrlEl = $("publicUrl");
+      const statusEl     = $("status");
+      const copyBoxEl    = $("copyBox");
+      const pinUrlEl     = $("pinUrl");
+      const dashUrlEl    = $("dashUrl");
+      const publicUrlEl  = $("publicUrl");
       const qrTargetTextEl = $("qrTargetText");
-
-      const cardTitleEl = $("cardTitle");
-      const cardSlugEl = $("cardSlug");
-      const cardNoteEl = $("cardNote");
-
-      const qrCanvas = $("qrCanvas");
+      const cardTitleEl  = $("cardTitle");
+      const cardSlugEl   = $("cardSlug");
+      const cardNoteEl   = $("cardNote");
+      const qrCanvas     = $("qrCanvas");
 
       function setStatus(text, ok = true){
-        statusEl.innerHTML = `Statut : <span class="${ok ? 'ok' : 'bad'}">${escapeHtml(text)}</span>`;
+        statusEl.innerHTML = `Statut : <span class="${ok ? "ok" : "bad"}">${escapeHtml(text)}</span>`;
       }
 
       function escapeHtml(str){
         return String(str ?? "")
-          .replaceAll("&","&amp;")
-          .replaceAll("<","&lt;")
-          .replaceAll(">","&gt;")
-          .replaceAll('"',"&quot;");
+          .replaceAll("&","&amp;").replaceAll("<","&lt;")
+          .replaceAll(">","&gt;").replaceAll('"',"&quot;");
       }
 
-      function qs(name){
-        return new URLSearchParams(location.search).get(name) || "";
-      }
+      function qs(name){ return new URLSearchParams(location.search).get(name) || ""; }
 
       function slugify(str){
-        return String(str || "")
-          .toLowerCase()
+        return String(str || "").toLowerCase()
           .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/(^-|-$)/g, "")
-          .trim();
+          .replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").trim();
       }
 
       function getCleanSlug(){
-        const raw = String(slugEl.value || "").trim();
-        return raw || "pos-221771342889";
+        return String(slugEl.value || "").trim() || "pos-000000000";
       }
 
       function buildUrls(){
         const slug = getCleanSlug();
-        const pin = `${PRO_BASE}/pin.html?slug=${encodeURIComponent(slug)}`;
+        const pin  = `${PRO_BASE}/pin.html?slug=${encodeURIComponent(slug)}`;
         const dash = `${PRO_BASE}/dashboard-pro.html?slug=${encodeURIComponent(slug)}`;
-        const pub = `${PUBLIC_BASE}/?slug=${encodeURIComponent(slug)}`;
-
+        const pub  = `${PUBLIC_BASE}/?slug=${encodeURIComponent(slug)}`;
         return { slug, pin, dash, pub };
       }
 
       function getQrTarget(){
         const { pin, dash, pub } = buildUrls();
         const mode = targetModeEl.value;
-
         if(mode === "dashboard") return dash;
-        if(mode === "public") return pub;
+        if(mode === "public")    return pub;
         return pin;
       }
 
       async function generateQr(){
-        const slug = getCleanSlug();
+        const slug       = getCleanSlug();
         const publicName = String(publicNameEl.value || "").trim() || "MON COMMERCE";
-        const shopName = String(shopNameEl.value || "").trim() || "DIGIY CAISSE PRO";
+        /* ━━━ AVANT : shopName default "DIGIY CAISSE PRO" → banni ━━━ */
+        const shopName   = String(shopNameEl.value || "").trim() || "Ma boutique";
         const urls = buildUrls();
         const target = getQrTarget();
 
-        pinUrlEl.textContent = urls.pin;
-        dashUrlEl.textContent = urls.dash;
-        publicUrlEl.textContent = urls.pub;
+        pinUrlEl.textContent       = urls.pin;
+        dashUrlEl.textContent      = urls.dash;
+        publicUrlEl.textContent    = urls.pub;
         qrTargetTextEl.textContent = target;
-        copyBoxEl.textContent = target;
+        copyBoxEl.textContent      = target;
 
         cardTitleEl.textContent = publicName;
-        cardSlugEl.textContent = `slug: ${slug}`;
-        cardNoteEl.textContent =
+        /* ━━━ AVANT : "slug: ..." → "identifiant: ..." ━━━ */
+        cardSlugEl.textContent  = `identifiant: ${slug}`;
+        cardNoteEl.textContent  =
           targetModeEl.value === "public"
-            ? `${shopName} • ouverture vitrine publique`
+            ? `${shopName} · ouverture vitrine publique`
             : targetModeEl.value === "dashboard"
-              ? `${shopName} • ouverture dashboard pro`
-              : `${shopName} • ouverture PIN pro`;
+              ? `${shopName} · ouverture espace de travail`
+              : `${shopName} · ouverture accès sécurisé`;
 
         if(!window.QRCode || typeof window.QRCode.toCanvas !== "function"){
-          setStatus("lib QR absente", false);
+          setStatus("Librairie QR absente", false);
           return;
         }
 
         try{
           await window.QRCode.toCanvas(qrCanvas, target, {
-            width: 320,
-            margin: 2,
-            errorCorrectionLevel: "H",
-            color: {
-              dark: "#0f172a",
-              light: "#ffffff"
-            }
+            width: 320, margin: 2, errorCorrectionLevel: "H",
+            color: { dark: "#0f172a", light: "#ffffff" }
           });
-          setStatus(`QR ${MODULE} généré pour ${slug}`, true);
+          setStatus(`QR généré pour ${slug}`, true);
         }catch(err){
           console.error(err);
-          setStatus("erreur génération QR", false);
+          setStatus("Erreur génération QR", false);
         }
       }
 
       async function copyTarget(){
         try{
-          const target = getQrTarget();
-          await navigator.clipboard.writeText(target);
-          setStatus("lien QR copié", true);
+          await navigator.clipboard.writeText(getQrTarget());
+          setStatus("Lien copié", true);
         }catch(err){
           console.error(err);
-          setStatus("copie impossible", false);
+          setStatus("Copie impossible", false);
         }
       }
 
-      function openTarget(){
-        window.open(getQrTarget(), "_blank", "noopener");
-      }
-
-      function openDash(){
-        window.open(buildUrls().dash, "_blank", "noopener");
-      }
-
-      function openPublic(){
-        window.open(buildUrls().pub, "_blank", "noopener");
-      }
+      function openTarget()  { window.open(getQrTarget(), "_blank", "noopener"); }
+      function openDash()    { window.open(buildUrls().dash, "_blank", "noopener"); }
+      function openPublic()  { window.open(buildUrls().pub,  "_blank", "noopener"); }
 
       function downloadPng(){
         try{
-          const slug = getCleanSlug();
+          const slug       = getCleanSlug();
           const publicName = String(publicNameEl.value || "").trim() || "MON COMMERCE";
-          const shopName = String(shopNameEl.value || "").trim() || "DIGIY CAISSE PRO";
+          /* ━━━ AVANT : "DIGIY CAISSE PRO" × 2 dans le PNG → bannis ━━━ */
+          const shopName   = String(shopNameEl.value || "").trim() || "Ma boutique";
 
           const out = document.createElement("canvas");
-          out.width = 1400;
-          out.height = 1800;
-
+          out.width = 1400; out.height = 1800;
           const ctx = out.getContext("2d");
 
           const grad = ctx.createLinearGradient(0, 0, 0, out.height);
-          grad.addColorStop(0, "#ffffff");
-          grad.addColorStop(1, "#f8fafc");
+          grad.addColorStop(0, "#ffffff"); grad.addColorStop(1, "#f8fafc");
           ctx.fillStyle = grad;
           ctx.fillRect(0, 0, out.width, out.height);
 
+          /* ━━━ AVANT : "DIGIY CAISSE PRO" → "MON COMMERCE" ━━━ */
           ctx.fillStyle = "#0f172a";
-          ctx.font = "900 56px Inter, Arial, sans-serif";
+          ctx.font = "900 56px Outfit, Arial, sans-serif";
           ctx.textAlign = "center";
-          ctx.fillText("DIGIY CAISSE PRO", out.width / 2, 120);
+          ctx.fillText("MON COMMERCE", out.width / 2, 120);
 
           ctx.fillStyle = "#334155";
-          ctx.font = "800 30px Inter, Arial, sans-serif";
-          ctx.fillText("MON COMMERCE • QR D’ACCÈS", out.width / 2, 175);
+          ctx.font = "800 30px Outfit, Arial, sans-serif";
+          /* ━━━ AVANT : "MON COMMERCE • QR D'ACCÈS" → déjà OK ━━━ */
+          ctx.fillText("DIGIYLYFE • QR D'ACCÈS BOUTIQUE", out.width / 2, 175);
 
           ctx.fillStyle = "#facc15";
           roundRect(ctx, 500, 210, 400, 56, 28, true);
           ctx.fillStyle = "#0f172a";
-          ctx.font = "900 24px Inter, Arial, sans-serif";
-          ctx.fillText("MODULE POS", out.width / 2, 247);
+          ctx.font = "900 24px Outfit, Arial, sans-serif";
+          /* ━━━ AVANT : "MODULE POS" → banni ━━━ */
+          ctx.fillText("MON COMMERCE", out.width / 2, 247);
 
           ctx.fillStyle = "#ffffff";
           roundRect(ctx, 250, 310, 900, 900, 40, true);
-
           ctx.drawImage(qrCanvas, 350, 410, 700, 700);
 
           ctx.fillStyle = "#0f172a";
-          ctx.font = "1000 72px Inter, Arial, sans-serif";
+          ctx.font = "1000 72px Outfit, Arial, sans-serif";
           ctx.fillText(publicName, out.width / 2, 1325);
 
           ctx.fillStyle = "#334155";
-          ctx.font = "900 34px Inter, Arial, sans-serif";
+          ctx.font = "900 34px Outfit, Arial, sans-serif";
           ctx.fillText(shopName, out.width / 2, 1390);
 
           ctx.fillStyle = "#475569";
-          ctx.font = "800 26px Inter, Arial, sans-serif";
-          ctx.fillText(`slug: ${slug}`, out.width / 2, 1450);
+          ctx.font = "800 26px Outfit, Arial, sans-serif";
+          /* ━━━ AVANT : "slug: ..." → "identifiant: ..." ━━━ */
+          ctx.fillText(`identifiant: ${slug}`, out.width / 2, 1450);
 
           ctx.fillStyle = "#64748b";
-          ctx.font = "800 24px Inter, Arial, sans-serif";
-          ctx.fillText("Scanner pour ouvrir l’accès pro DIGIY", out.width / 2, 1520);
+          ctx.font = "800 24px Outfit, Arial, sans-serif";
+          ctx.fillText("Scanner pour ouvrir l'accès boutique DIGIY", out.width / 2, 1520);
 
           ctx.fillStyle = "#94a3b8";
-          ctx.font = "700 20px Inter, Arial, sans-serif";
+          ctx.font = "700 20px Outfit, Arial, sans-serif";
           wrapCenterText(ctx, getQrTarget(), out.width / 2, 1600, 1000, 30);
 
           const a = document.createElement("a");
           a.href = out.toDataURL("image/png");
-          a.download = `${slug}-qr-pos.png`;
+          a.download = `${slug}-qr-moncommerce.png`;
           a.click();
 
           setStatus("PNG téléchargé", true);
         }catch(err){
           console.error(err);
-          setStatus("téléchargement PNG impossible", false);
+          setStatus("Téléchargement PNG impossible", false);
         }
       }
 
       function roundRect(ctx, x, y, w, h, r, fill){
         ctx.beginPath();
-        ctx.moveTo(x + r, y);
-        ctx.lineTo(x + w - r, y);
+        ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y);
         ctx.quadraticCurveTo(x + w, y, x + w, y + r);
         ctx.lineTo(x + w, y + h - r);
         ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
@@ -678,20 +396,13 @@
 
       function wrapCenterText(ctx, text, centerX, startY, maxWidth, lineHeight){
         const words = String(text || "").split(" ");
-        let line = "";
-        let y = startY;
-
+        let line = "", y = startY;
         for(let i = 0; i < words.length; i++){
           const testLine = line ? `${line} ${words[i]}` : words[i];
-          const width = ctx.measureText(testLine).width;
-
-          if(width > maxWidth && line){
+          if(ctx.measureText(testLine).width > maxWidth && line){
             ctx.fillText(line, centerX, y);
-            line = words[i];
-            y += lineHeight;
-          } else {
-            line = testLine;
-          }
+            line = words[i]; y += lineHeight;
+          } else { line = testLine; }
         }
         if(line) ctx.fillText(line, centerX, y);
       }
@@ -702,9 +413,10 @@
         const qShop = String(qs("shop") || "").trim();
         const qMode = String(qs("mode") || "").trim();
 
-        slugEl.value = qSlug || "pos-221771342889";
+        /* ━━━ AVANT : defaults "pos-221771342889" + "DIGIY CAISSE PRO" → bannis ━━━ */
+        slugEl.value       = qSlug || "";
         publicNameEl.value = qName || "MON COMMERCE";
-        shopNameEl.value = qShop || "DIGIY CAISSE PRO";
+        shopNameEl.value   = qShop || "";
 
         if(["pin","dashboard","public"].includes(qMode)){
           targetModeEl.value = qMode;
