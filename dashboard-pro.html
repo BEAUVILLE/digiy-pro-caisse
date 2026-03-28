@@ -1,12 +1,11 @@
-===== dashboard-pro.html =====
 <!doctype html>
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>MON COMMERCE — Dashboard Pro</title>
+  <title>Mon espace de travail · MON COMMERCE by DIGIY</title>
   <meta name="theme-color" content="#07140f" />
-  <meta name="description" content="MON COMMERCE by DIGIY — dashboard pro POS : abonnement, activité, boost et porte centrale vers la caisse." />
+  <meta name="description" content="MON COMMERCE by DIGIY — mon espace de travail : abonnement, activité, boost et accès à ma caisse." />
 
   <script>
     window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
@@ -32,34 +31,28 @@
   <script src="./guard.js"></script>
   <script src="./claw-tools-pos.js"></script>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+
   <style>
     :root{
-      --bg:#04110d;
-      --bg2:#071a14;
-      --card:rgba(8,24,18,.78);
-      --card2:rgba(9,28,21,.92);
-      --muted:#bfd3c8;
-      --text:#f7fbf8;
-      --ok:#22c55e;
-      --warn:#f59e0b;
-      --danger:#ef4444;
-      --accent:#60a5fa;
-      --gold:#facc15;
-      --gold2:#f59e0b;
-      --line:rgba(255,255,255,.09);
-      --line2:rgba(255,255,255,.14);
-      --shadow:0 22px 56px rgba(0,0,0,.28);
-      --shadow-soft:0 14px 34px rgba(0,0,0,.22);
-      --radius:26px;
-      --max:1120px;
+      --bg:#04110d;--bg2:#071a14;
+      --card:rgba(8,24,18,.78);--card2:rgba(9,28,21,.92);
+      --muted:#bfd3c8;--text:#f7fbf8;
+      --ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--accent:#60a5fa;
+      --gold:#facc15;--gold2:#f59e0b;
+      --line:rgba(255,255,255,.09);--line2:rgba(255,255,255,.14);
+      --shadow:0 22px 56px rgba(0,0,0,.28);--shadow-soft:0 14px 34px rgba(0,0,0,.22);
+      --radius:26px;--max:1120px;
+      --fontA:"Outfit",system-ui,-apple-system,sans-serif;
     }
 
     *{box-sizing:border-box}
     html,body{margin:0;padding:0}
     html{scroll-behavior:smooth}
     body{
-      min-height:100vh;
-      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      min-height:100vh;font-family:var(--fontA);
       background:
         radial-gradient(circle at top left, rgba(250,204,21,.10), transparent 28%),
         radial-gradient(circle at top right, rgba(96,165,250,.08), transparent 22%),
@@ -72,13 +65,14 @@
 
     .wrap{width:min(100%, var(--max));margin:0 auto;padding:16px 14px 92px}
 
+    /* ━━━ ANTI-ÉCRAN NOIR ━━━ */
     .app{display:none}
     html.app-ready .app{display:block}
 
+    /* ── FLOAT ── */
     .floating-site-btn{
-      position:fixed;left:16px;
-      bottom:calc(16px + env(safe-area-inset-bottom, 0px));
-      z-index:90;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom, 0px));z-index:90;
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
       min-height:48px;padding:14px 16px;border-radius:999px;
       border:1px solid rgba(255,255,255,.12);background:rgba(5,16,12,.88);
       backdrop-filter:blur(10px);color:var(--text);font-size:13px;font-weight:900;
@@ -87,6 +81,7 @@
     }
     .floating-site-btn:hover{transform:translateY(-1px);border-color:rgba(250,204,21,.28);background:rgba(8,20,15,.94)}
 
+    /* ── TOPBAR ── */
     .topbar{
       position:sticky;top:0;z-index:70;margin-bottom:12px;
       backdrop-filter:blur(12px);background:rgba(4,17,13,.76);
@@ -95,25 +90,17 @@
     .topbar-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px}
 
     .brand{display:flex;align-items:center;gap:12px;min-width:0}
-    .brand-badge{
-      width:48px;height:48px;border-radius:18px;display:grid;place-items:center;
-      background:linear-gradient(135deg, rgba(250,204,21,.16), rgba(245,158,11,.08));
-      border:1px solid rgba(250,204,21,.16);box-shadow:0 16px 34px rgba(250,204,21,.10);
-      font-size:24px;flex:0 0 auto;
-    }
+    .brand-badge{width:48px;height:48px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg, rgba(250,204,21,.16), rgba(245,158,11,.08));border:1px solid rgba(250,204,21,.16);box-shadow:0 16px 34px rgba(250,204,21,.10);font-size:24px;flex:0 0 auto;}
     .brand-kicker{color:var(--gold);font-size:12px;font-weight:950;letter-spacing:.14em;text-transform:uppercase;margin-bottom:3px}
     .brand-title{font-size:20px;font-weight:1000;line-height:1.08;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .brand-sub{color:var(--muted);font-size:12px;font-weight:800;margin-top:3px;letter-spacing:.04em}
 
     .right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
 
-    .pill{
-      display:inline-flex;align-items:center;gap:8px;padding:10px 13px;border-radius:999px;
-      background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--muted);
-      font-weight:900;font-size:12px;backdrop-filter:blur(10px);
-    }
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:10px 13px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--muted);font-weight:900;font-size:12px;backdrop-filter:blur(10px);}
     .pill b{color:var(--text);font-weight:950}
 
+    /* ── BOUTONS ── */
     .btn,.btn-outline,.btn-ghost{
       appearance:none;border:none;cursor:pointer;
       display:inline-flex;align-items:center;justify-content:center;gap:10px;
@@ -126,51 +113,31 @@
     .btn-outline{background:rgba(255,255,255,.04);border:1px solid var(--line2);color:var(--text)}
     .btn-ghost{background:transparent;border:1px solid var(--line2);color:var(--muted)}
 
+    /* ── LAYOUT ── */
     .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:12px;margin-top:8px}
-
-    .card{
-      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)),var(--card);
-      border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;
-    }
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)),var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;}
     .card h3{margin:0 0 10px 0;font-size:16px;letter-spacing:.01em;line-height:1.2}
 
-    .heroBadge{
-      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
-      background:rgba(250,204,21,.10);border:1px solid rgba(250,204,21,.18);color:var(--gold);
-      font-size:12px;font-weight:950;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px;
-    }
+    .heroBadge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(250,204,21,.10);border:1px solid rgba(250,204,21,.18);color:var(--gold);font-size:12px;font-weight:950;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px;}
 
     .muted{color:var(--muted)}
     .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 
     .statusDot{width:10px;height:10px;border-radius:999px;background:var(--warn);box-shadow:0 0 0 4px rgba(255,255,255,.03)}
-    .statusDot.ok{background:var(--ok)}
-    .statusDot.bad{background:var(--danger)}
+    .statusDot.ok{background:var(--ok)}.statusDot.bad{background:var(--danger)}
 
     .bigMoney{font-size:38px;font-weight:1000;letter-spacing:-.04em;margin:8px 0 4px 0;line-height:1}
-
     .mini{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--muted);font-weight:800;line-height:1.6}
 
-    .diag{
-      margin-top:12px;padding:12px;border-radius:16px;background:#081119;border:1px solid var(--line);
-      color:#d8e1ff;font:12px/1.58 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      white-space:pre-wrap;word-break:break-word;max-height:240px;overflow:auto;
-    }
+    .diag{margin-top:12px;padding:12px;border-radius:16px;background:#081119;border:1px solid var(--line);color:#d8e1ff;font:12px/1.58 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word;max-height:240px;overflow:auto;}
 
     .hr{height:1px;background:var(--line);margin:14px 0}
 
-    .boostBox{
-      display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
-      padding:14px;border-radius:20px;background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.20);
-    }
+    .boostBox{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:14px;border-radius:20px;background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.20);}
     .boostBox b{display:block;margin-bottom:5px;font-size:15px}
 
     .notifList{display:flex;flex-direction:column;gap:8px;margin-top:8px}
-
-    .notif{
-      padding:12px 13px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.03);
-      display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
-    }
+    .notif{padding:12px 13px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.03);display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
 
     .tag{font-size:11px;font-weight:950;padding:7px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
     .tag.warn{color:#ffe2b0;border-color:rgba(245,158,11,.35);background:rgba(245,158,11,.10)}
@@ -178,9 +145,7 @@
     .tag.info{color:#cfd6ff;border-color:rgba(96,165,250,.35);background:rgba(96,165,250,.10)}
 
     .footer{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-
-    .smallLink{color:var(--muted);text-decoration:none;font-weight:850}
-    .smallLink:hover{color:var(--text)}
+    .smallLink{color:var(--muted);text-decoration:none;font-weight:850}.smallLink:hover{color:var(--text)}
 
     .navRow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
 
@@ -194,9 +159,7 @@
 
     @media(max-width:920px){.grid{grid-template-columns:1fr}}
     @media(max-width:700px){
-      .wrap{padding:12px 12px 92px}
-      .topbar-inner{padding:12px}
-      .brand-title{white-space:normal}
+      .wrap{padding:12px 12px 92px}.topbar-inner{padding:12px}.brand-title{white-space:normal}
       .boostBox{flex-direction:column}
       .floating-site-btn{left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom, 0px));min-height:46px;padding:14px;font-size:12px}
     }
@@ -204,53 +167,63 @@
 </head>
 
 <body>
-  <a class="floating-site-btn" id="btnPublicFloating" href="https://mon-commerce.digiylyfe.com/" aria-label="Retour à la vitrine MON COMMERCE">⬅️ Retour vitrine MON COMMERCE</a>
+  <!-- ━━━ FLOAT : retour vitrine ━━━ -->
+  <a class="floating-site-btn" id="btnPublicFloating" href="https://mon-commerce.digiylyfe.com/" aria-label="Retour à la vitrine MON COMMERCE">⬅️ Retour à la vitrine</a>
 
   <div class="wrap app">
-
     <div class="topbar">
       <div class="topbar-inner">
         <div class="brand">
           <div class="brand-badge">🏪</div>
           <div>
             <div class="brand-kicker">DIGIYLYFE</div>
-            <div id="brandTitle" class="brand-title">MON COMMERCE — Dashboard Pro</div>
-            <div id="brandSub" class="brand-sub">Pilotage abonnement, activité et boost</div>
+            <!-- ━━━ AVANT : "MON COMMERCE — Dashboard Pro" → banni ━━━ -->
+            <div id="brandTitle" class="brand-title">MON COMMERCE — Mon espace de travail</div>
+            <div id="brandSub" class="brand-sub">Mon activité · boutique · abonnement</div>
           </div>
         </div>
         <div class="right">
           <div class="pill" id="pillStatus">Statut : <b>…</b></div>
-          <a class="btn-outline" id="btnPinTop" href="./pin.html">🔐 PIN</a>
-          <a class="btn-outline" id="btnSettings" href="./admin.html">⚙️ Admin</a>
+          <a class="btn-outline" id="btnPinTop" href="./pin.html">🔐 Mon PIN</a>
+          <!-- ━━━ AVANT : "⚙️ Admin" → banni ━━━ -->
+          <a class="btn-outline" id="btnSettings" href="./dashboard-pro.html">⚙️ Mes réglages</a>
         </div>
       </div>
     </div>
 
+    <!-- ━━━ NAV — doctrine façade ━━━ -->
     <div class="navRow">
-      <a class="btn-ghost" id="btnHall"     href="./index.html">🏠 Hall</a>
-      <a class="btn-ghost" id="btnCaisse"   href="./caisse.html">🧾 Caisse</a>
-      <a class="btn-ghost" id="btnAdmin"    href="./admin.html">⚙️ Admin</a>
-      <a class="btn-outline" id="btnAbosTop"   href="https://commencer-a-payer.digiylyfe.com/">💳 Abonnement</a>
+      <!-- ━━━ "Hall" × 2 → "Accueil" ━━━ -->
+      <a class="btn-ghost"   id="btnHall"       href="./index.html">🏠 Accueil</a>
+      <a class="btn-ghost"   id="btnCaisse"     href="./caisse.html">🧾 Ma caisse</a>
+      <!-- ━━━ "Admin" × 2 → "Mes réglages" ━━━ -->
+      <a class="btn-ghost"   id="btnAdmin"      href="./dashboard-pro.html">⚙️ Mes réglages</a>
+      <a class="btn-outline" id="btnAbosTop"    href="https://commencer-a-payer.digiylyfe.com/">💳 Mon abonnement</a>
       <a class="btn-outline" id="btnSupportTop" href="#" target="_blank" rel="noopener">💬 Support</a>
     </div>
 
+    <!-- ━━━ ÉCRAN BLOQUÉ ━━━ -->
     <div id="blockedShell" class="card shell" style="display:none">
       <div class="shellCard">
-        <div class="shellTitle" id="blockedTitle">Accès contrôlé</div>
-        <div class="shellText" id="blockedText">Cette porte demande un slug actif et un accès POS valide.</div>
+        <div class="shellTitle" id="blockedTitle">Accès requis</div>
+        <!-- ━━━ AVANT : "slug POS", "pin.html?slug=…" visibles → jargon banni ━━━ -->
+        <div class="shellText" id="blockedText">Entre par ton PIN ou rejoins DIGIY pour accéder à ton espace.</div>
         <div class="footer" style="justify-content:center;margin-top:18px">
-          <a class="btn-outline" id="btnBlockedPin"  href="./pin.html">🔐 Ouvrir avec mon PIN</a>
-          <a class="btn"         id="btnBlockedAbos" href="https://commencer-a-payer.digiylyfe.com/">💳 Gérer mon abonnement</a>
+          <a class="btn-outline" id="btnBlockedPin"  href="./pin.html">🔐 Entrer avec mon PIN</a>
+          <a class="btn"         id="btnBlockedAbos" href="https://commencer-a-payer.digiylyfe.com/">💳 Mon abonnement</a>
         </div>
       </div>
     </div>
 
+    <!-- ━━━ CONTENU PRINCIPAL ━━━ -->
     <div id="dashboardContent" style="display:none">
       <div class="grid">
 
+        <!-- CARTE STATUT -->
         <div class="card" id="cardStatus">
-          <div class="heroBadge">dashboard pro • abonnement • argent • boost</div>
-          <h3>Statut &amp; sécurité</h3>
+          <!-- ━━━ AVANT : "dashboard pro • abonnement • argent • boost" → banni ━━━ -->
+          <div class="heroBadge">Mon activité · abonnement · argent · boost</div>
+          <h3>Mon abonnement</h3>
 
           <div class="row">
             <div class="statusDot" id="dot"></div>
@@ -261,15 +234,14 @@
           </div>
 
           <div class="subPills">
-            <div class="subPill">Slug : <b id="slugBox">—</b></div>
+            <!-- ━━━ AVANT : "Slug :" → jargon technique, remplacé par "Identifiant :" ━━━ -->
+            <div class="subPill">Identifiant : <b id="slugBox">—</b></div>
             <div class="subPill">Téléphone : <b id="phoneBox">—</b></div>
-            <div class="subPill">Module : <b>POS</b></div>
+            <div class="subPill">Service : <b>MON COMMERCE</b></div>
           </div>
 
           <div class="hr"></div>
-
           <div class="mini" id="metaLine"><span>Plan : —</span><span>•</span><span>Paiement : —</span></div>
-
           <div class="diag" id="diagBox">Initialisation…</div>
 
           <div class="footer">
@@ -277,8 +249,9 @@
           </div>
         </div>
 
+        <!-- CARTE ARGENT -->
         <div class="card" id="cardMoney">
-          <h3>Argent</h3>
+          <h3>Ce qui est rentré</h3>
           <div class="bigMoney" id="moneyMonth">— FCFA</div>
           <div class="mini" id="moneyMeta">
             <span id="txCount">— transactions</span>
@@ -291,7 +264,7 @@
           <div class="boostBox">
             <div>
               <b>🚀 BOOST visibilité</b>
-              <div class="muted" style="font-weight:800;font-size:13px" id="boostText">+50% d'apparition • 7 jours • 5 000 FCFA</div>
+              <div class="muted" style="font-weight:800;font-size:13px" id="boostText">+50% d'apparition · 7 jours · 5 000 FCFA</div>
               <div class="muted" style="font-weight:800;font-size:12px;margin-top:6px" id="boostStatus">Statut boost : —</div>
             </div>
             <div style="display:flex;flex-direction:column;gap:8px;min-width:170px">
@@ -301,6 +274,7 @@
           </div>
         </div>
 
+        <!-- CARTE ACTION -->
         <div class="card" id="cardAction" style="grid-column:1/-1">
           <h3>Action principale</h3>
           <div class="muted" style="font-weight:800;margin-bottom:10px" id="actionDesc">Une action. Simple. Efficace.</div>
@@ -324,7 +298,7 @@
       </div>
     </div>
 
-  </div>
+  </div><!-- /.wrap.app -->
 
 <script>
 (() => {
@@ -332,37 +306,41 @@
 
   const MODULE_CODE          = "POS";
   const MODULE_LABEL         = "MON COMMERCE";
-  const PRIMARY_ACTION_LABEL = "Ouvrir la caisse";
-  const PRIMARY_ACTION_HINT  = "Encaisse une vente, gère tes produits et ton stock.";
+  const PRIMARY_ACTION_LABEL = "Ouvrir ma caisse";
+  const PRIMARY_ACTION_HINT  = "Encaisse, gère tes produits et suis ton stock.";
   const SUPPORT_PHONE        = "221771342889";
 
   const SUPABASE_URL  = String(window.DIGIY_SUPABASE_URL  || "").trim();
   const SUPABASE_ANON = String(window.DIGIY_SUPABASE_ANON_KEY || window.DIGIY_SUPABASE_ANON || "").trim();
 
-  const ABOS_URL     = "https://commencer-a-payer.digiylyfe.com/";
-  const CAISSE_URL   = digiyLocal("caisse.html");
-  const HALL_URL     = digiyLocal("index.html");
-  const ADMIN_URL    = digiyLocal("admin.html");
-  const PIN_URL      = digiyLocal("pin.html");
+  const ABOS_URL      = "https://commencer-a-payer.digiylyfe.com/";
+  const CAISSE_URL    = digiyLocal("caisse.html");
+  const HALL_URL      = digiyLocal("index.html");
+  const ADMIN_URL     = digiyLocal("dashboard-pro.html"); // réglages = même espace
+  const PIN_URL       = digiyLocal("pin.html");
   const DASHBOARD_URL = digiyLocal("dashboard-pro.html");
-  const PUBLIC_URL   = "https://mon-commerce.digiylyfe.com/";
+  const PUBLIC_URL    = "https://mon-commerce.digiylyfe.com/";
 
   const BOOST = { module:"BOOST", plan:"boost_7d", price_xof:5000, label:"BOOST visibilité", duration_days:7 };
 
   const $ = (id) => document.getElementById(id);
   const diagLines = [];
   let sb = null;
-
   const state = { slug:"", phone:"", access:false, storeName:"", plan:"", statusPayload:null };
 
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     ANTI-ÉCRAN NOIR
+     1. setTimeout(reveal, 2000) — filet absolu
+     2. reveal() au début de init()
+     3. reveal() dans le catch fatal
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   function reveal() {
     document.documentElement.classList.add("app-ready");
     document.documentElement.style.visibility = "";
   }
+  setTimeout(reveal, 2000); // filet absolu
 
-  function safeStringify(v) {
-    try { return JSON.stringify(v, null, 2); } catch(_) { return String(v); }
-  }
+  function safeStringify(v) { try { return JSON.stringify(v, null, 2); } catch(_) { return String(v); } }
 
   function log(msg, data) {
     const line = `[${new Date().toLocaleTimeString("fr-FR")}] ${msg}`;
@@ -381,18 +359,39 @@
   function cleanDigits(v)  { return String(v || "").replace(/[^\d]/g, ""); }
   function normSlug(v)     { return String(v || "").trim().toLowerCase(); }
 
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     buildUrl — VERSION BLINDÉE
+     new URL(relatif, location.href) fragile selon l'env.
+     On reconstruit l'origine manuellement.
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   function buildUrl(base, params) {
-    const u = new URL(base, location.href);
-    Object.entries(params || {}).forEach(([k, v]) => {
-      if (v !== null && v !== undefined && v !== "") u.searchParams.set(k, String(v));
-    });
+    const baseStr = (base == null ? "" : String(base)).trim();
+    if (!baseStr) return location.href;
+    let u;
+    try {
+      if (/^https?:\/\//i.test(baseStr)) {
+        u = new URL(baseStr);
+      } else {
+        const origin = location.protocol + "//" + location.host;
+        const full   = baseStr.startsWith("/") ? origin + baseStr : origin + "/" + baseStr;
+        u = new URL(full);
+      }
+    } catch(e) {
+      log("buildUrl KO: " + baseStr + " — " + e.message);
+      return baseStr;
+    }
+    try {
+      Object.entries(params || {}).forEach(([k, v]) => {
+        if (v !== null && v !== undefined && v !== "") u.searchParams.set(k, String(v));
+      });
+    } catch(e) { /* silencieux */ }
     return u.toString();
   }
 
   function buildSupportUrl(phone, slug) {
     const text = ["Bonjour JB,", "j'ai besoin d'aide pour MON COMMERCE by DIGIY.",
-      slug  ? `Slug : ${slug}`         : "",
-      phone ? `Téléphone : +${phone}`  : ""
+      slug  ? `Slug : ${slug}`        : "",
+      phone ? `Téléphone : +${phone}` : ""
     ].filter(Boolean).join(" ");
     return `https://wa.me/${SUPPORT_PHONE}?text=${encodeURIComponent(text)}`;
   }
@@ -510,10 +509,10 @@
   async function digiyHasAccess(phone, module) {
     const res = await rpcFirstSuccess("digiy_has_access", [{ p_phone: phone, p_module: module }, { phone, module }]);
     if (typeof res === "boolean") return res;
-    if (res && typeof res.ok          === "boolean") return res.ok;
-    if (res && typeof res.has_access  === "boolean") return res.has_access;
-    if (res && typeof res.allowed     === "boolean") return res.allowed;
-    if (res && typeof res.access      === "boolean") return res.access;
+    if (res && typeof res.ok         === "boolean") return res.ok;
+    if (res && typeof res.has_access === "boolean") return res.has_access;
+    if (res && typeof res.allowed    === "boolean") return res.allowed;
+    if (res && typeof res.access     === "boolean") return res.access;
     return !!res;
   }
 
@@ -544,28 +543,36 @@
     }
   }
 
+  /* ━━━ wireNav : try/catch pour ne jamais faire tomber init() ━━━ */
   function wireNav(phone, slug) {
-    const q = { slug, phone, module: MODULE_CODE };
-    $("btnHall").href          = buildUrl(HALL_URL,  q);
-    $("btnCaisse").href        = buildUrl(CAISSE_URL, q);
-    $("btnAdmin").href         = buildUrl(ADMIN_URL,  q);
-    $("btnSettings").href      = buildUrl(ADMIN_URL,  q);
-    $("btnAbosTop").href       = buildUrl(ABOS_URL,   buildAbosParams(phone, slug));
-    $("btnSupportTop").href    = buildSupportUrl(phone, slug);
-    $("linkSupport").href      = buildSupportUrl(phone, slug);
-    $("linkPayments").href     = buildUrl(ABOS_URL, buildAbosParams(phone, slug));
-    $("btnPinTop").href        = buildUrl(PIN_URL, { slug, phone, module: MODULE_CODE, return: DASHBOARD_URL });
-    $("btnPublicFloating").href = buildUrl(PUBLIC_URL, { slug });
-    $("btnBlockedPin").href    = buildUrl(PIN_URL, { slug, phone, module: MODULE_CODE, return: DASHBOARD_URL });
-    $("btnBlockedAbos").href   = buildUrl(ABOS_URL, buildAbosParams(phone, slug));
+    try {
+      const q = { slug, phone, module: MODULE_CODE };
+      $("btnHall").href          = buildUrl(HALL_URL,  q);
+      $("btnCaisse").href        = buildUrl(CAISSE_URL, q);
+      $("btnAdmin").href         = buildUrl(ADMIN_URL,  q);
+      $("btnSettings").href      = buildUrl(ADMIN_URL,  q);
+      $("btnAbosTop").href       = buildUrl(ABOS_URL,   buildAbosParams(phone, slug));
+      $("btnSupportTop").href    = buildSupportUrl(phone, slug);
+      $("linkSupport").href      = buildSupportUrl(phone, slug);
+      $("linkPayments").href     = buildUrl(ABOS_URL, buildAbosParams(phone, slug));
+      $("btnPinTop").href        = buildUrl(PIN_URL, { slug, phone, module: MODULE_CODE, "return": DASHBOARD_URL });
+      $("btnPublicFloating").href = buildUrl(PUBLIC_URL, { slug });
+      $("btnBlockedPin").href    = buildUrl(PIN_URL, { slug, phone, module: MODULE_CODE, "return": DASHBOARD_URL });
+      $("btnBlockedAbos").href   = buildUrl(ABOS_URL, buildAbosParams(phone, slug));
+    } catch(e) {
+      log("wireNav erreur silencieuse", { message: e.message || String(e) });
+    }
   }
 
-  function showBlocked(title, text, pill = "Bloqué") {
+  /* ━━━ showBlocked : langage humain, pills sans jargon ━━━ */
+  function showBlocked(title, text, pill) {
     $("dashboardContent").style.display = "none";
     $("blockedShell").style.display     = "grid";
     $("blockedTitle").textContent        = title;
     $("blockedText").innerHTML           = text;
-    $("pillStatus").innerHTML            = `Statut : <b>${pill}</b>`;
+    /* ━━━ AVANT : "Bloqué", "Contrôle", "Inactif" → jargon banni ━━━ */
+    const pillLabel = pill || "Accès requis";
+    $("pillStatus").innerHTML = `Statut : <b>${pillLabel}</b>`;
   }
 
   function showDashboard() {
@@ -574,12 +581,15 @@
   }
 
   async function init() {
-    $("brandTitle").textContent      = `${MODULE_LABEL} — Dashboard Pro`;
-    $("brandSub").textContent        = "Pilotage abonnement, activité et boost";
+    reveal(); // filet 1 : on révèle dès le départ
+
+    /* ━━━ Textes JS — doctrine façade ━━━ */
+    $("brandTitle").textContent       = `${MODULE_LABEL} — Mon espace de travail`;
+    $("brandSub").textContent         = "Mon activité · boutique · abonnement";
     $("btnPrimaryAction").textContent = PRIMARY_ACTION_LABEL;
-    $("actionHint").textContent      = PRIMARY_ACTION_HINT;
-    $("actionDesc").textContent      = "Entre dans la caisse, pilote tes produits et ton stock depuis une seule porte.";
-    $("pillStatus").innerHTML        = `Statut : <b>…</b>`;
+    $("actionHint").textContent       = PRIMARY_ACTION_HINT;
+    $("actionDesc").textContent       = "Entre dans ta caisse, pilote tes produits et ton stock depuis un seul endroit.";
+    $("pillStatus").innerHTML         = `Statut : <b>…</b>`;
 
     await awaitGuardReady();
     await bootGuard();
@@ -593,11 +603,15 @@
     $("slugBox").textContent  = slug  || "—";
     $("phoneBox").textContent = phone ? `+${phone}` : "—";
     wireNav(phone, slug);
-    reveal();
 
     if (!slug) {
       log("slug manquant");
-      showBlocked("Slug manquant", "Cette porte a besoin d'un <b>slug POS</b> valide. Passe par ton QR ou par <b>pin.html?slug=…</b> pour rouvrir le bon rail.", "Bloqué");
+      /* ━━━ AVANT : "slug POS", "pin.html?slug=…" → jargon banni ━━━ */
+      showBlocked(
+        "Identifiant manquant",
+        "Entre par ton PIN ou passe par ton lien pro pour ouvrir ton espace.",
+        "Accès requis"
+      );
       return;
     }
 
@@ -621,12 +635,20 @@
     state.access = !!access;
 
     if (!state.phone) {
-      showBlocked("Téléphone introuvable", "Le slug est là, mais le téléphone n'a pas pu être résolu. Passe par le <b>PIN</b> pour reconstruire la session proprement.", "Contrôle");
+      showBlocked(
+        "Boutique introuvable",
+        "Le lien n'a pas permis d'identifier ta boutique. Entre par ton PIN pour reconstruire ta session.",
+        "En attente"
+      );
       return;
     }
 
     if (!state.access) {
-      showBlocked("Abonnement requis", "Le contexte du commerce est bien reconnu, mais l'accès POS n'est pas actif. Active ton module ou repasse par le <b>PIN</b> pour vérifier ton accès.", "Inactif");
+      showBlocked(
+        "Abonnement requis",
+        "Ta boutique est reconnue, mais ton accès MON COMMERCE n'est pas encore actif. Active ton abonnement ou entre par ton PIN.",
+        "À activer"
+      );
       return;
     }
 
@@ -635,7 +657,7 @@
     const storeCtx = await getStoreContext(slug);
     state.storeName = String(storeCtx?.shop_name || storeCtx?.display_name || storeCtx?.store?.name || storeCtx?.profile?.display_name || MODULE_LABEL).trim();
 
-    const status    = await digiyGetSubscriptionFull(state.phone, MODULE_CODE);
+    const status = await digiyGetSubscriptionFull(state.phone, MODULE_CODE);
     state.statusPayload = status || null;
 
     const expiresAt = status?.expires_at || status?.current_period_end || null;
@@ -649,7 +671,8 @@
     $("expiryLine").textContent = expiresAt ? `Expire le ${fmtDateFR(expiresAt)}` : "Expiration : —";
     $("pillStatus").innerHTML   = `Statut : <b>Actif</b>`;
     $("metaLine").innerHTML     = `<span>Plan : ${plan}</span><span>•</span><span>Paiement : ${pay}</span>`;
-    $("brandSub").textContent   = `${state.storeName} • pilotage abonnement, activité et boost`;
+    /* ━━━ brandSub dynamique : nom boutique, pas jargon ━━━ */
+    $("brandSub").textContent   = state.storeName ? `${state.storeName} · mon espace de travail` : "Mon espace de travail · boutique active";
 
     const stats = await digiyGetDashboardStats(state.phone, MODULE_CODE);
     const month = stats?.month_xof ?? null;
@@ -664,31 +687,31 @@
     if (expiresAt) {
       const d = daysBetween(new Date().toISOString(), expiresAt);
       notifs.push(d !== null && d <= 3
-        ? { level:"warn", tag:"J-3", title:"Abonnement bientôt expiré", text:`Expire dans ${d} jour(s). Renouvelle pour éviter la coupure.` }
-        : { level:"ok",   tag:"OK",  title:"Abonnement",                text:"Actif — prochain contrôle : J-3." }
+        ? { level:"warn", tag:"J-3",   title:"Abonnement bientôt expiré",  text:`Expire dans ${d} jour(s). Renouvelle pour éviter la coupure.` }
+        : { level:"ok",   tag:"OK",    title:"Abonnement",                  text:"Actif — prochain contrôle : J-3." }
       );
     }
 
     const boost = await digiyGetBoostStatus(state.phone);
     if (boost?.active) {
-      $("boostStatus").textContent = `Statut boost : actif jusqu'au ${fmtDateFR(boost.expires_at)} • +${boost.views_today || 0} vues aujourd'hui`;
+      $("boostStatus").textContent = `Statut boost : actif jusqu'au ${fmtDateFR(boost.expires_at)} · +${boost.views_today || 0} vues aujourd'hui`;
       $("btnBoost").textContent    = "Actif";
       $("btnBoost").disabled       = true;
-      notifs.push({ level:"info", tag:"BOOST", title:"Boost actif", text:"Visibilité augmentée. Continue ton activité." });
+      notifs.push({ level:"info", tag:"BOOST",  title:"Boost actif",      text:"Visibilité augmentée. Continue ton activité." });
     } else {
       $("boostStatus").textContent = "Statut boost : inactif";
       notifs.push({ level:"info", tag:"OPTION", title:"Boost disponible", text:"Active le BOOST si tu veux plus de visibilité." });
     }
 
     if (month === null || tx === null) {
-      notifs.push({ level:"info", tag:"DATA", title:"Stats à brancher", text:"Le dashboard vit déjà, mais les chiffres réels attendent la RPC stats si elle n'est pas encore posée." });
+      notifs.push({ level:"info", tag:"DATA", title:"Stats à brancher", text:"Le chiffre exact arrive dès que la connexion données est posée." });
     }
 
     setNotifs(notifs);
 
-    $("btnManageSub").onclick    = () => { location.href = buildUrl(ABOS_URL, buildAbosParams(state.phone, slug)); };
+    $("btnManageSub").onclick     = () => { location.href = buildUrl(ABOS_URL, buildAbosParams(state.phone, slug)); };
     $("btnPrimaryAction").onclick = () => { location.href = buildUrl(CAISSE_URL, { slug, phone: state.phone, module: MODULE_CODE }); };
-    $("btnBoostInfo").onclick    = () => { alert("BOOST : +50% d'apparition pendant 7 jours. Paiement direct. Aucun spam."); };
+    $("btnBoostInfo").onclick     = () => { alert("BOOST : +50% d'apparition pendant 7 jours. Paiement direct. Aucun spam."); };
 
     $("btnBoost").onclick = async () => {
       try {
@@ -700,7 +723,7 @@
         location.href = url;
       } catch(e) {
         console.error(e);
-        alert("Impossible d'activer le BOOST. Vérifie la config ou la RPC digiy_build_pay_url.");
+        alert("Impossible d'activer le BOOST pour le moment. Réessaie ou contacte le support.");
         $("btnBoost").disabled    = false;
         $("btnBoost").textContent = "Activer";
       }
@@ -712,8 +735,12 @@
   init().catch((err) => {
     console.error(err);
     log("init fatale", { message: err?.message || String(err) });
-    reveal();
-    showBlocked("Erreur de chargement", "Le dashboard n'a pas pu finir sa lecture. Passe par le <b>PIN</b> ou relance avec un slug propre.", "Erreur");
+    reveal(); // filet 2 : catch fatal
+    showBlocked(
+      "Problème technique",
+      "Ton espace n'a pas pu finir de charger. Entre par ton PIN ou contacte le support.",
+      "Erreur"
+    );
   });
 })();
 </script>
