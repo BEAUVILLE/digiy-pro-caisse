@@ -574,12 +574,21 @@
 
       function getResolvedSlug(){
         const gs = window.DIGIY_GUARD?.state || {};
-        return String(getUrlParam("slug") || gs.slug || gs.session?.slug || gs.identity?.slug || localStorage.getItem("digiy_pos_last_slug") || sessionStorage.getItem("digiy_pos_last_slug") || "").trim().toLowerCase();
+        return String(
+          getUrlParam("slug") || gs.slug || gs.session?.slug || gs.identity?.slug ||
+          sessionStorage.getItem("digiy_pos_last_slug") || localStorage.getItem("digiy_pos_last_slug") ||
+          sessionStorage.getItem("digiy_pos_slug")      || localStorage.getItem("digiy_pos_slug") || ""
+        ).trim().toLowerCase();
       }
 
       function getResolvedPhone(){
         const gs = window.DIGIY_GUARD?.state || {};
-        return normPhone(getUrlParam("phone") || gs.phone || gs.session?.phone || gs.identity?.phone || localStorage.getItem("digiy_pos_last_phone") || sessionStorage.getItem("digiy_pos_last_phone") || "");
+        return normPhone(
+          getUrlParam("phone") || getUrlParam("tel") ||
+          gs.phone || gs.session?.phone || gs.identity?.phone ||
+          sessionStorage.getItem("digiy_pos_last_phone") || localStorage.getItem("digiy_pos_last_phone") ||
+          sessionStorage.getItem("digiy_pos_phone")       || localStorage.getItem("digiy_pos_phone") || ""
+        );
       }
 
       async function resolvePhoneFromSlug(slug){
