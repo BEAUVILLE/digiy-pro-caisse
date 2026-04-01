@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#08111f" />
   <title>MON COMMERCE — Accès sécurisé</title>
   <!-- ━━━ AVANT : "Accès sécurisé MON COMMERCE / DIGIY CAISSE PRO par téléphone + PIN" → banni ━━━ -->
-  <meta name="description" content="MON COMMERCE by DIGIY — accès sécurisé par téléphone et PIN." />
+  <meta name="description" content="MON COMMERCE by DIGIY — accès sécurisé par téléphone et code." />
 
   <script>
     window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
@@ -100,7 +100,7 @@
       <div class="body">
         <!-- ━━━ AVANT : "Entre avec ton slug ou ton téléphone" → "slug" banni ━━━ -->
         <p class="intro">
-          Entre avec ton <strong>identifiant</strong> ou ton <strong>téléphone</strong>, puis ton <strong>PIN</strong>.
+          Entre avec ton <strong>identifiant</strong> ou ton <strong>téléphone</strong>, puis ton <strong>code d'accès</strong>.
           Une fois validé, ton espace s'ouvre directement.
         </p>
 
@@ -116,10 +116,10 @@
         </div>
 
         <div class="field">
-          <label for="pin">PIN</label>
+          <label for="pin">Code d'accès</label>
           <div class="pin-row">
             <input id="pin" type="password" inputmode="numeric" maxlength="8" placeholder="••••" autocomplete="one-time-code" />
-            <button id="togglePin" class="mini" type="button" aria-label="Afficher le PIN">👁️</button>
+            <button id="togglePin" class="mini" type="button" aria-label="Afficher le code">👁️</button>
           </div>
         </div>
 
@@ -525,7 +525,7 @@
 
           const auth = await verifyPin(phone, pin);
           if (!auth?.ok) {
-            setStatus("PIN invalide. Vérifie et réessaie.", "err");
+            setStatus("Code invalide. Vérifie et réessaie.", "err");
             return;
           }
 

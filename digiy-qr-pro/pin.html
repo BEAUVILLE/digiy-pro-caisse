@@ -4,7 +4,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <meta name="theme-color" content="#061b14"/>
-  <title>DIGIY QR PRO — Porte PIN</title>
+  <title>MON COMMERCE by DIGIY — Accès sécurisé</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -78,7 +78,7 @@
       <div class="brand">
         <div class="ico">🦅</div>
         <div>
-          <div class="t" id="title">PORTE PIN</div>
+          <div class="t" id="title">ACCÈS SÉCURISÉ</div>
           <div class="sub" id="subtitle">Chargement…</div>
         </div>
       </div>
@@ -88,10 +88,10 @@
     <div class="sep"></div>
 
     <div class="mini">
-      SLUG : <b id="slugBox">—</b>
+      Identifiant : <b id="slugBox">—</b>
     </div>
 
-    <label for="pin">Entre ton PIN</label>
+    <label for="pin">Entre ton code</label>
     <input id="pin" type="password" inputmode="numeric" autocomplete="one-time-code" placeholder="••••" maxlength="8"/>
 
     <button id="go">🚀 ENTRER</button>
@@ -116,19 +116,19 @@
 
   const $ = (id)=>document.getElementById(id);
   $("modPill").textContent = MODULE_CODE;
-  $("title").textContent = "PORTE PIN — " + MODULE_CODE.toUpperCase();
+  $("title").textContent = "ACCÈS SÉCURISÉ";
 
   // slug depuis URL ?slug=
   const url = new URL(location.href);
   const slug = (url.searchParams.get("slug") || "").trim().toLowerCase();
 
   $("slugBox").textContent = slug || "—";
-  $("subtitle").textContent = slug ? "Accès sécurisé — PIN requis" : "SLUG manquant";
+  $("subtitle").textContent = slug ? "Accès sécurisé — code requis" : "Identifiant manquant";
 
   const msg = (html)=>{ $("msg").innerHTML = html; };
 
   if(!slug){
-    msg(`<span class="bad">❌ SLUG manquant.</span><br>Reviens depuis ton Espace PRO / QR Factory (lien avec ?slug=...).`);
+    msg(`<span class="bad">❌ Identifiant manquant.</span><br>Reviens depuis ton lien d'accès QR (lien avec ?slug=...).`);
     $("go").disabled = true;
     return;
   }
@@ -159,7 +159,7 @@
   async function enter(){
     const pin = $("pin").value.trim();
     if(pin.length < 3){
-      msg(`<span class="bad">❌ PIN invalide.</span>`);
+      msg(`<span class="bad">❌ Code invalide.</span>`);
       return;
     }
 
@@ -182,13 +182,13 @@
       $("go").disabled = false;
 
       if(data?.reason === "module_inactive"){
-        msg(`<span class="bad">🔒 Module non actif.</span><br>
-             Ce module n’est pas encore activé pour ce pro.<br>
-             <span style="opacity:.85">Modules actifs: ${(data.modules_active||[]).join(", ")}</span>`);
+        msg(`<span class="bad">🔒 Accès non disponible.</span><br>
+             Ce service n’est pas encore activé pour ce commerce.<br>
+             <span style="opacity:.85">Services actifs: ${(data.modules_active||[]).join(", ")}</span>`);
         return;
       }
 
-      msg(`<span class="bad">❌ Accès refusé.</span><br>PIN incorrect.`);
+      msg(`<span class="bad">❌ Accès refusé.</span><br>Code incorrect.`);
       return;
     }
 

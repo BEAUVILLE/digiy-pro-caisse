@@ -231,11 +231,11 @@
         <div class="blockedInner">
           <div class="blockedTitle">Caisse protégée</div>
           <div class="blockedText" id="blockedText">
-            Ta caisse attend ton accès. Entre par ton PIN ou rejoins DIGIY pour commencer.
+            Ta caisse attend ton accès. Entre avec ton code ou rejoins DIGIY pour commencer.
           </div>
 
           <div class="actionRow" style="justify-content:center">
-            <a class="btn" id="btnBlockedPin" href="./pin.html">🔐 Entrer avec mon PIN</a>
+            <a class="btn" id="btnBlockedPin" href="./pin.html">🔐 Entrer avec mon code</a>
             <a class="btn-outline" id="btnBlockedAbos" href="https://commencer-a-payer.digiylyfe.com/">💳 Mon abonnement</a>
             <!-- ━━━ AVANT : "🧭 Dashboard Pro" → banni ━━━ -->
             <a class="btn-ghost" id="btnBlockedDash" href="./dashboard-pro.html">🧭 Mon espace de travail</a>
@@ -290,7 +290,7 @@
             </div>
 
             <div class="actionRow">
-              <a class="btn-outline" id="btnGoPin" href="./pin.html">🔐 Mon PIN</a>
+              <a class="btn-outline" id="btnGoPin" href="./pin.html">🔐 Mon code d'accès</a>
               <!-- ━━━ AVANT : "Dashboard Pro" → banni ━━━ -->
               <a class="btn-outline" id="btnGoDashboard" href="./dashboard-pro.html">🧭 Mon espace de travail</a>
               <!-- ━━━ AVANT : "⚙️ Admin" → "⚙️ Mes réglages" ━━━ -->
@@ -649,7 +649,7 @@
         qs("blockedText").innerHTML = `
           <div style="margin-bottom:12px">${esc(reason || "Ta caisse attend ton accès.")}</div>
           ${phone ? `<div><b>Téléphone :</b> +${esc(phone)}</div>` : ""}
-          <div style="margin-top:12px">Entre par ton PIN ou rejoint DIGIY pour commencer.</div>
+          <div style="margin-top:12px">Entre avec ton code ou rejoins DIGIY pour commencer.</div>
         `;
 
         const q = { slug: slug || "", phone: phone || "", module: MODULE_CODE };

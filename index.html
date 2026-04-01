@@ -428,7 +428,7 @@
           <span id="statusPillText">Chargement…</span>
         </div>
         <!-- ━━━ "PIN PRO" → "Mon accès PIN" ━━━ -->
-        <a class="btn-ghost" id="btnPinTop" href="./pin.html">🔐 Mon accès PIN</a>
+        <a class="btn-ghost" id="btnPinTop" href="./pin.html">🔐 Mon code d'accès</a>
         <!-- ━━━ "Vérifier mon accès" → intention humaine, on garde ━━━ -->
         <button class="btn-outline" id="btnCheck" type="button">🔄 Vérifier mon accès</button>
         <!-- ━━━ AVANT : "Activer mon module" × 4 → "Je commence" ━━━ -->
@@ -483,7 +483,7 @@
             <a class="btn" id="btnHeroPrimary" href="https://commencer-a-payer.digiylyfe.com/">💳 Je commence</a>
             <a class="btn-outline" id="btnOpenDashboard" href="./dashboard-pro.html">🧭 Mon espace de travail</a>
             <a class="btn-outline" id="btnOpenCaisse" href="./caisse.html">🧾 Ouvrir ma caisse</a>
-            <a class="btn-ghost" id="btnOpenPin" href="./pin.html">🔐 Entrer avec mon PIN</a>
+            <a class="btn-ghost" id="btnOpenPin" href="./pin.html">🔐 Entrer avec mon code</a>
           </div>
 
           <!-- ━━━ helper : on parle chemin humain, pas nom de fichier ━━━ -->
@@ -746,7 +746,7 @@
           <div class="step-num">2</div>
           <div class="feat-title">Tu entres</div>
           <div class="feat-text">
-            Ton PIN t'ouvre l'accès sécurisé — directement dans ton espace de travail, sans couloir bancal.
+            Ton code d'accès t'ouvre directement ton espace de travail, sans détour inutile.
           </div>
         </article>
 
@@ -1061,7 +1061,7 @@
             setStatus(
               "warn", "APERÇU LIBRE", "Ta caisse t'attend",
               "La page montre la valeur. Le vrai travail s'ouvre avec ton identifiant et ton accès actif.",
-              "Passe par ton lien pro ou rejoins DIGIY pour commencer. L'entrée normale se fait par <b>QR → PIN → espace de travail</b>."
+              "Passe par ton lien d'accès ou rejoins DIGIY pour commencer. L'entrée normale se fait par <b>QR → code d'accès → espace de travail</b>."
             );
             state.storeName = "Aperçu libre"; state.plan = "—";
             paintMeta(); wireButtons(); return;
@@ -1104,7 +1104,7 @@
             setStatus(
               "warn", "APERÇU + CONTRÔLE", "Boutique repérée, accès fermé",
               "La page a reconnu ton identifiant, mais l'accès reste fermé tant que tu n'es pas abonné actif.",
-              `Identifiant reconnu : <b>${state.slug}</b>${state.phone ? `<br>Téléphone : <b>+${state.phone}</b>` : ""}<br>Tu peux rejoindre DIGIY ou entrer par ton PIN pour vérifier ton accès.`
+              `Identifiant reconnu : <b>${state.slug}</b>${state.phone ? `<br>Téléphone : <b>+${state.phone}</b>` : ""}<br>Tu peux rejoindre DIGIY ou entrer avec ton code pour vérifier ton accès.`
             );
           }
         }catch(err){

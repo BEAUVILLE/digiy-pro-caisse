@@ -184,7 +184,7 @@
         </div>
         <div class="right">
           <div class="pill" id="pillStatus">Statut : <b>…</b></div>
-          <a class="btn-outline" id="btnPinTop" href="./pin.html">🔐 Mon PIN</a>
+          <a class="btn-outline" id="btnPinTop" href="./pin.html">🔐 Mon code d'accès</a>
           <!-- ━━━ AVANT : "⚙️ Admin" → banni ━━━ -->
           <a class="btn-outline" id="btnSettings" href="./dashboard-pro.html">⚙️ Mes réglages</a>
         </div>
@@ -207,9 +207,9 @@
       <div class="shellCard">
         <div class="shellTitle" id="blockedTitle">Accès requis</div>
         <!-- ━━━ AVANT : "slug POS", "pin.html?slug=…" visibles → jargon banni ━━━ -->
-        <div class="shellText" id="blockedText">Entre par ton PIN ou rejoins DIGIY pour accéder à ton espace.</div>
+        <div class="shellText" id="blockedText">Entre avec ton code d'accès ou rejoins DIGIY pour accéder à ton espace.</div>
         <div class="footer" style="justify-content:center;margin-top:18px">
-          <a class="btn-outline" id="btnBlockedPin"  href="./pin.html">🔐 Entrer avec mon PIN</a>
+          <a class="btn-outline" id="btnBlockedPin"  href="./pin.html">🔐 Entrer avec mon code</a>
           <a class="btn"         id="btnBlockedAbos" href="https://commencer-a-payer.digiylyfe.com/">💳 Mon abonnement</a>
         </div>
       </div>
@@ -617,7 +617,7 @@
       /* ━━━ AVANT : "slug POS", "pin.html?slug=…" → jargon banni ━━━ */
       showBlocked(
         "Identifiant manquant",
-        "Entre par ton PIN ou passe par ton lien pro pour ouvrir ton espace.",
+        "Entre avec ton code d'accès ou passe par ton lien d'accès pour ouvrir ton espace.",
         "Accès requis"
       );
       return;
@@ -645,7 +645,7 @@
     if (!state.phone) {
       showBlocked(
         "Boutique introuvable",
-        "Le lien n'a pas permis d'identifier ta boutique. Entre par ton PIN pour reconstruire ta session.",
+        "Le lien n'a pas permis d'identifier ta boutique. Entre avec ton code pour reconstruire ta session.",
         "En attente"
       );
       return;
@@ -746,7 +746,7 @@
     reveal(); // filet 2 : catch fatal
     showBlocked(
       "Problème technique",
-      "Ton espace n'a pas pu finir de charger. Entre par ton PIN ou contacte le support.",
+      "Ton espace n'a pas pu finir de charger. Entre avec ton code ou contacte le support.",
       "Erreur"
     );
   });
