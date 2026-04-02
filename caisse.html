@@ -291,7 +291,7 @@
               <span class="badge" id="badgeAccess">Accès…</span>
               <span class="badge" id="badgeStore">Boutique…</span>
               <span class="badge" id="badgeCache">Lecture…</span>
-              <span class="badge" id="badgePlan">Plan…</span>
+              <span class="badge" id="badgePlan">Abonnement…</span>
             </div>
 
             <div class="actionRow">
@@ -300,10 +300,6 @@
               <a class="btn-ghost" id="btnGoHall" href="./index.html">🏠 Accueil</a>
             </div>
 
-            <details>
-              <summary>Diagnostic technique</summary>
-              <div class="logBox" id="diagBox">Initialisation…</div>
-            </details>
           </div>
 
           <div class="card">
@@ -326,7 +322,7 @@
             </div>
 
             <div class="helper">
-              Lecture simple : accès, boutique, abonnement, cache local.
+              Lecture simple : accès, boutique, abonnement, derniers repères enregistrés.
             </div>
           </div>
         </div>
@@ -685,14 +681,14 @@
         qs("metaSlug").textContent = STATE.slug || "—";
         qs("metaPhone").textContent = STATE.phone ? `+${STATE.phone}` : "—";
         qs("metaStoreName").textContent = shopName;
-        qs("metaSource").textContent = source === "cache" ? "cache local" : "en direct";
+        qs("metaSource").textContent = source === "cache" ? "repères enregistrés" : "mise à jour directe";
 
         paintPills(STATE.access, shopName);
 
         setBadge("badgeAccess", STATE.access ? "ACCÈS OK" : "ACCÈS BLOQUÉ", STATE.access ? "ok" : "bad");
         setBadge("badgeStore", shopName ? "BOUTIQUE OK" : "BOUTIQUE MINIMALE", shopName ? "ok" : "warn");
         setBadge("badgeCache", source === "cache" ? "CACHE LOCAL" : "EN DIRECT", source === "cache" ? "info" : "ok");
-        setBadge("badgePlan", subscription?.plan || subscription?.plan_code || subscription?.status || "PLAN ACTIF", "info");
+        setBadge("badgePlan", subscription?.plan || subscription?.plan_code ? "Abonnement réglé" : "Abonnement actif", "info");
 
         /* ━━━ AVANT : affichait "Store ID", "Statut store" → jargon technique banni ━━━ */
         qs("storeContextBox").innerHTML = `

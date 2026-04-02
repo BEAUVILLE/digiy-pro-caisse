@@ -241,8 +241,7 @@
           </div>
 
           <div class="hr"></div>
-          <div class="mini" id="metaLine"><span>Plan : —</span><span>•</span><span>Paiement : —</span></div>
-          <div class="diag" id="diagBox">Initialisation…</div>
+          <div class="mini" id="metaLine"><span>Abonnement : —</span><span>•</span><span>Paiement : —</span></div>
 
           <div class="footer">
             <button class="btn-outline" id="btnManageSub" type="button">Gérer mon abonnement</button>
@@ -669,7 +668,7 @@
     state.statusPayload = status || null;
 
     const expiresAt = status?.expires_at || status?.current_period_end || null;
-    const plan      = status?.plan || status?.plan_code || "standard";
+    const plan      = status?.plan || status?.plan_code || "";
     const pay       = status?.payment_ref ? "validé" : "ok";
     state.plan      = plan;
 
@@ -678,7 +677,9 @@
     $("statusLine").textContent = "Abonnement actif";
     $("expiryLine").textContent = expiresAt ? `Expire le ${fmtDateFR(expiresAt)}` : "Expiration : —";
     $("pillStatus").innerHTML   = `Statut : <b>Actif</b>`;
-    $("metaLine").innerHTML     = `<span>Plan : ${plan}</span><span>•</span><span>Paiement : ${pay}</span>`;
+    $("metaLine").innerHTML     = plan
+      ? `<span>Abonnement : ${plan}</span><span>•</span><span>Paiement : ${pay}</span>`
+      : `<span>Abonnement actif</span><span>•</span><span>Paiement : ${pay}</span>`;
     /* ━━━ brandSub dynamique : nom boutique, pas jargon ━━━ */
     $("brandSub").textContent   = state.storeName ? `${state.storeName} · mon espace de travail` : "Mon espace de travail · boutique active";
 

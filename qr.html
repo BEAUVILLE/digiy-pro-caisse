@@ -124,19 +124,19 @@
         <div class="grid">
           <!-- ━━━ AVANT : "URL PIN PRO", "URL Dashboard Pro" → bannis ━━━ -->
           <div class="stat">
-            <div class="k">Lien code d'accès</div>
-            <div id="pinUrl" class="v">—</div>
+            <div class="k">Accès sécurisé</div>
+            <div id="pinUrl" class="v">Ouverture directe</div>
           </div>
           <div class="stat">
-            <div class="k">Lien espace de travail</div>
-            <div id="dashUrl" class="v">—</div>
+            <div class="k">Espace boutique</div>
+            <div id="dashUrl" class="v">Ouverture directe</div>
           </div>
           <div class="stat">
             <div class="k">Lien vitrine publique</div>
             <div id="publicUrl" class="v">—</div>
           </div>
           <div class="stat">
-            <div class="k">Lien encodé dans le QR</div>
+            <div class="k">Destination active</div>
             <div id="qrTargetText" class="v">—</div>
           </div>
         </div>
@@ -157,7 +157,6 @@
           Statut : <span class="ok">prêt</span>
         </div>
 
-        <div style="margin-top:12px" class="urlbox" id="copyBox">—</div>
       </div>
     </section>
 
@@ -206,7 +205,6 @@
       const shopNameEl   = $("shopName");
       const targetModeEl = $("targetMode");
       const statusEl     = $("status");
-      const copyBoxEl    = $("copyBox");
       const pinUrlEl     = $("pinUrl");
       const dashUrlEl    = $("dashUrl");
       const publicUrlEl  = $("publicUrl");
@@ -262,11 +260,15 @@
         const urls = buildUrls();
         const target = getQrTarget();
 
-        pinUrlEl.textContent       = urls.pin;
-        dashUrlEl.textContent      = urls.dash;
-        publicUrlEl.textContent    = urls.pub;
-        qrTargetTextEl.textContent = target;
-        copyBoxEl.textContent      = target;
+        pinUrlEl.textContent       = "Prêt";
+        dashUrlEl.textContent      = "Prêt";
+        publicUrlEl.textContent    = "Prêt";
+        qrTargetTextEl.textContent =
+          targetModeEl.value === "public"
+            ? "Ma vitrine publique"
+            : targetModeEl.value === "dashboard"
+              ? "Mon espace de travail"
+              : "Mon code d'accès";
 
         cardTitleEl.textContent = publicName;
         /* ━━━ AVANT : "slug: ..." → "identifiant: ..." ━━━ */

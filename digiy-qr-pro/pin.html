@@ -82,7 +82,7 @@
           <div class="sub" id="subtitle">Chargement…</div>
         </div>
       </div>
-      <div class="pill" id="modPill">—</div>
+      <div class="pill" id="modPill">Accès boutique</div>
     </div>
 
     <div class="sep"></div>
@@ -115,7 +115,7 @@
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   const $ = (id)=>document.getElementById(id);
-  $("modPill").textContent = MODULE_CODE;
+  $("modPill").textContent = "Accès boutique";
   $("title").textContent = "ACCÈS SÉCURISÉ";
 
   // slug depuis URL ?slug=
@@ -128,7 +128,7 @@
   const msg = (html)=>{ $("msg").innerHTML = html; };
 
   if(!slug){
-    msg(`<span class="bad">❌ Identifiant manquant.</span><br>Reviens depuis ton lien d'accès QR (lien avec ?slug=...).`);
+    msg(`<span class="bad">❌ Identifiant manquant.</span><br>Reviens depuis ton lien d'accès boutique.`);
     $("go").disabled = true;
     return;
   }
